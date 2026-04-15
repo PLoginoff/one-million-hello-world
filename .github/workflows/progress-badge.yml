@@ -1,0 +1,38 @@
+name: Update Progress Badge
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Count lines of code
+        id: count
+        run: |
+          LINES=$(find . -type f \( -name "*.ts" -o -name "*.js" -o -name "*.tsx" -o -name "*.jsx" \) ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" -exec cat {} \; | wc -l)
+          echo "lines=$LINES" >> $GITHUB_OUTPUT
+          
+          TARGET=1000000
+          PERCENT=$((LINES * 100 / TARGET))
+          echo "percent=$PERCENT" >> $GITHUB_OUTPUT
+          
+          echo "Current lines: $LINES"
+          echo "Progress: $PERCENT%"
+      
+      - name: Create badge
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GITHUB_TOKEN }}
+          gistID: ${{ secrets.BADGE_GIST_ID }}
+          filename: progress-badge.json
+          label: Progress
+          message: ${{ steps.count.outputs.percent }}% (${{ steps.count.outputs.lines }} / 1M)
+          color: ${{ steps.count.outputs.percent >= 100 && 'success' || steps.count.outputs.percent >= 50 && 'important' || steps.count.outputs.percent >= 25 && 'critical' || 'critical' }}
