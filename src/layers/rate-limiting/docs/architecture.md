@@ -1,10 +1,10 @@
-# ADR 004: Rate Limiting Layer Architecture
+# Rate Limiting Layer Architecture
 
 ## Status
 Accepted
 
 ## Context
-The Rate Limiting Layer (Layer 4) is responsible for rate limiting requests based on IP addresses, user IDs, and API keys. It receives requests from the Security Layer and ensures rate limit compliance before passing to the Validation Layer. The layer has been significantly expanded to include advanced rate limiting strategies, comprehensive statistics tracking, health monitoring, diagnostics, rule-based rate limiting, exception handling, tiered rate limits, quota management, and warning systems.
+The Rate Limiting Layer is responsible for rate limiting requests based on IP addresses, user IDs, and API keys. It receives requests from the Security Layer and ensures rate limit compliance before passing to the Validation Layer. The layer has been significantly expanded to include advanced rate limiting strategies, comprehensive statistics tracking, health monitoring, diagnostics, rule-based rate limiting, exception handling, tiered rate limits, quota management, and warning systems.
 
 ## Decision
 We chose to implement the Rate Limiting Layer with the following design:
@@ -168,6 +168,8 @@ We chose to implement the Rate Limiting Layer with the following design:
 ## References
 - README.md - Architecture overview
 - DEVELOPMENT.md - Implementation progress
-- ADR 001 - Network Layer Architecture
-- ADR 002 - HTTP Parser Layer Architecture
-- ADR 003 - Security Layer Architecture
+- rate-limiting-strategies.md - Rate limiting strategies details
+- identifiers-scopes.md - Identifier types and scopes
+- rules-exceptions-tiers.md - Rules, exceptions, and tiers
+- statistics-monitoring.md - Statistics and monitoring
+- testing.md - Testing strategy

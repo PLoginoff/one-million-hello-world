@@ -1,10 +1,10 @@
-# ADR 005: Validation Layer Architecture
+# Validation Layer Architecture
 
 ## Status
 Accepted
 
 ## Context
-The Validation Layer (Layer 5) is responsible for schema validation, data sanitization, and type checking. It receives requests from the Rate Limiting Layer and ensures data integrity before passing to the Middleware Layer. The layer has been significantly expanded to include advanced validation strategies, comprehensive error handling, cross-field validation, conditional validation, custom validators, sanitization pipelines, health monitoring, diagnostics, and extensive format validation for various data types.
+The Validation Layer is responsible for schema validation, data sanitization, and type checking. It receives requests from the Rate Limiting Layer and ensures data integrity before passing to the Middleware Layer. The layer has been significantly expanded to include advanced validation strategies, comprehensive error handling, cross-field validation, conditional validation, custom validators, sanitization pipelines, health monitoring, diagnostics, and extensive format validation for various data types.
 
 ## Decision
 We chose to implement the Validation Layer with the following design:
@@ -15,25 +15,6 @@ We chose to implement the Validation Layer with the following design:
 3. **Type Definitions**: Comprehensive types for validation schemas, results, errors, warnings, and extended features
 
 ### Key Design Decisions
-- **Schema-based validation**: Use declarative schemas for field validation rules
-- **Extended validation results**: Include metrics, context, and sanitization data
-- **Cross-field validation**: Support rules that depend on multiple fields
-- **Conditional validation**: Apply different schemas based on conditions
-- **Custom validators**: Allow user-defined validation logic
-- **Sanitization pipeline**: Multiple sanitizers can be applied to data
-- **Health monitoring**: Track validation system health and diagnostics
-- **Statistics tracking**: Monitor validation performance and error patterns
-
-### Expanded Features
-- **Format validation**: UUID, phone, credit card, IP address, hex color, Base64, JSON, XML
-- **Advanced sanitization**: Trim, lowercase, uppercase, capitalize, escape HTML, normalize whitespace
-- **Validation context**: Track request metadata during validation
-- **Nested schema validation**: Support complex object structures
-- **Array and object validation**: Length and key constraints
-- **Error severity levels**: Error, warning, info
-- **Comprehensive error codes**: 28 specific error codes for different validation failures
-- **Warning codes**: 10 warning codes for non-critical issues
-- **Configuration management**: Runtime control of validation behavior
 
 **Schema-Based Validation**
 - Declarative validation schemas
@@ -69,6 +50,63 @@ We chose to implement the Validation Layer with the following design:
 - Strict mode toggle
 - Sanitization enable/disable
 
+### Expanded Features
+
+**Format Validation**
+- UUID format validation
+- Phone number format validation
+- Credit card format validation
+- IP address format validation
+- Hex color format validation
+- Base64 format validation
+- JSON format validation
+- XML format validation
+
+**Advanced Sanitization**
+- Trim whitespace
+- Convert to lowercase
+- Convert to uppercase
+- Capitalize text
+- Escape HTML entities
+- Normalize whitespace
+
+**Validation Context**
+- Track request metadata during validation
+- Pass context to custom validators
+- Support conditional validation based on context
+
+**Nested Schema Validation**
+- Support complex object structures
+- Validate nested objects
+- Validate arrays of objects
+- Support recursive schemas
+
+**Array and Object Validation**
+- Length constraints for arrays
+- Key constraints for objects
+- Item validation for arrays
+- Property validation for objects
+
+**Error Severity Levels**
+- Error: Critical validation failures
+- Warning: Non-critical issues
+- Info: Informational messages
+
+**Comprehensive Error Codes**
+- 28 specific error codes for different validation failures
+- Categorized error codes for easy handling
+- Detailed error descriptions
+
+**Warning Codes**
+- 10 warning codes for non-critical issues
+- Warning severity levels
+- Warning suppression options
+
+**Configuration Management**
+- Runtime control of validation behavior
+- Schema versioning
+- Validation mode switching
+
 ### Isolation Strategy
 - Validation Layer depends only on Rate Limiting Layer types
 - Does not depend on any higher layers
@@ -99,7 +137,7 @@ We chose to implement the Validation Layer with the following design:
 ## References
 - README.md - Architecture overview
 - DEVELOPMENT.md - Implementation progress
-- ADR 001 - Network Layer Architecture
-- ADR 002 - HTTP Parser Layer Architecture
-- ADR 003 - Security Layer Architecture
-- ADR 004 - Rate Limiting Layer Architecture
+- schema-validation.md - Schema-based validation details
+- sanitization.md - Sanitization pipeline
+- error-handling.md - Error handling and reporting
+- testing.md - Testing strategy

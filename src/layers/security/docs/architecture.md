@@ -1,10 +1,10 @@
-# ADR 003: Security Layer Architecture
+# Security Layer Architecture
 
 ## Status
 Accepted
 
 ## Context
-The Security Layer (Layer 3) is responsible for authentication, authorization, CORS validation, and threat detection. It receives parsed HTTP requests from the HTTP Parser Layer and ensures security before passing to the Rate Limiting Layer.
+The Security Layer is responsible for authentication, authorization, CORS validation, and threat detection. It receives parsed HTTP requests from the HTTP Parser Layer and ensures security before passing to the Rate Limiting Layer.
 
 ## Decision
 We chose to implement the Security Layer with the following design:
@@ -134,5 +134,7 @@ We chose to implement the Security Layer with the following design:
 ## References
 - README.md - Architecture overview
 - DEVELOPMENT.md - Implementation progress
-- ADR 001 - Network Layer Architecture
-- ADR 002 - HTTP Parser Layer Architecture
+- authentication-authorization.md - Authentication and authorization details
+- cors-threat-detection.md - CORS validation and threat detection
+- security-policies.md - Security policies and configuration
+- testing.md - Testing strategy

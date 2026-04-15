@@ -1,10 +1,10 @@
-# ADR 002: HTTP Parser Layer Architecture
+# HTTP Parser Layer Architecture
 
 ## Status
 Accepted
 
 ## Context
-The HTTP Parser Layer (Layer 2) is responsible for parsing raw HTTP request data into structured objects. It receives raw buffers from the Network Layer and produces parsed HttpRequest objects for the Security Layer.
+The HTTP Parser Layer is responsible for parsing raw HTTP request data into structured objects. It receives raw buffers from the Network Layer and produces parsed HttpRequest objects for the Security Layer.
 
 ## Decision
 We chose to implement the HTTP Parser Layer with the following design:
@@ -106,4 +106,7 @@ We chose to implement the HTTP Parser Layer with the following design:
 ## References
 - README.md - Architecture overview
 - DEVELOPMENT.md - Implementation progress
-- ADR 001 - Network Layer Architecture
+- request-parsing.md - Request parsing details
+- validation-error-handling.md - Validation and error handling
+- advanced-features.md - Advanced features
+- testing.md - Testing strategy

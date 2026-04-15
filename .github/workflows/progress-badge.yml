@@ -17,7 +17,7 @@ jobs:
       - name: Count lines of code
         id: count
         run: |
-          LINES=$(find . -type f \( -name "*.ts" -o -name "*.js" -o -name "*.tsx" -o -name "*.jsx" \) ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" -exec cat {} \; | wc -l)
+          LINES=$(find . -type f ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" -exec cat {} \; | wc -l)
           echo "lines=$LINES" >> $GITHUB_OUTPUT
           
           TARGET=1000000
