@@ -1,18 +1,18 @@
 # One Million Hello World
 
-Этот проект представляет собой полнофункциональную реализацию классического HTTP-сервера, возвращающего "Hello World", с использованием enterprise-grade архитектурных паттернов и best practices.
+This project is a fully-featured implementation of a classic HTTP server returning "Hello World" using enterprise-grade architectural patterns and best practices.
 
-Кодовая база проекта содержит **1 миллион строк** (пока лишь 50к)
+The codebase contains **1 million lines** (currently 30k)
 
 ![Progress](https://img.shields.io/badge/progress-3%25-red)
 
-## Цель
+## Goal
 
-Демонстрация комплексной архитектурной реализации с применением принципов чистой архитектуры, SOLID, паттернов проектирования и enterprise-level подходов к разработке. Проект иллюстрирует, как систематический подход к абстракции и модульности может быть применен даже к задачам с минимальной функциональной сложностью, обеспечивая при этом высокую поддерживаемость, тестируемость и расширяемость системы.
+Demonstration of a comprehensive architectural implementation applying clean architecture principles, SOLID, design patterns, and enterprise-level development approaches. The project illustrates how a systematic approach to abstraction and modularity can be applied even to tasks with minimal functional complexity, ensuring high maintainability, testability, and system extensibility.
 
-## Архитектура
+## Architecture
 
-Проект реализован в соответствии с принципами чистой архитектуры, обеспечивая строгую изоляцию бизнес-логики от инфраструктурных зависимостей и следование Dependency Rule. Архитектура построена на основе концентрических слоев с однонаправленным потоком зависимостей, что гарантирует тестируемость, поддерживаемость и масштабируемость системы. Каждый слой решает конкретную задачу и взаимодействует с другими слоями исключительно через четко определенные интерфейсы, реализуя принципы инверсии зависимостей и разделения ответственности.
+The project is implemented following clean architecture principles, ensuring strict isolation of business logic from infrastructure dependencies and adherence to the Dependency Rule. The architecture is built on concentric layers with a unidirectional dependency flow, guaranteeing testability, maintainability, and system scalability. Each layer solves a specific task and interacts with other layers exclusively through well-defined interfaces, implementing dependency inversion and separation of concerns principles.
 
 ```
 HTTP Request
@@ -68,20 +68,20 @@ Decorator Layer (Runtime decoration, cross-cutting concerns)
 Transport Layer (HTTP response, streaming, chunked encoding)
 ```
 
-### Логирование
+### Logging
 
-Логи на **каждом уровне**:
+Logs at **every level**:
 - Structured logging (JSON format)
 - Log levels: DEBUG, INFO, WARN, ERROR, FATAL
-- Correlation IDs для трассировки запросов
-- Performance metrics на каждом слое
+- Correlation IDs for request tracing
+- Performance metrics at each layer
 - Error tracking with stack traces
 - Audit logging
 - Distributed tracing (OpenTelemetry)
 
-### Технологии
+### Technologies
 
-- **TypeScript** с строгой типизацией
+- **TypeScript** with strict typing
 - **Express.js** - HTTP framework
 - **Winston** - Logging
 - **Zod** - Schema validation
@@ -89,88 +89,88 @@ Transport Layer (HTTP response, streaming, chunked encoding)
 - **Inversify** - Dependency Injection
 - **OpenTelemetry** - Distributed tracing
 
-## Архитектурные правила и стандарты
+## Architectural Rules and Standards
 
-### Чистая архитектура (Clean Architecture)
+### Clean Architecture
 
-- **Dependency Rule**: зависимости направлены внутрь (внешние слои зависят от внутренних)
-- **Entities**: бизнес-логика не зависит от фреймворков, UI, базы данных
-- **Use Cases**: бизнес-правила, специфичные для приложения
-- **Interface Adapters**: преобразование данных из формата use cases в формат внешних систем
-- **Frameworks & Drivers**: внешние инструменты (Express, Winston, etc.)
+- **Dependency Rule**: dependencies point inward (outer layers depend on inner layers)
+- **Entities**: business logic does not depend on frameworks, UI, or databases
+- **Use Cases**: application-specific business rules
+- **Interface Adapters**: data transformation from use cases format to external systems format
+- **Frameworks & Drivers**: external tools (Express, Winston, etc.)
 
-### SOLID принципы
+### SOLID Principles
 
 **S - Single Responsibility Principle:**
-- Каждый класс имеет одну причину для изменения
-- Каждый слой отвечает за одну функцию
-- Каждый файл содержит одну сущность
+- Each class has one reason to change
+- Each layer is responsible for one function
+- Each file contains one entity
 
 **O - Open/Closed Principle:**
-- Открыт для расширения, закрыт для модификации
-- Использование интерфейсов для расширения функционала
-- Strategy Pattern для вариативного поведения
+- Open for extension, closed for modification
+- Use interfaces to extend functionality
+- Strategy Pattern for variable behavior
 
 **L - Liskov Substitution Principle:**
-- Подтипы должны быть заменяемыми базовыми типами
-- Контракты интерфейсов строго соблюдаются
-- Нарушения логируются как ошибки
+- Subtypes must be substitutable for base types
+- Interface contracts are strictly followed
+- Violations are logged as errors
 
 **I - Interface Segregation Principle:**
-- Много мелких интерфейсов вместо одного большого
-- Клиенты не зависят от методов, которые не используют
-- Каждый слой имеет свой набор интерфейсов
+- Many small interfaces instead of one large interface
+- Clients do not depend on methods they don't use
+- Each layer has its own set of interfaces
 
 **D - Dependency Inversion Principle:**
-- Модули верхних уровней не зависят от модулей нижних уровней
-- Оба зависят от абстракций
-- Dependency Injection через Inversify
+- Higher-level modules do not depend on lower-level modules
+- Both depend on abstractions
+- Dependency Injection via Inversify
 
-### Правила слоев
+### Layer Rules
 
-**Строгая изоляция:**
-- Слой N может обращаться только к слою N-1
-- Запрещены прямые вызовы между непоследовательными слоями
-- Обход слоев через паттерн Service Locator запрещен
+**Strict Isolation:**
+- Layer N can only access layer N-1
+- Direct calls between non-consecutive layers are prohibited
+- Bypassing layers via Service Locator pattern is prohibited
 
-**Однонаправленный поток:**
-- Движение только сверху вниз (Request → Response)
-- Нижние слои не знают о верхних
-- Event Bus для обратной связи (только через события)
+**Unidirectional Flow:**
+- Movement only from top to bottom (Request → Response)
+- Lower layers are unaware of upper layers
+- Event Bus for feedback (only through events)
 
-**Интерфейсы между слоями:**
-- Каждый слой экспортирует только интерфейсы
-- Реализация скрыта внутри слоя
-- Типы TypeScript для контрактов
+**Interfaces Between Layers:**
+- Each layer exports only interfaces
+- Implementation is hidden inside the layer
+- TypeScript types for contracts
 
-### Тестирование
+### Testing
 
-**Покрытие кода:**
-- Минимальное покрытие: **95%**
-- Целевое покрытие: **99%+**
+**Code Coverage:**
+- Minimum coverage: **95%**
+- Target coverage: **99%+**
 - Branch coverage: **90%+**
 
-**Типы тестов:**
+**Test Types:**
 
-1. **Unit Tests** (80% от всех тестов):
-   - Тестируют отдельные функции/классы
-   - Моки всех зависимостей
-   - Изоляция от внешних систем
-   - Скорость: < 1ms per test
+1. **Unit Tests** (80% of all tests):
+   - Test individual functions/classes
+   - Mock all dependencies
+   - Isolation from external systems
+   - Speed: < 1ms per test
 
 2. **Integration Tests** (15%):
-   - Тестируют взаимодействие слоев
-   - In-memory реализации внешних зависимостей
-   - Проверка контрактов между слоями
-   - Скорость: < 10ms per test
+   - Test layer interaction
+   - In-memory implementations of external dependencies
+   - Verify contracts between layers
+   - Speed: < 10ms per test
 
 3. **E2E Tests** (5%):
-   - Полный путь HTTP Request → Response
-   - Реальный HTTP сервер
-   - Реальные логи и метрики
-   - Скорость: < 100ms per test
+   - Full path HTTP Request → Response
+   - Real HTTP server
+   - Real logs and metrics
+   - Speed: < 100ms per test
 
-**Тестовая пирамида:**
+**Test Pyramid:**
 ```
         /\
        /E2E\      (5%)
@@ -181,7 +181,7 @@ Transport Layer (HTTP response, streaming, chunked encoding)
   /----------------\
 ```
 
-**Правила написания тестов:**
+**Test Writing Rules:**
 - AAA pattern (Arrange, Act, Assert)
 - Descriptive test names
 - One assertion per test
@@ -190,9 +190,9 @@ Transport Layer (HTTP response, streaming, chunked encoding)
 - Mock everything external
 
 **Mutation Testing:**
-- Использование Stryker для проверки качества тестов
-- Цель: убить 100% мутантов
-- Выявление "мертвого" кода в тестах
+- Use Stryker to verify test quality
+- Goal: kill 100% of mutants
+- Identify "dead" code in tests
 
 ### Code Style
 
@@ -218,28 +218,28 @@ Transport Layer (HTTP response, streaming, chunked encoding)
 - Private properties: _prefix
 - Files: kebab-case
 
-### Документация
+### Documentation
 
 **TSDoc:**
-- Каждый публичный метод документирован
-- @param для каждого параметра
-- @returns для возвращаемых значений
-- @throws для исключений
-- Примеры использования
+- Every public method is documented
+- @param for each parameter
+- @returns for return values
+- @throws for exceptions
+- Usage examples
 
 **Architecture Decision Records (ADR):**
-- Каждое архитектурное решение задокументировано
-- Формат: Context, Decision, Consequences
-- Хранение в /docs/adr/
+- Every architectural decision is documented
+- Format: Context, Decision, Consequences
+- Stored in /docs/adr/
 
 ### CI/CD
 
 **GitHub Actions:**
-- Линтеринг на каждый PR
-- Unit tests на каждый PR
-- Integration tests на merge
-- E2E tests на release
-- Coverage report на каждый build
+- Linting on every PR
+- Unit tests on every PR
+- Integration tests on merge
+- E2E tests on release
+- Coverage report on every build
 
 **Quality Gates:**
 - Build fails if coverage < 95%
@@ -247,35 +247,35 @@ Transport Layer (HTTP response, streaming, chunked encoding)
 - Build fails if test failures
 - Mutation testing weekly
 
-## Как запустить
+## How to Run
 
 ```bash
-# Установка зависимостей
+# Install dependencies
 npm install
 
-# Запуск сервера
+# Start server
 npm start
 
-# С логами
+# Start with logs
 npm run start:dev
 ```
 
-Сервер будет доступен на `http://localhost:3000`
+Server will be available at `http://localhost:3000`
 
 ## API
 
 ### GET /
 
-Возвращает классическое "Hello, World!"
+Returns classic "Hello, World!"
 
-## Статистика
+## Statistics
 
-- **Строк кода**: 1,000,000 (цель)
-- **Файлов**: TBD
-- **Слоёв архитектуры**: 25
-- **Типов TypeScript**: TBD
-- **Размер**: TBD
+- **Lines of code**: 1,000,000 (goal)
+- **Files**: TBD
+- **Architecture layers**: 25
+- **TypeScript types**: TBD
+- **Size**: TBD
 
-## Лицензия
+## License
 
 MIT
