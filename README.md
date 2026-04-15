@@ -1,12 +1,10 @@
 # One Million Hello World
 
-![Progress](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/PLoginoff/b0db26c4585dcb64f7b93e1c44c28ea2/raw/progress-badge.json)
-
-## Описание проекта
-
 Этот проект представляет собой полнофункциональную реализацию классического HTTP-сервера, возвращающего "Hello World", с использованием enterprise-grade архитектурных паттернов и best practices.
 
 Кодовая база проекта содержит **1 миллион строк** (пока лишь 50к)
+
+![Progress](https://img.shields.io/badge/progress-5%25-red)
 
 ## Цель
 

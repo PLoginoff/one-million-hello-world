@@ -27,12 +27,29 @@ jobs:
           echo "Current lines: $LINES"
           echo "Progress: $PERCENT%"
       
-      - name: Create badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
-        with:
-          auth: ${{ secrets.GITHUB_TOKEN }}
-          gistID: ${{ secrets.BADGE_GIST_ID }}
-          filename: progress-badge.json
-          label: Progress
-          message: ${{ steps.count.outputs.percent }}% (${{ steps.count.outputs.lines }} / 1M)
-          color: ${{ steps.count.outputs.percent >= 100 && 'success' || steps.count.outputs.percent >= 50 && 'important' || steps.count.outputs.percent >= 25 && 'critical' || 'critical' }}
+      - name: Update badge in README
+        run: |
+          PERCENT=${{ steps.count.outputs.percent }}
+          LINES=${{ steps.count.outputs.lines }}
+          
+          if [ $PERCENT -ge 100 ]; then
+            COLOR="brightgreen"
+          elif [ $PERCENT -ge 50 ]; then
+            COLOR="yellow"
+          elif [ $PERCENT -ge 25 ]; then
+            COLOR="orange"
+          else
+            COLOR="red"
+          fi
+          
+          BADGE_URL="https://img.shields.io/badge/progress-${PERCENT}%25-${COLOR}"
+          
+          sed -i "s|!\[Progress\](.*)|![Progress](${BADGE_URL})|g" README.md
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update progress badge: ${{ steps.count.outputs.percent }}% (${{ steps.count.outputs.lines }} lines)"
+          git push
