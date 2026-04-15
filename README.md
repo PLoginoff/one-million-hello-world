@@ -4,7 +4,7 @@
 
 Кодовая база проекта содержит **1 миллион строк** (пока лишь 50к)
 
-![Progress](https://img.shields.io/badge/progress-5%25-red)
+![Progress](https://img.shields.io/badge/progress-3%25-red)
 
 ## Цель
 
