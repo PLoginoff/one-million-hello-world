@@ -345,3 +345,191 @@ export interface RateLimitException {
   expiresAt?: Date;
   permanent: boolean;
 }
+
+/**
+ * Internal layer types for rate limiting
+ */
+export enum InternalLayer {
+  CACHE = 'CACHE',
+  CIRCUIT_BREAKER = 'CIRCUIT_BREAKER',
+  COMPRESSION = 'COMPRESSION',
+  CONTROLLER = 'CONTROLLER',
+  DATA_TRANSFORMATION = 'DATA_TRANSFORMATION',
+  DECORATOR = 'DECORATOR',
+  DOMAIN = 'DOMAIN',
+  EVENT = 'EVENT',
+  FACADE = 'FACADE',
+  HTTP_PARSER = 'HTTP_PARSER',
+  MESSAGE_QUEUE = 'MESSAGE_QUEUE',
+  MIDDLEWARE = 'MIDDLEWARE',
+  NETWORK = 'NETWORK',
+  PROXY = 'PROXY',
+  RATE_LIMITING = 'RATE_LIMITING',
+  REPOSITORY = 'REPOSITORY',
+  RETRY = 'RETRY',
+  ROUTER = 'ROUTER',
+  SAGA = 'SAGA',
+  SECURITY = 'SECURITY',
+  SERIALIZATION = 'SERIALIZATION',
+  SERVICE = 'SERVICE',
+  STRATEGY = 'STRATEGY',
+  TRANSPORT = 'TRANSPORT',
+  VALIDATION = 'VALIDATION',
+}
+
+/**
+ * Internal layer identifier
+ */
+export interface InternalLayerIdentifier {
+  layer: InternalLayer;
+  operation?: string;
+  component?: string;
+}
+
+/**
+ * Internal layer rate limit config
+ */
+export interface InternalLayerRateLimitConfig {
+  layer: InternalLayer;
+  requestsPerWindow: number;
+  windowSizeMs: number;
+  strategy: RateLimitStrategy;
+  enabled: boolean;
+  priority: number;
+}
+
+/**
+ * Internal layer rate limit result
+ */
+export interface InternalLayerRateLimitResult {
+  layer: InternalLayer;
+  allowed: boolean;
+  limit: number;
+  remaining: number;
+  resetTime: Date;
+  retryAfter?: number;
+  operation?: string;
+}
+
+/**
+ * Internal layer context
+ */
+export interface InternalLayerContext {
+  layer: InternalLayer;
+  operation?: string;
+  correlationId?: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Layer-specific rate limit stats
+ */
+export interface LayerRateLimitStats {
+  layer: InternalLayer;
+  totalRequests: number;
+  allowedRequests: number;
+  deniedRequests: number;
+  currentBuckets: number;
+  averageRequestRate: number;
+  peakRequestRate: number;
+  lastResetTime: Date;
+}
+
+/**
+ * Cross-layer rate limit config
+ */
+export interface CrossLayerRateLimitConfig {
+  sourceLayer: InternalLayer;
+  targetLayer: InternalLayer;
+  requestsPerWindow: number;
+  windowSizeMs: number;
+  strategy: RateLimitStrategy;
+  enabled: boolean;
+}
+
+/**
+ * Cross-layer rate limit result
+ */
+export interface CrossLayerRateLimitResult {
+  sourceLayer: InternalLayer;
+  targetLayer: InternalLayer;
+  allowed: boolean;
+  limit: number;
+  remaining: number;
+  resetTime: Date;
+  retryAfter?: number;
+}
+
+/**
+ * Layer dependency graph
+ */
+export interface LayerDependencyGraph {
+  nodes: Map<InternalLayer, LayerNode>;
+  edges: LayerEdge[];
+}
+
+/**
+ * Layer node in dependency graph
+ */
+export interface LayerNode {
+  layer: InternalLayer;
+  rateLimitConfig: InternalLayerRateLimitConfig;
+  currentRate: number;
+  dependencies: InternalLayer[];
+  dependents: InternalLayer[];
+}
+
+/**
+ * Layer edge in dependency graph
+ */
+export interface LayerEdge {
+  source: InternalLayer;
+  target: InternalLayer;
+  weight: number;
+  rateLimitConfig?: CrossLayerRateLimitConfig;
+}
+
+/**
+ * Layer health status
+ */
+export interface LayerHealthStatus {
+  layer: InternalLayer;
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  score: number;
+  lastCheck: Date;
+  issues: string[];
+}
+
+/**
+ * Rate limit cascade config
+ */
+export interface RateLimitCascadeConfig {
+  propagateDownstream: boolean;
+  propagateUpstream: boolean;
+  cascadeThreshold: number;
+  cascadeStrategy: 'strict' | 'lenient' | 'adaptive';
+}
+
+/**
+ * Adaptive rate limit config
+ */
+export interface AdaptiveRateLimitConfig {
+  enabled: boolean;
+  minRequestsPerWindow: number;
+  maxRequestsPerWindow: number;
+  adjustmentFactor: number;
+  adjustmentIntervalMs: number;
+  metricsWindowMs: number;
+}
+
+/**
+ * Rate limit prediction
+ */
+export interface RateLimitPrediction {
+  identifier: RateLimitIdentifier;
+  predictedUsage: number;
+  predictedLimit: number;
+  timeWindow: Date;
+  confidence: number;
+  recommendations: string[];
+}

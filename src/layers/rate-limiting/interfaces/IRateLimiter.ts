@@ -28,6 +28,21 @@ import {
   RateLimitErrorCode,
   RateLimitScope,
   RateLimitAction,
+  InternalLayer,
+  InternalLayerIdentifier,
+  InternalLayerRateLimitConfig,
+  InternalLayerRateLimitResult,
+  InternalLayerContext,
+  LayerRateLimitStats,
+  CrossLayerRateLimitConfig,
+  CrossLayerRateLimitResult,
+  LayerDependencyGraph,
+  LayerNode,
+  LayerEdge,
+  LayerHealthStatus,
+  RateLimitCascadeConfig,
+  AdaptiveRateLimitConfig,
+  RateLimitPrediction,
 } from '../types/rate-limiting-types';
 
 /**
@@ -315,4 +330,192 @@ export interface IRateLimiter {
    * @returns Applicable rate limit rule or null
    */
   getApplicableRule(identifier: RateLimitIdentifier): RateLimitRule | null;
+
+  // Internal Layer Methods
+
+  /**
+   * Checks rate limit for internal layer
+   * 
+   * @param layerIdentifier - Internal layer identifier
+   * @param context - Internal layer context
+   * @returns Internal layer rate limit result
+   */
+  checkInternalLayerRateLimit(
+    layerIdentifier: InternalLayerIdentifier,
+    context?: InternalLayerContext
+  ): InternalLayerRateLimitResult;
+
+  /**
+   * Sets rate limit config for internal layer
+   * 
+   * @param config - Internal layer rate limit config
+   */
+  setInternalLayerRateLimitConfig(config: InternalLayerRateLimitConfig): void;
+
+  /**
+   * Gets rate limit config for internal layer
+   * 
+   * @param layer - Internal layer
+   * @returns Internal layer rate limit config or null
+   */
+  getInternalLayerRateLimitConfig(layer: InternalLayer): InternalLayerRateLimitConfig | null;
+
+  /**
+   * Gets rate limit stats for internal layer
+   * 
+   * @param layer - Internal layer
+   * @returns Layer rate limit stats
+   */
+  getLayerRateLimitStats(layer: InternalLayer): LayerRateLimitStats;
+
+  /**
+   * Gets rate limit stats for all layers
+   * 
+   * @returns Array of layer rate limit stats
+   */
+  getAllLayerRateLimitStats(): LayerRateLimitStats[];
+
+  /**
+   * Checks cross-layer rate limit
+   * 
+   * @param sourceLayer - Source internal layer
+   * @param targetLayer - Target internal layer
+   * @returns Cross-layer rate limit result
+   */
+  checkCrossLayerRateLimit(
+    sourceLayer: InternalLayer,
+    targetLayer: InternalLayer
+  ): CrossLayerRateLimitResult;
+
+  /**
+   * Sets cross-layer rate limit config
+   * 
+   * @param config - Cross-layer rate limit config
+   */
+  setCrossLayerRateLimitConfig(config: CrossLayerRateLimitConfig): void;
+
+  /**
+   * Gets cross-layer rate limit config
+   * 
+   * @param sourceLayer - Source internal layer
+   * @param targetLayer - Target internal layer
+   * @returns Cross-layer rate limit config or null
+   */
+  getCrossLayerRateLimitConfig(
+    sourceLayer: InternalLayer,
+    targetLayer: InternalLayer
+  ): CrossLayerRateLimitConfig | null;
+
+  /**
+   * Gets layer dependency graph
+   * 
+   * @returns Layer dependency graph
+   */
+  getLayerDependencyGraph(): LayerDependencyGraph;
+
+  /**
+   * Adds layer dependency
+   * 
+   * @param source - Source layer
+   * @param target - Target layer
+   * @param weight - Dependency weight
+   */
+  addLayerDependency(source: InternalLayer, target: InternalLayer, weight: number): void;
+
+  /**
+   * Removes layer dependency
+   * 
+   * @param source - Source layer
+   * @param target - Target layer
+   */
+  removeLayerDependency(source: InternalLayer, target: InternalLayer): void;
+
+  /**
+   * Gets layer health status
+   * 
+   * @param layer - Internal layer
+   * @returns Layer health status
+   */
+  getLayerHealthStatus(layer: InternalLayer): LayerHealthStatus;
+
+  /**
+   * Gets health status for all layers
+   * 
+   * @returns Array of layer health statuses
+   */
+  getAllLayerHealthStatuses(): LayerHealthStatus[];
+
+  /**
+   * Sets rate limit cascade config
+   * 
+   * @param config - Rate limit cascade config
+   */
+  setRateLimitCascadeConfig(config: RateLimitCascadeConfig): void;
+
+  /**
+   * Gets rate limit cascade config
+   * 
+   * @returns Rate limit cascade config
+   */
+  getRateLimitCascadeConfig(): RateLimitCascadeConfig;
+
+  /**
+   * Sets adaptive rate limit config
+   * 
+   * @param config - Adaptive rate limit config
+   */
+  setAdaptiveRateLimitConfig(config: AdaptiveRateLimitConfig): void;
+
+  /**
+   * Gets adaptive rate limit config
+   * 
+   * @returns Adaptive rate limit config
+   */
+  getAdaptiveRateLimitConfig(): AdaptiveRateLimitConfig;
+
+  /**
+   * Predicts rate limit usage
+   * 
+   * @param identifier - Rate limit identifier
+   * @param timeWindow - Time window for prediction
+   * @returns Rate limit prediction
+   */
+  predictRateLimitUsage(
+    identifier: RateLimitIdentifier,
+    timeWindow: Date
+  ): RateLimitPrediction;
+
+  /**
+   * Enables internal layer rate limiting
+   * 
+   * @param layer - Internal layer
+   */
+  enableInternalLayerRateLimiting(layer: InternalLayer): void;
+
+  /**
+   * Disables internal layer rate limiting
+   * 
+   * @param layer - Internal layer
+   */
+  disableInternalLayerRateLimiting(layer: InternalLayer): void;
+
+  /**
+   * Checks if internal layer rate limiting is enabled
+   * 
+   * @param layer - Internal layer
+   * @returns True if enabled
+   */
+  isInternalLayerRateLimitingEnabled(layer: InternalLayer): boolean;
+
+  /**
+   * Resets rate limit for internal layer
+   * 
+   * @param layerIdentifier - Internal layer identifier
+   */
+  resetInternalLayerRateLimit(layerIdentifier: InternalLayerIdentifier): void;
+
+  /**
+   * Clears all internal layer buckets
+   */
+  clearAllInternalLayerBuckets(): void;
 }

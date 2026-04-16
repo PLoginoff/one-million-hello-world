@@ -4,15 +4,15 @@
 Accepted
 
 ## Context
-The Rate Limiting Layer is responsible for rate limiting requests based on IP addresses, user IDs, and API keys. It receives requests from the Security Layer and ensures rate limit compliance before passing to the Validation Layer. The layer has been significantly expanded to include advanced rate limiting strategies, comprehensive statistics tracking, health monitoring, diagnostics, rule-based rate limiting, exception handling, tiered rate limits, quota management, and warning systems.
+The Rate Limiting Layer is responsible for rate limiting requests based on IP addresses, user IDs, and API keys. It receives requests from the Security Layer and ensures rate limit compliance before passing to the Validation Layer. The layer has been significantly expanded to include advanced rate limiting strategies, comprehensive statistics tracking, health monitoring, diagnostics, rule-based rate limiting, exception handling, tiered rate limits, quota management, warning systems, and internal layer rate limiting for inter-service communication.
 
 ## Decision
 We chose to implement the Rate Limiting Layer with the following design:
 
 ### Components
-1. **IRateLimiter Interface**: Defines the contract for rate limiting operations
-2. **RateLimiter Implementation**: Concrete rate limiter with token bucket strategy
-3. **Type Definitions**: Comprehensive types for rate limiting strategies and identifiers
+1. **IRateLimiter Interface**: Defines the contract for rate limiting operations including internal layer methods
+2. **RateLimiter Implementation**: Concrete rate limiter with token bucket strategy and internal layer support
+3. **Type Definitions**: Comprehensive types for rate limiting strategies, identifiers, and internal layers
 
 ### Key Design Decisions
 
@@ -125,6 +125,59 @@ We chose to implement the Rate Limiting Layer with the following design:
 - Grace period configuration
 - Priority queue configuration
 
+**Internal Layer Rate Limiting**
+- Support for 25+ internal layers (cache, circuit-breaker, service, etc.)
+- Per-layer rate limit configuration
+- Layer-specific statistics tracking
+- Cross-layer rate limiting for inter-service communication
+- Layer dependency graph management
+- Layer health status monitoring
+- Rate limit cascade configuration
+- Adaptive rate limiting for internal layers
+- Rate limit usage prediction
+- Enable/disable rate limiting per layer
+
+**Internal Layer Types**
+- CACHE, CIRCUIT_BREAKER, COMPRESSION, CONTROLLER
+- DATA_TRANSFORMATION, DECORATOR, DOMAIN, EVENT
+- FACADE, HTTP_PARSER, MESSAGE_QUEUE, MIDDLEWARE
+- NETWORK, PROXY, RATE_LIMITING, REPOSITORY
+- RETRY, ROUTER, SAGA, SECURITY
+- SERIALIZATION, SERVICE, STRATEGY, TRANSPORT, VALIDATION
+
+**Cross-Layer Rate Limiting**
+- Rate limiting between internal layers
+- Configurable cross-layer limits
+- Dependency-aware rate limiting
+- Cascade propagation (upstream/downstream)
+- Adaptive cascade strategies (strict, lenient, adaptive)
+
+**Layer Dependency Graph**
+- Visual representation of layer dependencies
+- Weight-based dependency management
+- Dynamic dependency addition/removal
+- Graph-based health monitoring
+
+**Layer Health Monitoring**
+- Per-layer health status (healthy, degraded, unhealthy)
+- Health score calculation
+- Issue tracking per layer
+- Denial rate monitoring
+- Configuration validation
+
+**Adaptive Rate Limiting**
+- Dynamic limit adjustment based on usage
+- Configurable min/max limits
+- Adjustment factor configuration
+- Time-based adjustment intervals
+- Metrics window for adaptive decisions
+
+**Rate Limit Prediction**
+- Usage prediction for future time windows
+- Confidence scoring
+- Recommendation generation
+- Current usage analysis
+
 ### Isolation Strategy
 - Rate Limiting Layer depends only on Security Layer types
 - Does not depend on any higher layers
@@ -148,6 +201,13 @@ We chose to implement the Rate Limiting Layer with the following design:
 - Extended rate limit results with metrics
 - Bucket cleanup for memory management
 - Usage tracking across all identifiers
+- Internal layer rate limiting for 25+ layers
+- Cross-layer rate limiting for inter-service communication
+- Layer dependency graph for visualization
+- Layer health status monitoring
+- Adaptive rate limiting with dynamic adjustment
+- Rate limit usage prediction with recommendations
+- Cascade configuration for propagation strategies
 
 ### Negative
 - Token bucket may allow short bursts
@@ -158,6 +218,11 @@ We chose to implement the Rate Limiting Layer with the following design:
 - Memory overhead from storing rules, exceptions, tiers, and quotas
 - Additional latency from health checks and diagnostics
 - Complexity from multiple configuration options
+- Increased memory overhead from internal layer buckets (25+ layers)
+- Additional complexity from cross-layer rate limiting
+- Dependency graph management overhead
+- Layer health monitoring computational cost
+- Adaptive rate limiting prediction complexity
 
 ### Alternatives Considered
 1. **Use external rate limiter (Redis)**: Rejected for simplicity and control
@@ -173,3 +238,4 @@ We chose to implement the Rate Limiting Layer with the following design:
 - rules-exceptions-tiers.md - Rules, exceptions, and tiers
 - statistics-monitoring.md - Statistics and monitoring
 - testing.md - Testing strategy
+- internal-layers.md - Internal layer rate limiting documentation

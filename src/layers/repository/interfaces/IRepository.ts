@@ -11,6 +11,7 @@ import {
   RepositoryResult,
   RepositoryConfig,
 } from '../types/repository-types';
+import { IQueryBuilder } from './IQueryBuilder';
 
 /**
  * Interface for repository operations
@@ -82,4 +83,11 @@ export interface IRepository<T extends DomainEntity> {
    * Clears all cached data
    */
   clearCache(): void;
+
+  /**
+   * Gets the query builder for this repository
+   * 
+   * @returns Query builder instance
+   */
+  getQueryBuilder(): IQueryBuilder;
 }

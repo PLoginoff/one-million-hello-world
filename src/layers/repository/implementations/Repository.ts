@@ -2,10 +2,11 @@
  * Repository Implementation
  * 
  * Concrete implementation of IRepository.
- * Handles data access abstraction and query building.
+ * Handles data access abstraction with QueryBuilder and Handler integration.
  */
 
 import { IRepository } from '../interfaces/IRepository';
+import { IQueryBuilder } from '../interfaces/IQueryBuilder';
 import { DomainEntity } from '../../domain/types/domain-types';
 import {
   QueryOptions,
@@ -16,11 +17,13 @@ import {
   FilterOperator,
   SortDirection,
 } from '../types/repository-types';
+import { QueryBuilder } from './QueryBuilder';
 
 export class Repository<T extends DomainEntity> implements IRepository<T> {
   private _data: Map<string, T>;
   private _config: RepositoryConfig;
   private _cache: Map<string, { data: unknown; timestamp: number }>;
+  private _queryBuilder: IQueryBuilder;
 
   constructor() {
     this._data = new Map();
@@ -30,6 +33,7 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
       enableTransaction: false,
     };
     this._cache = new Map();
+    this._queryBuilder = new QueryBuilder();
   }
 
   async findById(id: string): Promise<RepositoryResult<T>> {
@@ -115,6 +119,10 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
 
   clearCache(): void {
     this._cache.clear();
+  }
+
+  getQueryBuilder(): IQueryBuilder {
+    return this._queryBuilder;
   }
 
   private _applyFilters(entities: T[], filters: QueryFilter[]): T[] {

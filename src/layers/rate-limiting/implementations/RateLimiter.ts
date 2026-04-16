@@ -36,6 +36,21 @@ import {
   DiagnosticStep,
   DiagnosticSummary,
   RateLimitHealthCheck,
+  InternalLayer,
+  InternalLayerIdentifier,
+  InternalLayerRateLimitConfig,
+  InternalLayerRateLimitResult,
+  InternalLayerContext,
+  LayerRateLimitStats,
+  CrossLayerRateLimitConfig,
+  CrossLayerRateLimitResult,
+  LayerDependencyGraph,
+  LayerNode,
+  LayerEdge,
+  LayerHealthStatus,
+  RateLimitCascadeConfig,
+  AdaptiveRateLimitConfig,
+  RateLimitPrediction,
 } from '../types/rate-limiting-types';
 
 export class RateLimiter implements IRateLimiter {
@@ -49,6 +64,18 @@ export class RateLimiter implements IRateLimiter {
   private _tiers: Map<string, RateLimitTier>;
   private _quotas: Map<string, RateLimitQuota>;
   private _checkStartTime: number;
+
+  private _internalLayerBuckets: Map<string, TokenBucketState | SlidingWindowState | FixedWindowState | LeakyBucketState>;
+  private _internalLayerConfigs: Map<InternalLayer, InternalLayerRateLimitConfig>;
+  private _internalLayerStats: Map<InternalLayer, LayerRateLimitStats>;
+  private _crossLayerConfigs: Map<string, CrossLayerRateLimitConfig>;
+  private _crossLayerBuckets: Map<string, TokenBucketState | SlidingWindowState | FixedWindowState | LeakyBucketState>;
+  private _layerDependencyGraph: LayerDependencyGraph;
+  private _layerHealthStatuses: Map<InternalLayer, LayerHealthStatus>;
+  private _cascadeConfig: RateLimitCascadeConfig;
+  private _adaptiveConfig: AdaptiveRateLimitConfig;
+  private _adaptiveLimits: Map<string, number>;
+  private _lastAdjustmentTime: number;
 
   constructor() {
     this._config = {
@@ -87,6 +114,91 @@ export class RateLimiter implements IRateLimiter {
     this._tiers = new Map();
     this._quotas = new Map();
     this._checkStartTime = 0;
+
+    this._internalLayerBuckets = new Map();
+    this._internalLayerConfigs = new Map();
+    this._internalLayerStats = new Map();
+    this._crossLayerConfigs = new Map();
+    this._crossLayerBuckets = new Map();
+    this._layerDependencyGraph = {
+      nodes: new Map(),
+      edges: [],
+    };
+    this._layerHealthStatuses = new Map();
+    this._cascadeConfig = {
+      propagateDownstream: true,
+      propagateUpstream: false,
+      cascadeThreshold: 0.8,
+      cascadeStrategy: 'adaptive',
+    };
+    this._adaptiveConfig = {
+      enabled: false,
+      minRequestsPerWindow: 50,
+      maxRequestsPerWindow: 200,
+      adjustmentFactor: 1.1,
+      adjustmentIntervalMs: 300000,
+      metricsWindowMs: 60000,
+    };
+    this._adaptiveLimits = new Map();
+    this._lastAdjustmentTime = Date.now();
+
+    this._initializeInternalLayerConfigs();
+    this._initializeLayerDependencyGraph();
+  }
+
+  private _initializeInternalLayerConfigs(): void {
+    const layers = Object.values(InternalLayer);
+    for (const layer of layers) {
+      this._internalLayerConfigs.set(layer, {
+        layer,
+        requestsPerWindow: 1000,
+        windowSizeMs: 60000,
+        strategy: RateLimitStrategy.TOKEN_BUCKET,
+        enabled: true,
+        priority: 1,
+      });
+      this._internalLayerStats.set(layer, {
+        layer,
+        totalRequests: 0,
+        allowedRequests: 0,
+        deniedRequests: 0,
+        currentBuckets: 0,
+        averageRequestRate: 0,
+        peakRequestRate: 0,
+        lastResetTime: new Date(),
+      });
+      this._layerHealthStatuses.set(layer, {
+        layer,
+        status: 'healthy',
+        score: 100,
+        lastCheck: new Date(),
+        issues: [],
+      });
+    }
+  }
+
+  private _initializeLayerDependencyGraph(): void {
+    const layers = Object.values(InternalLayer);
+    for (const layer of layers) {
+      const config = this._internalLayerConfigs.get(layer);
+      if (config) {
+        this._layerDependencyGraph.nodes.set(layer, {
+          layer,
+          rateLimitConfig: config,
+          currentRate: 0,
+          dependencies: [],
+          dependents: [],
+        });
+      }
+    }
+  }
+
+  private _getInternalLayerBucketKey(layerIdentifier: InternalLayerIdentifier): string {
+    return `${layerIdentifier.layer}:${layerIdentifier.operation || 'default'}:${layerIdentifier.component || 'default'}`;
+  }
+
+  private _getCrossLayerBucketKey(sourceLayer: InternalLayer, targetLayer: InternalLayer): string {
+    return `${sourceLayer}->${targetLayer}`;
   }
 
   checkRateLimit(
@@ -664,5 +776,452 @@ export class RateLimiter implements IRateLimiter {
     }
 
     return null;
+  }
+
+  checkInternalLayerRateLimit(
+    layerIdentifier: InternalLayerIdentifier,
+    _context?: InternalLayerContext
+  ): InternalLayerRateLimitResult {
+    const config = this._internalLayerConfigs.get(layerIdentifier.layer);
+    if (!config || !config.enabled) {
+      return {
+        layer: layerIdentifier.layer,
+        allowed: true,
+        limit: config?.requestsPerWindow || 1000,
+        remaining: config?.requestsPerWindow || 1000,
+        resetTime: new Date(Date.now() + (config?.windowSizeMs || 60000)),
+        operation: layerIdentifier.operation,
+      };
+    }
+
+    const stats = this._internalLayerStats.get(layerIdentifier.layer);
+    if (stats) {
+      stats.totalRequests++;
+    }
+
+    const bucketKey = this._getInternalLayerBucketKey(layerIdentifier);
+    const result = this._checkTokenBucketForLayer(bucketKey, config);
+
+    if (stats) {
+      if (result.allowed) {
+        stats.allowedRequests++;
+      } else {
+        stats.deniedRequests++;
+      }
+    }
+
+    return {
+      layer: layerIdentifier.layer,
+      allowed: result.allowed,
+      limit: result.limit,
+      remaining: result.remaining,
+      resetTime: result.resetTime,
+      retryAfter: result.retryAfter,
+      operation: layerIdentifier.operation,
+    };
+  }
+
+  private _checkTokenBucketForLayer(
+    bucketKey: string,
+    config: InternalLayerRateLimitConfig
+  ): RateLimitResult {
+    const now = new Date();
+    let bucket = this._internalLayerBuckets.get(bucketKey) as TokenBucketState | undefined;
+
+    if (!bucket) {
+      bucket = {
+        tokens: config.requestsPerWindow,
+        lastRefill: now,
+      };
+      this._internalLayerBuckets.set(bucketKey, bucket);
+    }
+
+    const timeSinceLastRefill = now.getTime() - bucket.lastRefill.getTime();
+    const refillAmount = Math.floor(
+      (timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow
+    );
+
+    bucket.tokens = Math.min(bucket.tokens + refillAmount, config.requestsPerWindow);
+    bucket.lastRefill = now;
+
+    if (bucket.tokens >= 1) {
+      bucket.tokens--;
+      return {
+        allowed: true,
+        limit: config.requestsPerWindow,
+        remaining: Math.floor(bucket.tokens),
+        resetTime: new Date(now.getTime() + config.windowSizeMs),
+      };
+    }
+
+    const retryAfter = Math.ceil(config.windowSizeMs / 1000);
+
+    return {
+      allowed: false,
+      limit: config.requestsPerWindow,
+      remaining: 0,
+      resetTime: new Date(now.getTime() + config.windowSizeMs),
+      retryAfter,
+    };
+  }
+
+  setInternalLayerRateLimitConfig(config: InternalLayerRateLimitConfig): void {
+    this._internalLayerConfigs.set(config.layer, config);
+    const node = this._layerDependencyGraph.nodes.get(config.layer);
+    if (node) {
+      node.rateLimitConfig = config;
+    }
+  }
+
+  getInternalLayerRateLimitConfig(layer: InternalLayer): InternalLayerRateLimitConfig | null {
+    return this._internalLayerConfigs.get(layer) || null;
+  }
+
+  getLayerRateLimitStats(layer: InternalLayer): LayerRateLimitStats {
+    const stats = this._internalLayerStats.get(layer);
+    if (!stats) {
+      return {
+        layer,
+        totalRequests: 0,
+        allowedRequests: 0,
+        deniedRequests: 0,
+        currentBuckets: 0,
+        averageRequestRate: 0,
+        peakRequestRate: 0,
+        lastResetTime: new Date(),
+      };
+    }
+    stats.currentBuckets = this._getLayerBucketCount(layer);
+    return { ...stats };
+  }
+
+  private _getLayerBucketCount(layer: InternalLayer): number {
+    let count = 0;
+    for (const key of this._internalLayerBuckets.keys()) {
+      if (key.startsWith(`${layer}:`)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  getAllLayerRateLimitStats(): LayerRateLimitStats[] {
+    const layers = Object.values(InternalLayer);
+    return layers.map((layer) => this.getLayerRateLimitStats(layer));
+  }
+
+  checkCrossLayerRateLimit(
+    sourceLayer: InternalLayer,
+    targetLayer: InternalLayer
+  ): CrossLayerRateLimitResult {
+    const bucketKey = this._getCrossLayerBucketKey(sourceLayer, targetLayer);
+    const config = this._crossLayerConfigs.get(bucketKey);
+
+    if (!config || !config.enabled) {
+      return {
+        sourceLayer,
+        targetLayer,
+        allowed: true,
+        limit: config?.requestsPerWindow || 500,
+        remaining: config?.requestsPerWindow || 500,
+        resetTime: new Date(Date.now() + (config?.windowSizeMs || 60000)),
+      };
+    }
+
+    const now = new Date();
+    let bucket = this._crossLayerBuckets.get(bucketKey) as TokenBucketState | undefined;
+
+    if (!bucket) {
+      bucket = {
+        tokens: config.requestsPerWindow,
+        lastRefill: now,
+      };
+      this._crossLayerBuckets.set(bucketKey, bucket);
+    }
+
+    const timeSinceLastRefill = now.getTime() - bucket.lastRefill.getTime();
+    const refillAmount = Math.floor(
+      (timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow
+    );
+
+    bucket.tokens = Math.min(bucket.tokens + refillAmount, config.requestsPerWindow);
+    bucket.lastRefill = now;
+
+    if (bucket.tokens >= 1) {
+      bucket.tokens--;
+      return {
+        sourceLayer,
+        targetLayer,
+        allowed: true,
+        limit: config.requestsPerWindow,
+        remaining: Math.floor(bucket.tokens),
+        resetTime: new Date(now.getTime() + config.windowSizeMs),
+      };
+    }
+
+    const retryAfter = Math.ceil(config.windowSizeMs / 1000);
+
+    return {
+      sourceLayer,
+      targetLayer,
+      allowed: false,
+      limit: config.requestsPerWindow,
+      remaining: 0,
+      resetTime: new Date(now.getTime() + config.windowSizeMs),
+      retryAfter,
+    };
+  }
+
+  setCrossLayerRateLimitConfig(config: CrossLayerRateLimitConfig): void {
+    const bucketKey = this._getCrossLayerBucketKey(config.sourceLayer, config.targetLayer);
+    this._crossLayerConfigs.set(bucketKey, config);
+
+    const edgeIndex = this._layerDependencyGraph.edges.findIndex(
+      (e) => e.source === config.sourceLayer && e.target === config.targetLayer
+    );
+
+    if (edgeIndex >= 0) {
+      const edge = this._layerDependencyGraph.edges[edgeIndex];
+      if (edge) {
+        edge.rateLimitConfig = config;
+      }
+    } else {
+      this._layerDependencyGraph.edges.push({
+        source: config.sourceLayer,
+        target: config.targetLayer,
+        weight: 1,
+        rateLimitConfig: config,
+      });
+    }
+
+    const sourceNode = this._layerDependencyGraph.nodes.get(config.sourceLayer);
+    const targetNode = this._layerDependencyGraph.nodes.get(config.targetLayer);
+
+    if (sourceNode && !sourceNode.dependencies.includes(config.targetLayer)) {
+      sourceNode.dependencies.push(config.targetLayer);
+    }
+    if (targetNode && !targetNode.dependents.includes(config.sourceLayer)) {
+      targetNode.dependents.push(config.sourceLayer);
+    }
+  }
+
+  getCrossLayerRateLimitConfig(
+    sourceLayer: InternalLayer,
+    targetLayer: InternalLayer
+  ): CrossLayerRateLimitConfig | null {
+    const bucketKey = this._getCrossLayerBucketKey(sourceLayer, targetLayer);
+    return this._crossLayerConfigs.get(bucketKey) || null;
+  }
+
+  getLayerDependencyGraph(): LayerDependencyGraph {
+    return {
+      nodes: new Map(this._layerDependencyGraph.nodes),
+      edges: [...this._layerDependencyGraph.edges],
+    };
+  }
+
+  addLayerDependency(source: InternalLayer, target: InternalLayer, weight: number): void {
+    const edgeIndex = this._layerDependencyGraph.edges.findIndex(
+      (e) => e.source === source && e.target === target
+    );
+
+    if (edgeIndex >= 0) {
+      const edge = this._layerDependencyGraph.edges[edgeIndex];
+      if (edge) {
+        edge.weight = weight;
+      }
+    } else {
+      this._layerDependencyGraph.edges.push({
+        source,
+        target,
+        weight,
+      });
+    }
+
+    const sourceNode = this._layerDependencyGraph.nodes.get(source);
+    const targetNode = this._layerDependencyGraph.nodes.get(target);
+
+    if (sourceNode && !sourceNode.dependencies.includes(target)) {
+      sourceNode.dependencies.push(target);
+    }
+    if (targetNode && !targetNode.dependents.includes(source)) {
+      targetNode.dependents.push(source);
+    }
+  }
+
+  removeLayerDependency(source: InternalLayer, target: InternalLayer): void {
+    const edgeIndex = this._layerDependencyGraph.edges.findIndex(
+      (e) => e.source === source && e.target === target
+    );
+
+    if (edgeIndex >= 0) {
+      this._layerDependencyGraph.edges.splice(edgeIndex, 1);
+    }
+
+    const sourceNode = this._layerDependencyGraph.nodes.get(source);
+    const targetNode = this._layerDependencyGraph.nodes.get(target);
+
+    if (sourceNode) {
+      sourceNode.dependencies = sourceNode.dependencies.filter((l) => l !== target);
+    }
+    if (targetNode) {
+      targetNode.dependents = targetNode.dependents.filter((l) => l !== source);
+    }
+  }
+
+  getLayerHealthStatus(layer: InternalLayer): LayerHealthStatus {
+    const status = this._layerHealthStatuses.get(layer);
+    if (!status) {
+      return {
+        layer,
+        status: 'healthy',
+        score: 100,
+        lastCheck: new Date(),
+        issues: [],
+      };
+    }
+
+    const stats = this._internalLayerStats.get(layer);
+    const config = this._internalLayerConfigs.get(layer);
+
+    const issues: string[] = [];
+
+    if (stats) {
+      const denialRate = stats.totalRequests > 0 ? stats.deniedRequests / stats.totalRequests : 0;
+      if (denialRate > 0.5) {
+        issues.push(`High denial rate: ${(denialRate * 100).toFixed(1)}%`);
+      }
+    }
+
+    if (config && !config.enabled) {
+      issues.push('Rate limiting disabled for this layer');
+    }
+
+    const score = Math.max(0, 100 - issues.length * 25);
+    const healthStatus: 'healthy' | 'degraded' | 'unhealthy' = issues.length === 0 ? 'healthy' : issues.length < 3 ? 'degraded' : 'unhealthy';
+
+    const updatedStatus: LayerHealthStatus = {
+      layer,
+      status: healthStatus,
+      score,
+      lastCheck: new Date(),
+      issues,
+    };
+
+    this._layerHealthStatuses.set(layer, updatedStatus);
+
+    return updatedStatus;
+  }
+
+  getAllLayerHealthStatuses(): LayerHealthStatus[] {
+    const layers = Object.values(InternalLayer);
+    return layers.map((layer) => this.getLayerHealthStatus(layer));
+  }
+
+  setRateLimitCascadeConfig(config: RateLimitCascadeConfig): void {
+    this._cascadeConfig = config;
+  }
+
+  getRateLimitCascadeConfig(): RateLimitCascadeConfig {
+    return { ...this._cascadeConfig };
+  }
+
+  setAdaptiveRateLimitConfig(config: AdaptiveRateLimitConfig): void {
+    this._adaptiveConfig = config;
+  }
+
+  getAdaptiveRateLimitConfig(): AdaptiveRateLimitConfig {
+    return { ...this._adaptiveConfig };
+  }
+
+  predictRateLimitUsage(
+    identifier: RateLimitIdentifier,
+    timeWindow: Date
+  ): RateLimitPrediction {
+    const bucketKey = this._getBucketKey(identifier);
+    const bucket = this._buckets.get(bucketKey) as TokenBucketState | undefined;
+
+    const currentUsage = bucket ? this._config.requestsPerWindow - bucket.tokens : 0;
+    const timeDiff = timeWindow.getTime() - Date.now();
+
+    if (timeDiff <= 0) {
+      return {
+        identifier,
+        predictedUsage: currentUsage,
+        predictedLimit: this._config.requestsPerWindow,
+        timeWindow,
+        confidence: 0.5,
+        recommendations: ['Time window is in the past'],
+      };
+    }
+
+    const windows = timeDiff / this._config.windowSizeMs;
+    const predictedUsage = Math.min(currentUsage * (1 + windows * 0.1), this._config.requestsPerWindow);
+
+    const recommendations: string[] = [];
+    if (predictedUsage > this._config.requestsPerWindow * 0.8) {
+      recommendations.push('Consider increasing rate limit or implementing caching');
+    }
+    if (predictedUsage > this._config.requestsPerWindow * 0.5) {
+      recommendations.push('Monitor usage closely');
+    }
+
+    return {
+      identifier,
+      predictedUsage: Math.floor(predictedUsage),
+      predictedLimit: this._config.requestsPerWindow,
+      timeWindow,
+      confidence: Math.max(0, 1 - windows * 0.1),
+      recommendations,
+    };
+  }
+
+  enableInternalLayerRateLimiting(layer: InternalLayer): void {
+    const config = this._internalLayerConfigs.get(layer);
+    if (config) {
+      config.enabled = true;
+      this._internalLayerConfigs.set(layer, config);
+    }
+  }
+
+  disableInternalLayerRateLimiting(layer: InternalLayer): void {
+    const config = this._internalLayerConfigs.get(layer);
+    if (config) {
+      config.enabled = false;
+      this._internalLayerConfigs.set(layer, config);
+    }
+  }
+
+  isInternalLayerRateLimitingEnabled(layer: InternalLayer): boolean {
+    const config = this._internalLayerConfigs.get(layer);
+    return config ? config.enabled : false;
+  }
+
+  resetInternalLayerRateLimit(layerIdentifier: InternalLayerIdentifier): void {
+    const bucketKey = this._getInternalLayerBucketKey(layerIdentifier);
+    this._internalLayerBuckets.delete(bucketKey);
+
+    const stats = this._internalLayerStats.get(layerIdentifier.layer);
+    if (stats) {
+      stats.totalRequests = 0;
+      stats.allowedRequests = 0;
+      stats.deniedRequests = 0;
+      stats.lastResetTime = new Date();
+    }
+  }
+
+  clearAllInternalLayerBuckets(): void {
+    this._internalLayerBuckets.clear();
+    this._crossLayerBuckets.clear();
+
+    for (const layer of Object.values(InternalLayer)) {
+      const stats = this._internalLayerStats.get(layer);
+      if (stats) {
+        stats.totalRequests = 0;
+        stats.allowedRequests = 0;
+        stats.deniedRequests = 0;
+        stats.lastResetTime = new Date();
+      }
+    }
   }
 }
