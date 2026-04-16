@@ -1,391 +1,550 @@
-# Testing Strategy
+# Testing Guide
 
 ## Overview
-The Cache Layer follows a comprehensive testing strategy to ensure correctness, performance, and reliability of caching functionality. Tests are organized into unit tests, integration tests, and performance tests with specific coverage targets.
 
-## Test Coverage Targets
+This document provides comprehensive testing strategies for the Cache Layer.
 
-### Coverage Goals
-- **Minimum Coverage**: 95%
-- **Target Coverage**: 99%+
-- **Branch Coverage**: 90%+
-- **Function Coverage**: 100%
+## Testing Philosophy
 
-### Coverage by Component
-- **ICacheManager Interface**: 100% (type validation)
-- **CacheManager Implementation**: 99%+
-- **L1 Cache**: 99%+
-- **Multi-Level Cache Manager**: 99%+
-- **Eviction Strategies**: 99%+
-- **Statistics Tracker**: 99%+
+The Cache Layer follows these testing principles:
 
-## Unit Tests
+1. **Unit Tests**: Test individual components in isolation
+2. **Integration Tests**: Test component interactions
+3. **Performance Tests**: Validate performance characteristics
+4. **Property-Based Tests**: Test with random inputs
+5. **Mutation Tests**: Ensure test quality
 
-### Test Organization
-```
-src/layers/cache/__tests__/
-├── unit/
-│   ├── cache/
-│   │   ├── l1-cache.test.ts
-│   │   ├── multi-level-cache.test.ts
-│   │   └── cache-manager.test.ts
-│   ├── eviction/
-│   │   ├── lru-eviction.test.ts
-│   │   ├── lfu-eviction.test.ts
-│   │   └── eviction-strategy.test.ts
-│   ├── invalidation/
-│   │   ├── ttl-manager.test.ts
-│   │   ├── pattern-invalidator.test.ts
-│   │   └── manual-invalidator.test.ts
-│   └── statistics/
-│       ├── statistics-tracker.test.ts
-│       ├── performance-monitor.test.ts
-│       └── statistics-aggregator.test.ts
-```
+## Unit Testing
 
-### Unit Test Categories
+### Testing Domain Entities
 
-#### 1. L1 Cache Tests
 ```typescript
-describe('L1 Cache', () => {
-  it('should set and get value', () => {
-    const cache = new L1Cache(100, new LRUEvictionStrategy());
-    cache.set('key1', 'value1', 300);
-    
-    const result = cache.get('key1');
-    expect(result).not.toBeNull();
-    expect(result?.value).toBe('value1');
+import { CacheEntry } from '../domain/entities/CacheEntry';
+
+describe('CacheEntry', () => {
+  it('should create entry with valid data', () => {
+    const entry = new CacheEntry('key', 'value', 60000);
+    expect(entry.key).toBe('key');
+    expect(entry.value).toBe('value');
+    expect(entry.ttl).toBe(60000);
   });
 
-  it('should return null for non-existent key', () => {
-    const cache = new L1Cache(100, new LRUEvictionStrategy());
-    
-    const result = cache.get('nonexistent');
-    expect(result).toBeNull();
+  it('should expire after TTL', () => {
+    const entry = new CacheEntry('key', 'value', 100);
+    expect(entry.isExpired(Date.now() + 150)).toBe(true);
   });
 
-  it('should evict entries when cache is full', () => {
-    const cache = new L1Cache(2, new LRUEvictionStrategy());
-    cache.set('key1', 'value1', 300);
-    cache.set('key2', 'value2', 300);
-    cache.set('key3', 'value3', 300);
-    
-    expect(cache.get('key1')).toBeNull();
-    expect(cache.get('key2')).not.toBeNull();
+  it('should track access count', () => {
+    const entry = new CacheEntry('key', 'value', 60000);
+    entry.recordAccess();
+    expect(entry.accessCount).toBe(1);
   });
 
-  it('should delete entry', () => {
-    const cache = new L1Cache(100, new LRUEvictionStrategy());
-    cache.set('key1', 'value1', 300);
-    cache.delete('key1');
-    
-    expect(cache.get('key1')).toBeNull();
+  it('should clone correctly', () => {
+    const entry = new CacheEntry('key', 'value', 60000);
+    entry.recordAccess();
+    const cloned = entry.clone();
+    expect(cloned.accessCount).toBe(1);
+    expect(cloned.key).toBe(entry.key);
   });
 });
 ```
 
-#### 2. Multi-Level Cache Tests
+### Testing Value Objects
+
 ```typescript
-describe('Multi-Level Cache', () => {
-  it('should get from L1 when available', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
-    
-    await manager.set('key1', 'value1', 300);
-    const result = await manager.get('key1');
-    
-    expect(result).not.toBeNull();
-    expect(result?.level).toBe(CacheLevel.L1);
+import { TTL, TimeUnit } from '../domain/value-objects/TTL';
+
+describe('TTL', () => {
+  it('should create from seconds', () => {
+    const ttl = TTL.seconds(60);
+    expect(ttl.toMilliseconds()).toBe(60000);
   });
 
-  it('should promote from L2 to L1', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
-    
-    // Set only in L2
-    manager.l2.set('key1', 'value1', 600);
-    
-    const result = await manager.get('key1');
-    
-    expect(result).not.toBeNull();
-    expect(result?.level).toBe(CacheLevel.L1);
-    expect(manager.l1.get('key1')).not.toBeNull();
+  it('should create from minutes', () => {
+    const ttl = TTL.minutes(5);
+    expect(ttl.toMilliseconds()).toBe(300000);
   });
 
-  it('should delete from all levels', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
-    
-    await manager.set('key1', 'value1', 300);
-    await manager.delete('key1');
-    
-    expect(manager.l1.get('key1')).toBeNull();
-    expect(manager.l2.get('key1')).toBeNull();
-    expect(manager.l3.get('key1')).toBeNull();
+  it('should detect infinite TTL', () => {
+    const ttl = TTL.seconds(0);
+    expect(ttl.isInfinite()).toBe(true);
   });
 });
 ```
 
-#### 3. Eviction Strategy Tests
-```typescript
-describe('LRU Eviction Strategy', () => {
-  it('should evict least recently used entries', () => {
-    const cache = new Map<string, CacheEntry>();
-    const strategy = new LRUEvictionStrategy();
-    
-    cache.set('key1', createEntry('key1', 1));
-    cache.set('key2', createEntry('key2', 2));
-    cache.set('key3', createEntry('key3', 3));
-    
-    const evicted = strategy.selectForEviction(cache);
-    
-    expect(evicted).toContain('key1');
-  });
-});
+### Testing Strategies
 
-describe('LFU Eviction Strategy', () => {
-  it('should evict least frequently used entries', () => {
-    const cache = new Map<string, CacheEntry>();
-    const strategy = new LFUEvictionStrategy();
-    
-    cache.set('key1', createEntry('key1', 1));
-    cache.set('key2', createEntry('key2', 10));
-    cache.set('key3', createEntry('key3', 5));
-    
-    const evicted = strategy.selectForEviction(cache);
-    
-    expect(evicted).toContain('key1');
+```typescript
+import { LRUEvictionStrategy } from '../strategies/eviction/LRUEvictionStrategy';
+import { CacheEntry } from '../domain/entities/CacheEntry';
+
+describe('LRUEvictionStrategy', () => {
+  let strategy: LRUEvictionStrategy<string>;
+
+  beforeEach(() => {
+    strategy = new LRUEvictionStrategy<string>();
+  });
+
+  it('should evict least recently used', () => {
+    const entries = new Map<string, CacheEntry<string>>();
+    const entry1 = new CacheEntry('key1', 'value1', 60000);
+    const entry2 = new CacheEntry('key2', 'value2', 60000);
+
+    entries.set('key1', entry1);
+    entries.set('key2', entry2);
+
+    strategy.onAdd('key1', entry1);
+    strategy.onAdd('key2', entry2);
+
+    // Access key1
+    strategy.onAccess('key1', entry1);
+
+    // key2 should be evicted (least recently accessed)
+    const evicted = strategy.selectEntryToEvict(entries);
+    expect(evicted).toBe('key2');
+  });
+
+  it('should reset state', () => {
+    const entry = new CacheEntry('key1', 'value1', 60000);
+    strategy.onAdd('key1', entry);
+    strategy.reset();
+    // State should be cleared
   });
 });
 ```
 
-#### 4. Statistics Tracker Tests
+### Testing Statistics Collectors
+
 ```typescript
-describe('Statistics Tracker', () => {
-  it('should record hits', () => {
-    const tracker = new CacheStatisticsTracker();
-    
-    tracker.recordHit(CacheLevel.L1, 10);
-    
-    const stats = tracker.getStatistics(CacheLevel.L1);
+import { BasicStatisticsCollector } from '../statistics/collectors/BasicStatisticsCollector';
+
+describe('BasicStatisticsCollector', () => {
+  let collector: BasicStatisticsCollector;
+
+  beforeEach(() => {
+    collector = new BasicStatisticsCollector();
+  });
+
+  it('should track hits', () => {
+    collector.recordHit();
+    const stats = collector.getStats();
     expect(stats.hits).toBe(1);
-    expect(stats.hitRate).toBe(1);
   });
 
-  it('should record misses', () => {
-    const tracker = new CacheStatisticsTracker();
-    
-    tracker.recordMiss(CacheLevel.L1);
-    
-    const stats = tracker.getStatistics(CacheLevel.L1);
+  it('should track misses', () => {
+    collector.recordMiss();
+    const stats = collector.getStats();
     expect(stats.misses).toBe(1);
-    expect(stats.hitRate).toBe(0);
   });
 
   it('should calculate hit rate correctly', () => {
-    const tracker = new CacheStatisticsTracker();
-    
-    tracker.recordHit(CacheLevel.L1, 10);
-    tracker.recordHit(CacheLevel.L1, 10);
-    tracker.recordMiss(CacheLevel.L1);
-    
-    const stats = tracker.getStatistics(CacheLevel.L1);
-    expect(stats.hitRate).toBeCloseTo(0.67, 2);
+    collector.recordHit();
+    collector.recordHit();
+    collector.recordMiss();
+
+    const stats = collector.getStats();
+    expect(stats.getHitRate()).toBeCloseTo(0.666, 2);
+  });
+
+  it('should reset statistics', () => {
+    collector.recordHit();
+    collector.reset();
+    const stats = collector.getStats();
+    expect(stats.hits).toBe(0);
   });
 });
 ```
 
-## Integration Tests
+### Testing Storage
 
-### Full Cache Integration Tests
 ```typescript
-describe('Cache Integration', () => {
-  it('should handle complete cache lifecycle', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
-    
-    await manager.set('key1', 'value1', 300);
-    const result = await manager.get('key1');
-    
-    expect(result?.value).toBe('value1');
-    
-    await manager.delete('key1');
-    const deleted = await manager.get('key1');
-    
-    expect(deleted).toBeNull();
+import { InMemoryStorage } from '../storage/implementations/in-memory/InMemoryStorage';
+import { CacheEntry } from '../domain/entities/CacheEntry';
+
+describe('InMemoryStorage', () => {
+  let storage: InMemoryStorage<string>;
+
+  beforeEach(() => {
+    storage = new InMemoryStorage<string>();
   });
 
-  it('should track statistics across levels', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
+  it('should store and retrieve entries', () => {
+    const entry = new CacheEntry('key1', 'value1', 60000);
+    storage.set('key1', entry);
     
-    await manager.set('key1', 'value1', 300);
-    await manager.get('key1');
-    await manager.get('key2');
+    const retrieved = storage.get('key1');
+    expect(retrieved?.value).toBe('value1');
+  });
+
+  it('should delete entries', () => {
+    const entry = new CacheEntry('key1', 'value1', 60000);
+    storage.set('key1', entry);
     
-    const stats = manager.statisticsTracker.getAllStatistics();
+    const deleted = storage.delete('key1');
+    expect(deleted).toBe(true);
+    expect(storage.has('key1')).toBe(false);
+  });
+
+  it('should clear all entries', () => {
+    storage.set('key1', entry1);
+    storage.set('key2', entry2);
     
-    expect(stats.L1.hits).toBeGreaterThan(0);
-    expect(stats.L1.misses).toBeGreaterThan(0);
+    storage.clear();
+    expect(storage.size()).toBe(0);
+  });
+
+  it('should return correct size', () => {
+    storage.set('key1', entry1);
+    storage.set('key2', entry2);
+    expect(storage.size()).toBe(2);
   });
 });
 ```
 
-## Performance Tests
+### Testing Cache Service
 
-### Benchmark Tests
 ```typescript
-describe('Performance Benchmarks', () => {
-  it('should set values within time limit', async () => {
-    const cache = new L1Cache(1000, new LRUEvictionStrategy());
-    const start = Date.now();
-    
-    for (let i = 0; i < 1000; i++) {
-      cache.set(`key${i}`, `value${i}`, 300);
-    }
-    
-    const duration = Date.now() - start;
-    expect(duration).toBeLessThan(100); // < 100ms for 1000 sets
+import { CacheService } from '../core/services/CacheService';
+import { InMemoryStorage } from '../storage/implementations/in-memory/InMemoryStorage';
+import { LRUEvictionStrategy } from '../strategies/eviction/LRUEvictionStrategy';
+import { TimeBasedInvalidationStrategy } from '../strategies/invalidation/TimeBasedInvalidationStrategy';
+import { BasicStatisticsCollector } from '../statistics/collectors/BasicStatisticsCollector';
+import { DefaultConfigs } from '../configuration/defaults/DefaultConfigs';
+
+describe('CacheService', () => {
+  let cacheService: CacheService<string>;
+
+  beforeEach(() => {
+    const storage = new InMemoryStorage<string>();
+    const evictionStrategy = new LRUEvictionStrategy<string>();
+    const invalidationStrategy = new TimeBasedInvalidationStrategy<string>();
+    const statsCollector = new BasicStatisticsCollector();
+    const config = DefaultConfigs.DEFAULT;
+
+    cacheService = new CacheService(
+      storage,
+      evictionStrategy,
+      invalidationStrategy,
+      statsCollector,
+      config
+    );
   });
 
-  it('should get values within time limit', () => {
-    const cache = new L1Cache(1000, new LRUEvictionStrategy());
+  it('should store and retrieve values', () => {
+    cacheService.set('key1', 'value1');
+    const result = cacheService.get('key1');
+
+    expect(result.hit).toBe(true);
+    expect(result.value).toBe('value1');
+  });
+
+  it('should track statistics', () => {
+    cacheService.set('key1', 'value1');
+    cacheService.get('key1');
+    cacheService.get('nonexistent');
+
+    const stats = cacheService.getStats();
+    expect(stats.hits).toBe(1);
+    expect(stats.misses).toBe(1);
+  });
+
+  it('should invalidate by pattern', () => {
+    cacheService.set('user:1', 'user1');
+    cacheService.set('user:2', 'user2');
+    cacheService.set('product:1', 'product1');
+
+    cacheService.invalidate('user:*');
+
+    expect(cacheService.get('user:1').hit).toBe(false);
+    expect(cacheService.get('user:2').hit).toBe(false);
+    expect(cacheService.get('product:1').hit).toBe(true);
+  });
+});
+```
+
+### Testing Cache Manager
+
+```typescript
+import { CacheManager } from '../core/managers/CacheManager';
+
+describe('CacheManager', () => {
+  let cache: CacheManager<string>;
+
+  beforeEach(() => {
+    cache = new CacheManager<string>();
+  });
+
+  it('should store and retrieve values', () => {
+    cache.set('key1', 'value1');
+    const result = cache.get('key1');
+
+    expect(result.hit).toBe(true);
+    expect(result.value).toBe('value1');
+  });
+
+  it('should handle cache misses', () => {
+    const result = cache.get('nonexistent');
+    expect(result.hit).toBe(false);
+  });
+
+  it('should delete entries', () => {
+    cache.set('key1', 'value1');
+    cache.delete('key1');
+    const result = cache.get('key1');
+    expect(result.hit).toBe(false);
+  });
+
+  it('should clear all entries', () => {
+    cache.set('key1', 'value1');
+    cache.set('key2', 'value2');
+    cache.clear();
+
+    const stats = cache.getStats();
+    expect(stats.size).toBe(0);
+  });
+});
+```
+
+## Integration Testing
+
+### Testing Factory Integration
+
+```typescript
+import { CacheFactory } from '../factories/cache/CacheFactory';
+
+describe('CacheFactory Integration', () => {
+  it('should create working cache', () => {
+    const cache = CacheFactory.create<string>();
     
-    for (let i = 0; i < 1000; i++) {
-      cache.set(`key${i}`, `value${i}`, 300);
-    }
+    cache.set('key1', 'value1');
+    const result = cache.get('key1');
     
+    expect(result.hit).toBe(true);
+    expect(result.value).toBe('value1');
+  });
+
+  it('should create high-performance cache', () => {
+    const cache = CacheFactory.createHighPerformance<string>();
+    
+    expect(cache.getConfig().maxSize).toBe(100);
+    expect(cache.getConfig().defaultTTL).toBe(30000);
+  });
+});
+```
+
+### Testing Configuration Builder Integration
+
+```typescript
+import { CacheConfigBuilder } from '../configuration/builders/CacheConfigBuilder';
+import { CacheConfigValidator } from '../configuration/validators/CacheConfigValidator';
+
+describe('Configuration Integration', () => {
+  it('should build valid configuration', () => {
+    const config = CacheConfigBuilder.create()
+      .withMaxSize(1000)
+      .withDefaultTTL(60000)
+      .build();
+
+    CacheConfigValidator.validate(config);
+    expect(config.maxSize).toBe(1000);
+  });
+
+  it('should reject invalid configuration', () => {
+    expect(() => {
+      CacheConfigBuilder.create()
+        .withMaxSize(-1)
+        .build();
+    }).toThrow();
+  });
+});
+```
+
+## Performance Testing
+
+### Benchmarking Cache Operations
+
+```typescript
+describe('Cache Performance', () => {
+  it('should handle high throughput', () => {
+    const cache = new CacheManager<string>();
+    const iterations = 10000;
+
     const start = Date.now();
     
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < iterations; i++) {
+      cache.set(`key${i}`, `value${i}`);
+    }
+    
+    const setDuration = Date.now() - start;
+    expect(setDuration).toBeLessThan(1000); // < 1 second
+
+    const getStart = Date.now();
+    
+    for (let i = 0; i < iterations; i++) {
       cache.get(`key${i}`);
     }
     
-    const duration = Date.now() - start;
-    expect(duration).toBeLessThan(50); // < 50ms for 1000 gets
+    const getDuration = Date.now() - getStart;
+    expect(getDuration).toBeLessThan(500); // < 0.5 seconds
   });
 
-  it('should handle concurrent access efficiently', async () => {
-    const config = createCacheConfig({ multiLevelEnabled: true });
-    const manager = new MultiLevelCacheManager(config);
+  it('should handle eviction efficiently', () => {
+    const cache = new CacheManager<string>({ maxSize: 100 });
     
-    const start = Date.now();
+    for (let i = 0; i < 200; i++) {
+      cache.set(`key${i}`, `value${i}`);
+    }
     
-    const promises = Array(100).fill(null).map((_, i) =>
-      manager.set(`key${i}`, `value${i}`, 300)
+    const stats = cache.getStats();
+    expect(stats.size).toBe(100);
+    expect(stats.evictions).toBeGreaterThan(0);
+  });
+});
+```
+
+### Memory Usage Testing
+
+```typescript
+describe('Cache Memory', () => {
+  it('should not exceed memory limits', () => {
+    const cache = new CacheManager<string>({ maxSize: 1000 });
+    
+    for (let i = 0; i < 10000; i++) {
+      cache.set(`key${i}`, `value${i}`);
+    }
+    
+    const stats = cache.getStats();
+    expect(stats.size).toBe(1000);
+  });
+});
+```
+
+## Property-Based Testing
+
+Using a property-based testing library like fast-check:
+
+```typescript
+import * as fc from 'fast-check';
+
+describe('Cache Property Tests', () => {
+  it('should preserve stored values', () => {
+    fc.assert(
+      fc.property(fc.string(), fc.anything(), (key, value) => {
+        const cache = new CacheManager<any>();
+        cache.set(key, value);
+        const result = cache.get(key);
+        return result.hit && result.value === value;
+      })
     );
-    
-    await Promise.all(promises);
-    
-    const duration = Date.now() - start;
-    expect(duration).toBeLessThan(500); // < 500ms for 100 concurrent sets
+  });
+
+  it('should handle deletion correctly', () => {
+    fc.assert(
+      fc.property(fc.string(), fc.anything(), (key, value) => {
+        const cache = new CacheManager<any>();
+        cache.set(key, value);
+        cache.delete(key);
+        const result = cache.get(key);
+        return !result.hit;
+      })
+    );
   });
 });
 ```
 
 ## Test Utilities
 
-### Mock Helpers
-```typescript
-function createCacheConfig(overrides?: Partial<CacheConfig>): CacheConfig {
-  return {
-    multiLevelEnabled: true,
-    l1MaxSize: 100,
-    l2MaxSize: 500,
-    l3MaxSize: 1000,
-    l1EvictionStrategy: new LRUEvictionStrategy(),
-    l2EvictionStrategy: new LRUEvictionStrategy(),
-    l3EvictionStrategy: new LRUEvictionStrategy(),
-    defaultTTL: 300,
-    ...overrides
-  };
-}
+### Test Helpers
 
-function createEntry(key: string, accessCount: number): CacheEntry {
-  return {
-    key,
-    value: 'value',
-    level: CacheLevel.L1,
-    ttl: 300,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 300000),
-    accessCount,
-    lastAccessedAt: new Date()
-  };
+```typescript
+export class CacheTestHelpers {
+  static createTestCache<T>(config?: Partial<CacheConfigOptions>): CacheManager<T> {
+    return new CacheManager<T>(config);
+  }
+
+  static fillCache<T>(cache: CacheManager<T>, count: number): void {
+    for (let i = 0; i < count; i++) {
+      cache.set(`key${i}`, `value${i}` as any);
+    }
+  }
+
+  static waitForTTL(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  static assertCacheStats(stats: CacheStats, expected: Partial<CacheStats>): void {
+    if (expected.hits !== undefined) {
+      expect(stats.hits).toBe(expected.hits);
+    }
+    if (expected.misses !== undefined) {
+      expect(stats.misses).toBe(expected.misses);
+    }
+    if (expected.evictions !== undefined) {
+      expect(stats.evictions).toBe(expected.evictions);
+    }
+    if (expected.size !== undefined) {
+      expect(stats.size).toBe(expected.size);
+    }
+  }
 }
 ```
+
+## Test Coverage
+
+Aim for:
+
+- **Domain Layer**: 100% coverage
+- **Configuration Layer**: 100% coverage
+- **Strategies Layer**: 100% coverage
+- **Statistics Layer**: 100% coverage
+- **Storage Layer**: 100% coverage
+- **Core Layer**: 90%+ coverage
+- **Factories Layer**: 100% coverage
+- **Utils Layer**: 100% coverage
 
 ## Running Tests
 
-### Unit Tests
 ```bash
-npm run test:unit -- src/layers/cache
+# Run all tests
+npm test
+
+# Run with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test -- CacheManager.test.ts
+
+# Watch mode
+npm test -- --watch
 ```
 
-### Integration Tests
-```bash
-npm run test:integration -- src/layers/cache
-```
+## CI/CD Integration
 
-### Performance Tests
-```bash
-npm run test:performance -- src/layers/cache
-```
-
-### All Tests
-```bash
-npm test -- src/layers/cache
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/cache
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
 ```yaml
-name: Cache Tests
+# .github/workflows/test.yml
+name: Tests
 
-on:
-  pull_request:
-    paths:
-      - 'src/layers/cache/**'
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
       - run: npm ci
-      - run: npm run test:unit -- src/layers/cache
-      - run: npm run test:integration -- src/layers/cache
-      - run: npm run test:performance -- src/layers/cache
-      - run: npm run test:coverage -- src/layers/cache
-      - uses: codecov/codecov-action@v3
+      - run: npm test
+      - run: npm test -- --coverage
 ```
 
 ## Best Practices
 
-### Test Writing Guidelines
-- Test all cache operations
-- Test eviction strategies
-- Test TTL expiration
-- Test multi-level caching
-- Test statistics tracking
-- Maintain test independence
-
-### Performance Testing Guidelines
-- Test with large datasets
-- Test concurrent access
-- Test eviction performance
-- Monitor memory usage
-- Test cache hit rates
-
-### Statistics Testing Guidelines
-- Test hit/miss counting
-- Test eviction counting
-- Test size tracking
-- Test hit rate calculation
-- Test aggregation
+1. **Test isolation**: Each test should be independent
+2. **Clear naming**: Use descriptive test names
+3. **AAA pattern**: Arrange, Act, Assert structure
+4. **Mock external dependencies**: Use mocks for external services
+5. **Test edge cases**: Test boundary conditions
+6. **Test error cases**: Test error handling
+7. **Keep tests fast**: Unit tests should run quickly
+8. **Maintain test data**: Use fixtures for complex test data

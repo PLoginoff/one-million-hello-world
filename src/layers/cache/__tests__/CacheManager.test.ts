@@ -1,18 +1,20 @@
 /**
  * Cache Manager Unit Tests
  * 
- * Tests for CacheManager implementation.
+ * Tests for CacheManager implementation using layered architecture.
  * Uses AAA pattern (Arrange, Act, Assert).
  */
 
-import { CacheManager } from '../implementations/CacheManager';
+import { CacheManager } from '../core/managers/CacheManager';
+import { CacheFactory } from '../factories/cache/CacheFactory';
 import { InvalidationStrategy } from '../types/cache-types';
+import { CacheConfigOptions } from '../configuration/defaults/DefaultConfigs';
 
 describe('CacheManager', () => {
-  let cache: CacheManager;
+  let cache: CacheManager<string>;
 
   beforeEach(() => {
-    cache = new CacheManager();
+    cache = new CacheManager<string>();
   });
 
   describe('getConfig', () => {
@@ -28,7 +30,7 @@ describe('CacheManager', () => {
 
   describe('setConfig', () => {
     it('should update configuration', () => {
-      const newConfig = {
+      const newConfig: Partial<CacheConfigOptions> = {
         maxSize: 500,
         defaultTTL: 30000,
         invalidationStrategy: InvalidationStrategy.LFU,
@@ -149,6 +151,40 @@ describe('CacheManager', () => {
       const entries = cache.getEntries();
 
       expect(entries).toHaveLength(2);
+    });
+  });
+});
+
+describe('CacheFactory', () => {
+  describe('create', () => {
+    it('should create cache with default config', () => {
+      const cache = CacheFactory.create<string>();
+      
+      expect(cache).toBeDefined();
+      expect(cache.getConfig().maxSize).toBe(1000);
+    });
+
+    it('should create cache with custom config', () => {
+      const cache = CacheFactory.create<string>({ maxSize: 500 });
+      
+      expect(cache.getConfig().maxSize).toBe(500);
+    });
+  });
+
+  describe('createHighPerformance', () => {
+    it('should create high-performance cache', () => {
+      const cache = CacheFactory.createHighPerformance<string>();
+      
+      expect(cache.getConfig().maxSize).toBe(100);
+      expect(cache.getConfig().defaultTTL).toBe(30000);
+    });
+  });
+
+  describe('createLargeCache', () => {
+    it('should create large cache', () => {
+      const cache = CacheFactory.createLargeCache<string>();
+      
+      expect(cache.getConfig().maxSize).toBe(10000);
     });
   });
 });
