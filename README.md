@@ -2,7 +2,7 @@
 
 This project is a fully-featured implementation of a classic HTTP server returning "Hello World" using enterprise-grade architectural patterns and best practices.
 
-The codebase contains **1 million lines** (currently 30k)
+The codebase contains **1 million lines** (currently 100k+)
 
 ![Progress](https://img.shields.io/badge/progress-10%25-red)
 
