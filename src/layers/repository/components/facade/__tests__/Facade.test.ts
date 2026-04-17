@@ -1,34 +1,43 @@
 /**
  * Repository Facade Layer Tests
  * 
- * Comprehensive test suite for Facade implementation.
+ * Comprehensive test suite for RepositoryFacade implementation.
  * Tests facade operations, layer coordination, configuration, and statistics.
  */
 
-import { Facade } from '../implementations/Facade';
-import { IFacade } from '../interfaces/IFacade';
+import { RepositoryFacade } from '../implementations/RepositoryFacade';
+import { IRepositoryFacade } from '../interfaces/IRepositoryFacade';
+import {
+  FacadeQueryOptions,
+  BulkOperationOptions,
+  HealthStatus,
+} from '../types/facade-types';
 
 interface TestEntity {
   id: string;
   name: string;
 }
 
-describe('Facade', () => {
-  let facade: Facade<TestEntity>;
+describe('RepositoryFacade', () => {
+  let facade: RepositoryFacade<TestEntity>;
 
   beforeEach(() => {
-    // Initialize Facade before each test
-    facade = new Facade<TestEntity>();
+    facade = new RepositoryFacade<TestEntity>();
   });
 
   describe('Initialization', () => {
     /**
-     * Test that Facade initializes with default configuration
+     * Test that RepositoryFacade initializes with default configuration
      */
     it('should initialize with default configuration', () => {
       const config = facade.getConfig();
       expect(config.enableCaching).toBe(true);
-      expect(config.enableTransactions).toBe(true);
+      expect(config.enableMetrics).toBe(true);
+      expect(config.enableValidation).toBe(true);
+      expect(config.enableTransactions).toBe(false);
+      expect(config.enableMiddleware).toBe(true);
+      expect(config.defaultTimeout).toBe(30000);
+      expect(config.maxConnections).toBe(10);
     });
 
     /**
@@ -37,26 +46,46 @@ describe('Facade', () => {
     it('should initialize stats to zero', () => {
       const stats = facade.getStats();
       expect(stats.totalOperations).toBe(0);
+      expect(stats.successfulOperations).toBe(0);
+      expect(stats.failedOperations).toBe(0);
+      expect(stats.averageExecutionTime).toBe(0);
+      expect(stats.cacheHitRate).toBe(0);
+      expect(stats.transactionRate).toBe(0);
     });
   });
 
   describe('CRUD Operations', () => {
+    /**
+     * Test finding entities
+     */
+    it('should find entities successfully', async () => {
+      const options: FacadeQueryOptions = {};
+      const result = await facade.find(options);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeDefined();
+      expect(result.metadata).toBeDefined();
+    });
+
     /**
      * Test finding an entity by ID
      */
     it('should find an entity by ID successfully', async () => {
       const result = await facade.findById('1');
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.metadata).toBeDefined();
     });
 
     /**
-     * Test finding entities with query options
+     * Test finding one entity
      */
-    it('should find entities with query options successfully', async () => {
-      const result = await facade.find({});
+    it('should find one entity successfully', async () => {
+      const options: FacadeQueryOptions = {};
+      const result = await facade.findOne(options);
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.metadata).toBeDefined();
     });
 
     /**
@@ -70,7 +99,20 @@ describe('Facade', () => {
 
       const result = await facade.save(entity);
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(entity);
+      expect(result.metadata).toBeDefined();
+    });
+
+    /**
+     * Test updating an entity
+     */
+    it('should update an entity successfully', async () => {
+      const updates: Partial<TestEntity> = { name: 'Updated' };
+      const result = await facade.update('1', updates);
+
+      expect(result.success).toBe(true);
+      expect(result.metadata).toBeDefined();
     });
 
     /**
@@ -79,90 +121,110 @@ describe('Facade', () => {
     it('should delete an entity successfully', async () => {
       const result = await facade.delete('1');
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.metadata).toBeDefined();
+    });
+
+    /**
+     * Test deleting multiple entities
+     */
+    it('should delete multiple entities successfully', async () => {
+      const options: BulkOperationOptions = {
+        batchSize: 10,
+        continueOnError: false,
+        useTransaction: false,
+      };
+      const result = await facade.deleteMany(['1', '2'], options);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBe(2);
     });
 
     /**
      * Test counting entities
      */
     it('should count entities successfully', async () => {
-      const result = await facade.count({});
+      const options: FacadeQueryOptions = {};
+      const result = await facade.count(options);
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.data).toBe(0);
     });
 
     /**
      * Test checking if entity exists
      */
     it('should check if entity exists successfully', async () => {
-      const result = await facade.exists('1');
+      const options: FacadeQueryOptions = {};
+      const result = await facade.exists('1', options);
 
-      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      expect(result.data).toBe(false);
+    });
+
+    /**
+     * Test performing aggregation
+     */
+    it('should perform aggregation successfully', async () => {
+      const aggregation = { total: 100 };
+      const options: FacadeQueryOptions = {};
+      const result = await facade.aggregate(aggregation, options);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeDefined();
+    });
+
+    /**
+     * Test performing bulk save
+     */
+    it('should perform bulk save successfully', async () => {
+      const entities: TestEntity[] = [
+        { id: '1', name: 'Test1' },
+        { id: '2', name: 'Test2' },
+      ];
+
+      const options: BulkOperationOptions = {
+        batchSize: 10,
+        continueOnError: false,
+        useTransaction: false,
+      };
+
+      const result = await facade.bulkSave(entities, options);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.successful).toEqual(entities);
+      expect(result.data?.failed).toEqual([]);
     });
   });
 
-  describe('Query Building', () => {
+  describe('Configuration', () => {
     /**
-     * Test getting query builder
+     * Test updating configuration
      */
-    it('should get query builder successfully', () => {
-      const queryBuilder = facade.getQueryBuilder();
+    it('should update configuration', () => {
+      const newConfig = {
+        enableCaching: false,
+        enableValidation: false,
+        enableMiddleware: false,
+      };
 
-      expect(queryBuilder).toBeDefined();
+      facade.setConfig(newConfig);
+      const config = facade.getConfig();
+
+      expect(config.enableCaching).toBe(false);
+      expect(config.enableValidation).toBe(false);
+      expect(config.enableMiddleware).toBe(false);
     });
 
     /**
-     * Test building and executing query
+     * Test partial config update
      */
-    it('should build and execute query successfully', async () => {
-      const queryBuilder = facade.getQueryBuilder();
-      const query = queryBuilder.where('name', 'eq', 'Test').build();
+    it('should update partial configuration', () => {
+      facade.setConfig({ enableTransactions: true });
+      const config = facade.getConfig();
 
-      const result = await facade.find(query);
-
-      expect(result).toBeDefined();
-    });
-  });
-
-  describe('Cache Management', () => {
-    /**
-     * Test clearing cache
-     */
-    it('should clear cache successfully', () => {
-      facade.clearCache();
-
-      expect(true).toBe(true);
-    });
-  });
-
-  describe('Transaction Management', () => {
-    /**
-     * Test beginning a transaction
-     */
-    it('should begin a transaction successfully', async () => {
-      const result = await facade.beginTransaction();
-
-      expect(result).toBeDefined();
-    });
-
-    /**
-     * Test committing a transaction
-     */
-    it('should commit a transaction successfully', async () => {
-      const txn = await facade.beginTransaction();
-      const result = await facade.commitTransaction(txn.transactionId);
-
-      expect(result).toBeDefined();
-    });
-
-    /**
-     * Test rolling back a transaction
-     */
-    it('should rollback a transaction successfully', async () => {
-      const txn = await facade.beginTransaction();
-      const result = await facade.rollbackTransaction(txn.transactionId);
-
-      expect(result).toBeDefined();
+      expect(config.enableTransactions).toBe(true);
+      expect(config.enableCaching).toBe(true);
     });
   });
 
@@ -179,6 +241,26 @@ describe('Facade', () => {
     });
 
     /**
+     * Test stats track successful operations
+     */
+    it('should track successful operations', async () => {
+      await facade.findById('1');
+
+      const stats = facade.getStats();
+      expect(stats.successfulOperations).toBe(1);
+    });
+
+    /**
+     * Test stats track layer execution counts
+     */
+    it('should track layer execution counts', async () => {
+      await facade.find({});
+
+      const stats = facade.getStats();
+      expect(stats.layerExecutionCounts.size).toBeGreaterThan(0);
+    });
+
+    /**
      * Test reset stats
      */
     it('should reset stats', async () => {
@@ -187,41 +269,122 @@ describe('Facade', () => {
 
       const stats = facade.getStats();
       expect(stats.totalOperations).toBe(0);
+      expect(stats.successfulOperations).toBe(0);
+      expect(stats.failedOperations).toBe(0);
     });
   });
 
-  describe('Configuration', () => {
+  describe('Health Check', () => {
     /**
-     * Test updating configuration
+     * Test performing health check
      */
-    it('should update configuration', () => {
-      const newConfig = {
-        enableCaching: false,
-        enableTransactions: false,
-      };
+    it('should perform health check successfully', async () => {
+      const result = await facade.healthCheck();
 
-      facade.setConfig(newConfig);
-      const config = facade.getConfig();
-
-      expect(config.enableCaching).toBe(false);
-      expect(config.enableTransactions).toBe(false);
+      expect(result.healthy).toBe(true);
+      expect(result.layers).toBeDefined();
+      expect(result.overallStatus).toBe(HealthStatus.HEALTHY);
     });
   });
 
-  describe('Layer Coordination', () => {
+  describe('Cache Management', () => {
     /**
-     * Test layers are properly coordinated
+     * Test clearing cache
      */
-    it('should coordinate layers properly', async () => {
-      const entity: TestEntity = {
-        id: '1',
-        name: 'Test',
-      };
+    it('should clear cache successfully', async () => {
+      const result = await facade.clearCache();
 
-      await facade.save(entity);
-      const found = await facade.findById('1');
+      expect(result.success).toBe(true);
+    });
+  });
 
-      expect(found).toBeDefined();
+  describe('Data Management', () => {
+    /**
+     * Test clearing data
+     */
+    it('should clear data successfully', async () => {
+      const result = await facade.clearData();
+
+      expect(result.success).toBe(true);
+    });
+
+    /**
+     * Test getting total count
+     */
+    it('should get total count successfully', async () => {
+      const result = await facade.getTotalCount();
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBe(0);
+    });
+  });
+
+  describe('Layer Management', () => {
+    /**
+     * Test getting layer info
+     */
+    it('should get layer info successfully', () => {
+      const layerInfo = facade.getLayerInfo();
+
+      expect(layerInfo).toBeDefined();
+      expect(layerInfo.size).toBeGreaterThan(0);
+    });
+
+    /**
+     * Test enabling a layer
+     */
+    it('should enable a layer successfully', async () => {
+      const result = await facade.enableLayer('cache');
+
+      expect(result.success).toBe(true);
+    });
+
+    /**
+     * Test disabling a layer
+     */
+    it('should disable a layer successfully', async () => {
+      const result = await facade.disableLayer('cache');
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('Reset', () => {
+    /**
+     * Test resetting facade to default state
+     */
+    it('should reset facade to default state', async () => {
+      await facade.findById('1');
+      facade.setConfig({ enableCaching: false });
+
+      facade.reset();
+
+      expect(facade.getStats().totalOperations).toBe(0);
+      expect(facade.getConfig().enableCaching).toBe(true);
+    });
+  });
+
+  describe('Edge Cases', () => {
+    /**
+     * Test find with caching disabled
+     */
+    it('should not use cache when caching disabled', async () => {
+      facade.setConfig({ enableCaching: false });
+
+      const result = await facade.find({});
+
+      expect(result.success).toBe(true);
+      expect(result.metadata.cacheHit).toBe(false);
+    });
+
+    /**
+     * Test find with validation enabled
+     */
+    it('should use validation when enabled', async () => {
+      const result = await facade.find({});
+
+      expect(result.success).toBe(true);
+      expect(result.metadata.layersExecuted).toContain('validation');
     });
   });
 });

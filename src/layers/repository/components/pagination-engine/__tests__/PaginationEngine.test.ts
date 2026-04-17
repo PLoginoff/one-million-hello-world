@@ -7,9 +7,7 @@
 
 import { PaginationEngine } from '../implementations/PaginationEngine';
 import { IPaginationEngine } from '../interfaces/IPaginationEngine';
-import {
-  PaginationStrategy,
-} from '../types/pagination-engine-types';
+import { ParsedPagination } from '../../query-parser/types/query-parser-types';
 
 interface TestItem {
   id: string;
@@ -21,7 +19,6 @@ describe('PaginationEngine', () => {
   let testData: TestItem[];
 
   beforeEach(() => {
-    // Initialize PaginationEngine before each test
     paginationEngine = new PaginationEngine<TestItem>();
     testData = Array.from({ length: 100 }, (_, i) => ({
       id: `item-${i}`,
@@ -35,9 +32,10 @@ describe('PaginationEngine', () => {
      */
     it('should initialize with default configuration', () => {
       const config = paginationEngine.getConfig();
-      expect(config.defaultStrategy).toBe(PaginationStrategy.OFFSET);
-      expect(config.defaultPageSize).toBe(20);
-      expect(config.maxPageSize).toBe(100);
+      expect(config.defaultLimit).toBe(10);
+      expect(config.maxLimit).toBe(100);
+      expect(config.enableCursorPagination).toBe(true);
+      expect(config.enableOffsetPagination).toBe(true);
     });
 
     /**
@@ -46,6 +44,41 @@ describe('PaginationEngine', () => {
     it('should initialize stats to zero', () => {
       const stats = paginationEngine.getStats();
       expect(stats.totalPaginations).toBe(0);
+      expect(stats.averagePageSize).toBe(0);
+      expect(stats.averageExecutionTime).toBe(0);
+    });
+  });
+
+  describe('Apply Parsed Pagination', () => {
+    /**
+     * Test applying parsed pagination
+     */
+    it('should apply parsed pagination successfully', () => {
+      const pagination: ParsedPagination = {
+        limit: 10,
+        offset: 0,
+      };
+
+      const result = paginationEngine.apply(testData, pagination);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.length).toBe(10);
+      expect(result.data?.[0].id).toBe('item-0');
+    });
+
+    /**
+     * Test applying pagination with total parameter
+     */
+    it('should apply pagination with total parameter', () => {
+      const pagination: ParsedPagination = {
+        limit: 10,
+        offset: 0,
+      };
+
+      const result = paginationEngine.apply(testData, pagination, 100);
+
+      expect(result.success).toBe(true);
+      expect(result.pagination.total).toBe(100);
     });
   });
 
@@ -91,114 +124,307 @@ describe('PaginationEngine', () => {
       expect(result.success).toBe(true);
       expect(result.data?.length).toBe(5);
     });
+
+    /**
+     * Test pagination with total parameter
+     */
+    it('should handle total parameter in offset pagination', () => {
+      const result = paginationEngine.applyOffset(testData, 0, 10, 100);
+
+      expect(result.success).toBe(true);
+      expect(result.pagination.total).toBe(100);
+    });
   });
 
   describe('Cursor-Based Pagination', () => {
     /**
-     * Test applying cursor-based pagination
+     * Test applying cursor-based pagination forward
      */
-    it('should apply cursor-based pagination successfully', () => {
-      const result = paginationEngine.applyCursor(testData, 'item-5', 10, 'id');
+    it('should apply cursor-based pagination forward successfully', () => {
+      const cursor = paginationEngine.generateCursor(testData[5], 'id');
+      const result = paginationEngine.applyCursor(testData, cursor, 10, 'FORWARD');
+
+      expect(result.success).toBe(true);
+      expect(result.data?.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * Test applying cursor-based pagination backward
+     */
+    it('should apply cursor-based pagination backward successfully', () => {
+      const cursor = paginationEngine.generateCursor(testData[50], 'id');
+      const result = paginationEngine.applyCursor(testData, cursor, 10, 'BACKWARD');
+
+      expect(result.success).toBe(true);
+      expect(result.data?.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * Test applying cursor pagination without cursor
+     */
+    it('should apply cursor pagination without cursor', () => {
+      const result = paginationEngine.applyCursor(testData, undefined, 10, 'FORWARD');
 
       expect(result.success).toBe(true);
       expect(result.data?.length).toBe(10);
-      expect(result.data?.[0].id).toBe('item-6');
     });
 
     /**
-     * Test getting next cursor
+     * Test generating cursor
      */
-    it('should get next cursor', () => {
-      const result = paginationEngine.applyOffset(testData, 0, 10);
-      const cursor = paginationEngine.getCursor(result.data, 'id');
+    it('should generate cursor for item', () => {
+      const cursor = paginationEngine.generateCursor(testData[0], 'id');
 
       expect(cursor).toBeDefined();
-      expect(cursor).toBe('item-9');
+      expect(typeof cursor).toBe('string');
     });
 
     /**
-     * Test getting previous cursor
+     * Test parsing cursor
      */
-    it('should get previous cursor', () => {
-      const result = paginationEngine.applyOffset(testData, 10, 10);
-      const cursor = paginationEngine.getPreviousCursor(result.data, 'id');
+    it('should parse cursor correctly', () => {
+      const cursor = paginationEngine.generateCursor(testData[0], 'id');
+      const cursorInfo = paginationEngine.parseCursor(cursor);
 
-      expect(cursor).toBeDefined();
-      expect(cursor).toBe('item-10');
+      expect(cursorInfo).toBeDefined();
+      expect(cursorInfo.field).toBe('id');
+    });
+
+    /**
+     * Test parsing invalid cursor throws error
+     */
+    it('should throw error when parsing invalid cursor', () => {
+      expect(() => {
+        paginationEngine.parseCursor('invalid-cursor');
+      }).toThrow();
+    });
+
+    /**
+     * Test cursor pagination disabled
+     */
+    it('should return error when cursor pagination is disabled', () => {
+      paginationEngine.setConfig({ enableCursorPagination: false });
+      const cursor = paginationEngine.generateCursor(testData[0], 'id');
+      const result = paginationEngine.applyCursor(testData, cursor, 10, 'FORWARD');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
     });
   });
 
-  describe('Page Number Pagination', () => {
+  describe('Page Number Calculations', () => {
     /**
-     * Test applying page number pagination
-     */
-    it('should apply page number pagination successfully', () => {
-      const result = paginationEngine.applyPage(testData, 2, 10);
-
-      expect(result.success).toBe(true);
-      expect(result.data?.length).toBe(10);
-      expect(result.data?.[0].id).toBe('item-10');
-    });
-
-    /**
-     * Test getting total pages
+     * Test calculating total pages
      */
     it('should calculate total pages correctly', () => {
-      const totalPages = paginationEngine.getTotalPages(testData, 10);
+      const totalPages = paginationEngine.calculateTotalPages(100, 10);
 
       expect(totalPages).toBe(10);
     });
 
     /**
-     * Test getting page count
+     * Test calculating total pages with remainder
      */
-    it('should get page count', () => {
-      const result = paginationEngine.applyPage(testData, 1, 10);
-      const pageCount = paginationEngine.getPageCount(result.data, testData);
+    it('should calculate total pages with remainder', () => {
+      const totalPages = paginationEngine.calculateTotalPages(105, 10);
 
-      expect(pageCount).toBe(10);
+      expect(totalPages).toBe(11);
+    });
+
+    /**
+     * Test calculating total pages with zero limit
+     */
+    it('should return 0 for total pages with zero limit', () => {
+      const totalPages = paginationEngine.calculateTotalPages(100, 0);
+
+      expect(totalPages).toBe(0);
+    });
+
+    /**
+     * Test calculating offset from page number
+     */
+    it('should calculate offset from page number', () => {
+      const offset = paginationEngine.calculateOffset(2, 10);
+
+      expect(offset).toBe(10);
+    });
+
+    /**
+     * Test calculating offset from first page
+     */
+    it('should return 0 for first page offset', () => {
+      const offset = paginationEngine.calculateOffset(1, 10);
+
+      expect(offset).toBe(0);
+    });
+
+    /**
+     * Test calculating offset with negative page number
+     */
+    it('should return 0 for negative page number', () => {
+      const offset = paginationEngine.calculateOffset(-1, 10);
+
+      expect(offset).toBe(0);
+    });
+
+    /**
+     * Test calculating page number from offset
+     */
+    it('should calculate page number from offset', () => {
+      const pageNumber = paginationEngine.calculatePageNumber(10, 10);
+
+      expect(pageNumber).toBe(2);
+    });
+
+    /**
+     * Test calculating page number from zero offset
+     */
+    it('should return 1 for zero offset', () => {
+      const pageNumber = paginationEngine.calculatePageNumber(0, 10);
+
+      expect(pageNumber).toBe(1);
     });
   });
 
-  describe('Pagination Info', () => {
+  describe('Pagination Metadata', () => {
     /**
-     * Test getting pagination info
+     * Test getting pagination metadata
      */
-    it('should return pagination info', () => {
-      const result = paginationEngine.applyOffset(testData, 0, 10);
-      const info = paginationEngine.getPaginationInfo(testData, 0, 10);
+    it('should return pagination metadata', () => {
+      const metadata = paginationEngine.getMetadata(100, 10, 0);
 
-      expect(info).toBeDefined();
-      expect(info.total).toBe(100);
-      expect(info.limit).toBe(10);
-      expect(info.offset).toBe(0);
+      expect(metadata.total).toBe(100);
+      expect(metadata.limit).toBe(10);
+      expect(metadata.offset).toBe(0);
+      expect(metadata.currentPage).toBe(1);
+      expect(metadata.totalPages).toBe(10);
+      expect(metadata.hasNext).toBe(true);
+      expect(metadata.hasPrevious).toBe(false);
     });
 
     /**
-     * Test getting hasNextPage
+     * Test getting pagination metadata for middle page
      */
-    it('should return true for hasNextPage', () => {
-      const hasNext = paginationEngine.hasNextPage(testData, 0, 10);
+    it('should return correct metadata for middle page', () => {
+      const metadata = paginationEngine.getMetadata(100, 10, 50);
 
-      expect(hasNext).toBe(true);
+      expect(metadata.total).toBe(100);
+      expect(metadata.limit).toBe(10);
+      expect(metadata.offset).toBe(50);
+      expect(metadata.currentPage).toBe(6);
+      expect(metadata.hasNext).toBe(true);
+      expect(metadata.hasPrevious).toBe(true);
     });
 
     /**
-     * Test getting hasPreviousPage
+     * Test getting pagination metadata for last page
      */
-    it('should return false for hasPreviousPage on first page', () => {
-      const hasPrevious = paginationEngine.hasPreviousPage(0);
+    it('should return correct metadata for last page', () => {
+      const metadata = paginationEngine.getMetadata(100, 10, 90);
 
-      expect(hasPrevious).toBe(false);
+      expect(metadata.total).toBe(100);
+      expect(metadata.limit).toBe(10);
+      expect(metadata.offset).toBe(90);
+      expect(metadata.currentPage).toBe(10);
+      expect(metadata.hasNext).toBe(false);
+      expect(metadata.hasPrevious).toBe(true);
+    });
+  });
+
+  describe('Page Info', () => {
+    /**
+     * Test getting page info
+     */
+    it('should return page info', () => {
+      const pageInfo = paginationEngine.getPageInfo(100, 10, 2);
+
+      expect(pageInfo.number).toBe(2);
+      expect(pageInfo.size).toBe(10);
+      expect(pageInfo.totalElements).toBe(100);
+      expect(pageInfo.totalPages).toBe(10);
+      expect(pageInfo.hasNext).toBe(true);
+      expect(pageInfo.hasPrevious).toBe(true);
     });
 
     /**
-     * Test getting hasPreviousPage for later pages
+     * Test getting page info for first page
      */
-    it('should return true for hasPreviousPage on later pages', () => {
-      const hasPrevious = paginationEngine.hasPreviousPage(10);
+    it('should return correct page info for first page', () => {
+      const pageInfo = paginationEngine.getPageInfo(100, 10, 1);
 
-      expect(hasPrevious).toBe(true);
+      expect(pageInfo.number).toBe(1);
+      expect(pageInfo.hasPrevious).toBe(false);
+      expect(pageInfo.hasNext).toBe(true);
+    });
+
+    /**
+     * Test getting page info for last page
+     */
+    it('should return correct page info for last page', () => {
+      const pageInfo = paginationEngine.getPageInfo(100, 10, 10);
+
+      expect(pageInfo.number).toBe(10);
+      expect(pageInfo.hasPrevious).toBe(true);
+      expect(pageInfo.hasNext).toBe(false);
+    });
+  });
+
+  describe('Pagination Validation', () => {
+    /**
+     * Test validating valid pagination
+     */
+    it('should validate valid pagination', () => {
+      const pagination: ParsedPagination = {
+        limit: 10,
+        offset: 0,
+      };
+
+      const isValid = paginationEngine.validate(pagination);
+
+      expect(isValid).toBe(true);
+    });
+
+    /**
+     * Test invalid pagination with negative limit
+     */
+    it('should fail validation for negative limit', () => {
+      const pagination: ParsedPagination = {
+        limit: -10,
+        offset: 0,
+      };
+
+      const isValid = paginationEngine.validate(pagination);
+
+      expect(isValid).toBe(false);
+    });
+
+    /**
+     * Test invalid pagination with negative offset
+     */
+    it('should fail validation for negative offset', () => {
+      const pagination: ParsedPagination = {
+        limit: 10,
+        offset: -5,
+      };
+
+      const isValid = paginationEngine.validate(pagination);
+
+      expect(isValid).toBe(false);
+    });
+
+    /**
+     * Test invalid pagination with limit exceeding max
+     */
+    it('should fail validation for limit exceeding max', () => {
+      paginationEngine.setConfig({ maxLimit: 50 });
+      const pagination: ParsedPagination = {
+        limit: 100,
+        offset: 0,
+      };
+
+      const isValid = paginationEngine.validate(pagination);
+
+      expect(isValid).toBe(false);
     });
   });
 
@@ -215,6 +441,27 @@ describe('PaginationEngine', () => {
     });
 
     /**
+     * Test stats track average page size
+     */
+    it('should track average page size', () => {
+      paginationEngine.applyOffset(testData, 0, 10);
+      paginationEngine.applyOffset(testData, 10, 20);
+
+      const stats = paginationEngine.getStats();
+      expect(stats.averagePageSize).toBe(15);
+    });
+
+    /**
+     * Test stats track average execution time
+     */
+    it('should track average execution time', () => {
+      paginationEngine.applyOffset(testData, 0, 10);
+
+      const stats = paginationEngine.getStats();
+      expect(stats.averageExecutionTime).toBeGreaterThan(0);
+    });
+
+    /**
      * Test reset stats
      */
     it('should reset stats', () => {
@@ -223,6 +470,8 @@ describe('PaginationEngine', () => {
 
       const stats = paginationEngine.getStats();
       expect(stats.totalPaginations).toBe(0);
+      expect(stats.averagePageSize).toBe(0);
+      expect(stats.averageExecutionTime).toBe(0);
     });
   });
 
@@ -232,17 +481,30 @@ describe('PaginationEngine', () => {
      */
     it('should update configuration', () => {
       const newConfig = {
-        defaultStrategy: PaginationStrategy.CURSOR,
-        defaultPageSize: 50,
-        maxPageSize: 200,
+        defaultLimit: 50,
+        maxLimit: 200,
+        enableCursorPagination: false,
+        enableOffsetPagination: true,
       };
 
       paginationEngine.setConfig(newConfig);
       const config = paginationEngine.getConfig();
 
-      expect(config.defaultStrategy).toBe(PaginationStrategy.CURSOR);
-      expect(config.defaultPageSize).toBe(50);
-      expect(config.maxPageSize).toBe(200);
+      expect(config.defaultLimit).toBe(50);
+      expect(config.maxLimit).toBe(200);
+      expect(config.enableCursorPagination).toBe(false);
+      expect(config.enableOffsetPagination).toBe(true);
+    });
+
+    /**
+     * Test configuration limits are enforced
+     */
+    it('should enforce max limit in applyOffset', () => {
+      paginationEngine.setConfig({ maxLimit: 50 });
+      const result = paginationEngine.applyOffset(testData, 0, 100);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.length).toBe(50);
     });
   });
 
@@ -265,6 +527,27 @@ describe('PaginationEngine', () => {
 
       expect(result.success).toBe(true);
       expect(result.data?.length).toBe(0);
+    });
+
+    /**
+     * Test pagination with single element
+     */
+    it('should handle single element array', () => {
+      const singleElement = [{ id: 'item-0', name: 'Item 0' }];
+      const result = paginationEngine.applyOffset(singleElement, 0, 10);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.length).toBe(1);
+    });
+
+    /**
+     * Test pagination with negative offset
+     */
+    it('should handle negative offset', () => {
+      const result = paginationEngine.applyOffset(testData, -10, 10);
+
+      expect(result.success).toBe(true);
+      expect(result.data?.[0].id).toBe('item-0');
     });
   });
 });

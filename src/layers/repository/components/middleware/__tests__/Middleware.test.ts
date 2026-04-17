@@ -1,242 +1,346 @@
 /**
- * Middleware Layer Tests
+ * Middleware Manager Layer Tests
  * 
- * Comprehensive test suite for Middleware implementation.
- * Tests middleware pipeline, execution order, error handling, and statistics.
+ * Comprehensive test suite for MiddlewareManager implementation.
+ * Tests middleware chains, pipelines, execution order, error handling, and statistics.
  */
 
-import { Middleware } from '../implementations/Middleware';
-import { IMiddleware } from '../interfaces/IMiddleware';
+import { MiddlewareManager } from '../implementations/MiddlewareManager';
+import { IMiddlewareManager } from '../interfaces/IMiddlewareManager';
 import {
-  MiddlewareFunction,
+  Middleware,
   MiddlewareContext,
+  MiddlewareResult,
 } from '../types/middleware-types';
 
-describe('Middleware', () => {
-  let middleware: Middleware;
+interface TestData {
+  value: string;
+}
+
+describe('MiddlewareManager', () => {
+  let middlewareManager: MiddlewareManager<TestData>;
 
   beforeEach(() => {
-    // Initialize Middleware before each test
-    middleware = new Middleware();
+    middlewareManager = new MiddlewareManager<TestData>();
   });
 
   describe('Initialization', () => {
     /**
-     * Test that Middleware initializes with empty pipeline
+     * Test that MiddlewareManager initializes with default configuration
      */
-    it('should initialize with empty pipeline', () => {
-      const pipeline = middleware.getPipeline();
-      expect(pipeline.length).toBe(0);
+    it('should initialize with default configuration', () => {
+      const config = middlewareManager.getConfig();
+      expect(config.enableGlobalMiddleware).toBe(true);
+      expect(config.enablePerOperationMiddleware).toBe(true);
+      expect(config.enableErrorHandling).toBe(true);
+      expect(config.enableLogging).toBe(false);
     });
 
     /**
      * Test that stats are initialized to zero
      */
     it('should initialize stats to zero', () => {
-      const stats = middleware.getStats();
+      const stats = middlewareManager.getStats();
       expect(stats.totalExecutions).toBe(0);
+      expect(stats.successfulExecutions).toBe(0);
+      expect(stats.failedExecutions).toBe(0);
     });
   });
 
   describe('Middleware Registration', () => {
     /**
-     * Test adding a middleware function
+     * Test adding a middleware
      */
-    it('should add a middleware function successfully', () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        return next(context);
+    it('should add a middleware successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      middleware.use(fn);
-      const pipeline = middleware.getPipeline();
+      middlewareManager.addMiddleware(middleware);
+      const middlewares = middlewareManager.getMiddlewares();
 
-      expect(pipeline.length).toBe(1);
+      expect(middlewares.length).toBe(1);
     });
 
     /**
-     * Test adding multiple middleware functions
+     * Test removing a middleware
      */
-    it('should add multiple middleware functions successfully', async () => {
-      const fn1: MiddlewareFunction = async (context, next) => {
-        context.metadata.order = 1;
-        return next(context);
+    it('should remove a middleware successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      const fn2: MiddlewareFunction = async (context, next) => {
-        context.metadata.order = 2;
-        return next(context);
+      middlewareManager.addMiddleware(middleware);
+      middlewareManager.removeMiddleware('test');
+
+      const middlewares = middlewareManager.getMiddlewares();
+      expect(middlewares.length).toBe(0);
+    });
+
+    /**
+     * Test getting a middleware by name
+     */
+    it('should return middleware by name', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      middleware.use(fn1);
-      middleware.use(fn2);
+      middlewareManager.addMiddleware(middleware);
+      const retrieved = middlewareManager.getMiddleware('test');
 
-      const pipeline = middleware.getPipeline();
-      expect(pipeline.length).toBe(2);
+      expect(retrieved).toBeDefined();
+      expect(retrieved?.name).toBe('test');
+    });
+
+    /**
+     * Test enabling a middleware
+     */
+    it('should enable a middleware successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: false,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+      middlewareManager.enableMiddleware('test');
+
+      const retrieved = middlewareManager.getMiddleware('test');
+      expect(retrieved?.enabled).toBe(true);
+    });
+
+    /**
+     * Test disabling a middleware
+     */
+    it('should disable a middleware successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+      middlewareManager.disableMiddleware('test');
+
+      const retrieved = middlewareManager.getMiddleware('test');
+      expect(retrieved?.enabled).toBe(false);
     });
   });
 
   describe('Middleware Execution', () => {
     /**
-     * Test executing middleware pipeline successfully
+     * Test executing middlewares successfully
      */
-    it('should execute middleware pipeline successfully', async () => {
+    it('should execute middlewares successfully', async () => {
       let executed = false;
 
-      const fn: MiddlewareFunction = async (context, next) => {
-        executed = true;
-        return next(context);
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          executed = true;
+          return next();
+        },
       };
 
-      middleware.use(fn);
+      middlewareManager.addMiddleware(middleware);
 
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
-
-      await middleware.execute(context);
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
 
       expect(executed).toBe(true);
     });
 
     /**
-     * Test middleware execution order
+     * Test middleware execution order by priority
      */
-    it('should execute middleware in correct order', async () => {
+    it('should execute middlewares in priority order', async () => {
       const order: number[] = [];
 
-      const fn1: MiddlewareFunction = async (context, next) => {
-        order.push(1);
-        return next(context);
+      const middleware1: Middleware<TestData> = {
+        name: 'middleware1',
+        priority: 2,
+        enabled: true,
+        execute: async (context, next) => {
+          order.push(2);
+          return next();
+        },
       };
 
-      const fn2: MiddlewareFunction = async (context, next) => {
-        order.push(2);
-        return next(context);
+      const middleware2: Middleware<TestData> = {
+        name: 'middleware2',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          order.push(1);
+          return next();
+        },
       };
 
-      const fn3: MiddlewareFunction = async (context, next) => {
-        order.push(3);
-        return next(context);
-      };
+      middlewareManager.addMiddleware(middleware1);
+      middlewareManager.addMiddleware(middleware2);
 
-      middleware.use(fn1);
-      middleware.use(fn2);
-      middleware.use(fn3);
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
 
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
-
-      await middleware.execute(context);
-
-      expect(order).toEqual([1, 2, 3]);
+      expect(order).toEqual([1, 2]);
     });
 
     /**
-     * Test middleware can modify context
+     * Test disabled middleware is not executed
      */
-    it('should allow middleware to modify context', async () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        context.metadata.modified = true;
-        return next(context);
+    it('should skip disabled middleware', async () => {
+      let executed = false;
+
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: false,
+        execute: async (context, next) => {
+          executed = true;
+          return next();
+        },
       };
 
-      middleware.use(fn);
+      middlewareManager.addMiddleware(middleware);
 
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
 
-      await middleware.execute(context);
-
-      expect(context.metadata.modified).toBe(true);
-    });
-  });
-
-  describe('Error Handling', () => {
-    /**
-     * Test middleware error handling
-     */
-    it('should handle middleware errors', async () => {
-      const errorFn: MiddlewareFunction = async () => {
-        throw new Error('Middleware error');
-      };
-
-      middleware.use(errorFn);
-
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
-
-      const result = await middleware.execute(context);
-
-      expect(result.success).toBe(false);
-    });
-
-    /**
-     * Test error middleware catches errors
-     */
-    it('should allow error middleware to catch errors', async () => {
-      const errorFn: MiddlewareFunction = async () => {
-        throw new Error('Middleware error');
-      };
-
-      const errorHandler: MiddlewareFunction = async (context, next) => {
-        try {
-          return next(context);
-        } catch (error) {
-          context.metadata.error = 'caught';
-          return { success: false, error };
-        }
-      };
-
-      middleware.use(errorHandler);
-      middleware.use(errorFn);
-
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
-
-      await middleware.execute(context);
-
-      expect(context.metadata.error).toBe('caught');
+      expect(executed).toBe(false);
     });
   });
 
-  describe('Middleware Removal', () => {
+  describe('Chain Execution', () => {
     /**
-     * Test removing a middleware function
+     * Test creating and executing a chain
      */
-    it('should remove a middleware function successfully', () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        return next(context);
+    it('should create and execute a chain successfully', async () => {
+      let executed = false;
+
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          executed = true;
+          return next();
+        },
       };
 
-      middleware.use(fn);
-      middleware.remove(fn);
+      const chain = middlewareManager.createChain([middleware]);
+      const context = middlewareManager.createContext('test', { value: 'test' });
 
-      const pipeline = middleware.getPipeline();
-      expect(pipeline.length).toBe(0);
+      const result = await middlewareManager.executeChain(context, chain);
+
+      expect(executed).toBe(true);
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('Pipeline Execution', () => {
+    /**
+     * Test creating and executing a pipeline
+     */
+    it('should create and execute a pipeline successfully', async () => {
+      let executed = false;
+
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          executed = true;
+          return next();
+        },
+      };
+
+      const pipeline = middlewareManager.createPipeline('testPipeline', [middleware]);
+      const context = middlewareManager.createContext('test', { value: 'test' });
+
+      const result = await middlewareManager.executePipeline(pipeline, context);
+
+      expect(executed).toBe(true);
+      expect(result.success).toBe(true);
     });
 
     /**
-     * Test clearing all middleware
+     * Test parallel pipeline execution
      */
-    it('should clear all middleware successfully', () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        return next(context);
+    it('should execute pipeline in parallel when parallel is true', async () => {
+      const order: string[] = [];
+
+      const middleware1: Middleware<TestData> = {
+        name: 'middleware1',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          order.push('m1');
+          return next();
+        },
       };
 
-      middleware.use(fn);
-      middleware.clear();
+      const middleware2: Middleware<TestData> = {
+        name: 'middleware2',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => {
+          order.push('m2');
+          return next();
+        },
+      };
 
-      const pipeline = middleware.getPipeline();
-      expect(pipeline.length).toBe(0);
+      const pipeline = middlewareManager.createPipeline('testPipeline', [middleware1, middleware2], true);
+      const context = middlewareManager.createContext('test', { value: 'test' });
+
+      await middlewareManager.executePipeline(pipeline, context);
+
+      expect(order.length).toBe(2);
+    });
+  });
+
+  describe('Configuration', () => {
+    /**
+     * Test updating configuration
+     */
+    it('should update configuration', () => {
+      const newConfig = {
+        enableGlobalMiddleware: false,
+        enablePerOperationMiddleware: false,
+        enableErrorHandling: false,
+        enableLogging: true,
+      };
+
+      middlewareManager.setConfig(newConfig);
+      const config = middlewareManager.getConfig();
+
+      expect(config.enableGlobalMiddleware).toBe(false);
+      expect(config.enablePerOperationMiddleware).toBe(false);
+      expect(config.enableErrorHandling).toBe(false);
+      expect(config.enableLogging).toBe(true);
+    });
+
+    /**
+     * Test partial config update
+     */
+    it('should update partial configuration', () => {
+      middlewareManager.setConfig({ enableLogging: true });
+      const config = middlewareManager.getConfig();
+
+      expect(config.enableLogging).toBe(true);
+      expect(config.enableGlobalMiddleware).toBe(true);
     });
   });
 
@@ -245,69 +349,275 @@ describe('Middleware', () => {
      * Test stats track total executions
      */
     it('should track total executions', async () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        return next(context);
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      middleware.use(fn);
+      middlewareManager.addMiddleware(middleware);
 
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
+      await middlewareManager.execute(context);
 
-      await middleware.execute(context);
-      await middleware.execute(context);
-
-      const stats = middleware.getStats();
+      const stats = middlewareManager.getStats();
       expect(stats.totalExecutions).toBe(2);
+    });
+
+    /**
+     * Test stats track successful executions
+     */
+    it('should track successful executions', async () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
+
+      const stats = middlewareManager.getStats();
+      expect(stats.successfulExecutions).toBe(1);
+    });
+
+    /**
+     * Test stats track failed executions
+     */
+    it('should track failed executions', async () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async () => {
+          throw new Error('Error');
+        },
+      };
+
+      middlewareManager.addMiddleware(middleware);
+
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
+
+      const stats = middlewareManager.getStats();
+      expect(stats.failedExecutions).toBe(1);
+    });
+
+    /**
+     * Test stats track middleware execution counts
+     */
+    it('should track middleware execution counts', async () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
+      await middlewareManager.execute(context);
+
+      const stats = middlewareManager.getStats();
+      expect(stats.middlewareExecutionCounts.get('test')).toBe(2);
     });
 
     /**
      * Test reset stats
      */
     it('should reset stats', async () => {
-      const fn: MiddlewareFunction = async (context, next) => {
-        return next(context);
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      middleware.use(fn);
+      middlewareManager.addMiddleware(middleware);
 
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
-      };
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      await middlewareManager.execute(context);
+      middlewareManager.resetStats();
 
-      await middleware.execute(context);
-      middleware.resetStats();
-
-      const stats = middleware.getStats();
+      const stats = middlewareManager.getStats();
       expect(stats.totalExecutions).toBe(0);
+      expect(stats.successfulExecutions).toBe(0);
+      expect(stats.failedExecutions).toBe(0);
     });
   });
 
-  describe('Conditional Execution', () => {
+  describe('Context Creation', () => {
     /**
-     * Test conditional middleware execution
+     * Test creating middleware context
      */
-    it('should support conditional middleware execution', async () => {
-      let executed = false;
+    it('should create middleware context successfully', () => {
+      const context = middlewareManager.createContext('test', { value: 'test' }, { meta: 'value' });
 
-      const fn: MiddlewareFunction = async (context, next) => {
-        executed = true;
-        return next(context);
+      expect(context.operation).toBe('test');
+      expect(context.data).toEqual({ value: 'test' });
+      expect(context.metadata.meta).toBe('value');
+      expect(context.timestamp).toBeInstanceOf(Date);
+      expect(context.state).toBeInstanceOf(Map);
+    });
+  });
+
+  describe('Middleware Sorting', () => {
+    /**
+     * Test sorting by priority
+     */
+    it('should sort middlewares by priority', () => {
+      const middleware1: Middleware<TestData> = {
+        name: 'middleware1',
+        priority: 3,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      middleware.use(fn, (context) => context.operation === 'test');
-
-      const context: MiddlewareContext = {
-        operation: 'test',
-        metadata: {},
+      const middleware2: Middleware<TestData> = {
+        name: 'middleware2',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
       };
 
-      await middleware.execute(context);
+      const middleware3: Middleware<TestData> = {
+        name: 'middleware3',
+        priority: 2,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
 
-      expect(executed).toBe(true);
+      middlewareManager.addMiddleware(middleware1);
+      middlewareManager.addMiddleware(middleware2);
+      middlewareManager.addMiddleware(middleware3);
+
+      middlewareManager.sortByPriority();
+
+      const middlewares = middlewareManager.getMiddlewares();
+      expect(middlewares[0].name).toBe('middleware2');
+      expect(middlewares[1].name).toBe('middleware3');
+      expect(middlewares[2].name).toBe('middleware1');
+    });
+  });
+
+  describe('Operation Middlewares', () => {
+    /**
+     * Test adding middleware for operation
+     */
+    it('should add middleware for operation successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddlewareForOperation('read', middleware);
+
+      const middlewares = middlewareManager.getMiddlewaresForOperation('read');
+      expect(middlewares.length).toBe(1);
+    });
+
+    /**
+     * Test getting middlewares for operation
+     */
+    it('should return empty array for operation with no middlewares', () => {
+      const middlewares = middlewareManager.getMiddlewaresForOperation('read');
+      expect(middlewares).toEqual([]);
+    });
+
+    /**
+     * Test removing middlewares for operation
+     */
+    it('should remove middlewares for operation successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddlewareForOperation('read', middleware);
+      middlewareManager.removeMiddlewaresForOperation('read');
+
+      const middlewares = middlewareManager.getMiddlewaresForOperation('read');
+      expect(middlewares).toEqual([]);
+    });
+  });
+
+  describe('Clear Middlewares', () => {
+    /**
+     * Test clearing all middlewares
+     */
+    it('should clear all middlewares successfully', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+      middlewareManager.clearMiddlewares();
+
+      const middlewares = middlewareManager.getMiddlewares();
+      expect(middlewares.length).toBe(0);
+    });
+  });
+
+  describe('Reset', () => {
+    /**
+     * Test resetting middleware manager
+     */
+    it('should reset middleware manager to default state', () => {
+      const middleware: Middleware<TestData> = {
+        name: 'test',
+        priority: 1,
+        enabled: true,
+        execute: async (context, next) => next(),
+      };
+
+      middlewareManager.addMiddleware(middleware);
+      middlewareManager.addMiddlewareForOperation('read', middleware);
+      middlewareManager.setConfig({ enableLogging: true });
+
+      middlewareManager.reset();
+
+      expect(middlewareManager.getMiddlewares().length).toBe(0);
+      expect(middlewareManager.getMiddlewaresForOperation('read').length).toBe(0);
+      expect(middlewareManager.getConfig().enableLogging).toBe(false);
+      expect(middlewareManager.getStats().totalExecutions).toBe(0);
+    });
+  });
+
+  describe('Edge Cases', () => {
+    /**
+     * Test executing with no middlewares
+     */
+    it('should return success when no middlewares', async () => {
+      const context = middlewareManager.createContext('test', { value: 'test' });
+      const result = await middlewareManager.execute(context);
+
+      expect(result.success).toBe(true);
+    });
+
+    /**
+     * Test pipeline with no middlewares
+     */
+    it('should return success when pipeline has no middlewares', async () => {
+      const pipeline = middlewareManager.createPipeline('test', []);
+      const context = middlewareManager.createContext('test', { value: 'test' });
+
+      const result = await middlewareManager.executePipeline(pipeline, context);
+
+      expect(result.success).toBe(true);
     });
   });
 });

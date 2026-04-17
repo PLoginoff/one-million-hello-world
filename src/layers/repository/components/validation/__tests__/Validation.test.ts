@@ -1,15 +1,19 @@
 /**
- * Validation Layer Tests
+ * Validation Engine Layer Tests
  * 
- * Comprehensive test suite for Validation implementation.
+ * Comprehensive test suite for ValidationEngine implementation.
  * Tests validation rules, schema validation, custom validators, and statistics.
  */
 
-import { Validation } from '../implementations/Validation';
-import { IValidation } from '../interfaces/IValidation';
+import { ValidationEngine } from '../implementations/ValidationEngine';
+import { IValidationEngine } from '../interfaces/IValidationEngine';
 import {
   ValidationRule,
   ValidationSeverity,
+  ValidationCategory,
+  SchemaDefinition,
+  FieldDefinition,
+  FieldType,
 } from '../types/validation-types';
 
 interface TestEntity {
@@ -18,72 +22,33 @@ interface TestEntity {
   email: string;
 }
 
-describe('Validation', () => {
-  let validation: Validation<TestEntity>;
+describe('ValidationEngine', () => {
+  let validationEngine: ValidationEngine;
 
   beforeEach(() => {
-    // Initialize Validation before each test
-    validation = new Validation<TestEntity>();
+    validationEngine = new ValidationEngine();
   });
 
   describe('Initialization', () => {
     /**
-     * Test that Validation initializes with default configuration
+     * Test that ValidationEngine initializes with default configuration
      */
     it('should initialize with default configuration', () => {
-      const config = validation.getConfig();
-      expect(config.stopOnFirstError).toBe(false);
-      expect(config.defaultSeverity).toBe(ValidationSeverity.ERROR);
+      const config = validationEngine.getConfig();
+      expect(config.enabled).toBe(true);
+      expect(config.failFast).toBe(false);
+      expect(config.enableWarnings).toBe(true);
     });
 
     /**
      * Test that stats are initialized to zero
      */
     it('should initialize stats to zero', () => {
-      const stats = validation.getStats();
+      const stats = validationEngine.getStats();
       expect(stats.totalValidations).toBe(0);
+      expect(stats.successfulValidations).toBe(0);
       expect(stats.failedValidations).toBe(0);
-    });
-  });
-
-  describe('Rule Registration', () => {
-    /**
-     * Test adding a validation rule
-     */
-    it('should add a validation rule successfully', () => {
-      const rule: ValidationRule<TestEntity> = {
-        field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
-      };
-
-      validation.addRule(rule);
-      const rules = validation.getRules();
-
-      expect(rules.length).toBe(1);
-    });
-
-    /**
-     * Test adding multiple validation rules
-     */
-    it('should add multiple validation rules successfully', () => {
-      const rules: ValidationRule<TestEntity>[] = [
-        {
-          field: 'name',
-          validator: (value) => value.length > 0,
-          message: 'Name is required',
-        },
-        {
-          field: 'age',
-          validator: (value) => value >= 18,
-          message: 'Age must be 18 or older',
-        },
-      ];
-
-      validation.addRules(rules);
-      const registeredRules = validation.getRules();
-
-      expect(registeredRules.length).toBe(2);
+      expect(stats.averageExecutionTime).toBe(0);
     });
   });
 
@@ -92,13 +57,14 @@ describe('Validation', () => {
      * Test validating a valid entity
      */
     it('should validate a valid entity successfully', () => {
-      const rule: ValidationRule<TestEntity> = {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
-
-      validation.addRule(rule);
 
       const entity: TestEntity = {
         name: 'John',
@@ -106,9 +72,9 @@ describe('Validation', () => {
         email: 'john@example.com',
       };
 
-      const result = validation.validate(entity);
+      const result = validationEngine.validate(entity, [rule]);
 
-      expect(result.success).toBe(true);
+      expect(result.valid).toBe(true);
       expect(result.errors.length).toBe(0);
     });
 
@@ -116,13 +82,14 @@ describe('Validation', () => {
      * Test validating an invalid entity
      */
     it('should fail validation for invalid entity', () => {
-      const rule: ValidationRule<TestEntity> = {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
-
-      validation.addRule(rule);
 
       const entity: TestEntity = {
         name: '',
@@ -130,9 +97,9 @@ describe('Validation', () => {
         email: 'john@example.com',
       };
 
-      const result = validation.validate(entity);
+      const result = validationEngine.validate(entity, [rule]);
 
-      expect(result.success).toBe(false);
+      expect(result.valid).toBe(false);
       expect(result.errors.length).toBe(1);
     });
 
@@ -140,20 +107,24 @@ describe('Validation', () => {
      * Test validating with multiple rules
      */
     it('should validate with multiple rules', () => {
-      const rules: ValidationRule<TestEntity>[] = [
+      const rules: ValidationRule[] = [
         {
+          name: 'nameRequired',
           field: 'name',
-          validator: (value) => value.length > 0,
-          message: 'Name is required',
+          validator: (value) => (value as string).length > 0,
+          errorMessage: 'Name is required',
+          severity: ValidationSeverity.ERROR,
+          category: ValidationCategory.REQUIRED,
         },
         {
+          name: 'ageMinimum',
           field: 'age',
-          validator: (value) => value >= 18,
-          message: 'Age must be 18 or older',
+          validator: (value) => (value as number) >= 18,
+          errorMessage: 'Age must be 18 or older',
+          severity: ValidationSeverity.ERROR,
+          category: ValidationCategory.RANGE,
         },
       ];
-
-      validation.addRules(rules);
 
       const entity: TestEntity = {
         name: '',
@@ -161,10 +132,36 @@ describe('Validation', () => {
         email: 'john@example.com',
       };
 
-      const result = validation.validate(entity);
+      const result = validationEngine.validate(entity, rules);
 
-      expect(result.success).toBe(false);
+      expect(result.valid).toBe(false);
       expect(result.errors.length).toBe(2);
+    });
+
+    /**
+     * Test validation with disabled config
+     */
+    it('should return valid when validation is disabled', () => {
+      validationEngine.setConfig({ enabled: false });
+
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: () => false,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      const entity: TestEntity = {
+        name: '',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const result = validationEngine.validate(entity, [rule]);
+
+      expect(result.valid).toBe(true);
     });
   });
 
@@ -173,131 +170,252 @@ describe('Validation', () => {
      * Test validating a specific field
      */
     it('should validate a specific field successfully', () => {
-      const rule: ValidationRule<TestEntity> = {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
+      const context = validationEngine.createContext('name', {});
+      const result = validationEngine.validateField('John', rule, context);
 
-      const result = validation.validateField('name', 'John');
-
-      expect(result.success).toBe(true);
+      expect(result.valid).toBe(true);
     });
 
     /**
      * Test validating a specific field with invalid value
      */
     it('should fail validation for invalid field value', () => {
-      const rule: ValidationRule<TestEntity> = {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
+      const context = validationEngine.createContext('name', {});
+      const result = validationEngine.validateField('', rule, context);
 
-      const result = validation.validateField('name', '');
+      expect(result.valid).toBe(false);
+    });
 
-      expect(result.success).toBe(false);
+    /**
+     * Test field validation with warning severity
+     */
+    it('should return warning for warning severity', () => {
+      const rule: ValidationRule = {
+        name: 'nameLength',
+        field: 'name',
+        validator: (value) => (value as string).length >= 5,
+        errorMessage: 'Name should be at least 5 characters',
+        severity: ValidationSeverity.WARNING,
+        category: ValidationCategory.LENGTH,
+      };
+
+      const context = validationEngine.createContext('name', {});
+      const result = validationEngine.validateField('John', rule, context);
+
+      expect(result.valid).toBe(true);
+      expect(result.warnings.length).toBe(1);
+    });
+  });
+
+  describe('Schema Validation', () => {
+    /**
+     * Test validating against schema
+     */
+    it('should validate entity against schema successfully', () => {
+      const schema: SchemaDefinition = {
+        fields: [
+          {
+            name: 'name',
+            type: FieldType.STRING,
+            required: true,
+            nullable: false,
+            rules: [],
+          },
+          {
+            name: 'age',
+            type: FieldType.NUMBER,
+            required: true,
+            nullable: false,
+            rules: [],
+          },
+        ],
+        globalRules: [],
+      };
+
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const result = validationEngine.validateSchema(entity, schema);
+
+      expect(result.valid).toBe(true);
+    });
+
+    /**
+     * Test schema validation with global rules
+     */
+    it('should apply global rules in schema validation', () => {
+      const globalRule: ValidationRule = {
+        name: 'ageMinimum',
+        field: 'age',
+        validator: (value) => (value as number) >= 18,
+        errorMessage: 'Age must be 18 or older',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.RANGE,
+      };
+
+      const schema: SchemaDefinition = {
+        fields: [],
+        globalRules: [globalRule],
+      };
+
+      const entity: TestEntity = {
+        name: 'John',
+        age: 15,
+        email: 'john@example.com',
+      };
+
+      const result = validationEngine.validateSchema(entity, schema);
+
+      expect(result.valid).toBe(false);
     });
   });
 
   describe('Custom Validators', () => {
     /**
-     * Test using a custom validator
+     * Test registering a custom validator
      */
-    it('should use custom validator successfully', () => {
-      const customValidator = (value: string) => /^[a-zA-Z]+$/.test(value);
+    it('should register a custom validator successfully', () => {
+      const customValidator = (value: unknown) => /^[a-zA-Z]+$/.test(value as string);
 
-      const rule: ValidationRule<TestEntity> = {
-        field: 'name',
-        validator: customValidator,
-        message: 'Name must contain only letters',
-      };
+      validationEngine.registerValidator('lettersOnly', customValidator);
 
-      validation.addRule(rule);
+      const validator = validationEngine.getValidator('lettersOnly');
+      expect(validator).toBeDefined();
+      expect(validator!('John')).toBe(true);
+      expect(validator!('John123')).toBe(false);
+    });
 
-      const result = validation.validateField('name', 'John123');
+    /**
+     * Test unregistering a custom validator
+     */
+    it('should unregister a custom validator successfully', () => {
+      const customValidator = (value: unknown) => true;
 
-      expect(result.success).toBe(false);
+      validationEngine.registerValidator('test', customValidator);
+      validationEngine.unregisterValidator('test');
+
+      const validator = validationEngine.getValidator('test');
+      expect(validator).toBeUndefined();
+    });
+
+    /**
+     * Test getting non-existent validator returns undefined
+     */
+    it('should return undefined for non-existent validator', () => {
+      const validator = validationEngine.getValidator('nonExistent');
+      expect(validator).toBeUndefined();
     });
   });
 
-  describe('Statistics', () => {
+  describe('Rule Management', () => {
     /**
-     * Test stats track total validations
+     * Test adding a validation rule
      */
-    it('should track total validations', () => {
-      const rule: ValidationRule<TestEntity> = {
+    it('should add a validation rule successfully', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
+      validationEngine.addRule(rule);
+      const rules = validationEngine.getRules();
 
-      const entity: TestEntity = {
-        name: 'John',
-        age: 30,
-        email: 'john@example.com',
-      };
-
-      validation.validate(entity);
-      validation.validate(entity);
-
-      const stats = validation.getStats();
-      expect(stats.totalValidations).toBe(2);
+      expect(rules.length).toBe(1);
     });
 
     /**
-     * Test stats track failed validations
+     * Test removing a validation rule
      */
-    it('should track failed validations', () => {
-      const rule: ValidationRule<TestEntity> = {
+    it('should remove a validation rule successfully', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
+      validationEngine.addRule(rule);
+      validationEngine.removeRule('nameRequired');
 
-      const entity: TestEntity = {
-        name: '',
-        age: 30,
-        email: 'john@example.com',
-      };
-
-      validation.validate(entity);
-
-      const stats = validation.getStats();
-      expect(stats.failedValidations).toBe(1);
+      const rules = validationEngine.getRules();
+      expect(rules.length).toBe(0);
     });
 
     /**
-     * Test reset stats
+     * Test getting rules for a specific field
      */
-    it('should reset stats', () => {
-      const rule: ValidationRule<TestEntity> = {
+    it('should return rules for specific field', () => {
+      const rule1: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
-
-      const entity: TestEntity = {
-        name: 'John',
-        age: 30,
-        email: 'john@example.com',
+      const rule2: ValidationRule = {
+        name: 'ageMinimum',
+        field: 'age',
+        validator: (value) => (value as number) >= 18,
+        errorMessage: 'Age must be 18 or older',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.RANGE,
       };
 
-      validation.validate(entity);
-      validation.resetStats();
+      validationEngine.addRule(rule1);
+      validationEngine.addRule(rule2);
 
-      const stats = validation.getStats();
-      expect(stats.totalValidations).toBe(0);
+      const nameRules = validationEngine.getRulesForField('name');
+      expect(nameRules.length).toBe(1);
+      expect(nameRules[0].field).toBe('name');
+    });
+
+    /**
+     * Test clearing all rules
+     */
+    it('should clear all rules successfully', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      validationEngine.addRule(rule);
+      validationEngine.clearRules();
+
+      const rules = validationEngine.getRules();
+      expect(rules.length).toBe(0);
     });
   });
 
@@ -307,58 +425,356 @@ describe('Validation', () => {
      */
     it('should update configuration', () => {
       const newConfig = {
-        stopOnFirstError: true,
-        defaultSeverity: ValidationSeverity.WARNING,
+        enabled: false,
+        failFast: true,
+        enableWarnings: false,
       };
 
-      validation.setConfig(newConfig);
-      const config = validation.getConfig();
+      validationEngine.setConfig(newConfig);
+      const config = validationEngine.getConfig();
 
-      expect(config.stopOnFirstError).toBe(true);
-      expect(config.defaultSeverity).toBe(ValidationSeverity.WARNING);
+      expect(config.enabled).toBe(false);
+      expect(config.failFast).toBe(true);
+      expect(config.enableWarnings).toBe(false);
+    });
+
+    /**
+     * Test partial config update
+     */
+    it('should update partial configuration', () => {
+      validationEngine.setConfig({ failFast: true });
+      const config = validationEngine.getConfig();
+
+      expect(config.failFast).toBe(true);
+      expect(config.enabled).toBe(true);
     });
   });
 
-  describe('Rule Removal', () => {
+  describe('Statistics', () => {
     /**
-     * Test removing a validation rule
+     * Test stats track total validations
      */
-    it('should remove a validation rule successfully', () => {
-      const rule: ValidationRule<TestEntity> = {
+    it('should track total validations', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
         field: 'name',
-        validator: (value) => value.length > 0,
-        message: 'Name is required',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
       };
 
-      validation.addRule(rule);
-      validation.removeRule('name');
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
 
-      const rules = validation.getRules();
-      expect(rules.length).toBe(0);
+      validationEngine.validate(entity, [rule]);
+      validationEngine.validate(entity, [rule]);
+
+      const stats = validationEngine.getStats();
+      expect(stats.totalValidations).toBe(2);
     });
 
     /**
-     * Test clearing all rules
+     * Test stats track successful validations
      */
-    it('should clear all rules successfully', () => {
-      const rules: ValidationRule<TestEntity>[] = [
+    it('should track successful validations', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      validationEngine.validate(entity, [rule]);
+
+      const stats = validationEngine.getStats();
+      expect(stats.successfulValidations).toBe(1);
+    });
+
+    /**
+     * Test stats track failed validations
+     */
+    it('should track failed validations', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      const entity: TestEntity = {
+        name: '',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      validationEngine.validate(entity, [rule]);
+
+      const stats = validationEngine.getStats();
+      expect(stats.failedValidations).toBe(1);
+    });
+
+    /**
+     * Test stats track rule execution counts
+     */
+    it('should track rule execution counts', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      validationEngine.validate(entity, [rule]);
+      validationEngine.validate(entity, [rule]);
+
+      const stats = validationEngine.getStats();
+      expect(stats.ruleExecutionCounts.get('nameRequired')).toBe(2);
+    });
+
+    /**
+     * Test reset stats
+     */
+    it('should reset stats', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      validationEngine.validate(entity, [rule]);
+      validationEngine.resetStats();
+
+      const stats = validationEngine.getStats();
+      expect(stats.totalValidations).toBe(0);
+      expect(stats.successfulValidations).toBe(0);
+      expect(stats.failedValidations).toBe(0);
+    });
+  });
+
+  describe('Validation Context', () => {
+    /**
+     * Test creating validation context
+     */
+    it('should create validation context successfully', () => {
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const context = validationEngine.createContext('name', entity, { test: 'value' });
+
+      expect(context.fieldName).toBe('name');
+      expect(context.entity).toEqual(entity);
+      expect(context.metadata.test).toBe('value');
+    });
+  });
+
+  describe('Required Fields Validation', () => {
+    /**
+     * Test validating required fields
+     */
+    it('should validate required fields successfully', () => {
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const result = validationEngine.validateRequired(entity, ['name', 'age']);
+
+      expect(result.valid).toBe(true);
+    });
+
+    /**
+     * Test fail validation when required field is missing
+     */
+    it('should fail validation when required field is missing', () => {
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const result = validationEngine.validateRequired(entity, ['name', 'age', 'address']);
+
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBe(1);
+    });
+  });
+
+  describe('Field Type Validation', () => {
+    /**
+     * Test validating field types
+     */
+    it('should validate field types successfully', () => {
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const fieldTypes = new Map<string, string>([
+        ['name', 'string'],
+        ['age', 'number'],
+      ]);
+
+      const result = validationEngine.validateTypes(entity, fieldTypes);
+
+      expect(result.valid).toBe(true);
+    });
+
+    /**
+     * Test fail validation when type mismatch
+     */
+    it('should fail validation when type mismatch', () => {
+      const entity: TestEntity = {
+        name: 'John',
+        age: 30,
+        email: 'john@example.com',
+      };
+
+      const fieldTypes = new Map<string, string>([
+        ['name', 'number'],
+      ]);
+
+      const result = validationEngine.validateTypes(entity, fieldTypes);
+
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBe(1);
+    });
+  });
+
+  describe('Clear Validators', () => {
+    /**
+     * Test clearing all custom validators
+     */
+    it('should clear all custom validators successfully', () => {
+      validationEngine.registerValidator('test1', () => true);
+      validationEngine.registerValidator('test2', () => true);
+
+      validationEngine.clearValidators();
+
+      expect(validationEngine.getValidator('test1')).toBeUndefined();
+      expect(validationEngine.getValidator('test2')).toBeUndefined();
+    });
+  });
+
+  describe('Reset', () => {
+    /**
+     * Test resetting validation engine
+     */
+    it('should reset validation engine to default state', () => {
+      const rule: ValidationRule = {
+        name: 'nameRequired',
+        field: 'name',
+        validator: (value) => (value as string).length > 0,
+        errorMessage: 'Name is required',
+        severity: ValidationSeverity.ERROR,
+        category: ValidationCategory.REQUIRED,
+      };
+
+      validationEngine.addRule(rule);
+      validationEngine.registerValidator('test', () => true);
+      validationEngine.setConfig({ enabled: false });
+
+      validationEngine.reset();
+
+      expect(validationEngine.getRules().length).toBe(0);
+      expect(validationEngine.getValidator('test')).toBeUndefined();
+      expect(validationEngine.getConfig().enabled).toBe(true);
+      expect(validationEngine.getStats().totalValidations).toBe(0);
+    });
+  });
+
+  describe('Edge Cases', () => {
+    /**
+     * Test validation with failFast enabled
+     */
+    it('should stop on first error when failFast is enabled', () => {
+      validationEngine.setConfig({ failFast: true });
+
+      const rules: ValidationRule[] = [
         {
+          name: 'nameRequired',
           field: 'name',
-          validator: (value) => value.length > 0,
-          message: 'Name is required',
+          validator: () => false,
+          errorMessage: 'Name is required',
+          severity: ValidationSeverity.ERROR,
+          category: ValidationCategory.REQUIRED,
         },
         {
+          name: 'ageMinimum',
           field: 'age',
-          validator: (value) => value >= 18,
-          message: 'Age must be 18 or older',
+          validator: () => false,
+          errorMessage: 'Age must be 18 or older',
+          severity: ValidationSeverity.ERROR,
+          category: ValidationCategory.RANGE,
         },
       ];
 
-      validation.addRules(rules);
-      validation.clearRules();
+      const entity: TestEntity = {
+        name: '',
+        age: 15,
+        email: 'john@example.com',
+      };
 
-      const registeredRules = validation.getRules();
-      expect(registeredRules.length).toBe(0);
+      const result = validationEngine.validate(entity, rules);
+
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBe(1);
+    });
+
+    /**
+     * Test validation with warnings disabled
+     */
+    it('should not include warnings when warnings are disabled', () => {
+      validationEngine.setConfig({ enableWarnings: false });
+
+      const rule: ValidationRule = {
+        name: 'nameLength',
+        field: 'name',
+        validator: (value) => (value as string).length >= 5,
+        errorMessage: 'Name should be at least 5 characters',
+        severity: ValidationSeverity.WARNING,
+        category: ValidationCategory.LENGTH,
+      };
+
+      const context = validationEngine.createContext('name', {});
+      const result = validationEngine.validateField('John', rule, context);
+
+      expect(result.warnings.length).toBe(0);
     });
   });
 });
