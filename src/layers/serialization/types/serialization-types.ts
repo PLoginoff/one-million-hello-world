@@ -32,6 +32,8 @@ export interface SerializationResult {
   data?: string;
   contentType?: ContentType;
   error?: string;
+  warnings?: string[];
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -41,4 +43,30 @@ export interface SerializationConfig {
   defaultFormat: SerializationFormat;
   enableVersioning: boolean;
   currentVersion: string;
+  enableValidation: boolean;
+  enablePlugins: boolean;
+  enableHooks: boolean;
+  strictMode: boolean;
+  maxDataSize?: number;
+  timeout?: number;
+}
+
+/**
+ * Serialization options
+ */
+export interface SerializationOptions {
+  format?: SerializationFormat;
+  validate?: boolean;
+  skipPlugins?: boolean;
+  skipHooks?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Extended serialization result with versioning info
+ */
+export interface ExtendedSerializationResult extends SerializationResult {
+  version?: string;
+  validationErrors?: string[];
+  validationWarnings?: string[];
 }
