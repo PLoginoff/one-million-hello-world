@@ -13,3 +13,10 @@
 export { IController } from './interfaces/IController';
 export { Controller } from './implementations/Controller';
 export * from './types/controller-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

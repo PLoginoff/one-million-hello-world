@@ -13,3 +13,10 @@
 export { IMiddlewareManager } from './interfaces/IMiddlewareManager';
 export { MiddlewareManager } from './implementations/MiddlewareManager';
 export * from './types/middleware-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

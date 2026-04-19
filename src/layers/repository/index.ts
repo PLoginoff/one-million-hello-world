@@ -13,3 +13,10 @@ export { RepositoryHandler } from './implementations/RepositoryHandler';
 export * from './types/repository-types';
 export * from './types/query-builder-types';
 export * from './types/handler-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

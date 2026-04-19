@@ -13,3 +13,10 @@
 export { IRateLimiter } from './interfaces/IRateLimiter';
 export { RateLimiter } from './implementations/RateLimiter';
 export * from './types/rate-limiting-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

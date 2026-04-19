@@ -13,3 +13,10 @@
 export { ISecurityManager } from './interfaces/ISecurityManager';
 export { SecurityManager } from './implementations/SecurityManager';
 export * from './types/security-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

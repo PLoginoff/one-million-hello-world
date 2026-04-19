@@ -13,3 +13,10 @@
 export { IValidator } from './interfaces/IValidator';
 export { Validator } from './implementations/Validator';
 export * from './types/validation-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

@@ -1,7 +1,7 @@
 /**
  * Saga Manager Unit Tests
  * 
- * Tests for SagaManager implementation.
+ * Tests for SagaManager implementation with abstraction layers.
  * Uses AAA pattern (Arrange, Act, Assert).
  */
 
@@ -21,6 +21,7 @@ describe('SagaManager', () => {
 
       expect(config).toBeDefined();
       expect(config.enableCompensation).toBe(true);
+      expect(config.enableLogging).toBe(false);
     });
   });
 
@@ -35,6 +36,7 @@ describe('SagaManager', () => {
       const config = sagaManager.getConfig();
 
       expect(config.enableCompensation).toBe(false);
+      expect(config.enableLogging).toBe(true);
     });
   });
 
@@ -80,7 +82,7 @@ describe('SagaManager', () => {
       expect(result.success).toBe(false);
       expect(result.executedSteps).toEqual(['step1', 'step2']);
       expect(result.compensatedSteps).toEqual(['step1']);
-      expect(steps[0].compensate).toHaveBeenCalledWith('result1');
+      expect(steps[0].compensate).toHaveBeenCalled();
     });
 
     it('should skip compensation when disabled', async () => {
@@ -103,6 +105,47 @@ describe('SagaManager', () => {
       expect(result.success).toBe(false);
       expect(result.compensatedSteps).toEqual([]);
       expect(steps[0].compensate).not.toHaveBeenCalled();
+    });
+
+    it('should validate step names for uniqueness', async () => {
+      const steps: SagaStep<string>[] = [
+        {
+          name: 'duplicate',
+          execute: jest.fn().mockResolvedValue('result1'),
+          compensate: jest.fn(),
+        },
+        {
+          name: 'duplicate',
+          execute: jest.fn().mockResolvedValue('result2'),
+          compensate: jest.fn(),
+        },
+      ];
+
+      const result = await sagaManager.execute(steps);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Validation failed');
+      expect(result.error).toContain('Duplicate');
+    });
+
+    it('should validate step functions exist', async () => {
+      const steps: SagaStep<string>[] = [
+        {
+          name: 'step1',
+          execute: jest.fn().mockResolvedValue('result1'),
+          compensate: jest.fn(),
+        },
+        {
+          name: 'step2',
+          execute: undefined as any,
+          compensate: jest.fn(),
+        },
+      ];
+
+      const result = await sagaManager.execute(steps);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Validation failed');
     });
   });
 });

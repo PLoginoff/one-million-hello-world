@@ -13,3 +13,10 @@
 export { IService } from './interfaces/IService';
 export { Service } from './implementations/Service';
 export * from './types/service-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';

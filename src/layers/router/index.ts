@@ -13,3 +13,10 @@
 export { IRouter } from './interfaces/IRouter';
 export { Router } from './implementations/Router';
 export * from './types/router-types';
+
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './statistics';
+export * from './factories';
+export * from './utils';
