@@ -1,5 +1,8 @@
 /**
- * Default Configurations
+ * Rate Limiting Configuration Defaults
+ *
+ * Exports default configuration presets.
  */
 
-export { DefaultConfigs, RateLimitConfigOptions } from './DefaultConfigs';
+export { DefaultConfigs } from './DefaultConfigs';
+export { RateLimitDefaults, RateLimitConfigDefaults } from './RateLimitDefaults';
