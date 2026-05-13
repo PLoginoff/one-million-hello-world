@@ -20,6 +20,7 @@ The codebase contains **1 million lines** (currently 100k+)
   - [Code Style](#code-style)
   - [Documentation](#documentation)
   - [CI/CD](#cicd)
+- [Setup](#setup)
 - [How to Run](#how-to-run)
 - [API](#api)
 - [Actual Statistics](#actual-statistics)
@@ -27,9 +28,13 @@ The codebase contains **1 million lines** (currently 100k+)
 - [License](#license)
 - [Authors](#authors)
 
+------------------------------------
+
 ## Goal
 
 Demonstration of a comprehensive architectural implementation applying clean architecture principles, SOLID, design patterns, and enterprise-level development approaches. The project illustrates how a systematic approach to abstraction and modularity can be applied even to tasks with minimal functional complexity, ensuring high maintainability, testability, and system extensibility.
+
+------------------------------------
 
 ## Architecture
 
@@ -89,6 +94,8 @@ Decorator Layer (Runtime decoration, cross-cutting concerns)
 Transport Layer (HTTP response, streaming, chunked encoding)
 ```
 
+------------------------------------
+
 ### Logging
 
 Logs at **every level**:
@@ -100,6 +107,8 @@ Logs at **every level**:
 - Audit logging
 - Distributed tracing (OpenTelemetry)
 
+------------------------------------
+
 ### Technologies
 
 - **TypeScript** with strict typing
@@ -109,6 +118,8 @@ Logs at **every level**:
 - **RxJS** - Reactive streams
 - **Inversify** - Dependency Injection
 - **OpenTelemetry** - Distributed tracing
+
+------------------------------------
 
 ## Architectural Rules and Standards
 
@@ -268,6 +279,19 @@ Logs at **every level**:
 - Build fails if test failures
 - Mutation testing weekly
 
+------------------------------------
+
+## Setup
+
+Run commands:
+```
+make install
+make build
+make start-dev
+```
+
+------------------------------------
+
 ## How to Run
 
 All common tasks are available through **Makefile**:
@@ -313,11 +337,15 @@ npm run start:dev
 
 Server will be available at `http://localhost:3000`
 
+------------------------------------
+
 ## API
 
 ### GET /
 
 Returns classic "Hello, World!"
+
+------------------------------------
 
 ## Actual Statistics
 
@@ -365,6 +393,8 @@ make stats
   tsconfig.json/                      1
 ```
 
+------------------------------------
+
 ## Expected Statistics
 
 - **Lines of code**: 1,000,000 (goal)
@@ -373,10 +403,16 @@ make stats
 - **TypeScript types**: TBD
 - **Size**: TBD
 
+------------------------------------
+
 ## License
 
 **MIT**
 
+------------------------------------
+
 ## Authors
 - Pavel Loginov <ploginoff@gmail.com>
 - Ikonnikov Mikhail <mishaikon@gmail.com>
+
+------------------------------------
