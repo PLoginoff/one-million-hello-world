@@ -249,6 +249,36 @@ Logs at **every level**:
 
 ## How to Run
 
+All common tasks are available through **Makefile**:
+
+```bash
+# Install dependencies
+make install
+
+# Build the project
+make build
+
+# Start production server
+make start
+
+# Start development server with hot reload
+make dev
+
+# Run tests
+make test
+
+# Run linter
+make lint
+
+# Format code
+make format
+
+# Show project statistics (files, lines, commits)
+make stats
+```
+
+Or use npm directly:
+
 ```bash
 # Install dependencies
 npm install
@@ -268,7 +298,53 @@ Server will be available at `http://localhost:3000`
 
 Returns classic "Hello, World!"
 
-## Statistics
+## Actual Statistics
+
+```
+make stats
+
+==================================================
+  Общая статистика проекта
+==================================================
+  Общее количество файлов             1 025
+  Примерное количество строк кода     158 846
+  Общее количество коммитов           24
+
+==================================================
+  Git-метрики
+==================================================
+  Количество авторов                  3
+  Дата последнего коммита             2026-05-13
+
+==================================================
+  Файлы по расширениям
+==================================================
+  .ts                                 819
+  .md                                 197
+  (no ext)                            4
+  .json                               3
+  .js                                 2
+
+==================================================
+  Файлы по директориям (верхний уровень)
+==================================================
+  src/                                985
+  docs/                               25
+  doc/                                4
+  .eslintrc.json/                     1
+  .gitignore/                         1
+  .prettierrc/                        1
+  DEVELOPMENT.md/                     1
+  LICENSE/                            1
+  Makefile/                           1
+  README.md/                          1
+  jest.config.js/                     1
+  package.json/                       1
+  scripts/                            1
+  tsconfig.json/                      1
+```
+
+## Expected Statistics
 
 - **Lines of code**: 1,000,000 (goal)
 - **Files**: TBD
@@ -278,4 +354,8 @@ Returns classic "Hello, World!"
 
 ## License
 
-MIT
+**MIT**
+
+## Authors
+- Pavel Loginov <ploginoff@gmail.com>
+- Ikonnikov Mikhail <mishaikon@gmail.com>
