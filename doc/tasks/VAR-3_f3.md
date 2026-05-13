@@ -29,6 +29,19 @@ docs: add Makefile commands description to README.md
 start, dev, test, lint, format, stats) с кратким описанием.
 ```
 
+## VAR-3_f3 — Добавлено оглавление в README
+
+**Дата: 2026-05-13 23:49**
+
+## Комментарий для коммита
+
+```
+docs: add table of contents to README.md
+
+Добавлено содержание (Contents) в начало README.md со ссылками
+на все основные разделы для быстрой навигации.
+```
+
 ## Тестирование
 
 ```bash

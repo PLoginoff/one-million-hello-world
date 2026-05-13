@@ -6,6 +6,27 @@ The codebase contains **1 million lines** (currently 100k+)
 
 ![Progress](https://img.shields.io/badge/progress-16%25-red)
 
+## Contents
+
+- [Goal](#goal)
+- [Architecture](#architecture)
+  - [Logging](#logging)
+  - [Technologies](#technologies)
+- [Architectural Rules and Standards](#architectural-rules-and-standards)
+  - [Clean Architecture](#clean-architecture)
+  - [SOLID Principles](#solid-principles)
+  - [Layer Rules](#layer-rules)
+  - [Testing](#testing)
+  - [Code Style](#code-style)
+  - [Documentation](#documentation)
+  - [CI/CD](#cicd)
+- [How to Run](#how-to-run)
+- [API](#api)
+- [Actual Statistics](#actual-statistics)
+- [Expected Statistics](#expected-statistics)
+- [License](#license)
+- [Authors](#authors)
+
 ## Goal
 
 Demonstration of a comprehensive architectural implementation applying clean architecture principles, SOLID, design patterns, and enterprise-level development approaches. The project illustrates how a systematic approach to abstraction and modularity can be applied even to tasks with minimal functional complexity, ensuring high maintainability, testability, and system extensibility.
