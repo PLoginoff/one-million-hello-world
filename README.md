@@ -283,7 +283,7 @@ make build
 make start
 
 # Start development server with hot reload
-make dev
+make start-dev
 
 # Run tests
 make test

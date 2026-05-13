@@ -1,7 +1,7 @@
 # Main Makefile for One Million Hello World project
 # Provides unified commands for build, run, test and deploy
 
-.PHONY: help install build start dev test test-watch test-coverage lint lint-fix format type-check clean deploy stats
+.PHONY: help install build start start-dev test test-watch test-coverage lint lint-fix format type-check clean deploy stats
 
 # Show available make commands with descriptions
 help:
@@ -9,7 +9,7 @@ help:
 	@echo "  make install       - Install dependencies"
 	@echo "  make build         - Compile TypeScript"
 	@echo "  make start         - Start production server"
-	@echo "  make dev           - Start development server with ts-node"
+	@echo "  make start-dev     - Start development server with ts-node"
 	@echo "  make test          - Run unit tests"
 	@echo "  make test-watch    - Run tests in watch mode"
 	@echo "  make test-coverage - Run tests with coverage report"
@@ -34,7 +34,7 @@ start:
 	npm start
 
 # Start development server with hot reload via ts-node
-dev:
+start-dev:
 	npm run start:dev
 
 # Run all unit tests once

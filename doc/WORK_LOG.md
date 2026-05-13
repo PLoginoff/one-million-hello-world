@@ -16,5 +16,6 @@
 - VAR-3_f3 **feat: add project-stats script and Makefile target** — [scripts/project-stats.js](scripts/project-stats.js) , [WorkLog](doc/tasks/VAR-3_f3.md)
 - VAR-3_f3 **docs: add Makefile commands description to README.md** — [README.md](README.md) , [WorkLog](doc/tasks/VAR-3_f3.md)
 - VAR-3_f3 **docs: add table of contents to README.md** — [README.md](README.md) , [WorkLog](doc/tasks/VAR-3_f3.md)
+- VAr-3_f1 **refactor: rename make dev to make start-dev** — [Makefile](Makefile) , [README.md](README.md)
 
 -------------------
