@@ -17,5 +17,7 @@
 - VAR-3_f3 **docs: add Makefile commands description to README.md** — [README.md](../README.md) , [WorkLog](tasks/VAR-3_f3.md)
 - VAR-3_f3 **docs: add table of contents to README.md** — [README.md](../README.md) , [WorkLog](tasks/VAR-3_f3.md)
 - VAr-3_f1 **refactor: rename make dev to make start-dev** — [Makefile](../Makefile) , [README.md](../README.md)
+- VAR-3_f1 **fix: use npx tsc instead of npm run build in Makefile** — [Makefile](../Makefile)
+- VAR-3_f4 **fix: update OpenTelemetry packages and remove jaeger exporter** — [package.json](../package.json) , [WorkLog](tasks/VAR-3_f4.md)
 
 -------------------

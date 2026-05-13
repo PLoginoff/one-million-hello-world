@@ -27,7 +27,7 @@ install:
 
 # Compile TypeScript sources into dist/
 build:
-	npm run build
+	npx tsc
 
 # Start the compiled production server
 start:

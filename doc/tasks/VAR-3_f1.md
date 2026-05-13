@@ -26,8 +26,22 @@ docs: add inline comments to every Makefile target
 для быстрого понимания назначения команды без чтения README.
 ```
 
+## VAR-3_f1 — Исправлена ошибка `tsc: not found`
+
+**Дата: 2026-05-14 00:05**
+
+## Комментарий для коммита
+
+```
+fix: use npx tsc instead of npm run build in Makefile
+
+Команда make build вызывала npm run build, который не находил tsc
+в PATH при запуске через WSL. Заменено на npx tsc — ищет бинарник
+локально в node_modules/.bin автоматически.
+```
+
 ## Тестирование
 
 ```bash
-wsl make help
+wsl make build
 ```
