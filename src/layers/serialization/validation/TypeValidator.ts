@@ -41,4 +41,8 @@ export class TypeValidator implements IValidator {
   getValidatorName(): string {
     return 'type';
   }
+
+  isEnabled(): boolean {
+    return true;
+  }
 }

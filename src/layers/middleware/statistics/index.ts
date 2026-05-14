@@ -4,4 +4,4 @@
  * Exports statistics tracking components.
  */
 
-export { MiddlewareStatistics, MiddlewareStats } from './MiddlewareStatistics';
+export { MiddlewareStats } from './MiddlewareStatistics';

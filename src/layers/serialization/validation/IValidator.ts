@@ -6,8 +6,13 @@
 
 export interface IValidator {
   /**
+   * Check if validator is enabled
+   */
+  isEnabled(): boolean;
+
+  /**
    * Validates data
-   * 
+   *
    * @param data - Data to validate
    * @returns Validation result
    */
@@ -15,7 +20,7 @@ export interface IValidator {
 
   /**
    * Gets the validator name
-   * 
+   *
    * @returns Validator name
    */
   getValidatorName(): string;

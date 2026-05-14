@@ -43,3 +43,6 @@ Thumbs.db
 .eslintcache
 .prettier-cache
 .cache/
+
+# docs
+doc/

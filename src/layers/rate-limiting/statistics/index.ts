@@ -4,4 +4,4 @@
  * Exports statistics tracking components.
  */
 
-export { RateLimitStatistics, RateLimitStats } from './RateLimitStatistics';
+export { RateLimitStatistics } from './RateLimitStatistics';

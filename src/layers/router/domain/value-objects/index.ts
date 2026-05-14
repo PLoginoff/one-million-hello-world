@@ -2,4 +2,4 @@
  * Domain Value Objects
  */
 
-export { HttpMethodValueObject, HttpMethod } from './HttpMethodValueObject';
+export { HttpMethodValueObject } from './HttpMethodValueObject';

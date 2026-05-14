@@ -2,4 +2,4 @@
  * Domain Value Objects
  */
 
-export { ValidationSeverityValueObject, ValidationSeverity } from './ValidationSeverityValueObject';
+export { ValidationSeverityValueObject } from './ValidationSeverityValueObject';

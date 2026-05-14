@@ -3,4 +3,4 @@
  */
 
 export { ValidationService } from './ValidationService';
-export { SchemaValidationService, ValidationSchema } from './SchemaValidationService';
+export { SchemaValidationService } from './SchemaValidationService';

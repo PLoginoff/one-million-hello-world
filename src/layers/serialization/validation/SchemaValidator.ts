@@ -42,6 +42,10 @@ export class SchemaValidator implements IValidator {
     return 'schema';
   }
 
+  isEnabled(): boolean {
+    return true;
+  }
+
   private _validate(
     data: unknown,
     schema: Schema,
