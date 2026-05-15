@@ -10,8 +10,8 @@ export class EventType {
   private static readonly MAX_LENGTH = 100;
 
   private readonly _value: string;
-  private readonly _category: string;
-  private readonly _subcategory?: string;
+  private _category: string;
+  private _subcategory?: string;
 
   constructor(value: string) {
     this._value = value.toLowerCase().trim();

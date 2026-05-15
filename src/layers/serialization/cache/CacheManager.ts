@@ -62,7 +62,7 @@ export class CacheManager {
    */
   get<T>(namespace: string, key: string): T | undefined {
     const provider = this.getProvider(namespace);
-    return provider ? provider.get(key) : undefined;
+    return provider ? (provider.get(key) as T) : undefined;
   }
 
   /**

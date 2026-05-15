@@ -40,7 +40,7 @@ export class MockEventBus implements IEventBus {
 
   once<T>(eventType: string, handler: EventHandler<T>): string {
     const wrappedHandler: EventHandler = (event: Event) => {
-      handler(event);
+      handler(event as Event<T>);
       this.unsubscribe(`mock-sub-${eventType}`);
     };
     return this.subscribe(eventType, wrappedHandler);

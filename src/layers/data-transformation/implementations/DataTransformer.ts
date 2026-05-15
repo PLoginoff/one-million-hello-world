@@ -113,7 +113,7 @@ export class DataTransformer implements IDataTransformer {
 
     if (this._config.enableMapping && rules) {
       const mappedResult = this.map(result.data as T, rules);
-      return mappedResult;
+      return mappedResult as TransformationResult<U>;
     }
 
     return { success: true, data: result.data as unknown as U };

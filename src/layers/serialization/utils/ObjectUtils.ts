@@ -45,7 +45,7 @@ export class ObjectUtils {
             result[key] = this.deepMerge(
               targetValue as Record<string, unknown>,
               sourceValue as Record<string, unknown>
-            );
+            ) as T[Extract<keyof T, string>];
           } else {
             result[key] = this.deepClone(sourceValue);
           }
@@ -146,7 +146,7 @@ export class ObjectUtils {
    * Gets all values of object
    */
   static values<T extends Record<string, unknown>>(obj: T): T[keyof T][] {
-    return Object.values(obj);
+    return Object.values(obj) as T[keyof T][];
   }
 
   /**

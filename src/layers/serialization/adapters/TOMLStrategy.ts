@@ -4,8 +4,8 @@
  * Adapter for TOML serialization format.
  */
 
-import { ISerializationStrategy } from '../../interfaces/ISerializationStrategy';
-import { ContentType } from '../../types/serialization-types';
+import { ISerializationStrategy } from '../strategies/ISerializationStrategy';
+import { ContentType } from '../types/serialization-types';
 
 export class TOMLStrategy implements ISerializationStrategy {
   serialize(data: unknown): string {
@@ -29,7 +29,7 @@ export class TOMLStrategy implements ISerializationStrategy {
   }
 
   getContentType(): ContentType {
-    return ContentType.TEXT;
+    return ContentType.PLAIN_TEXT;
   }
 
   getFormatName(): string {

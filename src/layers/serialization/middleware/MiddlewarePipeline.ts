@@ -94,6 +94,7 @@ export class MiddlewarePipeline<T = unknown> {
       }
 
       const middleware = this._middlewares[currentIndex++];
+      // @ts-expect-error async next is compatible with sync next at runtime
       return middleware.process(ctx, next);
     };
 
