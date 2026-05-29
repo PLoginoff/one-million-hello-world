@@ -5,5 +5,5 @@
  */
 
 export { EventBusConfig, EventBusConfigOptions } from './EventBusConfig';
-export { ConfigValidator, ValidationError, ValidationResult } from './ConfigValidator';
+export { ConfigValidator, ValidationError } from './ConfigValidator';
 export { ConfigLoader, ConfigSource, LoadedConfig } from './ConfigLoader';

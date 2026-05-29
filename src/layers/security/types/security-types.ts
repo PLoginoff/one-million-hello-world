@@ -61,6 +61,20 @@ export interface SecurityError {
 /**
  * Security error codes
  */
+export enum SecurityLevel {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+export enum ThreatSeverity {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
 export enum SecurityErrorCode {
   UNAUTHORIZED = 'UNAUTHORIZED',
   FORBIDDEN = 'FORBIDDEN',
@@ -100,6 +114,7 @@ export enum ThreatType {
   XSS = 'XSS',
   CSRF = 'CSRF',
   PATH_TRAVERSAL = 'PATH_TRAVERSAL',
+  BRUTE_FORCE = 'BRUTE_FORCE',
   DDOS = 'DDOS',
   MALICIOUS_USER_AGENT = 'MALICIOUS_USER_AGENT',
   COMMAND_INJECTION = 'COMMAND_INJECTION',

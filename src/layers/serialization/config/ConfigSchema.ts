@@ -140,6 +140,7 @@ export class ConfigSchema {
 
     for (const [key, property] of Object.entries(this._schema)) {
       if (property.default !== undefined) {
+        // @ts-expect-error partial config with index access produces never
         defaults[key as keyof SerializationConfig] = property.default as any;
       }
     }

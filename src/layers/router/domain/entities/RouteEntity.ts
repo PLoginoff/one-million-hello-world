@@ -90,6 +90,13 @@ export class RouteEntity {
   }
 
   /**
+   * Check if route is enabled
+   */
+  isEnabled(): boolean {
+    return this.data.enabled;
+  }
+
+  /**
    * Enable route
    */
   enable(): RouteEntity {

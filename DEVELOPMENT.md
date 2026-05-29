@@ -213,7 +213,21 @@
 - [ ] Coverage reporting
 - [ ] Automated release process
 
-## Statistics
+## Actual Statistics
+
+To get actual statictics, please run:
+
+In Linux/MacOS:
+```
+make stats
+```
+
+In windows:
+```
+wsl make stats
+```
+
+## Current Statistics
 
 - **Total Layers**: 25
 - **Layers Completed**: 0/25

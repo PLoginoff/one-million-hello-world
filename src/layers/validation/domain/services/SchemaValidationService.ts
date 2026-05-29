@@ -4,18 +4,20 @@
  * Provides schema-based validation.
  */
 
+export interface FieldSchema {
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+  pattern?: string;
+  properties?: Record<string, FieldSchema>;
+  items?: FieldSchema;
+}
+
 export interface ValidationSchema {
-  [field: string]: {
-    type: 'string' | 'number' | 'boolean' | 'object' | 'array';
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    min?: number;
-    max?: number;
-    pattern?: string;
-    properties?: ValidationSchema;
-    items?: ValidationSchema;
-  };
+  [field: string]: FieldSchema;
 }
 
 export class SchemaValidationService {
@@ -46,7 +48,7 @@ export class SchemaValidationService {
   private static validateField(
     field: string,
     value: any,
-    schema: ValidationSchema[string],
+    schema: FieldSchema,
     parent: any
   ): Array<{ field: string; message: string }> {
     const errors: Array<{ field: string; message: string }> = [];

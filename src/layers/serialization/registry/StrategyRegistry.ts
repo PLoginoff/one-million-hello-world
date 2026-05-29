@@ -165,7 +165,7 @@ export class StrategyRegistry {
    * @returns Array of content types
    */
   getSupportedContentTypes(): ContentType[] {
-    return Array.from(this._contentTypeMap.keys());
+    return Array.from(this._contentTypeMap.keys()) as ContentType[];
   }
 
   /**

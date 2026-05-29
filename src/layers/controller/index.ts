@@ -19,4 +19,4 @@ export * from './configuration';
 export * from './strategies';
 export * from './statistics';
 export * from './factories';
-export * from './utils';
+export { ControllerHelpers } from './utils';

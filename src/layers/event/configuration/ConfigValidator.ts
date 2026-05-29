@@ -33,17 +33,17 @@ export class ConfigValidator {
 
     for (const rule of this._rules) {
       const result = rule.validate(config);
-      if (!result.valid) {
+      if (!result) {
         if (rule.severity === 'error') {
           errors.push({
             field: rule.field,
-            message: result.message || rule.defaultMessage,
+            message: rule.defaultMessage,
             value: (config as any)[rule.field],
           });
         } else {
           warnings.push({
             field: rule.field,
-            message: result.message || rule.defaultMessage,
+            message: rule.defaultMessage,
             value: (config as any)[rule.field],
           });
         }

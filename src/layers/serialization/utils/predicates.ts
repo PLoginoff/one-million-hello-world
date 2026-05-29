@@ -122,10 +122,10 @@ export function ifElse<T>(
   return (value) => condition(value) ? thenPredicate(value) : elsePredicate(value);
 }
 
-export function compose<T, U, V>(
-  p1: Predicate<V>,
-  p2: (value: V) => U,
-  p3: (value: U) => T
+export function compose<V, T, U>(
+  p1: Predicate<U>,
+  p2: (value: T) => U,
+  p3: (value: V) => T
 ): Predicate<V> {
   return (value) => p1(p2(p3(value)));
 }

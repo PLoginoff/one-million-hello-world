@@ -32,6 +32,7 @@ import {
   MetricAggregationResult,
   LogOutputFormat,
   LogOutputTarget,
+  MetricType,
 } from '../types/middleware-types';
 
 export class MiddlewareManager implements IMiddlewareManager {
@@ -59,8 +60,8 @@ export class MiddlewareManager implements IMiddlewareManager {
       enableSpanSampling: false,
       spanSamplingRate: 1.0,
       enableStructuredLogging: true,
-      logOutputFormat: 'JSON' as const,
-      logOutputTarget: 'CONSOLE' as const,
+      logOutputFormat: LogOutputFormat.JSON,
+      logOutputTarget: LogOutputTarget.CONSOLE,
     };
     this._logs = [];
     this._metrics = [];
@@ -590,7 +591,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     return {
       name: metricName,
-      type: metrics.length > 0 ? metrics[0].type : 'COUNTER' as const,
+      type: metrics.length > 0 ? metrics[0].type : MetricType.COUNTER,
       statistics,
       timeRange,
       labels,

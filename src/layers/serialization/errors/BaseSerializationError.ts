@@ -8,7 +8,7 @@ export class BaseSerializationError extends Error {
   public readonly code: string;
   public readonly timestamp: Date;
   public readonly context?: Record<string, unknown>;
-  public readonly cause?: Error;
+  public override readonly cause?: Error;
 
   constructor(
     code: string,
@@ -75,7 +75,7 @@ export class BaseSerializationError extends Error {
   /**
    * Converts error to string
    */
-  toString(): string {
+  override toString(): string {
     return `${this.name} [${this.code}]: ${this.message}`;
   }
 }

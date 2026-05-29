@@ -6,9 +6,35 @@ The codebase contains **1 million lines** (currently 100k+)
 
 ![Progress](https://img.shields.io/badge/progress-18%25-red)
 
+## Contents
+
+- [Goal](#goal)
+- [Architecture](#architecture)
+  - [Logging](#logging)
+  - [Technologies](#technologies)
+- [Architectural Rules and Standards](#architectural-rules-and-standards)
+  - [Clean Architecture](#clean-architecture)
+  - [SOLID Principles](#solid-principles)
+  - [Layer Rules](#layer-rules)
+  - [Testing](#testing)
+  - [Code Style](#code-style)
+  - [Documentation](#documentation)
+  - [CI/CD](#cicd)
+- [Setup](#setup)
+- [How to Run](#how-to-run)
+- [API](#api)
+- [Actual Statistics](#actual-statistics)
+- [Expected Statistics](#expected-statistics)
+- [License](#license)
+- [Authors](#authors)
+
+------------------------------------
+
 ## Goal
 
 Demonstration of a comprehensive architectural implementation applying clean architecture principles, SOLID, design patterns, and enterprise-level development approaches. The project illustrates how a systematic approach to abstraction and modularity can be applied even to tasks with minimal functional complexity, ensuring high maintainability, testability, and system extensibility.
+
+------------------------------------
 
 ## Architecture
 
@@ -68,6 +94,8 @@ Decorator Layer (Runtime decoration, cross-cutting concerns)
 Transport Layer (HTTP response, streaming, chunked encoding)
 ```
 
+------------------------------------
+
 ### Logging
 
 Logs at **every level**:
@@ -79,6 +107,8 @@ Logs at **every level**:
 - Audit logging
 - Distributed tracing (OpenTelemetry)
 
+------------------------------------
+
 ### Technologies
 
 - **TypeScript** with strict typing
@@ -88,6 +118,8 @@ Logs at **every level**:
 - **RxJS** - Reactive streams
 - **Inversify** - Dependency Injection
 - **OpenTelemetry** - Distributed tracing
+
+------------------------------------
 
 ## Architectural Rules and Standards
 
@@ -247,7 +279,50 @@ Logs at **every level**:
 - Build fails if test failures
 - Mutation testing weekly
 
+------------------------------------
+
+## Setup
+
+Run commands:
+```
+make install
+make build
+make start-dev
+```
+
+------------------------------------
+
 ## How to Run
+
+All common tasks are available through **Makefile**:
+
+```bash
+# Install dependencies
+make install
+
+# Build the project
+make build
+
+# Start production server
+make start
+
+# Start development server with hot reload
+make start-dev
+
+# Run tests
+make test
+
+# Run linter
+make lint
+
+# Format code
+make format
+
+# Show project statistics (files, lines, commits)
+make stats
+```
+
+Or use npm directly:
 
 ```bash
 # Install dependencies
@@ -262,13 +337,65 @@ npm run start:dev
 
 Server will be available at `http://localhost:3000`
 
+------------------------------------
+
 ## API
 
 ### GET /
 
 Returns classic "Hello, World!"
 
-## Statistics
+------------------------------------
+
+## Actual Statistics
+
+```
+make stats
+
+==================================================
+  Общая статистика проекта
+==================================================
+  Общее количество файлов             1 025
+  Примерное количество строк кода     158 846
+  Общее количество коммитов           24
+
+==================================================
+  Git-метрики
+==================================================
+  Количество авторов                  3
+  Дата последнего коммита             2026-05-13
+
+==================================================
+  Файлы по расширениям
+==================================================
+  .ts                                 819
+  .md                                 197
+  (no ext)                            4
+  .json                               3
+  .js                                 2
+
+==================================================
+  Файлы по директориям (верхний уровень)
+==================================================
+  src/                                985
+  docs/                               25
+  doc/                                4
+  .eslintrc.json/                     1
+  .gitignore/                         1
+  .prettierrc/                        1
+  DEVELOPMENT.md/                     1
+  LICENSE/                            1
+  Makefile/                           1
+  README.md/                          1
+  jest.config.js/                     1
+  package.json/                       1
+  scripts/                            1
+  tsconfig.json/                      1
+```
+
+------------------------------------
+
+## Expected Statistics
 
 - **Lines of code**: 1,000,000 (goal)
 - **Files**: TBD
@@ -276,6 +403,16 @@ Returns classic "Hello, World!"
 - **TypeScript types**: TBD
 - **Size**: TBD
 
+------------------------------------
+
 ## License
 
-MIT
+**MIT**
+
+------------------------------------
+
+## Authors
+- Pavel Loginov <ploginoff@gmail.com>
+- Ikonnikov Mikhail <mishaikon@gmail.com>
+
+------------------------------------

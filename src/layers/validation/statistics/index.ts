@@ -4,4 +4,4 @@
  * Exports statistics tracking components.
  */
 
-export { ValidationStatistics, ValidationStats } from './ValidationStatistics';
+export { ValidationStats } from './ValidationStatistics';

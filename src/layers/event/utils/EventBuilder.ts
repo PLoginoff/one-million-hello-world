@@ -29,7 +29,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withPayload(payload: T | EventPayload<T>): EventBuilder<T> {
-    this._options.payload = payload instanceof EventPayload ? payload : payload;
+    this._options.payload = payload as T;
     return this;
   }
 

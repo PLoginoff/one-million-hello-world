@@ -6,7 +6,14 @@
 
 export { IRepository } from './interfaces/IRepository';
 export { IQueryBuilder } from './interfaces/IQueryBuilder';
-export { IRepositoryHandler, HandlerConfig, HandlerContext, HandlerResult, HandlerError, HandlerMetrics } from './interfaces/IRepositoryHandler';
+export {
+  IRepositoryHandler,
+  HandlerConfig,
+  HandlerContext,
+  HandlerResult,
+  HandlerError,
+  HandlerMetrics,
+} from './interfaces/IRepositoryHandler';
 export { Repository } from './implementations/Repository';
 export { QueryBuilder } from './implementations/QueryBuilder';
 export { RepositoryHandler } from './implementations/RepositoryHandler';
@@ -19,4 +26,4 @@ export * from './configuration';
 export * from './strategies';
 export * from './statistics';
 export * from './factories';
-export * from './utils';
+export { RepositoryHelpers } from './utils';
