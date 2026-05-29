@@ -1,25 +1,19 @@
 /**
  * Cache Layer
- * 
+ *
  * This module exports all public interfaces, implementations, and types
  * for the Cache Layer (Layer 12 of the 25-layer architecture).
- * 
+ *
  * The Cache Layer provides multi-level caching with Clean Architecture,
  * including domain entities, configuration management, strategies,
  * statistics collection, storage abstractions, and factory patterns.
- * 
+ *
  * @module CacheLayer
  */
 
-// Legacy exports (backward compatibility)
-export { ICacheManager } from './interfaces/ICacheManager';
-export { CacheManager as LegacyCacheManager } from './implementations/CacheManager';
-export { InvalidationStrategy } from './types/cache-types';
-export type { CacheResult as LegacyCacheResult } from './types/cache-types';
+// Clean Architecture exports
 
-// New Clean Architecture exports
-
-// Domain Layer (replaces legacy types)
+// Domain Layer
 export { CacheEntry, CacheKey } from './domain/entities';
 export { TTL, TimeUnit } from './domain/value-objects/TTL';
 export { CacheLevel } from './domain/value-objects/CacheLevel';
