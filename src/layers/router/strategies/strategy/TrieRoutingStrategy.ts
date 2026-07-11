@@ -41,7 +41,7 @@ export class TrieRoutingStrategy implements IRoutingStrategy {
         if (!node.children.has(segment)) {
           node.children.set(segment, { children: new Map(), routes: [] });
         }
-        node = node.children.get(segment)!;
+        node = node.children.get(segment);
       }
     }
 
@@ -58,7 +58,7 @@ export class TrieRoutingStrategy implements IRoutingStrategy {
 
     for (const segment of segments) {
       if (node.children.has(segment)) {
-        node = node.children.get(segment)!;
+        node = node.children.get(segment);
       } else if (node.paramNode) {
         node = node.paramNode;
       } else {

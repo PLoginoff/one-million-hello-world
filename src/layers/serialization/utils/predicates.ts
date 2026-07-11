@@ -134,7 +134,7 @@ export function memoize<T>(predicate: Predicate<T>): Predicate<T> {
   const cache = new Map<T, boolean>();
   return (value) => {
     if (cache.has(value)) {
-      return cache.get(value)!;
+      return cache.get(value);
     }
     const result = predicate(value);
     cache.set(value, result);

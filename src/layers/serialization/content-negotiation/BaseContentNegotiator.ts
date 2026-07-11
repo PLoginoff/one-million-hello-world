@@ -53,7 +53,7 @@ export abstract class BaseContentNegotiator implements IContentNegotiator {
     for (const type of types) {
       const [mimeType, qValue] = type.split(';');
       const q = qValue ? parseFloat(qValue.replace('q=', '')) : 1.0;
-      parsed.push({ type: mimeType.trim(), q });
+      parsed.push({ type: mimeType.trim!(), q });
     }
 
     return parsed.sort((a, b) => b.q - a.q);

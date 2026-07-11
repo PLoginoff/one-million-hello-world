@@ -1,0 +1,1 @@
+export { WafConfigValidator } from './WafValidator';

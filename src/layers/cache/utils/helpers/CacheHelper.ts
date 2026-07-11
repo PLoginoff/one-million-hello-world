@@ -8,6 +8,55 @@ import { CacheEntry } from '../../domain/entities/CacheEntry';
 
 export class CacheHelper {
   /**
+   * Calculate approximate size of a cache entry in bytes
+   */
+  static calculateSize<T>(entry: CacheEntry<T>): number {
+    const keySize = entry.key.length * 2;
+    const valueSize = JSON.stringify(entry.value).length * 2;
+    return keySize + valueSize + 64;
+  }
+
+  /**
+   * Generate a cache key from multiple parts
+   */
+  static generateKey(...parts: string[]): string {
+    return parts.filter(part => part.length > 0).join(':');
+  }
+
+  /**
+   * Parse a cache key into its parts
+   */
+  static parseKey(key: string): string[] {
+    if (!key) return [];
+    return key.split(':');
+  }
+
+  /**
+   * Serialize a cache entry to JSON
+   */
+  static serialize<T>(entry: CacheEntry<T>): string {
+    return JSON.stringify({
+      key: entry.key,
+      value: entry.value,
+      ttl: entry.ttl,
+      createdAt: entry.createdAt,
+      accessCount: entry.accessCount,
+      lastAccessedAt: entry.lastAccessedAt,
+    });
+  }
+
+  /**
+   * Deserialize a cache entry from JSON
+   */
+  static deserialize<T>(data: string): CacheEntry<T> {
+    const parsed = JSON.parse(data);
+    const entry = new CacheEntry<T>(parsed.key, parsed.value, parsed.ttl, parsed.createdAt);
+    entry.accessCount = parsed.accessCount ?? 0;
+    entry.lastAccessedAt = parsed.lastAccessedAt ?? parsed.createdAt;
+    return entry;
+  }
+
+  /**
    * Generate a hash for a key
    */
   static hashKey(key: string): number {

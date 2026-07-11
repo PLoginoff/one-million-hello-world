@@ -155,7 +155,7 @@ export class ConnectionStatisticsService {
       const sum = window.reduce((acc, d) => acc + d.value, 0);
       const average = sum / window.length;
       result.push({
-        timestamp: data[i].timestamp,
+        timestamp: (data[i])!.timestamp,
         value: average,
       });
     }

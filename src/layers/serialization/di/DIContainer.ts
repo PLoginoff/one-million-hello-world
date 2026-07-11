@@ -17,34 +17,39 @@ export class DIContainer implements IDIContainer {
 
   register<T>(
     token: unknown,
-    factory: () => T,
-    lifetime: ServiceLifetime = ServiceLifetime.TRANSIENT,
+    lifetime: ServiceLifetime,
+    factory?: () => T,
     dependencies?: unknown[]
   ): void {
-    const descriptor = createServiceDescriptor(token, factory, lifetime, dependencies);
+    if (this._services.has(token)) {
+      throw new Error(`Service already registered: ${String(token)}`);
+    }
+
+    const resolvedFactory = factory ?? (() => this._createConstructorInstance<T>(token, dependencies ?? []));
+    const descriptor = createServiceDescriptor(token, resolvedFactory, lifetime, dependencies);
     this._services.set(token, descriptor);
   }
 
+  private _createConstructorInstance<T>(constructor: unknown, dependencies: unknown[]): T {
+    const deps = dependencies.map(dep => this.resolve(dep));
+    const Ctor = constructor as new (...args: unknown[]) => T;
+    return new Ctor(...deps);
+  }
+
+  resolve<T>(token: new (...args: unknown[]) => T): T;
+  resolve<T>(token: unknown): T;
   resolve<T>(token: unknown): T {
     if (this._scoped.has(token)) {
       return this._scoped.get(token) as T;
     }
 
-    const descriptor = this._services.get(token);
+    const descriptor = this._services.get(token) ?? this._findDescriptorInParent(token);
     if (!descriptor) {
-      if (this._parent) {
-        return this._parent.resolve<T>(token);
-      }
       throw new Error(`Service not registered: ${String(token)}`);
     }
 
     if (descriptor.lifetime === ServiceLifetime.SINGLETON) {
-      if (this._singletons.has(token)) {
-        return this._singletons.get(token) as T;
-      }
-      const instance = this._createInstance(descriptor);
-      this._singletons.set(token, instance);
-      return instance as T;
+      return this._resolveSingleton<T>(descriptor, token);
     }
 
     if (descriptor.lifetime === ServiceLifetime.SCOPED) {
@@ -57,6 +62,35 @@ export class DIContainer implements IDIContainer {
     }
 
     return this._createInstance(descriptor) as T;
+  }
+
+  private _findDescriptorInParent(token: unknown): ServiceDescriptor | undefined {
+    let parent = this._parent;
+    while (parent) {
+      if (parent instanceof DIContainer) {
+        const descriptor = parent._services.get(token);
+        if (descriptor) {
+          return descriptor;
+        }
+        parent = parent._parent;
+      } else {
+        return undefined;
+      }
+    }
+    return undefined;
+  }
+
+  private _resolveSingleton<T>(descriptor: ServiceDescriptor, token: unknown): T {
+    let root: DIContainer = this;
+    while (root._parent instanceof DIContainer) {
+      root = root._parent;
+    }
+    if (root._singletons.has(token)) {
+      return root._singletons.get(token) as T;
+    }
+    const instance = this._createInstance(descriptor);
+    root._singletons.set(token, instance);
+    return instance as T;
   }
 
   isRegistered(token: unknown): boolean {

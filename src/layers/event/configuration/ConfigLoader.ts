@@ -128,8 +128,10 @@ export class ConfigLoader {
   }
 
   private _parseEnvValue(value: string): boolean | number | string {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
+    const lower = value.toLowerCase();
+    if (lower === 'true') return true;
+    if (lower === 'false') return false;
+    if (value === '') return value;
     const num = Number(value);
     if (!isNaN(num)) return num;
     return value;

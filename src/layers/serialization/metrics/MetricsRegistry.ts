@@ -53,7 +53,7 @@ export class MetricsRegistry {
     if (!this._collectors.has(name)) {
       this._collectors.set(name, new InMemoryMetricsCollector());
     }
-    return this._collectors.get(name)!;
+    return this._collectors.get(name);
   }
 
   /**

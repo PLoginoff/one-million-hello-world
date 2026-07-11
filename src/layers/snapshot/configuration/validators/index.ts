@@ -1,0 +1,1 @@
+export { SnapshotConfigValidator } from './SnapshotValidator';

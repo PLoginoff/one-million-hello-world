@@ -1,0 +1,1 @@
+export { DataQualityConfigValidator } from './DataQualityValidator';

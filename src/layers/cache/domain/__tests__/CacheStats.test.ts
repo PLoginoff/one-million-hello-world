@@ -238,8 +238,8 @@ describe('CacheStats', () => {
       const stats = new CacheStats(100, 50, 25, 50);
       const json = stats.toJSON();
       
-      expect(typeof json.getHitRate).toBe('undefined');
-      expect(typeof json.reset).toBe('undefined');
+      expect(typeof (json as Record<string, unknown>).getHitRate).toBe('undefined');
+      expect(typeof (json as Record<string, unknown>).reset).toBe('undefined');
     });
   });
 

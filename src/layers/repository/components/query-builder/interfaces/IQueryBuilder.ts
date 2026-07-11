@@ -170,7 +170,7 @@ export interface IQueryBuilder {
    * 
    * @param state - Query builder state
    */
-  setState(state: QueryBuilderState): void;
+  setState(state: Partial<QueryBuilderState>): void;
 
   /**
    * Sets query builder configuration

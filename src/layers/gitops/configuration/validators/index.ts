@@ -1,0 +1,1 @@
+export { GitopsConfigValidator } from './GitopsValidator';

@@ -26,7 +26,7 @@ export type ValidatorFunction = (value: unknown, context: ValidationContext) => 
  */
 export interface ValidationContext {
   fieldName: string;
-  entity: Record<string, unknown>;
+  entity: unknown;
   metadata: Record<string, unknown>;
   rules: ValidationRule[];
 }

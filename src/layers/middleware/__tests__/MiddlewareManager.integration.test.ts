@@ -23,6 +23,7 @@ import {
   PipelineStage,
   StageType,
 } from '../types/middleware-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('MiddlewareManager Integration', () => {
   let manager: MiddlewareManager;
@@ -218,7 +219,7 @@ describe('MiddlewareManager Integration', () => {
   describe('Correlation Integration', () => {
     it('should integrate correlation context with headers', () => {
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([
           ['x-request-id', 'req-123'],
           ['x-correlation-id', 'corr-456'],
@@ -309,6 +310,7 @@ describe('MiddlewareManager Integration', () => {
     it('should integrate flush with statistics', () => {
       manager.log(LogLevel.INFO, 'Message 1');
       manager.recordMetric({ name: 'test', type: MetricType.COUNTER, value: 10, timestamp: new Date() });
+      manager.recordMetric({ name: 'test2', type: MetricType.GAUGE, value: 20, timestamp: new Date() });
 
       manager.flushMetrics();
 
@@ -330,7 +332,7 @@ describe('MiddlewareManager Integration', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['x-request-id', 'req-123']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),

@@ -168,7 +168,7 @@ describe('EventExecutor', () => {
     });
 
     it('should handle handlers that return non-promises', async () => {
-      const handler = jest.fn(() => 'return value');
+      const handler = jest.fn(() => 'return value') as any;
       const event = Event.create('test.event', {});
 
       const result = await executor.executeAsync(event, handler);

@@ -1,0 +1,1 @@
+export { MfaConfigValidator } from './MfaValidator';

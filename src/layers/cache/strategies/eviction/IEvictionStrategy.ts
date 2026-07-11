@@ -25,11 +25,18 @@ export interface IEvictionStrategy<T> {
 
   /**
    * Notify strategy when entry is added
-   * 
+   *
    * @param key - Cache key
    * @param entry - Cache entry
    */
   onAdd(key: string, entry: CacheEntry<T>): void;
+
+  /**
+   * Notify strategy when entry is removed
+   *
+   * @param key - Cache key
+   */
+  onRemove(key: string): void;
 
   /**
    * Reset strategy state

@@ -1,0 +1,1 @@
+export { SecretsConfigValidator } from './SecretsValidator';

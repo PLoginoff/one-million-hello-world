@@ -15,12 +15,13 @@ export class FIFOEvictionStrategy<T> implements IEvictionStrategy<T> {
   }
 
   selectEntryToEvict(entries: Map<string, CacheEntry<T>>): string | null {
-    if (this.insertionOrder.length === 0) {
+    if (entries.size === 0) {
       return null;
     }
 
-    // Find first inserted key that still exists
-    for (const key of this.insertionOrder) {
+    // Find first inserted key that still exists and remove it from tracking
+    while (this.insertionOrder.length > 0) {
+      const key = this.insertionOrder.shift()!;
       if (entries.has(key)) {
         return key;
       }
@@ -45,6 +46,10 @@ export class FIFOEvictionStrategy<T> implements IEvictionStrategy<T> {
 
   onAdd(key: string, entry: CacheEntry<T>): void {
     this.insertionOrder.push(key);
+  }
+
+  onRemove(key: string): void {
+    this.insertionOrder = this.insertionOrder.filter(k => k !== key);
   }
 
   reset(): void {

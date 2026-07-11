@@ -1,0 +1,1 @@
+export { IdentityProviderFactory } from './IdentityProviderFactory';

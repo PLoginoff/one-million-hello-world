@@ -1,6 +1,6 @@
 /**
  * Compression Result Entity
- * 
+ *
  * Represents the result of a compression operation with metadata.
  * Immutable entity that stores compressed data with performance metrics.
  */
@@ -20,7 +20,7 @@ export class CompressionResultEntity {
     originalSize: number,
     compressedSize: number,
     algorithm: string,
-    metadata?: CompressionMetadata,
+    metadata?: CompressionMetadata
   ) {
     this.data = data;
     this.originalSize = originalSize;
@@ -69,14 +69,14 @@ export class CompressionResultEntity {
    * Get compression time in milliseconds
    */
   getCompressionTime(): number {
-    return this.metadata.compressionTime;
+    return this.metadata.getCompressionTime();
   }
 
   /**
    * Get decompression time in milliseconds
    */
   getDecompressionTime(): number {
-    return this.metadata.decompressionTime || 0;
+    return this.metadata.getDecompressionTime();
   }
 
   /**
@@ -88,20 +88,22 @@ export class CompressionResultEntity {
       this.originalSize,
       this.compressedSize,
       this.algorithm,
-      this.metadata.clone(),
+      this.metadata.clone()
     );
   }
 
   /**
    * Update metadata
    */
-  updateMetadata(updates: Partial<CompressionMetadata>): CompressionResultEntity {
+  updateMetadata(
+    updates: Partial<import('../value-objects/CompressionMetadata').CompressionMetadataData>
+  ): CompressionResultEntity {
     return new CompressionResultEntity(
       this.data,
       this.originalSize,
       this.compressedSize,
       this.algorithm,
-      this.metadata.update(updates),
+      this.metadata.update(updates)
     );
   }
 

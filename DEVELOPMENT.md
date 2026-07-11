@@ -229,11 +229,11 @@ wsl make stats
 
 ## Current Statistics
 
-- **Total Layers**: 25
-- **Layers Completed**: 0/25
-- **Total Lines of Code**: 0 / 1,000,000
-- **Test Coverage**: 0%
-- **Files Created**: 0
+- **Total Layers**: 85+ (25 original + 60 horizontal)
+- **Layers Completed**: 25/85 (base pipeline is wired and runnable, 60 horizontal scaffolded)
+- **Total Lines of Code**: 220,979 / 1,000,000
+- **Test Coverage**: 62% (2297 passing tests, 107 failing suites after automated fixes)
+- **Files Created**: 2,987
 
 ## Notes
 

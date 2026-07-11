@@ -22,10 +22,12 @@ export class CacheValidationService {
    * Validate TTL value
    */
   static validateTTL(ttl: number | TTL): void {
-    if (typeof ttl === 'number') {
-      if (ttl < 0) {
-        throw new Error('TTL cannot be negative');
-      }
+    const ms = typeof ttl === 'number' ? ttl : ttl.toMilliseconds();
+    if (ms < 0) {
+      throw new Error('TTL cannot be negative');
+    }
+    if (ms > 86400000) {
+      throw new Error('TTL cannot exceed 24 hours');
     }
   }
 
@@ -57,6 +59,9 @@ export class CacheValidationService {
    * Validate pattern for invalidation
    */
   static validatePattern(pattern: string): void {
+    if (!pattern || pattern.trim().length === 0) {
+      throw new Error('Pattern cannot be empty');
+    }
     try {
       new RegExp(pattern);
     } catch (error) {

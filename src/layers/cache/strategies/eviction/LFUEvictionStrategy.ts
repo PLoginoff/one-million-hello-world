@@ -42,6 +42,10 @@ export class LFUEvictionStrategy<T> implements IEvictionStrategy<T> {
     this.frequencyMap.set(key, 0);
   }
 
+  onRemove(key: string): void {
+    this.frequencyMap.delete(key);
+  }
+
   reset(): void {
     this.frequencyMap.clear();
   }

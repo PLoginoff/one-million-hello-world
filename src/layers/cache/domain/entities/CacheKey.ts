@@ -9,7 +9,7 @@ export class CacheKey {
   readonly pattern: RegExp | null;
 
   private constructor(value: string, pattern: RegExp | null = null) {
-    if (!value || value.length === 0) {
+    if (!value || value.trim().length === 0) {
       throw new Error('Cache key cannot be empty');
     }
     if (value.length > 255) {
@@ -30,6 +30,7 @@ export class CacheKey {
    * Create a cache key from pattern
    */
   static fromPattern(pattern: string): CacheKey {
+    new RegExp(pattern);
     return new CacheKey(pattern, new RegExp(pattern));
   }
 

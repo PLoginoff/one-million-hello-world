@@ -4,6 +4,7 @@
 
 import { SerializerBuilder } from '../../builders/SerializerBuilder';
 import { SerializationFormat } from '../../types/serialization-types';
+import { ISerializationStrategy } from '../../strategies/ISerializationStrategy';
 
 describe('SerializerBuilder', () => {
   describe('Building Serializer', () => {
@@ -43,7 +44,7 @@ describe('SerializerBuilder', () => {
         canDeserialize() { return true; }
       })();
       const serializer = new SerializerBuilder()
-        .withStrategy('custom', strategy)
+        .withStrategy('custom', strategy as unknown as ISerializationStrategy)
         .build();
       expect(serializer).toBeDefined();
     });

@@ -113,9 +113,10 @@ describe('EventPayload', () => {
       expect(payload.isEmpty()).toBe(true);
     });
 
-    it('should return true for undefined', () => {
-      const payload = new EventPayload(undefined as any);
-      expect(payload.isEmpty()).toBe(true);
+    it('should throw for undefined data', () => {
+      expect(() => new EventPayload(undefined as any)).toThrow(
+        'EventPayload: data cannot be undefined'
+      );
     });
 
     it('should return true for empty object', () => {

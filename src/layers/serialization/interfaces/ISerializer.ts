@@ -47,7 +47,7 @@ export interface ISerializer {
    */
   deserialize<T>(
     data: string,
-    format: SerializationFormat,
+    format?: SerializationFormat,
     options?: SerializationOptions
   ): Promise<ExtendedSerializationResult & { data?: T }>;
 

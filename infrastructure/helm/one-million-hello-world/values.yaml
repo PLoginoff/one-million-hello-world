@@ -1,0 +1,38 @@
+replicaCount: 3
+
+image:
+  repository: one-million-hello-world
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  host: hello-world.local
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+probes:
+  liveness:
+    path: /health
+    port: 3000
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  readiness:
+    path: /health
+    port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+nodeEnv: production
+port: 3000

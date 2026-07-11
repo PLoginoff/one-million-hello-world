@@ -1,0 +1,1 @@
+export { JwtValidationConfigBuilder } from './JwtValidationBuilder';

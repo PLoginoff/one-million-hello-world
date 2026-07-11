@@ -1,6 +1,6 @@
 /**
  * Network Metrics
- * 
+ *
  * Tracks and aggregates network performance metrics.
  */
 
@@ -46,7 +46,7 @@ export class NetworkMetrics {
       this.metrics.set(name, []);
     }
 
-    const samples = this.metrics.get(name)!;
+    const samples = this.metrics.get(name);
     samples.push(data);
 
     if (samples.length > this.maxSamples) {
@@ -68,7 +68,7 @@ export class NetworkMetrics {
     const samples = this.getSamples(name);
     if (samples.length === 0) return null;
 
-    const values = samples.map(s => s.value);
+    const values = samples.map((s) => s.value);
     const sum = values.reduce((acc, v) => acc + v, 0);
     const min = Math.min(...values);
     const max = Math.max(...values);
@@ -79,7 +79,7 @@ export class NetworkMetrics {
       max,
       average: sum / samples.length,
       sum,
-      lastValue: values[values.length - 1],
+      lastValue: values[values.length - 1]!,
     };
   }
 
@@ -88,7 +88,7 @@ export class NetworkMetrics {
    */
   getLatest(name: string): NetworkMetricData | null {
     const samples = this.getSamples(name);
-    return samples.length > 0 ? samples[samples.length - 1] : null;
+    return samples.length > 0 ? samples[samples.length - 1]! : null;
   }
 
   /**
@@ -96,7 +96,7 @@ export class NetworkMetrics {
    */
   getByTimeRange(name: string, startTime: number, endTime: number): NetworkMetricData[] {
     const samples = this.getSamples(name);
-    return samples.filter(s => s.timestamp >= startTime && s.timestamp <= endTime);
+    return samples.filter((s) => s.timestamp >= startTime && s.timestamp <= endTime);
   }
 
   /**
@@ -157,11 +157,7 @@ export class NetworkMetrics {
   /**
    * Measure execution time of a function
    */
-  async measure<T>(
-    name: string,
-    fn: () => Promise<T>,
-    tags: Record<string, string> = {},
-  ): Promise<T> {
+  async measure<T>(name: string, fn: () => Promise<T>, tags: Record<string, string> = {}): Promise<T> {
     const startTime = Date.now();
     try {
       const result = await fn();

@@ -1,0 +1,1 @@
+export { EdgeCacheConfigBuilder } from './EdgeCacheBuilder';

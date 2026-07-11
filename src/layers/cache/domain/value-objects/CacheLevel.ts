@@ -39,7 +39,7 @@ export class CacheLevel {
    * Create from string
    */
   static fromString(value: string): CacheLevel {
-    switch (value.toUpperCase()) {
+    switch (value) {
       case 'L1':
         return CacheLevel.L1();
       case 'L2':

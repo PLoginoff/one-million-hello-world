@@ -1,0 +1,1 @@
+export { SchemaRegistryFactory } from './SchemaRegistryFactory';

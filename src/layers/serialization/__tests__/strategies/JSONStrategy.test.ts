@@ -49,7 +49,7 @@ describe('JSONStrategy', () => {
     });
 
     it('should serialize null to JSON string', () => {
-      const data = null;
+      const data: null = null;
       const result = strategy.serialize(data);
 
       expect(result).toBe('null');

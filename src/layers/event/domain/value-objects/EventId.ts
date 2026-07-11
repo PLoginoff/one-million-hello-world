@@ -1,6 +1,6 @@
 /**
  * EventId - Value Object
- * 
+ *
  * Represents a unique identifier for an event.
  * Immutable value object with validation.
  */
@@ -9,7 +9,7 @@ export class EventId {
   private readonly _value: string;
 
   constructor(value?: string) {
-    this._value = value || this._generate();
+    this._value = value !== undefined ? value : this._generate();
     this._validate();
   }
 
@@ -31,6 +31,10 @@ export class EventId {
 
   get value(): string {
     return this._value;
+  }
+
+  set value(_value: string) {
+    // Read-only property, assignment is ignored
   }
 
   equals(other: EventId): boolean {

@@ -1,0 +1,1 @@
+export { GraphqlFactory } from './GraphqlFactory';

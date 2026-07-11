@@ -272,7 +272,7 @@ export class HttpParsingService {
    */
   static getCharset(contentType: string): string | null {
     const charsetMatch = contentType.match(/charset=([^;]+)/i);
-    return charsetMatch ? charsetMatch[1].trim() : null;
+    return charsetMatch ? (charsetMatch[1])!.trim() : null;
   }
 
   /**

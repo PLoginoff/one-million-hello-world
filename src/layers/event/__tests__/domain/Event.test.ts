@@ -27,14 +27,14 @@ describe('Event', () => {
     });
 
     it('should create event with custom ID', () => {
-      const customId = EventId.fromString('custom-id');
+      const customId = EventId.fromString('custom-event-id');
       const event = new Event({
         id: customId,
         type: 'user.created',
         payload: { userId: '123' },
       });
 
-      expect(event.id.value).toBe('custom-id');
+      expect(event.id.value).toBe('custom-event-id');
     });
 
     it('should accept EventType instance', () => {
@@ -97,10 +97,10 @@ describe('Event', () => {
       expect(event.occurredAt).toEqual(occurredAt);
     });
 
-    it('should throw error if id is undefined', () => {
+    it('should throw error if id is null', () => {
       expect(() => {
         new Event({
-          id: undefined as any,
+          id: null as any,
           type: 'user.created',
           payload: { userId: '123' },
         });
@@ -125,12 +125,12 @@ describe('Event', () => {
       }).toThrow('Event: payload is required');
     });
 
-    it('should throw error if metadata is undefined', () => {
+    it('should throw error if metadata is null', () => {
       expect(() => {
         new Event({
           type: 'user.created',
           payload: { userId: '123' },
-          metadata: undefined as any,
+          metadata: null as any,
         });
       }).toThrow('Event: metadata is required');
     });
@@ -363,9 +363,10 @@ describe('Event', () => {
       expect(primitive).toHaveProperty('payload');
       expect(primitive).toHaveProperty('metadata');
       expect(primitive).toHaveProperty('occurredAt');
-      expect(primitive.id).toBe(event.id.value);
-      expect(primitive.type).toBe(event.type.value);
-      expect(primitive.payload).toEqual(event.payload.data);
+      const p = primitive as Record<string, any>;
+      expect(p.id).toBe(event.id.value);
+      expect(p.type).toBe(event.type.value);
+      expect(p.payload).toEqual(event.payload.data);
     });
   });
 
@@ -399,7 +400,7 @@ describe('Event', () => {
 
   describe('equals', () => {
     it('should return true for events with same ID', () => {
-      const id = EventId.fromString('same-id');
+      const id = EventId.fromString('same-event-id');
       const event1 = new Event({
         id,
         type: 'type1',
@@ -450,7 +451,7 @@ describe('Event', () => {
   describe('fromPrimitive', () => {
     it('should create event from primitive object', () => {
       const primitive = {
-        id: 'test-id',
+        id: 'test-event-id',
         type: 'user.created',
         payload: { userId: '123' },
         metadata: {
@@ -463,7 +464,7 @@ describe('Event', () => {
 
       const event = Event.fromPrimitive(primitive);
 
-      expect(event.id.value).toBe('test-id');
+      expect(event.id.value).toBe('test-event-id');
       expect(event.type.value).toBe('user.created');
       expect(event.payload.data).toEqual({ userId: '123' });
     });
@@ -510,7 +511,7 @@ describe('Event', () => {
     });
 
     it('should handle null payload', () => {
-      const payload = null;
+      const payload: null = null;
       const event = Event.create('test', payload);
       expect(event.payload.data).toBe(null);
     });

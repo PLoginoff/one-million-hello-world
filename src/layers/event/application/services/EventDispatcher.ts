@@ -33,20 +33,17 @@ export class EventDispatcher implements IEventDispatcher {
     const errors: Error[] = [];
 
     const executeHandler = async (registration: any): Promise<void> => {
+      const maxRetries = options.retryOnFailure ? (options.maxRetries ?? 1) : 1;
       try {
         if (timeout) {
-          await this._executeWithTimeout(registration.handler, event, timeout);
+          await this._retryWithTimeout(registration.handler, event, timeout, maxRetries);
         } else {
-          await registration.handler(event);
+          await this._retryHandler(registration.handler, event, maxRetries);
         }
         handlersSucceeded++;
       } catch (error) {
         handlersFailed++;
         errors.push(error as Error);
-        
-        if (options.retryOnFailure && options.maxRetries) {
-          await this._retryHandler(registration.handler, event, options.maxRetries);
-        }
       }
     };
 
@@ -67,7 +64,7 @@ export class EventDispatcher implements IEventDispatcher {
     const executionTime = performance.now() - startTime;
 
     return {
-      success: handlersFailed === 0,
+      success: errors.length === 0,
       eventId: event.id.value,
       eventType: event.type.value,
       handlersExecuted,
@@ -148,6 +145,25 @@ export class EventDispatcher implements IEventDispatcher {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         await handler(event);
+        return;
+      } catch (error) {
+        if (attempt === maxRetries) {
+          throw error;
+        }
+        await this._delay(100 * attempt);
+      }
+    }
+  }
+
+  private async _retryWithTimeout<T>(
+    handler: (event: T) => void | Promise<void>,
+    event: T,
+    timeout: number,
+    maxRetries: number
+  ): Promise<void> {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await this._executeWithTimeout(handler, event, timeout);
         return;
       } catch (error) {
         if (attempt === maxRetries) {

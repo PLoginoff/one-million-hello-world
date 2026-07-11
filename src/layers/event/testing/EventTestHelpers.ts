@@ -30,7 +30,7 @@ export class EventTestHelpers {
 
   static assertEventSequence(events: Event[]): void {
     for (let i = 1; i < events.length; i++) {
-      expect(events[i].occurredAfter(events[i - 1])).toBe(true);
+      expect((events[i])!.occurredAfter(events[i - 1])).toBe(true);
     }
   }
 

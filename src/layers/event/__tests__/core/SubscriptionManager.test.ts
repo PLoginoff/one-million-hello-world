@@ -178,7 +178,7 @@ describe('SubscriptionManager', () => {
       expect(subscriptions).toEqual([]);
     });
 
-    it('should return subscriptions sorted by creation time', () => {
+    it('should return subscriptions sorted by creation time', async () => {
       const handler = jest.fn();
       const sub1 = manager.add('test.event', handler, false);
       await new Promise(resolve => setTimeout(resolve, 10));
@@ -218,7 +218,7 @@ describe('SubscriptionManager', () => {
       expect(subscriptions).toEqual([]);
     });
 
-    it('should return subscriptions sorted by creation time', () => {
+    it('should return subscriptions sorted by creation time', async () => {
       const handler = jest.fn();
       const sub1 = manager.add('event1', handler, false);
       await new Promise(resolve => setTimeout(resolve, 10));

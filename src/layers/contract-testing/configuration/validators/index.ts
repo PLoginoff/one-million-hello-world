@@ -1,0 +1,1 @@
+export { ContractTestingConfigValidator } from './ContractTestingValidator';

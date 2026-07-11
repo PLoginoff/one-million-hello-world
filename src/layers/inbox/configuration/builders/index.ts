@@ -1,0 +1,1 @@
+export { InboxConfigBuilder } from './InboxBuilder';

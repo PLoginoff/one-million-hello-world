@@ -1,0 +1,1 @@
+export { CqrsConfigValidator } from './CqrsValidator';

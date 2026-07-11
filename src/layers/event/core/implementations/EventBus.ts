@@ -80,7 +80,7 @@ export class EventBus implements IEventBus {
         this._subscriptionManager.updateExecution(subscription.id);
         
         if (subscription.once) {
-          toRemove.push(subscription.id);
+          toRemove.push!(subscription.id);
         }
       }
     }

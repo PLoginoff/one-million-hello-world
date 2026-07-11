@@ -1,6 +1,6 @@
 /**
  * Strategy Execution Entity
- * 
+ *
  * Represents the execution of a strategy with metadata.
  * Immutable entity that stores strategy execution data with performance metrics.
  */
@@ -23,7 +23,7 @@ export class StrategyExecutionEntity {
     status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled',
     parameters: Record<string, unknown>,
     metadata?: ExecutionMetadata,
-    result?: unknown,
+    result?: unknown
   ) {
     this.strategyId = strategyId;
     this.strategyName = strategyName;
@@ -80,21 +80,21 @@ export class StrategyExecutionEntity {
    * Get execution duration in milliseconds
    */
   getDuration(): number {
-    return this.metadata.duration;
+    return this.metadata.getDuration();
   }
 
   /**
    * Get execution start time
    */
   getStartTime(): number {
-    return this.metadata.startTime;
+    return this.metadata.getStartTime();
   }
 
   /**
    * Get execution end time
    */
   getEndTime(): number {
-    return this.metadata.endTime || 0;
+    return this.metadata.getEndTime();
   }
 
   /**
@@ -108,7 +108,7 @@ export class StrategyExecutionEntity {
       status,
       this.parameters,
       this.metadata,
-      this.result,
+      this.result
     );
   }
 
@@ -123,14 +123,16 @@ export class StrategyExecutionEntity {
       this.status,
       this.parameters,
       this.metadata,
-      result,
+      result
     );
   }
 
   /**
    * Create a copy with updated metadata
    */
-  withMetadata(updates: Partial<ExecutionMetadata>): StrategyExecutionEntity {
+  withMetadata(
+    updates: Partial<import('../value-objects/ExecutionMetadata').ExecutionMetadataData>
+  ): StrategyExecutionEntity {
     return new StrategyExecutionEntity(
       this.strategyId,
       this.strategyName,
@@ -138,7 +140,7 @@ export class StrategyExecutionEntity {
       this.status,
       this.parameters,
       this.metadata.update(updates),
-      this.result,
+      this.result
     );
   }
 
@@ -153,7 +155,7 @@ export class StrategyExecutionEntity {
       this.status,
       { ...this.parameters },
       this.metadata.clone(),
-      this.result,
+      this.result
     );
   }
 

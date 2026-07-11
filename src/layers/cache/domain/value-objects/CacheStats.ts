@@ -38,7 +38,8 @@ export class CacheStats {
    * Calculate miss rate
    */
   getMissRate(): number {
-    return 1 - this.getHitRate();
+    const total = this.getTotalRequests();
+    return total > 0 ? this.misses / total : 0;
   }
 
   /**
@@ -112,9 +113,7 @@ export class CacheStats {
       misses: this.misses,
       evictions: this.evictions,
       size: this.size,
-      hitRate: this.getHitRate(),
-      missRate: this.getMissRate(),
-      totalRequests: this.getTotalRequests(),
+      createdAt: this.createdAt,
     };
   }
 }

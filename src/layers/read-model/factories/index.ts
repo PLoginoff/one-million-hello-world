@@ -1,0 +1,1 @@
+export { ReadModelFactory } from './ReadModelFactory';

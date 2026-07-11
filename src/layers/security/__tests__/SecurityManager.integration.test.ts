@@ -9,6 +9,7 @@
 import { SecurityManager } from '../implementations/SecurityManager';
 import { HttpRequest } from '../../http-parser/types/http-parser-types';
 import { SecurityEvent, AuthMethod } from '../types/security-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('SecurityManager Integration', () => {
   let manager: SecurityManager;
@@ -20,7 +21,7 @@ describe('SecurityManager Integration', () => {
   describe('Full Security Workflow Integration', () => {
     it('should authenticate and authorize request', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -60,7 +61,7 @@ describe('SecurityManager Integration', () => {
   describe('Statistics Tracking Integration', () => {
     it('should track statistics across multiple operations', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -79,7 +80,7 @@ describe('SecurityManager Integration', () => {
   describe('Audit Log Integration', () => {
     it('should log security events and retrieve them', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -121,7 +122,7 @@ describe('SecurityManager Integration', () => {
   describe('Extended Context Integration', () => {
     it('should create extended context with all components', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -164,7 +165,7 @@ describe('SecurityManager Integration', () => {
   describe('Threat Detection Integration', () => {
     it('should detect threats and update statistics', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/?param=<script>alert(1)</script>', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/?param=<script>alert(1)</script>', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /?param=<script>alert(1)</script> HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -232,7 +233,7 @@ describe('SecurityManager Integration', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([
           ['authorization', 'Bearer token'],
           ['content-type', 'application/json'],
@@ -254,7 +255,7 @@ describe('SecurityManager Integration', () => {
   describe('Extended Auth Integration', () => {
     it('should authenticate with metrics and warnings', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -275,7 +276,7 @@ describe('SecurityManager Integration', () => {
   describe('Extended Threat Detection Integration', () => {
     it('should detect threats with patterns and recommendations', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/?param=<script>alert(1)</script>', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/?param=<script>alert(1)</script>', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /?param=<script>alert(1)</script> HTTP/1.1\r\n\r\n', 'utf-8'),

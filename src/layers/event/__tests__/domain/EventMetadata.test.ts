@@ -56,10 +56,9 @@ describe('EventMetadata', () => {
       );
     });
 
-    it('should throw error for undefined source', () => {
-      expect(() => new EventMetadata({ source: undefined as any })).toThrow(
-        'EventMetadata: source must be a non-empty string'
-      );
+    it('should use default source when undefined', () => {
+      const metadata = new EventMetadata({ source: undefined as any });
+      expect(metadata.source).toBe('unknown');
     });
 
     it('should throw error for empty correlation ID', () => {

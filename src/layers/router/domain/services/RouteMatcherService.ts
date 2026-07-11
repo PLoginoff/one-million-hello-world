@@ -31,9 +31,9 @@ export class RouteMatcherService {
       const patternPart = patternParts[i];
       const pathPart = pathParts[i];
 
-      if (patternPart.startsWith(':')) {
-        const paramName = patternPart.substring(1);
-        params[paramName] = pathPart;
+      if (patternPart.startsWith!(':')) {
+        const paramName = patternPart.substring!(1);
+        (params[paramName])! = pathPart;
       } else if (patternPart !== pathPart) {
         return { matched: false, params };
       }

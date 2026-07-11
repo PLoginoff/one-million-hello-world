@@ -17,8 +17,8 @@ export interface IDIContainer {
    */
   register<T>(
     token: unknown,
-    factory: () => T,
-    lifetime?: ServiceLifetime,
+    lifetime: ServiceLifetime,
+    factory?: () => T,
     dependencies?: unknown[]
   ): void;
 
@@ -29,6 +29,7 @@ export interface IDIContainer {
    * @returns Service instance
    * @throws Error if service not found or cannot be resolved
    */
+  resolve<T>(token: new (...args: unknown[]) => T): T;
   resolve<T>(token: unknown): T;
 
   /**

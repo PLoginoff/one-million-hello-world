@@ -25,7 +25,7 @@ export interface IValidationEngine {
    * @param rules - Validation rules to apply
    * @returns Validation result
    */
-  validate(entity: Record<string, unknown>, rules: ValidationRule[]): ValidationResult;
+  validate(entity: unknown, rules: ValidationRule[]): ValidationResult;
 
   /**
    * Validates a single field
@@ -44,7 +44,7 @@ export interface IValidationEngine {
    * @param schema - Schema definition
    * @returns Validation result
    */
-  validateSchema(entity: Record<string, unknown>, schema: SchemaDefinition): ValidationResult;
+  validateSchema(entity: unknown, schema: SchemaDefinition): ValidationResult;
 
   /**
    * Registers a custom validator
@@ -132,7 +132,7 @@ export interface IValidationEngine {
    * @param metadata - Optional metadata
    * @returns Validation context
    */
-  createContext(fieldName: string, entity: Record<string, unknown>, metadata?: Record<string, unknown>): ValidationContext;
+  createContext(fieldName: string, entity: unknown, metadata?: Record<string, unknown>): ValidationContext;
 
   /**
    * Validates required fields
@@ -141,7 +141,7 @@ export interface IValidationEngine {
    * @param requiredFields - Array of required field names
    * @returns Validation result
    */
-  validateRequired(entity: Record<string, unknown>, requiredFields: string[]): ValidationResult;
+  validateRequired(entity: unknown, requiredFields: string[]): ValidationResult;
 
   /**
    * Validates field types
@@ -150,7 +150,7 @@ export interface IValidationEngine {
    * @param fieldTypes - Map of field names to expected types
    * @returns Validation result
    */
-  validateTypes(entity: Record<string, unknown>, fieldTypes: Map<string, string>): ValidationResult;
+  validateTypes(entity: unknown, fieldTypes: Map<string, string>): ValidationResult;
 
   /**
    * Clears all validation rules

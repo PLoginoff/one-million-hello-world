@@ -16,8 +16,9 @@ export class PluginManager {
    * @param plugin - Plugin to register
    */
   async registerPlugin(plugin: ISerializationPlugin): Promise<void> {
-    if (this._plugins.has(plugin.name)) {
-      throw new Error(`Plugin '${plugin.name}' is already registered`);
+    const existing = this._plugins.get(plugin.name);
+    if (existing && existing.cleanup) {
+      await existing.cleanup();
     }
 
     if (plugin.initialize) {
@@ -35,7 +36,7 @@ export class PluginManager {
   async unregisterPlugin(name: string): Promise<void> {
     const plugin = this._plugins.get(name);
     if (!plugin) {
-      throw new Error(`Plugin '${name}' not found`);
+      return;
     }
 
     if (plugin.cleanup) {
@@ -62,6 +63,22 @@ export class PluginManager {
    */
   getAllPlugins(): ISerializationPlugin[] {
     return Array.from(this._plugins.values());
+  }
+
+  /**
+   * Gets all registered plugins (alias for getAllPlugins)
+   *
+   * @returns Array of plugins
+   */
+  getPlugins(): ISerializationPlugin[] {
+    return this.getAllPlugins();
+  }
+
+  /**
+   * Clears all plugins (alias for clear)
+   */
+  clearPlugins(): Promise<void> {
+    return this.clear();
   }
 
   /**

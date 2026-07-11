@@ -43,7 +43,7 @@ export interface IHttpRequestParser {
    * @param config - Parser configuration options
    * @returns Parse result with success/failure information
    */
-  parse(raw: Buffer, config?: ParserConfig): ParseResult<HttpRequest>;
+  parse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpRequest>;
 
   /**
    * Parses only the request line (first line of HTTP request)
@@ -78,7 +78,7 @@ export interface IHttpRequestParser {
    * 
    * @param config - Default configuration
    */
-  setDefaultConfig(config: ParserConfig): void;
+  setDefaultConfig(config: Partial<ParserConfig>): void;
 
   /**
    * Gets current default configuration
@@ -94,7 +94,7 @@ export interface IHttpRequestParser {
    * @param config - Extended parser configuration options
    * @returns Extended parse result with warnings and metrics
    */
-  parseExtended(raw: Buffer, config?: ExtendedParserConfig): ExtendedParseResult<ExtendedHttpRequest>;
+  parseExtended(raw: Buffer, config?: Partial<ExtendedParserConfig>): ExtendedParseResult<ExtendedHttpRequest>;
 
   /**
    * Parses query string from URL
@@ -169,7 +169,7 @@ export interface IHttpRequestParser {
    * 
    * @param rules - Validation rules to apply
    */
-  setValidationRules(rules: ValidationRules): void;
+  setValidationRules(rules: Partial<ValidationRules>): void;
 
   /**
    * Gets current validation rules
@@ -193,7 +193,7 @@ export interface IHttpRequestParser {
    * @param config - Parser configuration options
    * @returns Parse result with success/failure information
    */
-  parseResponse(raw: Buffer, config?: ParserConfig): ParseResult<HttpResponse>;
+  parseResponse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpResponse>;
 
   /**
    * Parses HTTP response with extended information
@@ -202,7 +202,7 @@ export interface IHttpRequestParser {
    * @param config - Extended parser configuration options
    * @returns Extended parse result with warnings and metrics
    */
-  parseResponseExtended(raw: Buffer, config?: ExtendedParserConfig): ExtendedParseResult<ExtendedHttpResponse>;
+  parseResponseExtended(raw: Buffer, config?: Partial<ExtendedParserConfig>): ExtendedParseResult<ExtendedHttpResponse>;
 
   /**
    * Gets parser health status
@@ -223,7 +223,7 @@ export interface IHttpRequestParser {
    * 
    * @param config - Security headers configuration
    */
-  setSecurityHeadersConfig(config: SecurityHeadersConfig): void;
+  setSecurityHeadersConfig(config: Partial<SecurityHeadersConfig>): void;
 
   /**
    * Gets security headers configuration
@@ -237,7 +237,7 @@ export interface IHttpRequestParser {
    * 
    * @param config - CORS configuration
    */
-  setCorsConfig(config: CorsConfig): void;
+  setCorsConfig(config: Partial<CorsConfig>): void;
 
   /**
    * Gets CORS configuration
@@ -251,7 +251,7 @@ export interface IHttpRequestParser {
    * 
    * @param config - Rate limiting configuration
    */
-  setRateLimitConfig(config: RateLimitConfig): void;
+  setRateLimitConfig(config: Partial<RateLimitConfig>): void;
 
   /**
    * Gets rate limiting configuration
@@ -320,5 +320,5 @@ export interface IHttpRequestParser {
    * 
    * @param config - Extended default configuration
    */
-  setExtendedDefaultConfig(config: ExtendedParserConfig): void;
+  setExtendedDefaultConfig(config: Partial<ExtendedParserConfig>): void;
 }

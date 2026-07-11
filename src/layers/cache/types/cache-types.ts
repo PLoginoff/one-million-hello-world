@@ -34,6 +34,8 @@ export enum InvalidationStrategy {
   TIME_BASED = 'TIME_BASED',
   LRU = 'LRU',
   LFU = 'LFU',
+  FIFO = 'FIFO',
+  RANDOM = 'RANDOM',
   MANUAL = 'MANUAL',
 }
 

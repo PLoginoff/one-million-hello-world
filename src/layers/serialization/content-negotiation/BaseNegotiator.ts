@@ -96,7 +96,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
       .map(part => {
         const [type, qPart] = part.trim().split(';');
         const q = qPart?.includes('q=') ? parseFloat(qPart.split('=')[1]) : 1.0;
-        return { type: type.trim(), q: isNaN(q) ? 1.0 : q };
+        return { type: type.trim!(), q: isNaN(q) ? 1.0 : q };
       })
       .sort((a, b) => b.q - a.q);
   }

@@ -47,7 +47,7 @@ export class ObjectUtils {
               sourceValue as Record<string, unknown>
             ) as T[Extract<keyof T, string>];
           } else {
-            result[key] = this.deepClone(sourceValue);
+            (result[key])! = this.deepClone(sourceValue);
           }
         }
       }

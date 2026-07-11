@@ -138,7 +138,7 @@ export class ValidationHelpers {
    */
   static setNestedValue(obj: any, path: string, value: any): void {
     const keys = path.split('.');
-    const lastKey = keys.pop()!;
+    const lastKey = keys.pop();
     const target = keys.reduce((current, key) => {
       if (!current[key]) current[key] = {};
       return current[key];

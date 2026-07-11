@@ -8,10 +8,10 @@ import { SerializationConfig } from '../types/serialization-types';
 import { ConfigSchema, SchemaDefinition, defaultSerializationConfigSchema } from './ConfigSchema';
 
 export class ConfigValidator {
-  private _schema: ConfigSchema;
+  private _schema: ConfigSchema<SerializationConfig>;
 
   constructor(schema?: SchemaDefinition) {
-    this._schema = new ConfigSchema(schema ?? defaultSerializationConfigSchema);
+    this._schema = new ConfigSchema<SerializationConfig>(schema ?? defaultSerializationConfigSchema);
   }
 
   /**
@@ -63,7 +63,7 @@ export class ConfigValidator {
    * @param schema - New schema definition
    */
   setSchema(schema: SchemaDefinition): void {
-    this._schema = new ConfigSchema(schema);
+    this._schema = new ConfigSchema<SerializationConfig>(schema);
   }
 
   /**

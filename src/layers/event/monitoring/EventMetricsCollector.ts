@@ -113,7 +113,7 @@ export class EventMetricsCollector implements IEventMetrics {
       this._timeSeries.set(metric, []);
     }
 
-    const data = this._timeSeries.get(metric)!;
+    const data = this._timeSeries.get(metric);
     data.push({
       timestamp: new Date(),
       value,

@@ -24,14 +24,14 @@ describe('XMLStrategy', () => {
     });
 
     it('should serialize null to XML', () => {
-      const data = null;
+      const data: null = null;
       const result = strategy.serialize(data);
 
       expect(result).toBe('<root />');
     });
 
     it('should serialize undefined to XML', () => {
-      const data = undefined;
+      const data: undefined = undefined;
       const result = strategy.serialize(data);
 
       expect(result).toBe('<root />');

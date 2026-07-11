@@ -74,8 +74,24 @@ export class DetailedStatisticsCollector implements IStatisticsCollector {
     }
   }
 
+  recordSizeChange(size: number): void {
+    this.updateSize(size);
+  }
+
   getStats(): CacheStats {
     return this.stats;
+  }
+
+  getHitRate(): number {
+    return this.stats.getHitRate();
+  }
+
+  getMissRate(): number {
+    return this.stats.getMissRate();
+  }
+
+  getTotalRequests(): number {
+    return this.stats.getTotalRequests();
   }
 
   getDetailedStats(): DetailedCacheStats {

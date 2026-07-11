@@ -1,0 +1,1 @@
+export { DdosProtectionConfigBuilder } from './DdosProtectionBuilder';

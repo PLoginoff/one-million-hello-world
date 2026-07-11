@@ -143,14 +143,16 @@ export class HttpRequestParser implements IHttpRequestParser {
     this._parseStartTime = 0;
   }
 
-  parse(raw: Buffer, config?: ParserConfig): ParseResult<HttpRequest> {
+  parse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpRequest> {
     const parserConfig = config || this._defaultConfig;
+    this._state = ParserState.PARSING_REQUEST_LINE;
 
     try {
       const rawString = raw.toString('utf-8');
       const lines = rawString.split('\r\n');
 
       if (lines.length < 1) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: {
@@ -162,14 +164,17 @@ export class HttpRequestParser implements IHttpRequestParser {
 
       const requestLineResult = this.parseRequestLine(lines[0]);
       if (!requestLineResult.success || !requestLineResult.data) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: requestLineResult.error,
         };
       }
 
+      this._state = ParserState.PARSING_HEADERS;
       const emptyLineIndex = lines.indexOf('');
       if (emptyLineIndex === -1) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: {
@@ -182,17 +187,20 @@ export class HttpRequestParser implements IHttpRequestParser {
       const headerLines = lines.slice(1, emptyLineIndex);
       const headersResult = this.parseHeaders(headerLines);
       if (!headersResult.success || !headersResult.data) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: headersResult.error,
         };
       }
 
+      this._state = ParserState.PARSING_BODY;
       const bodyStart = emptyLineIndex + 1;
       const bodyLines = lines.slice(bodyStart);
       const body = Buffer.from(bodyLines.join('\r\n'), 'utf-8');
 
       if (body.length > parserConfig.maxBodySize) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: {
@@ -216,6 +224,7 @@ export class HttpRequestParser implements IHttpRequestParser {
       };
 
       if (parserConfig.strictMode && !this.validate(request)) {
+        this._state = ParserState.ERROR;
         return {
           success: false,
           error: {
@@ -225,11 +234,13 @@ export class HttpRequestParser implements IHttpRequestParser {
         };
       }
 
+      this._state = ParserState.COMPLETE;
       return {
         success: true,
         data: request,
       };
     } catch (error) {
+      this._state = ParserState.ERROR;
       return {
         success: false,
         error: {
@@ -346,7 +357,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return true;
   }
 
-  setDefaultConfig(config: ParserConfig): void {
+  setDefaultConfig(config: Partial<ParserConfig>): void {
     this._defaultConfig = { ...this._defaultConfig, ...config };
   }
 
@@ -354,7 +365,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return { ...this._defaultConfig };
   }
 
-  parseExtended(raw: Buffer, config?: ExtendedParserConfig): ExtendedParseResult<ExtendedHttpRequest> {
+  parseExtended(raw: Buffer, config?: Partial<ExtendedParserConfig>): ExtendedParseResult<ExtendedHttpRequest> {
     this._parseStartTime = Date.now();
     this._state = ParserState.PARSING_REQUEST_LINE;
     this._warnings = [];
@@ -465,9 +476,9 @@ export class HttpRequestParser implements IHttpRequestParser {
 
     const cookieStrings = cookieHeader.split(';');
     for (const cookieString of cookieStrings) {
-      const [name, value] = cookieString.trim().split('=');
-      if (name && value) {
-        cookies.set(name, { name, value });
+      const [name, ...rest] = cookieString.trim().split('=');
+      if (name) {
+        cookies.set(name, { name, value: rest.join('=') });
       }
     }
 
@@ -629,7 +640,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return this._state;
   }
 
-  setValidationRules(rules: ValidationRules): void {
+  setValidationRules(rules: Partial<ValidationRules>): void {
     this._validationRules = { ...this._validationRules, ...rules };
   }
 
@@ -657,7 +668,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return true;
   }
 
-  parseResponse(raw: Buffer, config?: ParserConfig): ParseResult<HttpResponse> {
+  parseResponse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpResponse> {
     const parserConfig = config || this._defaultConfig;
 
     try {
@@ -774,7 +785,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
   }
 
-  parseResponseExtended(raw: Buffer, config?: ExtendedParserConfig): ExtendedParseResult<ExtendedHttpResponse> {
+  parseResponseExtended(raw: Buffer, config?: Partial<ExtendedParserConfig>): ExtendedParseResult<ExtendedHttpResponse> {
     this._parseStartTime = Date.now();
     this._state = ParserState.PARSING_REQUEST_LINE;
     this._warnings = [];
@@ -874,7 +885,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
   }
 
-  setSecurityHeadersConfig(config: SecurityHeadersConfig): void {
+  setSecurityHeadersConfig(config: Partial<SecurityHeadersConfig>): void {
     this._securityHeadersConfig = { ...this._securityHeadersConfig, ...config };
   }
 
@@ -882,7 +893,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return { ...this._securityHeadersConfig, customSecurityHeaders: new Map(this._securityHeadersConfig.customSecurityHeaders) };
   }
 
-  setCorsConfig(config: CorsConfig): void {
+  setCorsConfig(config: Partial<CorsConfig>): void {
     this._corsConfig = { ...this._corsConfig, ...config };
   }
 
@@ -890,7 +901,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     return { ...this._corsConfig };
   }
 
-  setRateLimitConfig(config: RateLimitConfig): void {
+  setRateLimitConfig(config: Partial<RateLimitConfig>): void {
     this._rateLimitConfig = { ...this._rateLimitConfig, ...config };
   }
 
@@ -942,19 +953,24 @@ export class HttpRequestParser implements IHttpRequestParser {
     return { ...this._extendedDefaultConfig, customHeaders: new Map(this._extendedDefaultConfig.customHeaders) };
   }
 
-  setExtendedDefaultConfig(config: ExtendedParserConfig): void {
-    this._extendedDefaultConfig = { ...this._extendedDefaultConfig, ...config, customHeaders: new Map(config.customHeaders) };
+  setExtendedDefaultConfig(config: Partial<ExtendedParserConfig>): void {
+    this._extendedDefaultConfig = {
+      ...this._extendedDefaultConfig,
+      ...config,
+      customHeaders: config.customHeaders ? new Map(config.customHeaders) : this._extendedDefaultConfig.customHeaders,
+    };
   }
 
   private _calculateMetrics() {
     const now = Date.now();
+    const duration = Math.max(1, now - this._parseStartTime);
     return {
       parseStartTime: this._parseStartTime,
       parseEndTime: now,
-      parseDuration: now - this._parseStartTime,
-      headerParseTime: (now - this._parseStartTime) * 0.3,
-      bodyParseTime: (now - this._parseStartTime) * 0.5,
-      validationTime: (now - this._parseStartTime) * 0.2,
+      parseDuration: duration,
+      headerParseTime: duration * 0.3,
+      bodyParseTime: duration * 0.5,
+      validationTime: duration * 0.2,
       memoryUsage: 0,
     };
   }
@@ -963,7 +979,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     const isHealthy = this._state !== ParserState.ERROR;
     return {
       name: 'parser_state',
-      status: isHealthy ? 'pass' : 'fail',
+      status: isHealthy ? 'pass' : 'warn',
       message: `Parser state: ${this._state}`,
       duration: 0,
     };

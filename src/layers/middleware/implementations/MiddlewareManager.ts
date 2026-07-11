@@ -200,8 +200,9 @@ export class MiddlewareManager implements IMiddlewareManager {
       return this._createDummySpan(operationName);
     }
 
+    const traceId = parentSpanId ? this._spans.get(parentSpanId)?.traceId || this._generateId() : this._generateId();
     const span: TraceSpan = {
-      traceId: this._generateId(),
+      traceId,
       spanId: this._generateId(),
       parentSpanId,
       operationName,
@@ -282,7 +283,7 @@ export class MiddlewareManager implements IMiddlewareManager {
     return context;
   }
 
-  setConfig(config: MiddlewareConfig): void {
+  setConfig(config: Partial<MiddlewareConfig>): void {
     this._config = { ...this._config, ...config };
   }
 
@@ -304,10 +305,10 @@ export class MiddlewareManager implements IMiddlewareManager {
       filtered = filtered.filter(log => log.category === filter.category);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(log => log.timestamp >= filter.startTime!);
+      filtered = filtered.filter(log => log.timestamp >= filter.startTime);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(log => log.timestamp <= filter.endTime!);
+      filtered = filtered.filter(log => log.timestamp <= filter.endTime);
     }
     if (filter.correlationId) {
       filtered = filtered.filter(log => log.correlationId === filter.correlationId);
@@ -319,7 +320,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       const regex = new RegExp(filter.messagePattern, 'i');
       filtered = filtered.filter(log => regex.test(log.message));
     }
-    if (filter.limit) {
+    if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
     }
 
@@ -340,18 +341,18 @@ export class MiddlewareManager implements IMiddlewareManager {
       filtered = filtered.filter(metric => metric.type === filter.type);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(metric => metric.timestamp >= filter.startTime!);
+      filtered = filtered.filter(metric => metric.timestamp >= filter.startTime);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(metric => metric.timestamp <= filter.endTime!);
+      filtered = filtered.filter(metric => metric.timestamp <= filter.endTime);
     }
     if (filter.labels) {
       filtered = filtered.filter(metric => {
         if (!metric.labels) return false;
-        return Object.entries(filter.labels!).every(([key, value]) => metric.labels![key] === value);
+        return Object.entries(filter.labels).every(([key, value]) => metric.labels![key] === value);
       });
     }
-    if (filter.limit) {
+    if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
     }
 
@@ -375,18 +376,18 @@ export class MiddlewareManager implements IMiddlewareManager {
       filtered = filtered.filter(span => span.status === filter.status);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(span => span.startTime >= filter.startTime!);
+      filtered = filtered.filter(span => span.startTime >= filter.startTime);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(span => span.endTime && span.endTime <= filter.endTime!);
+      filtered = filtered.filter(span => span.endTime && span.endTime <= filter.endTime);
     }
     if (filter.minDuration) {
-      filtered = filtered.filter(span => span.duration && span.duration >= filter.minDuration!);
+      filtered = filtered.filter(span => span.duration && span.duration >= filter.minDuration);
     }
     if (filter.maxDuration) {
-      filtered = filtered.filter(span => span.duration && span.duration <= filter.maxDuration!);
+      filtered = filtered.filter(span => span.duration && span.duration <= filter.maxDuration);
     }
-    if (filter.limit) {
+    if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
     }
 
@@ -421,7 +422,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       timestamp: new Date(),
     };
     checks.push(loggingCheck);
-    if (!this._config.enableLogging) score -= 10;
+    if (!this._config.enableLogging) score -= 25;
 
     const metricsCheck = {
       name: 'metrics',
@@ -431,7 +432,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       timestamp: new Date(),
     };
     checks.push(metricsCheck);
-    if (!this._config.enableMetrics) score -= 10;
+    if (!this._config.enableMetrics) score -= 25;
 
     const tracingCheck = {
       name: 'tracing',
@@ -441,7 +442,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       timestamp: new Date(),
     };
     checks.push(tracingCheck);
-    if (!this._config.enableTracing) score -= 10;
+    if (!this._config.enableTracing) score -= 25;
 
     const correlationCheck = {
       name: 'correlation',
@@ -451,7 +452,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       timestamp: new Date(),
     };
     checks.push(correlationCheck);
-    if (!this._config.enableCorrelation) score -= 10;
+    if (!this._config.enableCorrelation) score -= 25;
 
     const status = score >= 80 ? 'healthy' as const : score >= 50 ? 'degraded' as const : 'unhealthy' as const;
 

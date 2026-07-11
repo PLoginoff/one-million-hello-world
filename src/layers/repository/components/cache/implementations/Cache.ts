@@ -279,7 +279,7 @@ export class Cache<T = unknown> implements ICache<T> {
     entries.sort((a, b) => a[1].lastAccessed.getTime() - b[1].lastAccessed.getTime());
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete(entries[i][0]);
+      this._cache.delete((entries[i])![0]);
       this._incrementEvictions();
     }
   }
@@ -289,7 +289,7 @@ export class Cache<T = unknown> implements ICache<T> {
     entries.sort((a, b) => a[1].accessCount - b[1].accessCount);
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete(entries[i][0]);
+      this._cache.delete!(entries[i][0]);
       this._incrementEvictions();
     }
   }
@@ -299,7 +299,7 @@ export class Cache<T = unknown> implements ICache<T> {
     entries.sort((a, b) => a[1].createdAt.getTime() - b[1].createdAt.getTime());
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete(entries[i][0]);
+      this._cache.delete!(entries[i][0]);
       this._incrementEvictions();
     }
   }

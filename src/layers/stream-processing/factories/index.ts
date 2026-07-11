@@ -1,0 +1,1 @@
+export { StreamProcessingFactory } from './StreamProcessingFactory';

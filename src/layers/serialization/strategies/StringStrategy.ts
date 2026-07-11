@@ -25,7 +25,7 @@ export class StringStrategy implements ISerializationStrategy {
   }
 
   canSerialize(data: unknown): boolean {
-    return data !== undefined && data !== null;
+    return data !== undefined;
   }
 
   canDeserialize(data: string): boolean {

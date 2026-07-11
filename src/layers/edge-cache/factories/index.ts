@@ -1,0 +1,1 @@
+export { EdgeCacheFactory } from './EdgeCacheFactory';

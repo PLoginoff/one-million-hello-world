@@ -24,8 +24,11 @@ export class EventSerializer {
     this._format = format;
   }
 
-  setFormat(format: SerializationFormat): void {
-    this._format = format;
+  setFormat(format: SerializationFormat | string): void {
+    if (!['json', 'protobuf', 'msgpack'].includes(format)) {
+      throw new Error(`Unsupported serialization format: ${format}`);
+    }
+    this._format = format as SerializationFormat;
   }
 
   getFormat(): SerializationFormat {

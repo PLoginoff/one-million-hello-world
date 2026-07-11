@@ -1,0 +1,1 @@
+export { DistributedTracingConfigValidator } from './DistributedTracingValidator';

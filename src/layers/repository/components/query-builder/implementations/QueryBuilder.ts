@@ -216,8 +216,8 @@ export class QueryBuilder implements IQueryBuilder {
     return JSON.parse(JSON.stringify(this._state));
   }
 
-  setState(state: QueryBuilderState): void {
-    this._state = JSON.parse(JSON.stringify(state));
+  setState(state: Partial<QueryBuilderState>): void {
+    this._state = { ...this._state, ...JSON.parse(JSON.stringify(state)) };
   }
 
   setConfig(config: Partial<QueryBuilderConfig>): void {

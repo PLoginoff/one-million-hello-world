@@ -76,7 +76,8 @@ describe('EventValidator', () => {
 
     it('should detect missing correlation ID', () => {
       const event = Event.create('test.event', {});
-      (event as any).metadata.correlationId = undefined;
+      const metadata = event.metadata;
+      (metadata as any)._correlationId = undefined;
 
       const result = validator.validate(event);
 

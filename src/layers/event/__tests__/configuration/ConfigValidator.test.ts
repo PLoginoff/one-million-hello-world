@@ -285,13 +285,9 @@ describe('ConfigValidator', () => {
 
     it('should handle config at boundary values', () => {
       const config = new EventBusConfig({
-        maxQueueSize: 1,
         maxQueueSize: 100000,
-        maxSubscriptions: 1,
         maxSubscriptions: 1000000,
-        timeout: 1,
         timeout: 60000,
-        maxRetries: 0,
         maxRetries: 10,
       });
 

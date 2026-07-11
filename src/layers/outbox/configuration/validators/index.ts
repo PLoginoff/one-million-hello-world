@@ -1,0 +1,1 @@
+export { OutboxConfigValidator } from './OutboxValidator';

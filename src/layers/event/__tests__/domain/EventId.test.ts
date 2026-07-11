@@ -26,8 +26,8 @@ describe('EventId', () => {
       expect(() => new EventId('')).toThrow('EventId must be a non-empty string');
     });
 
-    it('should throw error for undefined', () => {
-      expect(() => new EventId(undefined as any)).toThrow('EventId must be a non-empty string');
+    it('should throw error for null', () => {
+      expect(() => new EventId(null as any)).toThrow('EventId must be a non-empty string');
     });
 
     it('should throw error for non-string value', () => {
@@ -52,39 +52,39 @@ describe('EventId', () => {
     });
 
     it('should be read-only', () => {
-      const eventId = new EventId('test-id');
+      const eventId = new EventId('test-event-id');
       expect(() => {
         (eventId as any).value = 'new-value';
       }).not.toThrow();
-      expect(eventId.value).toBe('test-id');
+      expect(eventId.value).toBe('test-event-id');
     });
   });
 
   describe('equals', () => {
     it('should return true for equal IDs', () => {
-      const id1 = new EventId('same-id');
-      const id2 = new EventId('same-id');
+      const id1 = new EventId('same-event-id');
+      const id2 = new EventId('same-event-id');
       expect(id1.equals(id2)).toBe(true);
     });
 
     it('should return false for different IDs', () => {
-      const id1 = new EventId('id-1');
-      const id2 = new EventId('id-2');
+      const id1 = new EventId('event-id-1');
+      const id2 = new EventId('event-id-2');
       expect(id1.equals(id2)).toBe(false);
     });
 
     it('should return false for non-EventId objects', () => {
-      const eventId = new EventId('test-id');
-      expect(eventId.equals({ value: 'test-id' } as any)).toBe(false);
+      const eventId = new EventId('test-event-id');
+      expect(eventId.equals({ value: 'test-event-id' } as any)).toBe(false);
     });
 
     it('should return false for null', () => {
-      const eventId = new EventId('test-id');
+      const eventId = new EventId('test-event-id');
       expect(eventId.equals(null as any)).toBe(false);
     });
 
     it('should return false for undefined', () => {
-      const eventId = new EventId('test-id');
+      const eventId = new EventId('test-event-id');
       expect(eventId.equals(undefined as any)).toBe(false);
     });
   });

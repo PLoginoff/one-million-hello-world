@@ -20,6 +20,7 @@ import {
   ValidationErrorCode,
   ValidationWarningCode,
 } from '../types/validation-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('Validator Advanced', () => {
   let validator: Validator;
@@ -44,7 +45,7 @@ describe('Validator Advanced', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/validate', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/validate', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['email', 'test@example.com']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/validate HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -303,7 +304,7 @@ describe('Validator Advanced', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'value']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -400,7 +401,7 @@ describe('Validator Advanced', () => {
   describe('Validation Context', () => {
     it('should create validation context from request', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([
           ['user-id', 'user-123'],
           ['session-id', 'session-456'],

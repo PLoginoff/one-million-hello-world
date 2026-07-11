@@ -9,21 +9,25 @@ export enum SerializationEventType {
    * Fired before serialization starts
    */
   BEFORE_SERIALIZE = 'before:serialize',
+  SERIALIZE_START = BEFORE_SERIALIZE,
 
   /**
    * Fired after serialization completes
    */
   AFTER_SERIALIZE = 'after:serialize',
+  SERIALIZE_END = AFTER_SERIALIZE,
 
   /**
    * Fired before deserialization starts
    */
   BEFORE_DESERIALIZE = 'before:deserialize',
+  DESERIALIZE_START = BEFORE_DESERIALIZE,
 
   /**
    * Fired after deserialization completes
    */
   AFTER_DESERIALIZE = 'after:deserialize',
+  DESERIALIZE_END = AFTER_DESERIALIZE,
 
   /**
    * Fired when a serialization error occurs

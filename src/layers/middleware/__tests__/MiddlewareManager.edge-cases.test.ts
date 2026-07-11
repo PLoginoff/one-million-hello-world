@@ -19,6 +19,7 @@ import {
   PipelineStage,
   StageType,
 } from '../types/middleware-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('MiddlewareManager Edge Cases', () => {
   let manager: MiddlewareManager;
@@ -142,7 +143,7 @@ describe('MiddlewareManager Edge Cases', () => {
       manager.setConfig({ enableCorrelation: false });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['x-request-id', 'req-123']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET /test HTTP/1.1\r\n\r\n', 'utf-8'),

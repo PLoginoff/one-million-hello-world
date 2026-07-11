@@ -1,0 +1,1 @@
+export { QueryObjectConfigValidator } from './QueryObjectValidator';

@@ -276,10 +276,10 @@ describe('Serializer', () => {
   describe('versioning', () => {
     it('should set versioning strategy', () => {
       const mockStrategy = {
-        applyVersioning: jest.fn((data, version) => data),
-        extractVersion: jest.fn(() => null),
-        getStrategyName: () => 'mock',
-        isVersioned: jest.fn(() => false),
+        applyVersioning: jest.fn((data: string, _version: string): string => data),
+        extractVersion: jest.fn((): { version: string; data: string } | null => null),
+        getStrategyName: (): string => 'mock',
+        isVersioned: jest.fn((): boolean => false),
       };
 
       serializer.setVersioningStrategy(mockStrategy as any);

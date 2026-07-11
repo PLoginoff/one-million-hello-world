@@ -5,17 +5,14 @@
  * Contains business logic for retry workflow with backoff strategies.
  */
 
-import { SagaExecutionEntity } from '../../domain/entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep } from '../../domain/entities/SagaExecution';
 import { SagaConfig } from '../../domain/value-objects/SagaConfig';
 
 export class RetrySagaUseCase {
   /**
    * Retry a failed saga execution
    */
-  async retry(
-    execution: SagaExecutionEntity,
-    config: SagaConfig,
-  ): Promise<SagaExecutionEntity> {
+  async retry(execution: SagaExecutionEntity, config: SagaConfig): Promise<SagaExecutionEntity> {
     if (!execution.isFailed()) {
       throw new Error('Can only retry failed executions');
     }
@@ -30,12 +27,10 @@ export class RetrySagaUseCase {
     const delay = this._calculateDelay(retryPolicy, currentAttempts);
     await this._sleep(delay);
 
-    const updatedExecution = execution
-      .withStatus('pending')
-      .withMetadata({
-        attemptCount: currentAttempts + 1,
-        lastAttemptTime: Date.now(),
-      });
+    const updatedExecution = execution.withStatus('pending').withMetadata({
+      attemptCount: currentAttempts + 1,
+      lastAttemptTime: Date.now(),
+    });
 
     return updatedExecution;
   }
@@ -43,12 +38,8 @@ export class RetrySagaUseCase {
   /**
    * Retry a specific step
    */
-  async retryStep(
-    execution: SagaExecutionEntity,
-    stepId: string,
-    config: SagaConfig,
-  ): Promise<SagaExecutionEntity> {
-    const step = execution.steps.find(s => s.stepId === stepId);
+  async retryStep(execution: SagaExecutionEntity, stepId: string, config: SagaConfig): Promise<SagaExecutionEntity> {
+    const step = execution.steps.find((s) => s.stepId === stepId);
     if (!step) {
       throw new Error(`Step ${stepId} not found`);
     }
@@ -61,12 +52,11 @@ export class RetrySagaUseCase {
     const delay = this._calculateDelay(retryPolicy, execution.metadata.getAttemptCount());
     await this._sleep(delay);
 
-    const updatedSteps = execution.steps.map(s =>
-      s.stepId === stepId ? { ...s, status: 'pending', error: undefined } : s
+    const updatedSteps: SagaStep[] = execution.steps.map((s) =>
+      s.stepId === stepId ? { ...s, status: 'pending' as const, error: undefined } : s
     );
 
-    return execution.withMetadata({
-      steps: updatedSteps,
+    return execution.withSteps(updatedSteps).withMetadata({
       attemptCount: execution.metadata.getAttemptCount() + 1,
       lastAttemptTime: Date.now(),
     });
@@ -100,7 +90,7 @@ export class RetrySagaUseCase {
         delay = retryPolicy.initialDelay * Math.pow(retryPolicy.multiplier, attempt);
         break;
       case 'linear':
-        delay = retryPolicy.initialDelay + (retryPolicy.initialDelay * attempt);
+        delay = retryPolicy.initialDelay + retryPolicy.initialDelay * attempt;
         break;
       default:
         delay = retryPolicy.initialDelay;
@@ -110,6 +100,6 @@ export class RetrySagaUseCase {
   }
 
   private _sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

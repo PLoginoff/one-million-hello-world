@@ -17,7 +17,7 @@ export class TypeValidator implements IValidator {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    const actualType = typeof data;
+    const actualType = data === null ? 'null' : typeof data;
 
     if (actualType !== this._expectedType) {
       errors.push(`Expected type '${this._expectedType}', got '${actualType}'`);

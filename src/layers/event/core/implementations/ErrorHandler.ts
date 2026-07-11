@@ -88,7 +88,7 @@ export class ErrorHandler implements IErrorHandler {
     console.error('[ErrorHandler]', {
       eventType: context.eventType,
       subscriptionId: context.subscriptionId,
-      error: context.error.message,
+      error: context.error ? context.error.message : 'Unknown error',
       timestamp: context.timestamp.toISOString(),
     });
   }

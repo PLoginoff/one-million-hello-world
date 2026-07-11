@@ -268,7 +268,7 @@ describe('EventMetricsCollector', () => {
       expect(timeSeries).toEqual([]);
     });
 
-    it('should filter by duration', () => {
+    it('should filter by duration', async () => {
       collector.recordEventPublished('test.event');
       await new Promise(resolve => setTimeout(resolve, 10));
       collector.recordEventPublished('test.event');

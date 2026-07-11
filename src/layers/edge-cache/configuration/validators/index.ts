@@ -1,0 +1,1 @@
+export { EdgeCacheConfigValidator } from './EdgeCacheValidator';

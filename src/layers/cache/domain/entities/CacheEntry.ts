@@ -32,7 +32,7 @@ export class CacheEntry<T> {
    */
   isExpired(currentTime: number = Date.now()): boolean {
     if (this.ttl <= 0) return false;
-    return currentTime - this.createdAt > this.ttl;
+    return currentTime - this.createdAt >= this.ttl;
   }
 
   /**

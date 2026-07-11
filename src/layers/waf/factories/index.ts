@@ -1,0 +1,1 @@
+export { WafFactory } from './WafFactory';

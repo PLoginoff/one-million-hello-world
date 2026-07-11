@@ -10,7 +10,7 @@ export interface IStorage<T> {
   /**
    * Get entry by key
    */
-  get(key: string): CacheEntry<T> | undefined;
+  get(key: string): CacheEntry<T> | null;
 
   /**
    * Set entry
@@ -36,6 +36,16 @@ export interface IStorage<T> {
    * Get all entries
    */
   entries(): CacheEntry<T>[];
+
+  /**
+   * Get all values (alias for entries)
+   */
+  values(): CacheEntry<T>[];
+
+  /**
+   * Remove expired entries
+   */
+  cleanup(): void;
 
   /**
    * Get storage size

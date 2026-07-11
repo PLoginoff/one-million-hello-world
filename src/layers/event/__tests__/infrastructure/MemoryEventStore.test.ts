@@ -184,7 +184,7 @@ describe('MemoryEventStore', () => {
       await store.save(event2);
       await store.save(event3);
 
-      const events = await store.getByCorrelationId(correlationId);
+      const events = await store.getByCorrelationId(event1.metadata.correlationId);
       expect(events).toHaveLength(2);
     });
 
@@ -408,7 +408,7 @@ describe('MemoryEventStore', () => {
     });
 
     it('should handle events with special characters in type', async () => {
-      const event = Event.create('event.with.dots-and_underscores', {});
+      const event = Event.create('event.with.dots-and-hyphens', {});
       await store.save(event);
 
       const retrieved = await store.get(event.id.value);

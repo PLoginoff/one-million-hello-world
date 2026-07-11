@@ -25,7 +25,7 @@ export class SagaExecutionEntity {
     compensationSteps: CompensationStep[],
     metadata?: SagaMetadata,
     result?: unknown,
-    error?: Error,
+    error?: Error
   ) {
     this.executionId = executionId;
     this.sagaId = sagaId;
@@ -103,7 +103,9 @@ export class SagaExecutionEntity {
   /**
    * Create a copy with updated status
    */
-  withStatus(status: 'pending' | 'running' | 'completed' | 'failed' | 'compensating' | 'compensated'): SagaExecutionEntity {
+  withStatus(
+    status: 'pending' | 'running' | 'completed' | 'failed' | 'compensating' | 'compensated'
+  ): SagaExecutionEntity {
     return new SagaExecutionEntity(
       this.executionId,
       this.sagaId,
@@ -112,7 +114,7 @@ export class SagaExecutionEntity {
       this.compensationSteps,
       this.metadata,
       this.result,
-      this.error,
+      this.error
     );
   }
 
@@ -128,7 +130,7 @@ export class SagaExecutionEntity {
       this.compensationSteps,
       this.metadata,
       result,
-      this.error,
+      this.error
     );
   }
 
@@ -144,7 +146,23 @@ export class SagaExecutionEntity {
       this.compensationSteps,
       this.metadata,
       this.result,
-      error,
+      error
+    );
+  }
+
+  /**
+   * Create a copy with updated steps
+   */
+  withSteps(steps: SagaStep[]): SagaExecutionEntity {
+    return new SagaExecutionEntity(
+      this.executionId,
+      this.sagaId,
+      this.status,
+      steps,
+      this.compensationSteps,
+      this.metadata,
+      this.result,
+      this.error
     );
   }
 
@@ -160,7 +178,7 @@ export class SagaExecutionEntity {
       this.compensationSteps,
       this.metadata.update(updates),
       this.result,
-      this.error,
+      this.error
     );
   }
 
@@ -176,7 +194,7 @@ export class SagaExecutionEntity {
       [...this.compensationSteps],
       this.metadata.clone(),
       this.result,
-      this.error,
+      this.error
     );
   }
 

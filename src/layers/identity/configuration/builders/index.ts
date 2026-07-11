@@ -1,0 +1,1 @@
+export { IdentityConfigBuilder } from './IdentityBuilder';

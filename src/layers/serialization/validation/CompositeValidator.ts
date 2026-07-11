@@ -164,7 +164,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Validates using the first validator that succeeds
-   * 
+   *
    * @param data - Data to validate
    * @returns Validation result
    */
@@ -178,6 +178,8 @@ export class CompositeValidator extends BaseValidator {
       if (result.valid) {
         return result;
       }
+
+      return result;
     }
 
     return this._failure(['No validator succeeded']);

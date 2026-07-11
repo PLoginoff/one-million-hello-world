@@ -35,10 +35,55 @@ export class StrategyRegistry {
    * @param strategy - Strategy instance
    * @param metadata - Strategy metadata
    */
-  register(key: string, strategy: ISerializationStrategy, metadata: StrategyMetadata): void {
-    this._strategies.set(key, { strategy, metadata });
-    this._formatMap.set(metadata.format, key);
-    this._contentTypeMap.set(metadata.contentType, key);
+  register(key: string, strategy: ISerializationStrategy, metadata?: Partial<StrategyMetadata>): void {
+    const fullMetadata: StrategyMetadata = {
+      name: metadata?.name ?? key,
+      format: metadata?.format ?? strategy.getFormatName(),
+      contentType: metadata?.contentType ?? strategy.getContentType(),
+      version: metadata?.version,
+      description: metadata?.description,
+      tags: metadata?.tags,
+      priority: metadata?.priority,
+    };
+    this._strategies.set(key, { strategy, metadata: fullMetadata });
+    this._formatMap.set(fullMetadata.format, key);
+    this._contentTypeMap.set(fullMetadata.contentType, key);
+  }
+
+  /**
+   * Updates strategy metadata
+   *
+   * @param key - Strategy key
+   * @param updates - Metadata updates
+   */
+  updateMetadata(key: string, updates: Partial<StrategyMetadata>): void {
+    const entry = this._strategies.get(key);
+    if (!entry) {
+      throw new Error(`Strategy not found: ${key}`);
+    }
+    const previousFormat = entry.metadata.format;
+    const previousContentType = entry.metadata.contentType;
+    const updated = { ...entry.metadata, ...updates };
+    entry.metadata = updated;
+
+    if (updated.format !== previousFormat) {
+      this._formatMap.delete(previousFormat);
+      this._formatMap.set(updated.format, key);
+    }
+
+    if (updated.contentType !== previousContentType) {
+      this._contentTypeMap.delete(previousContentType);
+      this._contentTypeMap.set(updated.contentType, key);
+    }
+  }
+
+  /**
+   * Lists all registered strategy keys
+   *
+   * @returns Array of strategy keys
+   */
+  list(): string[] {
+    return Array.from(this._strategies.keys());
   }
 
   /**
@@ -102,7 +147,18 @@ export class StrategyRegistry {
    * 
    * @returns Array of strategies with metadata
    */
-  getAll(): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
+  getAll(): Map<string, ISerializationStrategy> {
+    return new Map(
+      Array.from(this._strategies.entries()).map(([key, entry]) => [key, entry.strategy])
+    );
+  }
+
+  /**
+   * Gets all registered strategies with metadata
+   *
+   * @returns Array of strategies with metadata
+   */
+  getAllWithMetadata(): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
     return Array.from(this._strategies.entries()).map(([key, entry]) => ({
       key,
       strategy: entry.strategy,
@@ -117,7 +173,7 @@ export class StrategyRegistry {
    * @returns Array of matching strategies
    */
   getByTag(tag: string): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.tags?.includes(tag));
+    return this.getAllWithMetadata().filter(entry => entry.metadata.tags?.includes(tag));
   }
 
   /**
@@ -174,7 +230,7 @@ export class StrategyRegistry {
    * @returns Array of strategies sorted by priority
    */
   getByPriority(): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
-    return this.getAll().sort((a, b) => {
+    return this.getAllWithMetadata().sort((a, b) => {
       const aPriority = a.metadata.priority ?? 0;
       const bPriority = b.metadata.priority ?? 0;
       return bPriority - aPriority;

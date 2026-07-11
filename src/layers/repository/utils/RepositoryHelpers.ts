@@ -1,6 +1,6 @@
 /**
  * Repository Helpers
- * 
+ *
  * Utility functions for repository operations.
  */
 
@@ -30,7 +30,10 @@ export class RepositoryHelpers {
    * Generate repository ID from name
    */
   static generateRepositoryId(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   }
 
   /**
@@ -49,9 +52,9 @@ export class RepositoryHelpers {
       return null;
     }
     return {
-      host: match[1],
+      host: match[1]!,
       port: parseInt(match[2], 10),
-      database: match[3],
+      database: match[3]!,
     };
   }
 }

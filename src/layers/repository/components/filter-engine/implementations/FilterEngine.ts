@@ -1,6 +1,6 @@
 /**
  * Filter Engine Implementation
- * 
+ *
  * Concrete implementation of IFilterEngine.
  * Handles applying filters to data collections.
  */
@@ -235,7 +235,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     }
 
     return {
-      field: filters[0].field,
+      field: filters[0]!.field,
       operator: filters[0].operator,
       value: filters,
       negated: false,
@@ -318,8 +318,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
   private _updateAverageExecutionTime(duration: number): void {
     const total = this._stats.appliedFilters;
     if (total > 0) {
-      this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+      this._stats.averageExecutionTime = (this._stats.averageExecutionTime * (total - 1) + duration) / total;
     }
   }
 }

@@ -10,6 +10,7 @@ import { Event } from '../../domain/entities/Event';
 import { EventId } from '../../domain/value-objects/EventId';
 import { EventType } from '../../domain/value-objects/EventType';
 import { EventMetadata } from '../../domain/value-objects/EventMetadata';
+import { EventPayload } from '../../domain/value-objects/EventPayload';
 
 describe('EventBuilder', () => {
   describe('create', () => {
@@ -27,27 +28,27 @@ describe('EventBuilder', () => {
   describe('withId', () => {
     it('should set custom ID as string', () => {
       const event = EventBuilder.create()
-        .withId('custom-id')
+        .withId('custom-id-12')
         .withType('test.event')
         .withPayload({})
         .build();
 
-      expect(event.id.value).toBe('custom-id');
+      expect(event.id.value).toBe('custom-id-12');
     });
 
     it('should set custom ID as EventId', () => {
-      const customId = EventId.fromString('custom-id');
+      const customId = EventId.fromString('custom-id-12');
       const event = EventBuilder.create()
         .withId(customId)
         .withType('test.event')
         .withPayload({})
         .build();
 
-      expect(event.id.value).toBe('custom-id');
+      expect(event.id.value).toBe('custom-id-12');
     });
 
     it('should return builder instance for chaining', () => {
-      const builder = EventBuilder.create().withId('custom-id');
+      const builder = EventBuilder.create().withId('custom-id-12');
       expect(builder).toBeInstanceOf(EventBuilder);
     });
   });
@@ -363,7 +364,7 @@ describe('EventBuilder', () => {
 
     it('should handle complex fluent chain', () => {
       const event = EventBuilder.create()
-        .withId('custom-id')
+        .withId('custom-id-12')
         .withType('user.created')
         .withPayload({ userId: '123', name: 'John' })
         .withSource('api')
@@ -375,7 +376,7 @@ describe('EventBuilder', () => {
         .withOccurredAt(new Date('2024-01-01'))
         .build();
 
-      expect(event.id.value).toBe('custom-id');
+      expect(event.id.value).toBe('custom-id-12');
       expect(event.type.value).toBe('user.created');
       expect(event.payload.data).toEqual({ userId: '123', name: 'John' });
       expect(event.metadata.source).toBe('api');

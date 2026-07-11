@@ -1,0 +1,1 @@
+export { OutboxFactory } from './OutboxFactory';

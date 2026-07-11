@@ -34,7 +34,11 @@ describe('PluginManager', () => {
 
     it('should register multiple plugins', async () => {
       const plugin1 = new CompressionPlugin(false);
-      const plugin2 = new CompressionPlugin(false);
+      const plugin2: ISerializationPlugin = {
+        name: 'identity',
+        version: '1.0.0',
+        beforeSerialize: (data) => data,
+      };
 
       await manager.registerPlugin(plugin1);
       await manager.registerPlugin(plugin2);
@@ -174,7 +178,11 @@ describe('PluginManager', () => {
   describe('getPlugins', () => {
     it('should return all registered plugins', async () => {
       const plugin1 = new CompressionPlugin(false);
-      const plugin2 = new CompressionPlugin(false);
+      const plugin2: ISerializationPlugin = {
+        name: 'identity',
+        version: '1.0.0',
+        beforeSerialize: (data) => data,
+      };
 
       await manager.registerPlugin(plugin1);
       await manager.registerPlugin(plugin2);
@@ -194,7 +202,11 @@ describe('PluginManager', () => {
   describe('clearPlugins', () => {
     it('should remove all plugins', async () => {
       const plugin1 = new CompressionPlugin(false);
-      const plugin2 = new CompressionPlugin(false);
+      const plugin2: ISerializationPlugin = {
+        name: 'identity',
+        version: '1.0.0',
+        beforeSerialize: (data) => data,
+      };
 
       await manager.registerPlugin(plugin1);
       await manager.registerPlugin(plugin2);

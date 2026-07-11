@@ -30,8 +30,24 @@ export class BasicStatisticsCollector implements IStatisticsCollector {
     this.stats = this.stats.withSize(size);
   }
 
+  recordSizeChange(size: number): void {
+    this.updateSize(size);
+  }
+
   getStats(): CacheStats {
     return this.stats;
+  }
+
+  getHitRate(): number {
+    return this.stats.getHitRate();
+  }
+
+  getMissRate(): number {
+    return this.stats.getMissRate();
+  }
+
+  getTotalRequests(): number {
+    return this.stats.getTotalRequests();
   }
 
   reset(): void {

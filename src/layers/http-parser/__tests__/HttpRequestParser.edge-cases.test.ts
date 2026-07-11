@@ -8,6 +8,7 @@
 
 import { HttpRequestParser } from '../implementations/HttpRequestParser';
 import { ParserState } from '../types/http-parser-types';
+import { HttpVersion } from './../types/http-parser-types';
 
 describe('HttpRequestParser Edge Cases', () => {
   let parser: HttpRequestParser;
@@ -214,7 +215,7 @@ describe('HttpRequestParser Edge Cases', () => {
 
   describe('Response Validation Edge Cases', () => {
     it('should handle response without line', () => {
-      const response = { line: undefined, headers: new Map(), body: Buffer.from('') };
+      const response = { line: undefined as any, headers: new Map(), body: Buffer.from('') };
 
       const isValid = parser.validateResponse(response);
 
@@ -222,7 +223,7 @@ describe('HttpRequestParser Edge Cases', () => {
     });
 
     it('should handle response with invalid status code', () => {
-      const response = { line: { version: 'HTTP/1.1' as const, statusCode: 999, reasonPhrase: 'Custom' }, headers: new Map(), body: Buffer.from('') };
+      const response = { line: { version: HttpVersion.HTTP_1_1, statusCode: 999, reasonPhrase: 'Custom' }, headers: new Map(), body: Buffer.from('') };
 
       const isValid = parser.validateResponse(response);
 

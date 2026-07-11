@@ -1,0 +1,1 @@
+export { EventSourcingConfigValidator } from './EventSourcingValidator';

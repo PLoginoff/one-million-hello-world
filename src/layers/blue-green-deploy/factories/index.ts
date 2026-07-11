@@ -1,0 +1,1 @@
+export { BlueGreenDeployFactory } from './BlueGreenDeployFactory';

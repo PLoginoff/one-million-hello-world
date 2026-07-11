@@ -1,0 +1,1 @@
+export { DataWarehouseFactory } from './DataWarehouseFactory';

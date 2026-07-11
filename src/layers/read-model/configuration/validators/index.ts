@@ -1,0 +1,1 @@
+export { ReadModelConfigValidator } from './ReadModelValidator';

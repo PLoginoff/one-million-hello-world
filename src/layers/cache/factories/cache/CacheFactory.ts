@@ -14,7 +14,7 @@ import { BasicStatisticsCollector } from '../../statistics/collectors/BasicStati
 import { DetailedStatisticsCollector } from '../../statistics/collectors/DetailedStatisticsCollector';
 import { DefaultConfigs, CacheConfigOptions } from '../../configuration/defaults/DefaultConfigs';
 import { InvalidationStrategy } from '../../types/cache-types';
-import type { StorageType } from '../storage/StorageFactory';
+import { StorageType } from '../storage/StorageFactory';
 
 export interface CacheFactoryOptions {
   storageType?: StorageType;
@@ -42,6 +42,13 @@ export class CacheFactory {
     );
 
     return new CacheManager<T>(cacheConfig);
+  }
+
+  /**
+   * Create cache with default configuration (alias for create)
+   */
+  static createDefault<T>(options?: CacheFactoryOptions): CacheManager<T> {
+    return this.create<T>(undefined, options);
   }
 
   /**
@@ -80,8 +87,7 @@ export class CacheFactory {
   }
 
   private static createStorage<T>(type?: StorageType, nodeId?: string): any {
-    const storageType = type || 'IN_MEMORY';
-    if (storageType === 'DISTRIBUTED') {
+    if (type === StorageType.DISTRIBUTED) {
       return new DistributedStorage<T>(nodeId);
     }
     return new InMemoryStorage<T>();

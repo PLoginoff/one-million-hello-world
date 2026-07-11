@@ -21,6 +21,7 @@ import {
   RateLimitScope,
   RateLimitAction,
 } from '../types/rate-limiting-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('RateLimiter Advanced', () => {
   let limiter: RateLimiter;
@@ -32,7 +33,7 @@ describe('RateLimiter Advanced', () => {
   describe('Extended Rate Limiting', () => {
     it('should check rate limit with extended result', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -55,7 +56,7 @@ describe('RateLimiter Advanced', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -169,7 +170,7 @@ describe('RateLimiter Advanced', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -201,7 +202,7 @@ describe('RateLimiter Advanced', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -479,7 +480,7 @@ describe('RateLimiter Advanced', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -508,7 +509,7 @@ describe('RateLimiter Advanced', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),

@@ -27,12 +27,18 @@ export class Event<T = unknown> implements IDomainEvent<T> {
   readonly occurredAt: Date;
 
   constructor(options: EventOptions<T>) {
-    this.id = options.id || new EventId();
+    if (options.type === undefined) {
+      throw new Error('Event: type is required');
+    }
+    if (options.payload === undefined) {
+      throw new Error('Event: payload is required');
+    }
+    this.id = options.id !== undefined ? options.id : new EventId();
     this.type = options.type instanceof EventType ? options.type : new EventType(options.type);
-    this.payload = options.payload instanceof EventPayload 
-      ? options.payload 
+    this.payload = options.payload instanceof EventPayload
+      ? options.payload
       : new EventPayload(options.payload);
-    this.metadata = options.metadata || EventMetadata.create('system');
+    this.metadata = options.metadata !== undefined ? options.metadata : EventMetadata.create('system');
     this.occurredAt = options.occurredAt || new Date();
     this._validate();
   }
@@ -89,11 +95,24 @@ export class Event<T = unknown> implements IDomainEvent<T> {
 
   withCausationId(causationId: string): Event<T> {
     return new Event({
-      id: this.id,
+      id: new EventId(),
       type: this.type,
       payload: this.payload.data,
       metadata: this.metadata.withCausationId(causationId),
-      occurredAt: this.occurredAt,
+      occurredAt: new Date(),
+    });
+  }
+
+  withCorrelationId(correlationId: string): Event<T> {
+    return new Event({
+      id: new EventId(),
+      type: this.type,
+      payload: this.payload.data,
+      metadata: EventMetadata.fromJSON({
+        ...this.metadata.toJSON(),
+        correlationId,
+      }),
+      occurredAt: new Date(),
     });
   }
 
@@ -123,7 +142,7 @@ export class Event<T = unknown> implements IDomainEvent<T> {
   }
 
   static create<T>(type: string, payload: T): Event<T> {
-    return new Event({ type, payload });
+    return new Event({ type, payload, metadata: EventMetadata.create('system') });
   }
 
   static fromPrimitive<T>(primitive: any): Event<T> {

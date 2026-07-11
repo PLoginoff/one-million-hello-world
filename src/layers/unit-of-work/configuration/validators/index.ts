@@ -1,0 +1,1 @@
+export { UnitOfWorkConfigValidator } from './UnitOfWorkValidator';

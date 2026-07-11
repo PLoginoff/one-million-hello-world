@@ -1,0 +1,1 @@
+export { AnalyticsConfigValidator } from './AnalyticsValidator';

@@ -123,7 +123,7 @@ export interface IMiddlewareManager {
    * 
    * @param config - Middleware configuration
    */
-  setConfig(config: MiddlewareConfig): void;
+  setConfig(config: Partial<MiddlewareConfig>): void;
 
   /**
    * Gets current middleware configuration

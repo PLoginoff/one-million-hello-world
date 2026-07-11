@@ -1,0 +1,1 @@
+export { InboxConfigValidator } from './InboxValidator';

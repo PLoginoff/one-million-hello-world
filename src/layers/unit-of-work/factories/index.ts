@@ -1,0 +1,1 @@
+export { UnitOfWorkFactory } from './UnitOfWorkFactory';

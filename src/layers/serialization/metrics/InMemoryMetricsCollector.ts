@@ -131,7 +131,7 @@ export class InMemoryMetricsCollector implements IMetricsCollector {
     if (metrics.length === 0) {
       return undefined;
     }
-    return metrics[metrics.length - 1].value;
+    return (metrics[metrics.length - 1])!.value;
   }
 
   /**

@@ -1,0 +1,1 @@
+export { ContractTestingFactory } from './ContractTestingFactory';

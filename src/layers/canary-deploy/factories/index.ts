@@ -1,0 +1,1 @@
+export { CanaryDeployFactory } from './CanaryDeployFactory';

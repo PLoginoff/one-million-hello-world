@@ -53,12 +53,33 @@ export class XMLStrategy implements ISerializationStrategy {
   }
 
   private _fromXML(data: string): unknown {
-    const result: Record<string, unknown> = {};
-    const regex = /<(\w+)>(.*?)<\/\1>/g;
-    let match;
+    const trimmed = data.trim();
+    const rootMatch = trimmed.match(/^<(\w+)>(.*?)<\/\1>$/s) || trimmed.match(/^<(\w+) \/>$/s);
+    if (!rootMatch) {
+      return {};
+    }
 
-    while ((match = regex.exec(data)) !== null) {
-      const [, key, value] = match;
+    const rootTag = rootMatch[1];
+    const inner = rootMatch[2] ?? '';
+    const innerTrimmed = inner.trim();
+
+    if (!innerTrimmed) {
+      return {};
+    }
+
+    const childRegex = /<(\w+)>(.*?)<\/\1>/gs;
+    const children: Array<[string, string]> = [];
+    let childMatch;
+    while ((childMatch = childRegex.exec(inner)) !== null) {
+      children.push([childMatch[1], childMatch[2]]);
+    }
+
+    if (children.length === 0) {
+      return { [rootTag]: this._unescapeXML(innerTrimmed) };
+    }
+
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of children) {
       result[key] = this._unescapeXML(value);
     }
 

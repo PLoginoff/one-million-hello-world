@@ -1,0 +1,1 @@
+export { IdentityFactory } from './IdentityFactory';

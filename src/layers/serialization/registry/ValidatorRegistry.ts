@@ -128,8 +128,8 @@ export class ValidatorRegistry {
     const keys = this._categoryMap.get(category) ?? [];
     return keys.map(key => ({
       key,
-      validator: this.get(key)!,
-      metadata: this.getMetadata(key)!,
+      validator: this.get(key),
+      metadata: this.getMetadata(key),
     }));
   }
 
@@ -143,8 +143,8 @@ export class ValidatorRegistry {
     const keys = this._tagMap.get(tag) ?? [];
     return keys.map(key => ({
       key,
-      validator: this.get(key)!,
-      metadata: this.getMetadata(key)!,
+      validator: this.get(key),
+      metadata: this.getMetadata(key),
     }));
   }
 

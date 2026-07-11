@@ -58,7 +58,7 @@ export class EventBusConfig {
     return new EventBusConfig({ ...this, ...options });
   }
 
-  toJSON(): object {
+  toJSON(): Record<string, unknown> {
     return {
       enableAsync: this.enableAsync,
       enablePersistence: this.enablePersistence,

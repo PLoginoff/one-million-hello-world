@@ -256,7 +256,7 @@ describe('IdGenerator', () => {
     });
 
     describe('ULID strategy', () => {
-      it('should generate time-ordered ID', () => {
+      it('should generate time-ordered ID', async () => {
         generator.setOptions({ strategy: 'ulid' });
         const id1 = generator.generate();
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -324,7 +324,7 @@ describe('IdGenerator', () => {
     it('should handle very large length for nanoid', () => {
       generator.setOptions({ strategy: 'nanoid', length: 1000 });
       const id = generator.generate();
-      expect(id.length).toBeGreaterThan(1000);
+      expect(id.length).toBeGreaterThanOrEqual(1000);
     });
 
     it('should handle switching strategies multiple times', () => {

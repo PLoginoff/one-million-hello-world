@@ -1,0 +1,1 @@
+export { SchemaRegistryConfigBuilder } from './SchemaRegistryBuilder';

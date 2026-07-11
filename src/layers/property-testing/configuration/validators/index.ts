@@ -1,0 +1,1 @@
+export { PropertyTestingConfigValidator } from './PropertyTestingValidator';

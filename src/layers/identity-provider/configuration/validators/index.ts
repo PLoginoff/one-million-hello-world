@@ -1,0 +1,1 @@
+export { IdentityProviderConfigValidator } from './IdentityProviderValidator';

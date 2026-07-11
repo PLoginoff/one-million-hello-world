@@ -470,16 +470,16 @@ describe('QueryBuilder', () => {
     it('should set state successfully', () => {
       const newState = {
         filters: [{ field: 'age', operator: 'gt', value: 30, logicalOperator: 'AND', negated: false }],
-        sorts: [],
+        sorts: [] as unknown[],
         pagination: { limit: 20 },
-        projections: [],
-        groups: [],
-        aggregations: [],
-        having: [],
-        joins: [],
+        projections: [] as unknown[],
+        groups: [] as unknown[],
+        aggregations: [] as unknown[],
+        having: [] as unknown[],
+        joins: [] as unknown[],
       };
 
-      queryBuilder.setState(newState);
+      queryBuilder.setState(newState as any);
 
       expect(queryBuilder.getFilters().length).toBe(1);
       expect(queryBuilder.getLimit()).toBe(20);

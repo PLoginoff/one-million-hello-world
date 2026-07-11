@@ -10,8 +10,8 @@ export class EventPayload<T = unknown> {
   private readonly _schema?: object;
   private readonly _contentType: string;
 
-  constructor(data: T, options: { schema?: object; contentType?: string } = {}) {
-    this._data = data;
+  constructor(data: T | EventPayload<T>, options: { schema?: object; contentType?: string } = {}) {
+    this._data = data instanceof EventPayload ? data.data : data;
     this._schema = options.schema;
     this._contentType = options.contentType || 'application/json';
     this._validate();
@@ -55,6 +55,9 @@ export class EventPayload<T = unknown> {
   }
 
   getSize(): number {
+    if (typeof this._data === 'string') {
+      return this._data.length;
+    }
     return JSON.stringify(this._data).length;
   }
 

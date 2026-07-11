@@ -50,7 +50,7 @@ export class InMemorySagaEventRepository implements SagaEventRepository {
   async deleteByExecutionId(executionId: string): Promise<void> {
     const indices: number[] = [];
     for (let i = 0; i < this._storage.length; i++) {
-      if (this._storage[i].executionId === executionId) {
+      if (this._storage![i].executionId === executionId) {
         indices.push(i);
       }
     }

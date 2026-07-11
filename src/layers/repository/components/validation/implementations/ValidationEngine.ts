@@ -43,7 +43,7 @@ export class ValidationEngine implements IValidationEngine {
     };
   }
 
-  validate(entity: Record<string, unknown>, rules: ValidationRule[]): ValidationResult {
+  validate(entity: unknown, rules: ValidationRule[]): ValidationResult {
     const startTime = Date.now();
     this._stats.totalValidations++;
 
@@ -54,9 +54,10 @@ export class ValidationEngine implements IValidationEngine {
     const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
     const warnings: Array<{ code: string; message: string; field: string; value: unknown; rule: string }> = [];
 
+    const record = entity as Record<string, unknown>;
     for (const rule of rules) {
-      const context = this.createContext(rule.field, entity);
-      const result = this.validateField(entity[rule.field], rule, context);
+      const context = this.createContext(rule.field, record);
+      const result = this.validateField(record[rule.field], rule, context);
 
       if (!result.valid) {
         if (rule.severity === ValidationSeverity.ERROR) {
@@ -89,6 +90,10 @@ export class ValidationEngine implements IValidationEngine {
   validateField(value: unknown, rule: ValidationRule, context?: ValidationContext): ValidationResult {
     const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
     const warnings: Array<{ code: string; message: string; field: string; value: unknown; rule: string }> = [];
+
+    if (rule.severity === ValidationSeverity.WARNING && !this._config.enableWarnings) {
+      return { valid: true, errors: [], warnings: [] };
+    }
 
     try {
       const result = rule.validator(value, context || this.createContext(rule.field, {}));
@@ -133,7 +138,7 @@ export class ValidationEngine implements IValidationEngine {
     };
   }
 
-  validateSchema(entity: Record<string, unknown>, schema: SchemaDefinition): ValidationResult {
+  validateSchema(entity: unknown, schema: SchemaDefinition): ValidationResult {
     const allRules = [...schema.globalRules];
 
     for (const field of schema.fields) {
@@ -208,7 +213,7 @@ export class ValidationEngine implements IValidationEngine {
     };
   }
 
-  createContext(fieldName: string, entity: Record<string, unknown>, metadata?: Record<string, unknown>): ValidationContext {
+  createContext(fieldName: string, entity: unknown, metadata?: Record<string, unknown>): ValidationContext {
     return {
       fieldName,
       entity,
@@ -217,16 +222,17 @@ export class ValidationEngine implements IValidationEngine {
     };
   }
 
-  validateRequired(entity: Record<string, unknown>, requiredFields: string[]): ValidationResult {
+  validateRequired(entity: unknown, requiredFields: string[]): ValidationResult {
     const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
 
+    const record = entity as Record<string, unknown>;
     for (const field of requiredFields) {
-      if (entity[field] === undefined || entity[field] === null) {
+      if (record[field] === undefined || record[field] === null) {
         errors.push({
           code: 'REQUIRED_FIELD_MISSING',
           message: `Field '${field}' is required`,
           field,
-          value: entity[field],
+          value: record[field],
           rule: 'required',
           severity: ValidationSeverity.ERROR,
         });
@@ -240,11 +246,12 @@ export class ValidationEngine implements IValidationEngine {
     };
   }
 
-  validateTypes(entity: Record<string, unknown>, fieldTypes: Map<string, string>): ValidationResult {
+  validateTypes(entity: unknown, fieldTypes: Map<string, string>): ValidationResult {
     const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
 
+    const record = entity as Record<string, unknown>;
     for (const [field, expectedType] of fieldTypes) {
-      const value = entity[field];
+      const value = record[field];
 
       if (value !== undefined && value !== null) {
         const actualType = typeof value;

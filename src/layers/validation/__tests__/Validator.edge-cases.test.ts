@@ -13,6 +13,7 @@ import {
   FieldValidation,
   FieldType,
 } from '../types/validation-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('Validator Edge Cases', () => {
   let validator: Validator;
@@ -31,7 +32,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -56,7 +57,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -81,7 +82,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -109,7 +110,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'abcde']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -135,7 +136,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'abcd']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -161,7 +162,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'abcdefghij']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -187,7 +188,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'abcdefghijk']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -214,7 +215,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '0']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -240,7 +241,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '-1']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -267,7 +268,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from('{invalid json'),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -293,7 +294,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['email', 'invalid-email']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -319,7 +320,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['url', 'invalid-url']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -346,7 +347,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'not-a-number']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -371,7 +372,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '123']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -398,7 +399,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'test!@#$%^&*()']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -411,7 +412,7 @@ describe('Validator Edge Cases', () => {
 
     it('should sanitize HTML entities', () => {
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '<script>alert("xss")</script>']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -439,7 +440,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['status', 'active']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -465,7 +466,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['status', 'deleted']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -493,7 +494,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['code', 'ABC123']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -519,7 +520,7 @@ describe('Validator Edge Cases', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['code', 'abc123']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),

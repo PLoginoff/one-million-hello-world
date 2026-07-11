@@ -19,20 +19,20 @@ export class SerializationStrategyFactory implements ISerializationStrategyFacto
     this._registerDefaultStrategies();
   }
 
-  createStrategy(format: SerializationFormat): ISerializationStrategy {
-    const factory = this._strategies.get(format);
+  createStrategy(format: SerializationFormat | string): ISerializationStrategy {
+    const factory = this._strategies.get(format as SerializationFormat);
     if (!factory) {
       throw new Error(`Unsupported serialization format: ${format}`);
     }
     return factory();
   }
 
-  registerStrategy(format: SerializationFormat, strategy: () => ISerializationStrategy): void {
-    this._strategies.set(format, strategy);
+  registerStrategy(format: SerializationFormat | string, strategy: () => ISerializationStrategy): void {
+    this._strategies.set(format as SerializationFormat, strategy);
   }
 
-  isSupported(format: SerializationFormat): boolean {
-    return this._strategies.has(format);
+  isSupported(format: SerializationFormat | string): boolean {
+    return this._strategies.has(format as SerializationFormat);
   }
 
   getSupportedFormats(): SerializationFormat[] {
@@ -40,12 +40,31 @@ export class SerializationStrategyFactory implements ISerializationStrategyFacto
   }
 
   /**
+   * Checks if a strategy is registered for the format
+   *
+   * @param format - Serialization format
+   * @returns True if registered
+   */
+  hasStrategy(format: SerializationFormat | string): boolean {
+    return this._strategies.has(format as SerializationFormat);
+  }
+
+  /**
+   * Gets all available strategy formats
+   *
+   * @returns Array of available formats
+   */
+  getAvailableStrategies(): SerializationFormat[] {
+    return this.getSupportedFormats();
+  }
+
+  /**
    * Unregisters a strategy for a format
    * 
    * @param format - Serialization format
    */
-  unregisterStrategy(format: SerializationFormat): void {
-    this._strategies.delete(format);
+  unregisterStrategy(format: SerializationFormat | string): void {
+    this._strategies.delete(format as SerializationFormat);
   }
 
   /**

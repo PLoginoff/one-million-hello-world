@@ -1,0 +1,1 @@
+export { MigrationsConfigBuilder } from './MigrationsBuilder';

@@ -34,24 +34,22 @@ export class ConfigValidator {
     for (const rule of this._rules) {
       const result = rule.validate(config);
       if (!result) {
-        if (rule.severity === 'error') {
-          errors.push({
-            field: rule.field,
-            message: rule.defaultMessage,
-            value: (config as any)[rule.field],
-          });
+        const severity = rule.severity || 'error';
+        const entry = {
+          field: rule.field || rule.name,
+          message: rule.defaultMessage,
+          value: rule.field ? (config as any)[rule.field] : undefined,
+        };
+        if (severity === 'error') {
+          errors.push(entry);
         } else {
-          warnings.push({
-            field: rule.field,
-            message: rule.defaultMessage,
-            value: (config as any)[rule.field],
-          });
+          warnings.push(entry);
         }
       }
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors.length === 0 && warnings.length === 0,
       errors,
       warnings,
     };
@@ -136,8 +134,9 @@ export class ConfigValidator {
 }
 
 interface ValidationRule {
-  field: string;
-  severity: 'error' | 'warning';
+  name?: string;
+  field?: string;
+  severity?: 'error' | 'warning';
   validate: (config: EventBusConfig | EventBusConfigOptions) => boolean;
   defaultMessage: string;
 }

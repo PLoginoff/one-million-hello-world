@@ -254,7 +254,7 @@ export class Router implements IRouter {
   updateRoute(method: HttpMethod, path: string, updates: Partial<Route>): void {
     const index = this._routes.findIndex(r => r.method === method && r.path === path);
     if (index !== -1) {
-      this._routes[index] = { ...this._routes[index], ...updates };
+      this._routes![index] = { ...this._routes[index], ...updates };
       const updatedRoute = this._routes[index];
       if (updatedRoute && updatedRoute.method && updatedRoute.path) {
         this._updateRouteMetadata(updatedRoute);

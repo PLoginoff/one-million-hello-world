@@ -72,7 +72,7 @@ export class SagaOrchestrator implements ISagaOrchestrator {
 
       return {
         success: true,
-        data: executionResults[executionResults.length - 1].data,
+        data: (executionResults[executionResults.length - 1])!.data,
         executedSteps: this._sagaState.getExecutedSteps(),
         compensatedSteps: [],
       };

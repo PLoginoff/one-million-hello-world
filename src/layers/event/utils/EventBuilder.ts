@@ -28,8 +28,8 @@ export class EventBuilder<T = unknown> {
     return this;
   }
 
-  withPayload(payload: T | EventPayload<T>): EventBuilder<T> {
-    this._options.payload = payload as T;
+  withPayload(payload: any): EventBuilder<any> {
+    this._options.payload = payload instanceof EventPayload ? payload.data : payload;
     return this;
   }
 
@@ -40,8 +40,8 @@ export class EventBuilder<T = unknown> {
 
   withSource(source: string): EventBuilder<T> {
     const existingMetadata = this._options.metadata || EventMetadata.create('system');
-    this._options.metadata = new EventMetadata({
-      ...existingMetadata.toJSON() as any,
+    this._options.metadata = EventMetadata.fromJSON({
+      ...existingMetadata.toJSON(),
       source,
     });
     return this;
@@ -49,8 +49,8 @@ export class EventBuilder<T = unknown> {
 
   withCorrelationId(correlationId: string): EventBuilder<T> {
     const existingMetadata = this._options.metadata || EventMetadata.create('system');
-    this._options.metadata = new EventMetadata({
-      ...existingMetadata.toJSON() as any,
+    this._options.metadata = EventMetadata.fromJSON({
+      ...existingMetadata.toJSON(),
       correlationId,
     });
     return this;
@@ -58,8 +58,8 @@ export class EventBuilder<T = unknown> {
 
   withUserId(userId: string): EventBuilder<T> {
     const existingMetadata = this._options.metadata || EventMetadata.create('system');
-    this._options.metadata = new EventMetadata({
-      ...existingMetadata.toJSON() as any,
+    this._options.metadata = EventMetadata.fromJSON({
+      ...existingMetadata.toJSON(),
       userId,
     });
     return this;
@@ -83,6 +83,12 @@ export class EventBuilder<T = unknown> {
   }
 
   build(): Event<T> {
+    if (!this._options.metadata) {
+      this._options.metadata = EventMetadata.create('system');
+    }
+    if (!this._options.occurredAt) {
+      this._options.occurredAt = new Date();
+    }
     return new Event(this._options);
   }
 

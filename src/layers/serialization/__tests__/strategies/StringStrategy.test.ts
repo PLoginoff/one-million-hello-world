@@ -42,7 +42,7 @@ describe('StringStrategy', () => {
     });
 
     it('should serialize null to string', () => {
-      const data = null;
+      const data: null = null;
       const result = strategy.serialize(data);
 
       expect(result).toBe('null');

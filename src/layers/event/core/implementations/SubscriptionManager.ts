@@ -1,23 +1,25 @@
 /**
- * SubscriptionManager - Core Implementation
- * 
- * Manages event subscriptions with lifecycle tracking.
- * Provides storage, retrieval, and statistics for subscriptions.
+ * Subscription Manager Implementation
+ *
+ * Manages event subscriptions with indexing by event type.
  */
 
-import { ISubscriptionManager, Subscription, EventHandler } from '../interfaces';
+import { EventHandler } from '../interfaces/IEventBus';
+import { ISubscriptionManager, Subscription } from '../interfaces/ISubscriptionManager';
 
 export class SubscriptionManager implements ISubscriptionManager {
-  private _subscriptions: Map<string, Subscription>;
-  private _eventTypeIndex: Map<string, Set<string>>;
+  private subscriptions: Map<string, Subscription>;
+  private index: Map<string, Set<string>>;
+  private counter: number;
 
   constructor() {
-    this._subscriptions = new Map();
-    this._eventTypeIndex = new Map();
+    this.subscriptions = new Map();
+    this.index = new Map();
+    this.counter = 0;
   }
 
   add(eventType: string, handler: EventHandler, once: boolean): Subscription {
-    const id = this._generateId();
+    const id = `sub_${++this.counter}_${Date.now()}`;
     const subscription: Subscription = {
       id,
       eventType,
@@ -27,105 +29,94 @@ export class SubscriptionManager implements ISubscriptionManager {
       executionCount: 0,
     };
 
-    this._subscriptions.set(id, subscription);
+    this.subscriptions.set(id, subscription);
 
-    if (!this._eventTypeIndex.has(eventType)) {
-      this._eventTypeIndex.set(eventType, new Set());
+    if (!this.index.has(eventType)) {
+      this.index.set(eventType, new Set());
     }
-    this._eventTypeIndex.get(eventType)!.add(id);
+    this.index.get(eventType)!.add(id);
 
-    return subscription;
+    return this.clone(subscription);
   }
 
   remove(subscriptionId: string): boolean {
-    const subscription = this._subscriptions.get(subscriptionId);
+    const subscription = this.subscriptions.get(subscriptionId);
     if (!subscription) {
       return false;
     }
 
-    const eventTypeSet = this._eventTypeIndex.get(subscription.eventType);
-    if (eventTypeSet) {
-      eventTypeSet.delete(subscriptionId);
-      if (eventTypeSet.size === 0) {
-        this._eventTypeIndex.delete(subscription.eventType);
+    this.subscriptions.delete(subscriptionId);
+
+    const eventTypeIds = this.index.get(subscription.eventType);
+    if (eventTypeIds) {
+      eventTypeIds.delete(subscriptionId);
+      if (eventTypeIds.size === 0) {
+        this.index.delete(subscription.eventType);
       }
     }
 
-    return this._subscriptions.delete(subscriptionId);
+    return true;
   }
 
   get(subscriptionId: string): Subscription | undefined {
-    const subscription = this._subscriptions.get(subscriptionId);
-    if (!subscription) {
-      return undefined;
-    }
-    return this._cloneSubscription(subscription);
+    const subscription = this.subscriptions.get(subscriptionId);
+    return subscription ? this.clone(subscription) : undefined;
   }
 
   getByEventType(eventType: string): Subscription[] {
-    const ids = this._eventTypeIndex.get(eventType);
+    const ids = this.index.get(eventType);
     if (!ids) {
       return [];
     }
 
-    const subscriptions: Subscription[] = [];
-    for (const id of ids) {
-      const subscription = this._subscriptions.get(id);
-      if (subscription) {
-        subscriptions.push(this._cloneSubscription(subscription));
-      }
-    }
-
-    return subscriptions.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    return Array.from(ids)
+      .map(id => this.subscriptions.get(id))
+      .filter((sub): sub is Subscription => sub !== undefined)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .map(sub => this.clone(sub));
   }
 
   getAll(): Subscription[] {
-    const subscriptions: Subscription[] = [];
-    for (const subscription of this._subscriptions.values()) {
-      subscriptions.push(this._cloneSubscription(subscription));
-    }
-    return subscriptions.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    return Array.from(this.subscriptions.values())
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .map(sub => this.clone(sub));
   }
 
   clear(): void {
-    this._subscriptions.clear();
-    this._eventTypeIndex.clear();
+    this.subscriptions.clear();
+    this.index.clear();
   }
 
   count(): number {
-    return this._subscriptions.size;
+    return this.subscriptions.size;
   }
 
   countByEventType(eventType: string): number {
-    const ids = this._eventTypeIndex.get(eventType);
+    const ids = this.index.get(eventType);
     return ids ? ids.size : 0;
   }
 
+  countByType(eventType: string): number {
+    return this.countByEventType(eventType);
+  }
+
   updateExecution(subscriptionId: string): void {
-    const subscription = this._subscriptions.get(subscriptionId);
-    if (subscription) {
-      subscription.executionCount++;
-      subscription.lastExecutedAt = new Date();
+    const subscription = this.subscriptions.get(subscriptionId);
+    if (!subscription) {
+      return;
     }
+
+    subscription.executionCount++;
+    subscription.lastExecutedAt = new Date();
   }
 
-  private _generateId(): string {
-    const timestamp = Date.now().toString(36);
-    const random = Math.random().toString(36).substring(2, 10);
-    return `sub_${timestamp}_${random}`;
-  }
-
-  private _cloneSubscription(subscription: Subscription): Subscription {
+  private clone(subscription: Subscription): Subscription {
     return {
-      id: subscription.id,
-      eventType: subscription.eventType,
-      handler: subscription.handler,
-      once: subscription.once,
-      createdAt: new Date(subscription.createdAt),
-      lastExecutedAt: subscription.lastExecutedAt 
-        ? new Date(subscription.lastExecutedAt) 
+      ...subscription,
+      createdAt: new Date(subscription.createdAt.getTime()),
+      lastExecutedAt: subscription.lastExecutedAt
+        ? new Date(subscription.lastExecutedAt.getTime())
         : undefined,
-      executionCount: subscription.executionCount,
     };
   }
 }

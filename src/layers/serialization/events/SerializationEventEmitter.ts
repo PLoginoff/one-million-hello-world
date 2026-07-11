@@ -12,6 +12,7 @@ export interface EventSubscription {
   event: string;
   handler: EventHandler;
   once: boolean;
+  unsubscribe(): void;
 }
 
 export class SerializationEventEmitter {
@@ -32,7 +33,7 @@ export class SerializationEventEmitter {
    * @param handler - Event handler
    * @returns Subscription ID
    */
-  on<T = unknown>(event: string, handler: EventHandler<T>): string {
+  on<T = unknown>(event: string, handler: EventHandler<T>): { id: string; unsubscribe: () => void } {
     if (!this._enabled) {
       throw new Error('Event emitter is disabled');
     }
@@ -47,7 +48,10 @@ export class SerializationEventEmitter {
     listeners.push({ id, handler: handler as EventHandler, once: false });
     this._listeners.set(event, listeners);
 
-    return id;
+    return {
+      id,
+      unsubscribe: () => this.off(event, id),
+    };
   }
 
   /**
@@ -57,7 +61,7 @@ export class SerializationEventEmitter {
    * @param handler - Event handler
    * @returns Subscription ID
    */
-  once<T = unknown>(event: string, handler: EventHandler<T>): string {
+  once<T = unknown>(event: string, handler: EventHandler<T>): { id: string; unsubscribe: () => void } {
     if (!this._enabled) {
       throw new Error('Event emitter is disabled');
     }
@@ -68,7 +72,10 @@ export class SerializationEventEmitter {
     listeners.push({ id, handler: handler as EventHandler, once: true });
     this._listeners.set(event, listeners);
 
-    return id;
+    return {
+      id,
+      unsubscribe: () => this.off(event, id),
+    };
   }
 
   /**
@@ -107,6 +114,13 @@ export class SerializationEventEmitter {
     } else {
       this._listeners.clear();
     }
+  }
+
+  /**
+   * Clears all listeners (alias for removeAllListeners)
+   */
+  clear(): void {
+    this.removeAllListeners();
   }
 
   /**
@@ -256,6 +270,7 @@ export class SerializationEventEmitter {
           event,
           handler: listener.handler,
           once: listener.once,
+          unsubscribe: () => this.off(event, listener.id),
         });
       }
     }

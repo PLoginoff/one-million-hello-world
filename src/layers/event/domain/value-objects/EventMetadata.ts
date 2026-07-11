@@ -26,11 +26,11 @@ export class EventMetadata {
 
   constructor(options: EventMetadataOptions = {}) {
     this._timestamp = options.timestamp || new Date();
-    this._source = options.source || 'unknown';
-    this._correlationId = options.correlationId || this._generateCorrelationId();
+    this._source = options.source !== undefined ? options.source : 'unknown';
+    this._correlationId = options.correlationId !== undefined ? options.correlationId : this._generateCorrelationId();
     this._causationId = options.causationId;
     this._userId = options.userId;
-    this._version = options.version || 1;
+    this._version = options.version !== undefined ? options.version : 1;
     this._tags = options.tags || {};
     this._validate();
   }
@@ -130,7 +130,7 @@ export class EventMetadata {
     );
   }
 
-  toJSON(): object {
+  toJSON(): Record<string, unknown> {
     return {
       timestamp: this._timestamp.toISOString(),
       source: this._source,

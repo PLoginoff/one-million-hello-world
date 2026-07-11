@@ -1,0 +1,1 @@
+export { DdosProtectionFactory } from './DdosProtectionFactory';

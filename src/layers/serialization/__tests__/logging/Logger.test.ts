@@ -6,43 +6,50 @@ import { ConsoleLogger, MemoryLogger, LoggerFactory, LogLevel } from '../../logg
 
 describe('ConsoleLogger', () => {
   let logger: ConsoleLogger;
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+  let consoleSpies: jest.SpyInstance[];
 
   beforeEach(() => {
+    consoleSpies = [
+      jest.spyOn(console, 'debug').mockImplementation(),
+      jest.spyOn(console, 'info').mockImplementation(),
+      jest.spyOn(console, 'warn').mockImplementation(),
+      jest.spyOn(console, 'error').mockImplementation(),
+    ];
     logger = new ConsoleLogger('test', LogLevel.DEBUG);
-    consoleSpy.mockClear();
   });
 
   afterEach(() => {
-    consoleSpy.mockRestore();
+    consoleSpies.forEach(spy => spy.mockRestore());
   });
+
+  const anyConsoleCalled = () => consoleSpies.some(spy => spy.mock.calls.length > 0);
 
   it('should log debug message', () => {
     logger.debug('debug message');
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(true);
   });
 
   it('should log info message', () => {
     logger.info('info message');
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(true);
   });
 
   it('should log warning message', () => {
     logger.warn('warning message');
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(true);
   });
 
   it('should log error message', () => {
     logger.error('error message');
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(true);
   });
 
   it('should respect log level', () => {
     logger.setLevel(LogLevel.ERROR);
     logger.debug('debug message');
-    expect(consoleSpy).not.toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(false);
     logger.error('error message');
-    expect(consoleSpy).toHaveBeenCalled();
+    expect(anyConsoleCalled()).toBe(true);
   });
 });
 

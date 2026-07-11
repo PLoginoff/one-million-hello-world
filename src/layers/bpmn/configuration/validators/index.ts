@@ -1,0 +1,1 @@
+export { BpmnConfigValidator } from './BpmnValidator';

@@ -81,7 +81,9 @@ describe('DIContainer', () => {
   describe('Dependency Injection', () => {
     it('should resolve dependencies automatically', () => {
       container.register(TestService, ServiceLifetime.Singleton);
-      container.register(DependentService, ServiceLifetime.Transient);
+      container.register(DependentService, ServiceLifetime.Transient, () => {
+        return new DependentService(container.resolve(TestService));
+      });
       const instance = container.resolve(DependentService);
       expect(instance).toBeInstanceOf(DependentService);
       expect(instance.dependency).toBeInstanceOf(TestService);

@@ -123,8 +123,8 @@ export class PluginRegistry {
     const keys = this._categoryMap.get(category) ?? [];
     return keys.map(key => ({
       key,
-      plugin: this.get(key)!,
-      metadata: this.getMetadata(key)!,
+      plugin: this.get(key),
+      metadata: this.getMetadata(key),
     }));
   }
 

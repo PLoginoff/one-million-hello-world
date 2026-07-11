@@ -22,7 +22,7 @@ export interface SchemaDefinition {
   [key: string]: SchemaProperty;
 }
 
-export class ConfigSchema {
+export class ConfigSchema<T = Record<string, unknown>> {
   private _schema: SchemaDefinition;
 
   constructor(schema: SchemaDefinition) {
@@ -31,15 +31,15 @@ export class ConfigSchema {
 
   /**
    * Validates configuration against schema
-   * 
+   *
    * @param config - Configuration to validate
    * @returns Validation result
    */
-  validate(config: Partial<SerializationConfig>): { valid: boolean; errors: string[] } {
+  validate(config: Partial<T>): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     for (const [key, property] of Object.entries(this._schema)) {
-      const value = config[key as keyof SerializationConfig];
+      const value = config[key as keyof T];
 
       if (property.required && value === undefined) {
         errors.push(`Required property '${key}' is missing`);
@@ -135,13 +135,12 @@ export class ConfigSchema {
    * 
    * @returns Object with default values
    */
-  getDefaults(): Partial<SerializationConfig> {
-    const defaults: Partial<SerializationConfig> = {};
+  getDefaults(): Partial<T> {
+    const defaults: Partial<T> = {};
 
     for (const [key, property] of Object.entries(this._schema)) {
       if (property.default !== undefined) {
-        // @ts-expect-error partial config with index access produces never
-        defaults[key as keyof SerializationConfig] = property.default as any;
+        (defaults as Record<string, unknown>)[key] = property.default;
       }
     }
 
@@ -150,11 +149,11 @@ export class ConfigSchema {
 
   /**
    * Applies defaults to configuration
-   * 
+   *
    * @param config - Configuration to apply defaults to
    * @returns Configuration with defaults applied
    */
-  applyDefaults(config: Partial<SerializationConfig>): Partial<SerializationConfig> {
+  applyDefaults(config: Partial<T>): Partial<T> {
     return {
       ...this.getDefaults(),
       ...config,

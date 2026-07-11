@@ -96,7 +96,7 @@ describe('MiddlewareTypes', () => {
 
     it('should contain all expected span statuses', () => {
       expect(SpanStatus.OK).toBe('OK');
-      expect(SpanStatus.ERROR).toBe('ERROR');
+      expect(SpanStatus.ERROR).toBe('SPAN_ERROR');
       expect(SpanStatus.CANCELLED).toBe('CANCELLED');
       expect(SpanStatus.TIMEOUT).toBe('TIMEOUT');
       expect(SpanStatus.UNKNOWN).toBe('UNKNOWN');

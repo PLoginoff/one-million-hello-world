@@ -12,6 +12,7 @@ export interface ICacheProvider {
   set(key: string, value: string): void;
   has(key: string): boolean;
   clear(): void;
+  size(): number;
 }
 
 export class InMemoryCacheProvider implements ICacheProvider {
@@ -42,6 +43,10 @@ export class InMemoryCacheProvider implements ICacheProvider {
   clear(): void {
     this._cache.clear();
   }
+
+  size(): number {
+    return this._cache.size;
+  }
 }
 
 export class CachingDecorator implements ISerializationStrategy {
@@ -49,12 +54,16 @@ export class CachingDecorator implements ISerializationStrategy {
   private _cache: ICacheProvider;
   private _enabled: boolean;
   private _ttl?: number;
+  private _hits: number;
+  private _misses: number;
 
   constructor(strategy: ISerializationStrategy, cache?: ICacheProvider, ttl?: number) {
     this._strategy = strategy;
     this._cache = cache ?? new InMemoryCacheProvider();
     this._enabled = true;
     this._ttl = ttl;
+    this._hits = 0;
+    this._misses = 0;
   }
 
   serialize(data: unknown): string {
@@ -63,14 +72,16 @@ export class CachingDecorator implements ISerializationStrategy {
     }
 
     const cacheKey = this._generateCacheKey(data);
-    
+
     if (this._cache.has(cacheKey)) {
-      return this._cache.get(cacheKey)!;
+      this._hits++;
+      return this._cache.get(cacheKey);
     }
 
+    this._misses++;
     const result = this._strategy.serialize(data);
     this._cache.set(cacheKey, result);
-    
+
     return result;
   }
 
@@ -80,13 +91,15 @@ export class CachingDecorator implements ISerializationStrategy {
     }
 
     const cacheKey = this._generateCacheKey(data);
-    
+
     if (this._cache.has(cacheKey)) {
-      return this._strategy.deserialize(this._cache.get(cacheKey)!);
+      this._hits++;
+      return this._strategy.deserialize(this._cache.get(cacheKey));
     }
 
+    this._misses++;
     const result = this._strategy.deserialize(data);
-    
+
     return result;
   }
 
@@ -125,10 +138,41 @@ export class CachingDecorator implements ISerializationStrategy {
   }
 
   /**
+   * Sets the cache TTL
+   *
+   * @param ttl - TTL in milliseconds
+   */
+  setTTL(ttl: number): void {
+    this._ttl = ttl;
+  }
+
+  /**
+   * Sets the maximum cache size
+   *
+   * @param maxSize - Maximum number of entries
+   */
+  setMaxSize(maxSize: number): void {
+    this._cache = new InMemoryCacheProvider(maxSize);
+  }
+
+  /**
    * Clears the cache
    */
   clearCache(): void {
     this._cache.clear();
+  }
+
+  /**
+   * Gets cache statistics
+   *
+   * @returns Cache statistics
+   */
+  getStats(): { hits: number; misses: number; size: number } {
+    return {
+      hits: this._hits,
+      misses: this._misses,
+      size: this._cache.size(),
+    };
   }
 
   /**

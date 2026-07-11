@@ -1,0 +1,1 @@
+export { StreamProcessingConfigValidator } from './StreamProcessingValidator';

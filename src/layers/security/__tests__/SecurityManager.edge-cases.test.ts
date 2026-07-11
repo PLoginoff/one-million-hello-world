@@ -9,6 +9,7 @@
 import { SecurityManager } from '../implementations/SecurityManager';
 import { HttpRequest } from '../../http-parser/types/http-parser-types';
 import { SecurityErrorCode, ThreatType } from '../types/security-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('SecurityManager Edge Cases', () => {
   let manager: SecurityManager;
@@ -20,7 +21,7 @@ describe('SecurityManager Edge Cases', () => {
   describe('Authentication Edge Cases', () => {
     it('should handle empty credentials', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -39,7 +40,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle malformed token', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer\r\n\r\n', 'utf-8'),
@@ -53,7 +54,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle invalid token format', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'InvalidFormat token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: InvalidFormat token\r\n\r\n', 'utf-8'),
@@ -115,7 +116,7 @@ describe('SecurityManager Edge Cases', () => {
   describe('CORS Validation Edge Cases', () => {
     it('should handle missing origin header', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -128,7 +129,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle wildcard origin', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['origin', 'https://example.com']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nOrigin: https://example.com\r\n\r\n', 'utf-8'),
@@ -149,7 +150,7 @@ describe('SecurityManager Edge Cases', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['origin', 'https://blocked.com']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nOrigin: https://blocked.com\r\n\r\n', 'utf-8'),
@@ -164,7 +165,7 @@ describe('SecurityManager Edge Cases', () => {
   describe('Threat Detection Edge Cases', () => {
     it('should handle empty request body', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -182,7 +183,7 @@ describe('SecurityManager Edge Cases', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/?param=<script>alert(1)</script>', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/?param=<script>alert(1)</script>', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /?param=<script>alert(1)</script> HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -195,7 +196,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle multiple threat patterns', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: "/?param=<script>alert(1)</script>&id=' OR '1'='1", version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: "/?param=<script>alert(1)</script>&id=' OR '1'='1", version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from("GET /?param=<script>alert(1)</script>&id=' OR '1'='1 HTTP/1.1\r\n\r\n", 'utf-8'),
@@ -213,7 +214,7 @@ describe('SecurityManager Edge Cases', () => {
       const body = Buffer.alloc(maxSize);
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['content-length', maxSize.toString()]]),
         body,
         raw: body,
@@ -229,7 +230,7 @@ describe('SecurityManager Edge Cases', () => {
       const body = Buffer.alloc(maxSize + 1);
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['content-length', (maxSize + 1).toString()]]),
         body,
         raw: body,
@@ -354,7 +355,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle stats reset during operation', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -385,7 +386,7 @@ describe('SecurityManager Edge Cases', () => {
 
     it('should handle log limit larger than log size', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -453,7 +454,7 @@ describe('SecurityManager Edge Cases', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -471,7 +472,7 @@ describe('SecurityManager Edge Cases', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['content-type', 'application/json']]),
         body: Buffer.from('{}'),
         raw: Buffer.from('POST / HTTP/1.1\r\nContent-Type: application/json\r\n\r\n{}', 'utf-8'),

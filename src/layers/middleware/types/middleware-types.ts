@@ -134,7 +134,7 @@ export interface TraceSpan {
  */
 export enum SpanStatus {
   OK = 'OK',
-  ERROR = 'ERROR',
+  ERROR = 'SPAN_ERROR',
   CANCELLED = 'CANCELLED',
   TIMEOUT = 'TIMEOUT',
   UNKNOWN = 'UNKNOWN',

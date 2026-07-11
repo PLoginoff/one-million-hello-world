@@ -8,11 +8,15 @@ import { IValidator } from '../../validation/IValidator';
 class MockValidator implements IValidator {
   constructor(private _valid: boolean = true, private _name: string = 'mock') {}
 
+  isEnabled() {
+    return true;
+  }
+
   validate() {
     return {
       valid: this._valid,
       errors: this._valid ? [] : ['error'],
-      warnings: [],
+      warnings: [] as string[],
     };
   }
 
@@ -78,14 +82,14 @@ describe('CompositeValidator', () => {
 
   describe('Validator Management', () => {
     it('should add validator', () => {
-      const validator = new CompositeValidator('all', 'test');
+      const validator = new CompositeValidator('test', 'all');
       const mock = new MockValidator();
       validator.addValidator(mock);
       expect(validator.getValidators()).toContain(mock);
     });
 
     it('should remove validator', () => {
-      const validator = new CompositeValidator('all', 'test');
+      const validator = new CompositeValidator('test', 'all');
       const mock = new MockValidator();
       validator.addValidator(mock);
       validator.removeValidator(mock);
@@ -93,7 +97,7 @@ describe('CompositeValidator', () => {
     });
 
     it('should clear all validators', () => {
-      const validator = new CompositeValidator('all', 'test');
+      const validator = new CompositeValidator('test', 'all');
       validator.addValidator(new MockValidator());
       validator.addValidator(new MockValidator());
       validator.clearValidators();

@@ -1,0 +1,22 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "one-million-hello-world.fullname" . }}
+  labels:
+    app: {{ include "one-million-hello-world.name" . }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "one-million-hello-world.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}

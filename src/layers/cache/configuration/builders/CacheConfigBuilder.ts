@@ -8,6 +8,7 @@ import { InvalidationStrategy } from '../../types/cache-types';
 import { CacheConfigOptions, DefaultConfigs } from '../defaults/DefaultConfigs';
 import { CacheConfigValidator } from '../validators/CacheConfigValidator';
 
+
 export class CacheConfigBuilder {
   private config: CacheConfigOptions;
 
@@ -53,7 +54,6 @@ export class CacheConfigBuilder {
    * Set max size
    */
   withMaxSize(maxSize: number): CacheConfigBuilder {
-    CacheConfigValidator.validateMaxSize(maxSize);
     this.config.maxSize = maxSize;
     return this;
   }
@@ -62,7 +62,6 @@ export class CacheConfigBuilder {
    * Set default TTL in milliseconds
    */
   withDefaultTTL(ttl: number): CacheConfigBuilder {
-    CacheConfigValidator.validateDefaultTTL(ttl);
     this.config.defaultTTL = ttl;
     return this;
   }
@@ -78,7 +77,6 @@ export class CacheConfigBuilder {
    * Set invalidation strategy
    */
   withInvalidationStrategy(strategy: InvalidationStrategy): CacheConfigBuilder {
-    CacheConfigValidator.validateInvalidationStrategy(strategy);
     this.config.invalidationStrategy = strategy;
     return this;
   }
@@ -87,7 +85,6 @@ export class CacheConfigBuilder {
    * Enable or disable multi-level caching
    */
   withMultiLevel(enabled: boolean): CacheConfigBuilder {
-    CacheConfigValidator.validateMultiLevel(enabled);
     this.config.enableMultiLevel = enabled;
     return this;
   }

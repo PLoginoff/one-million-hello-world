@@ -1,0 +1,1 @@
+export { DeadLetterConfigValidator } from './DeadLetterValidator';

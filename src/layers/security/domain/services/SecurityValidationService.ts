@@ -97,7 +97,7 @@ export class SecurityValidationService {
       if (!rule.action) {
         errors.push(`Rule ${i}: action is required`);
       }
-      if (rule.effect !== 'allow' && rule.effect !== 'deny') {
+      if (rule.effect !== 'allow' && rule.effect! !== 'deny') {
         errors.push(`Rule ${i}: effect must be allow or deny`);
       }
     }

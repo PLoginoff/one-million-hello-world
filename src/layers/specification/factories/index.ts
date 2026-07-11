@@ -1,0 +1,1 @@
+export { SpecificationFactory } from './SpecificationFactory';

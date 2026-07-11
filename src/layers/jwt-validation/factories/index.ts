@@ -1,0 +1,1 @@
+export { JwtValidationFactory } from './JwtValidationFactory';

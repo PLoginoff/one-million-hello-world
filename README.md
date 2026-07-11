@@ -40,6 +40,10 @@ Demonstration of a comprehensive architectural implementation applying clean arc
 
 The project is implemented following clean architecture principles, ensuring strict isolation of business logic from infrastructure dependencies and adherence to the Dependency Rule. The architecture is built on concentric layers with a unidirectional dependency flow, guaranteeing testability, maintainability, and system scalability. Each layer solves a specific task and interacts with other layers exclusively through well-defined interfaces, implementing dependency inversion and separation of concerns principles.
 
+The request flows through a real pipeline: **Network → HTTP Parser → Security → Rate Limiting → Validation → Middleware → Router → Controller → Service → Domain → Repository → Cache → Event → Message Queue → Data Transformation → Serialization → Compression → Circuit Breaker → Retry → Saga → Strategy → Facade → Proxy → Decorator → Transport**. Each arrow is a directed interface call, not a conceptual relationship.
+
+In addition to the original 25 vertical layers, the architecture includes **20+ horizontal cross-cutting layers**: API Gateway, Load Balancer, Service Discovery, Feature Flags, Configuration, Secrets, Audit, Observability, Edge Cache, Schema Registry, Identity, Authorization, Encryption, Backup, Migrations, GraphQL, WebSocket, Message Bus, Throttling, Analytics, and more.
+
 ```
 HTTP Request
     ↓
@@ -92,6 +96,10 @@ Proxy Layer (Access control, lazy loading, caching proxy)
 Decorator Layer (Runtime decoration, cross-cutting concerns)
     ↓
 Transport Layer (HTTP response, streaming, chunked encoding)
+    ↓
+Horizontal Layers (API Gateway, Load Balancer, Observability, ...)
+    ↓
+HTTP Response
 ```
 
 ------------------------------------
@@ -343,65 +351,99 @@ Server will be available at `http://localhost:3000`
 
 ### GET /
 
-Returns classic "Hello, World!"
+Returns classic "Hello, World!" with multi-language support.
+
+**Query parameters:**
+- `language` — language code (`en`, `es`, `fr`, `de`, `it`, `pt`, `ru`, `zh`, `ja`, `ko`). Default: `en`.
+- `format` — response format (`json`, `plain`, `html`). Default: `json`.
+- `suffix` — optional suffix appended to the message.
+
+**Example:** `GET /?language=ru`
+
+```json
+{
+  "message": "Привет мир",
+  "timestamp": "2026-07-07T15:44:56.631Z",
+  "language": "ru",
+  "format": "json",
+  "requestId": "...",
+  "supportedLanguages": ["en", "es", "fr", "de", "it", "pt", "ru", "zh", "ja", "ko"]
+}
+```
+
+### GET /health
+
+Returns application health status with component checks.
+
+### GET /metrics
+
+Returns runtime metrics: layer count, request count, memory usage, uptime.
+
+### GET /version
+
+Returns application version, environment, Node.js version, and architecture metadata.
+
+------------------------------------
+
+## Deployment
+
+### Docker
+
+```bash
+docker build -t one-million-hello-world .
+docker run -p 3000:3000 one-million-hello-world
+```
+
+### Docker Compose (with Redis, Prometheus, Grafana)
+
+```bash
+docker-compose up -d
+```
+
+### Kubernetes
+
+```bash
+kubectl apply -f infrastructure/k8s/
+```
+
+### Helm
+
+```bash
+helm install hello-world ./infrastructure/helm/one-million-hello-world
+```
+
+### Terraform (AWS)
+
+```bash
+cd infrastructure/terraform
+terraform init
+terraform apply -var="image_uri=your-ecr-image-uri"
+```
 
 ------------------------------------
 
 ## Actual Statistics
 
-```
-make stats
+Run `make stats` to see current numbers.
 
-==================================================
-  Общая статистика проекта
-==================================================
-  Общее количество файлов             1 025
-  Примерное количество строк кода     158 846
-  Общее количество коммитов           24
-
-==================================================
-  Git-метрики
-==================================================
-  Количество авторов                  3
-  Дата последнего коммита             2026-05-13
-
-==================================================
-  Файлы по расширениям
-==================================================
-  .ts                                 819
-  .md                                 197
-  (no ext)                            4
-  .json                               3
-  .js                                 2
-
-==================================================
-  Файлы по директориям (верхний уровень)
-==================================================
-  src/                                985
-  docs/                               25
-  doc/                                4
-  .eslintrc.json/                     1
-  .gitignore/                         1
-  .prettierrc/                        1
-  DEVELOPMENT.md/                     1
-  LICENSE/                            1
-  Makefile/                           1
-  README.md/                          1
-  jest.config.js/                     1
-  package.json/                       1
-  scripts/                            1
-  tsconfig.json/                      1
-```
+Latest snapshot:
+- **Total files**: 2,987
+- **Approximate lines of code**: 220,979
+- **TypeScript files**: 2,638
+- **Architecture layers**: 85+
+- **Infrastructure files**: Terraform, K8s, Helm, Docker Compose, Prometheus, Grafana
 
 ------------------------------------
 
 ## Expected Statistics
 
 - **Lines of code**: 1,000,000 (goal)
-- **Files**: TBD
-- **Architecture layers**: 25
-- **TypeScript types**: TBD
-- **Size**: TBD
+- **Architecture layers**: 50+ (vertical + horizontal + meta)
+- **Files**: 3,000+
+- **Test coverage**: 95%+ (target)
+- **Deployment targets**: Docker, Kubernetes, AWS, GCP, Azure
+
+------------------------------------
 
 ------------------------------------
 

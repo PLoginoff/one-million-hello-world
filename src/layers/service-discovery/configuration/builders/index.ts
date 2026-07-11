@@ -1,0 +1,1 @@
+export { ServiceDiscoveryConfigBuilder } from './ServiceDiscoveryBuilder';

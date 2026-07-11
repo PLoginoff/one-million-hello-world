@@ -21,15 +21,15 @@ export class EventReconstructor {
     const sortedEvents = [...events].sort((a, b) => a.getTimestamp() - b.getTimestamp());
     const firstEvent = sortedEvents[0];
 
-    let executionId = firstEvent.getExecutionId();
+    let executionId = firstEvent.getExecutionId!();
     let sagaId = 'unknown';
     let status: 'pending' | 'running' | 'completed' | 'failed' | 'compensating' | 'compensated' = 'pending';
     let metadata = new SagaMetadata({
-      startTime: firstEvent.getTimestamp(),
-      duration: 0,
-      attemptCount: 1,
-      lastAttemptTime: firstEvent.getTimestamp(),
-    });
+          startTime: firstEvent.getTimestamp!(),
+          duration: 0,
+          attemptCount: 1,
+          lastAttemptTime: firstEvent.getTimestamp(),
+        });
 
     for (const event of sortedEvents) {
       switch (event.getEventType()) {

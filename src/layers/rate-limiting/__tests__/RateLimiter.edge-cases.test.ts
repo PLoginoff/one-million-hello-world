@@ -9,6 +9,7 @@
 import { RateLimiter } from '../implementations/RateLimiter';
 import { HttpRequest } from '../../http-parser/types/http-parser-types';
 import { RateLimitIdentifier, RateLimitIdentifierType, RateLimitStrategy } from '../types/rate-limiting-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('RateLimiter Edge Cases', () => {
   let limiter: RateLimiter;
@@ -30,7 +31,7 @@ describe('RateLimiter Edge Cases', () => {
       };
 
       const result = limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -59,7 +60,7 @@ describe('RateLimiter Edge Cases', () => {
       };
 
       const result = limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -76,7 +77,7 @@ describe('RateLimiter Edge Cases', () => {
       };
 
       const result = limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -99,7 +100,7 @@ describe('RateLimiter Edge Cases', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -160,7 +161,7 @@ describe('RateLimiter Edge Cases', () => {
       };
 
       limiter.checkRateLimitExtended({
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),

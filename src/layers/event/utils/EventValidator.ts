@@ -8,16 +8,22 @@
 import { Event } from '../domain/entities/Event';
 import { EventType } from '../domain/value-objects/EventType';
 
+export interface ValidationError {
+  message: string;
+  rule?: string;
+}
+
 export interface ValidationResult {
   valid: boolean;
-  errors: string[];
+  errors: ValidationError[];
   warnings: string[];
 }
 
 export interface ValidationRule {
   name: string;
   validate: (event: Event) => boolean;
-  errorMessage: string;
+  errorMessage?: string;
+  defaultMessage?: string;
 }
 
 export class EventValidator {
@@ -42,12 +48,15 @@ export class EventValidator {
   }
 
   validate(event: Event): ValidationResult {
-    const errors: string[] = [];
+    const errors: ValidationError[] = [];
     const warnings: string[] = [];
 
     for (const rule of this._rules) {
       if (!rule.validate(event)) {
-        errors.push(rule.errorMessage);
+        errors.push({
+          message: rule.errorMessage ?? rule.defaultMessage ?? `Validation rule '${rule.name}' failed`,
+          rule: rule.name,
+        });
       }
     }
 
@@ -59,7 +68,7 @@ export class EventValidator {
   }
 
   validateBatch(events: Event[]): ValidationResult {
-    const allErrors: string[] = [];
+    const allErrors: ValidationError[] = [];
     const allWarnings: string[] = [];
 
     for (const event of events) {
@@ -108,7 +117,7 @@ export class EventValidator {
 
     this._rules.push({
       name: 'correlation-id-required',
-      validate: (event) => event.metadata.correlationId !== undefined && event.metadata.correlationId.length > 0,
+      validate: (event) => event.metadata !== undefined && event.metadata.correlationId !== undefined && event.metadata.correlationId.length > 0,
       errorMessage: 'Event metadata must have a correlation ID',
     });
 

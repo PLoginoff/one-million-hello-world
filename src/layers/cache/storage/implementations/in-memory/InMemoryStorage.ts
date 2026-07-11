@@ -14,8 +14,12 @@ export class InMemoryStorage<T> implements IStorage<T> {
     this.storage = new Map();
   }
 
-  get(key: string): CacheEntry<T> | undefined {
-    return this.storage.get(key);
+  get(key: string): CacheEntry<T> | null {
+    const entry = this.storage.get(key);
+    if (!entry || entry.isExpired()) {
+      return null;
+    }
+    return entry;
   }
 
   set(key: string, entry: CacheEntry<T>): void {
@@ -36,6 +40,19 @@ export class InMemoryStorage<T> implements IStorage<T> {
 
   entries(): CacheEntry<T>[] {
     return Array.from(this.storage.values());
+  }
+
+  values(): CacheEntry<T>[] {
+    return this.entries();
+  }
+
+  cleanup(): void {
+    const now = Date.now();
+    for (const [key, entry] of this.storage.entries()) {
+      if (entry.isExpired(now)) {
+        this.storage.delete(key);
+      }
+    }
   }
 
   size(): number {

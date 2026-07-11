@@ -1,0 +1,1 @@
+export { EventSourcingConfigBuilder } from './EventSourcingBuilder';

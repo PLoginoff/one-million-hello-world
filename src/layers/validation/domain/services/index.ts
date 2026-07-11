@@ -4,4 +4,4 @@
 
 export { ValidationService } from './ValidationService';
 export { SchemaValidationService } from './SchemaValidationService';
-export { ValidationResultEntity, ValidationError, ValidationWarning } from '../entities/ValidationResult';
+export { ValidationError, ValidationWarning } from '../entities/ValidationResult';

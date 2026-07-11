@@ -8,7 +8,7 @@
 export type IdGenerationStrategy = 'uuid' | 'nanoid' | 'ulid' | 'custom';
 
 export interface IdGeneratorOptions {
-  strategy: IdGenerationStrategy;
+  strategy?: IdGenerationStrategy;
   prefix?: string;
   suffix?: string;
   length?: number;
@@ -48,7 +48,8 @@ export class IdGenerator {
   }
 
   private _generateByStrategy(): string {
-    switch (this._options.strategy) {
+    const strategy = this._options.strategy || 'uuid';
+    switch (strategy) {
       case 'uuid':
         return this._generateUUID();
       case 'nanoid':
@@ -83,9 +84,15 @@ export class IdGenerator {
   }
 
   private _generateULID(): string {
-    const timestamp = Date.now().toString(16).padStart(12, '0');
+    const chars = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+    const timestamp = Date.now().toString(16).toUpperCase().padStart(12, '0');
+    let timestampEncoded = '';
+    for (const char of timestamp) {
+      const value = parseInt(char, 16);
+      timestampEncoded += chars[value % chars.length];
+    }
     const random = this._generateRandomString(10);
-    return `${timestamp}${random}`;
+    return `${timestampEncoded}${random}`;
   }
 
   private _generateCustom(): string {

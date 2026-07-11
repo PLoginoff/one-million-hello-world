@@ -32,7 +32,7 @@ export class SerializerBuilder {
 
   /**
    * Sets the default serialization format
-   * 
+   *
    * @param format - Default format
    * @returns This builder for chaining
    */
@@ -42,13 +42,38 @@ export class SerializerBuilder {
   }
 
   /**
+   * Sets the default serialization format (alias for withDefaultFormat)
+   *
+   * @param format - Default format
+   * @returns This builder for chaining
+   */
+  withFormat(format: SerializationFormat): SerializerBuilder {
+    return this.withDefaultFormat(format);
+  }
+
+  /**
    * Enables or disables versioning
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
-  withVersioning(enabled: boolean): SerializerBuilder {
-    this._configBuilder.withVersioning(enabled);
+  withVersioning(enabled: boolean): SerializerBuilder;
+
+  /**
+   * Enables versioning and sets the current version
+   *
+   * @param version - Version string
+   * @returns This builder for chaining
+   */
+  withVersioning(version: string): SerializerBuilder;
+
+  withVersioning(enabledOrVersion: boolean | string): SerializerBuilder {
+    if (typeof enabledOrVersion === 'string') {
+      this._configBuilder.withVersioning(true);
+      this._configBuilder.withCurrentVersion(enabledOrVersion);
+    } else {
+      this._configBuilder.withVersioning(enabledOrVersion);
+    }
     return this;
   }
 
@@ -65,33 +90,33 @@ export class SerializerBuilder {
 
   /**
    * Enables or disables validation
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
-  withValidation(enabled: boolean): SerializerBuilder {
+  withValidation(enabled: boolean = true): SerializerBuilder {
     this._configBuilder.withValidation(enabled);
     return this;
   }
 
   /**
    * Enables or disables plugins
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
-  withPlugins(enabled: boolean): SerializerBuilder {
+  withPlugins(enabled: boolean = true): SerializerBuilder {
     this._configBuilder.withPlugins(enabled);
     return this;
   }
 
   /**
    * Enables or disables hooks
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
-  withHooks(enabled: boolean): SerializerBuilder {
+  withHooks(enabled: boolean = true): SerializerBuilder {
     this._configBuilder.withHooks(enabled);
     return this;
   }

@@ -1,6 +1,6 @@
 /**
  * MessagePack Serialization Strategy (Adapter)
- * 
+ *
  * Adapter for MessagePack serialization using a simple implementation.
  * In production, this would use a library like msgpack-lite.
  */
@@ -48,7 +48,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Encodes data to MessagePack format (simplified)
-   * 
+   *
    * @param data - Data to encode
    * @returns Encoded byte array
    */
@@ -95,7 +95,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Encodes a number
-   * 
+   *
    * @param num - Number to encode
    * @returns Encoded byte array
    */
@@ -107,7 +107,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Encodes a string
-   * 
+   *
    * @param str - String to encode
    * @returns Encoded byte array
    */
@@ -132,7 +132,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Encodes an array
-   * 
+   *
    * @param arr - Array to encode
    * @returns Encoded byte array
    */
@@ -140,19 +140,19 @@ export class MessagePackStrategy implements ISerializationStrategy {
     const length = arr.length;
 
     if (length <= 15) {
-      return [0x90 | length, ...arr.flatMap(item => this._encode(item))];
+      return [0x90 | length, ...arr.flatMap((item) => this._encode(item))];
     }
 
     if (length <= 65535) {
-      return [0xdc, length >> 8, length & 0xff, ...arr.flatMap(item => this._encode(item))];
+      return [0xdc, length >> 8, length & 0xff, ...arr.flatMap((item) => this._encode(item))];
     }
 
-    return [0xdd, ...this._encodeUint32(length), ...arr.flatMap(item => this._encode(item))];
+    return [0xdd, ...this._encodeUint32(length), ...arr.flatMap((item) => this._encode(item))];
   }
 
   /**
    * Encodes an object
-   * 
+   *
    * @param obj - Object to encode
    * @returns Encoded byte array
    */
@@ -161,43 +161,38 @@ export class MessagePackStrategy implements ISerializationStrategy {
     const length = entries.length;
 
     if (length <= 15) {
-      return [0x80 | length, ...entries.flatMap(([key, value]) => [
-        ...this._encode(key),
-        ...this._encode(value)
-      ])];
+      return [0x80 | length, ...entries.flatMap(([key, value]) => [...this._encode(key), ...this._encode(value)])];
     }
 
     if (length <= 65535) {
-      return [0xde, length >> 8, length & 0xff, ...entries.flatMap(([key, value]) => [
-        ...this._encode(key),
-        ...this._encode(value)
-      ])];
+      return [
+        0xde,
+        length >> 8,
+        length & 0xff,
+        ...entries.flatMap(([key, value]) => [...this._encode(key), ...this._encode(value)]),
+      ];
     }
 
-    return [0xdf, ...this._encodeUint32(length), ...entries.flatMap(([key, value]) => [
-      ...this._encode(key),
-      ...this._encode(value)
-    ])];
-  }
-
-  /**
-   * Encodes a 32-bit unsigned integer
-   * 
-   * @param num - Number to encode
-   * @returns Encoded byte array
-   */
-  private _encodeUint32(num: number): number[] {
     return [
-      (num >> 24) & 0xff,
-      (num >> 16) & 0xff,
-      (num >> 8) & 0xff,
-      num & 0xff
+      0xdf,
+      ...this._encodeUint32(length),
+      ...entries.flatMap(([key, value]) => [...this._encode(key), ...this._encode(value)]),
     ];
   }
 
   /**
+   * Encodes a 32-bit unsigned integer
+   *
+   * @param num - Number to encode
+   * @returns Encoded byte array
+   */
+  private _encodeUint32(num: number): number[] {
+    return [(num >> 24) & 0xff, (num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff];
+  }
+
+  /**
    * Decodes MessagePack data
-   * 
+   *
    * @param data - Byte array to decode
    * @returns Decoded data
    */
@@ -213,17 +208,24 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Decodes a value from byte array
-   * 
+   *
    * @param data - Byte array
    * @param offset - Current offset
    * @returns Decoded value and new offset
    */
+  private _byte(data: number[], offset: number): number {
+    if (offset >= data.length) {
+      throw new Error('Unexpected end of MessagePack data');
+    }
+    return data[offset];
+  }
+
   private _decodeValue(data: number[], offset: number): { value: unknown; offset: number } {
     if (offset >= data.length) {
       return { value: null, offset };
     }
 
-    const byte = data[offset];
+    const byte = this._byte(data, offset);
 
     if (byte <= 0x7f) {
       return { value: byte, offset: offset + 1 };
@@ -246,12 +248,12 @@ export class MessagePackStrategy implements ISerializationStrategy {
     }
 
     if (byte === 0xcc) {
-      const value = data[offset + 1];
+      const value = this._byte(data, offset + 1);
       return { value, offset: offset + 2 };
     }
 
     if (byte === 0xcd) {
-      const value = (data[offset + 1] << 8) | data[offset + 2];
+      const value = (this._byte(data, offset + 1) << 8) | this._byte(data, offset + 2);
       return { value, offset: offset + 3 };
     }
 
@@ -269,7 +271,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
     }
 
     if (byte === 0xd9) {
-      const length = data[offset + 1];
+      const length = this._byte(data, offset + 1);
       const bytes = data.slice(offset + 2, offset + 2 + length);
       const value = Buffer.from(bytes).toString('utf8');
       return { value, offset: offset + 2 + length };
@@ -280,7 +282,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
     }
 
     if (byte === 0xdc) {
-      const length = (data[offset + 1] << 8) | data[offset + 2];
+      const length = (this._byte(data, offset + 1) << 8) | this._byte(data, offset + 2);
       return this._decodeArray(data, offset, length);
     }
 
@@ -289,7 +291,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
     }
 
     if (byte === 0xde) {
-      const length = (data[offset + 1] << 8) | data[offset + 2];
+      const length = (this._byte(data, offset + 1) << 8) | this._byte(data, offset + 2);
       return this._decodeObject(data, offset, length);
     }
 
@@ -298,7 +300,7 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Decodes an array
-   * 
+   *
    * @param data - Byte array
    * @param offset - Current offset
    * @param length - Array length
@@ -319,13 +321,17 @@ export class MessagePackStrategy implements ISerializationStrategy {
 
   /**
    * Decodes an object
-   * 
+   *
    * @param data - Byte array
    * @param offset - Current offset
    * @param length - Object length
    * @returns Decoded object and new offset
    */
-  private _decodeObject(data: number[], offset: number, length: number): { value: Record<string, unknown>; offset: number } {
+  private _decodeObject(
+    data: number[],
+    offset: number,
+    length: number
+  ): { value: Record<string, unknown>; offset: number } {
     const obj: Record<string, unknown> = {};
     let currentOffset = offset + 2;
 

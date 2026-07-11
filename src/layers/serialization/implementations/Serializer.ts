@@ -63,6 +63,7 @@ export class Serializer implements ISerializer {
       new WrapperVersioningStrategy(),
       this._config.currentVersion
     );
+    this._versioningManager.setEnabled(this._config.enableVersioning);
     this._validationPipeline = new ValidationPipeline();
     this._pluginManager = new PluginManager();
     this._hookManager = new HookManager();
@@ -179,9 +180,10 @@ export class Serializer implements ISerializer {
 
   async deserialize<T>(
     data: string,
-    format: SerializationFormat,
+    format?: SerializationFormat,
     options?: SerializationOptions
   ): Promise<ExtendedSerializationResult & { data?: T }> {
+    const targetFormat = format ?? this._config.defaultFormat;
     const opts = {
       validate: this._config.enableValidation,
       skipPlugins: false,
@@ -191,7 +193,7 @@ export class Serializer implements ISerializer {
 
     const context: HookContext = {
       operation: 'deserialize',
-      format,
+      format: targetFormat,
       timestamp: new Date(),
       metadata: opts.metadata,
     };
@@ -218,9 +220,9 @@ export class Serializer implements ISerializer {
         }
       }
 
-      const strategy = this._strategies.get(format);
+      const strategy = this._strategies.get(targetFormat);
       if (!strategy) {
-        throw SerializationError.unsupportedFormat(format);
+        throw SerializationError.unsupportedFormat(targetFormat);
       }
 
       if (!strategy.canDeserialize(processedData)) {

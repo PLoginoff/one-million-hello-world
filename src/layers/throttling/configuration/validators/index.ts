@@ -1,0 +1,1 @@
+export { ThrottlingConfigValidator } from './ThrottlingValidator';

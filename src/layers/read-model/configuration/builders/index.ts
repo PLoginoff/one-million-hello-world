@@ -1,0 +1,1 @@
+export { ReadModelConfigBuilder } from './ReadModelBuilder';

@@ -26,6 +26,10 @@ export class RandomEvictionStrategy<T> implements IEvictionStrategy<T> {
     // Random doesn't track insertion
   }
 
+  onRemove(key: string): void {
+    // Random doesn't track insertion
+  }
+
   reset(): void {
     // No state to reset
   }

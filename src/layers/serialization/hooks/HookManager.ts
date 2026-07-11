@@ -26,7 +26,7 @@ export class HookManager {
       this._hooks.set(hook.type, []);
     }
 
-    const hooks = this._hooks.get(hook.type)!;
+    const hooks = this._hooks.get(hook.type);
     hooks.push({
       hook,
       priority: hook.priority ?? 100,

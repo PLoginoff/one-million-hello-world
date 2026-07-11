@@ -38,9 +38,9 @@ export class RouterHelpers {
     const pathParts = path.split('/');
 
     for (let i = 0; i < patternParts.length; i++) {
-      if (patternParts[i].startsWith(':')) {
+      if ((patternParts[i])!.startsWith(':')) {
         const paramName = patternParts[i].substring(1);
-        params[paramName] = pathParts[i];
+        (params[paramName])! = pathParts[i];
       }
     }
 

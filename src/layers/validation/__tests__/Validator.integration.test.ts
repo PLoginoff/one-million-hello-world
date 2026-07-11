@@ -19,6 +19,7 @@ import {
   SanitizerType,
   ValidationConfig,
 } from '../types/validation-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('Validator Integration', () => {
   let validator: Validator;
@@ -60,7 +61,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/validate', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/validate', version: HttpVersion.HTTP_1_1 },
         headers: new Map([
           ['email', 'test@example.com'],
           ['name', 'John Doe'],
@@ -105,7 +106,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'value']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -146,7 +147,7 @@ describe('Validator Integration', () => {
 
       for (let i = 0; i < 5; i++) {
         const request: HttpRequest = {
-          line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+          line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
           headers: new Map([['field', `value${i}`]]),
           body: Buffer.from(''),
           raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -264,7 +265,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', '  value  ']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -299,7 +300,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([
           ['email', 'test@example.com'],
           ['phone', '+1234567890'],
@@ -342,7 +343,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'value']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -416,7 +417,7 @@ describe('Validator Integration', () => {
       };
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/api/test', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/api/test', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['field', 'value']]),
         body: Buffer.from(''),
         raw: Buffer.from('POST /api/test HTTP/1.1\r\n\r\n', 'utf-8'),

@@ -1,0 +1,1 @@
+export { PropertyTestingFactory } from './PropertyTestingFactory';

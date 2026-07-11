@@ -1,0 +1,1 @@
+export { FraudDetectionConfigValidator } from './FraudDetectionValidator';

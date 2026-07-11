@@ -9,6 +9,7 @@
 import { SecurityManager } from '../implementations/SecurityManager';
 import { HttpRequest } from '../../http-parser/types/http-parser-types';
 import { AuthMethod, SecurityEvent, ThreatType } from '../types/security-types';
+import { HttpMethod, HttpVersion } from './../../http-parser/types/http-parser-types';
 
 describe('SecurityManager Advanced', () => {
   let manager: SecurityManager;
@@ -20,7 +21,7 @@ describe('SecurityManager Advanced', () => {
   describe('Extended Authentication', () => {
     it('should authenticate with extended result including metrics', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -35,7 +36,7 @@ describe('SecurityManager Advanced', () => {
 
     it('should track authentication statistics', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer valid-token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer valid-token\r\n\r\n', 'utf-8'),
@@ -54,7 +55,7 @@ describe('SecurityManager Advanced', () => {
   describe('Extended Threat Detection', () => {
     it('should detect threats with extended result including patterns', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/?param=<script>alert(1)</script>', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/?param=<script>alert(1)</script>', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /?param=<script>alert(1)</script> HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -69,7 +70,7 @@ describe('SecurityManager Advanced', () => {
 
     it('should provide recommendations for threats', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/?param=<script>alert(1)</script>', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/?param=<script>alert(1)</script>', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /?param=<script>alert(1)</script> HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -152,7 +153,7 @@ describe('SecurityManager Advanced', () => {
   describe('Signature Validation', () => {
     it('should validate signature when disabled', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -167,7 +168,7 @@ describe('SecurityManager Advanced', () => {
   describe('Timestamp Validation', () => {
     it('should validate timestamp when disabled', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -182,7 +183,7 @@ describe('SecurityManager Advanced', () => {
   describe('Nonce Validation', () => {
     it('should validate nonce when disabled', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -275,7 +276,7 @@ describe('SecurityManager Advanced', () => {
   describe('Audit Logging', () => {
     it('should log security events', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -291,7 +292,7 @@ describe('SecurityManager Advanced', () => {
 
     it('should limit audit log size', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -329,7 +330,7 @@ describe('SecurityManager Advanced', () => {
   describe('Extended Context Creation', () => {
     it('should create extended security context', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['user-agent', 'Mozilla/5.0']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0\r\n\r\n', 'utf-8'),
@@ -352,7 +353,7 @@ describe('SecurityManager Advanced', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer token\r\n\r\n', 'utf-8'),
@@ -370,7 +371,7 @@ describe('SecurityManager Advanced', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: 'POST' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.POST, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['content-type', 'application/json']]),
         body: Buffer.from('{}'),
         raw: Buffer.from('POST / HTTP/1.1\r\nContent-Type: application/json\r\n\r\n{}', 'utf-8'),
@@ -383,7 +384,7 @@ describe('SecurityManager Advanced', () => {
 
     it('should validate header size', () => {
       const request: HttpRequest = {
-        line: { method: 'GET' as const, path: '/', version: 'HTTP/1.1' as const },
+        line: { method: HttpMethod.GET, path: '/', version: HttpVersion.HTTP_1_1 },
         headers: new Map([['authorization', 'Bearer token']]),
         body: Buffer.from(''),
         raw: Buffer.from('GET / HTTP/1.1\r\nAuthorization: Bearer token\r\n\r\n', 'utf-8'),

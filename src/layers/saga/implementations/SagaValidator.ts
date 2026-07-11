@@ -81,7 +81,7 @@ export class SagaValidator implements ISagaValidator {
     const nameMap = new Map<string, number[]>();
 
     for (let i = 0; i < steps.length; i++) {
-      const name = steps[i].name;
+      const name = (steps[i])!.name;
       const indices = nameMap.get(name) || [];
       indices.push(i);
       nameMap.set(name, indices);

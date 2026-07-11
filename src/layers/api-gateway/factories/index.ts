@@ -1,0 +1,1 @@
+export { ApiGatewayFactory } from './ApiGatewayFactory';

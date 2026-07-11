@@ -10,9 +10,6 @@ export class TTL {
   readonly unit: TimeUnit;
 
   constructor(value: number, unit: TimeUnit = TimeUnit.MILLISECONDS) {
-    if (value < 0) {
-      throw new Error('TTL cannot be negative');
-    }
     this.value = value;
     this.unit = unit;
   }

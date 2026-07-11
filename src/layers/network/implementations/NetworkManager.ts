@@ -1,6 +1,6 @@
 /**
  * Network Manager Implementation
- * 
+ *
  * Concrete implementation of INetworkManager.
  * Manages multiple network connections with statistics tracking.
  */
@@ -136,13 +136,12 @@ export class NetworkManager implements INetworkManager {
   }
 
   async closeAllConnections(): Promise<void> {
-    const closePromises = Array.from(this._connections.values()).map((connection) =>
-      connection.disconnect()
-    );
+    const connectionsToClose = Array.from(this._connections.values());
+    this._stats.connectionsClosed += connectionsToClose.length;
 
+    const closePromises = connectionsToClose.map((connection) => connection.disconnect());
     await Promise.all(closePromises);
     this._connections.clear();
-    this._stats.connectionsClosed += this._connections.size;
   }
 
   getStats(): NetworkStats {
@@ -237,36 +236,26 @@ export class NetworkManager implements INetworkManager {
   }
 
   getConnectionsByPriority(priority: number): INetworkConnection[] {
-    return Array.from(this._connections.values()).filter(
-      (conn) => conn.getPriority() === priority
-    );
+    return Array.from(this._connections.values()).filter((conn) => conn.getPriority() === priority);
   }
 
   getConnectionsByState(state: string): INetworkConnection[] {
-    return Array.from(this._connections.values()).filter(
-      (conn) => conn.getState() === state
-    );
+    return Array.from(this._connections.values()).filter((conn) => conn.getState() === state);
   }
 
   async pauseAllConnections(): Promise<void> {
-    const pausePromises = Array.from(this._connections.values()).map((conn) =>
-      conn.pause().catch(() => {})
-    );
+    const pausePromises = Array.from(this._connections.values()).map((conn) => conn.pause().catch(() => {}));
     await Promise.all(pausePromises);
   }
 
   async resumeAllConnections(): Promise<void> {
-    const resumePromises = Array.from(this._connections.values()).map((conn) =>
-      conn.resume().catch(() => {})
-    );
+    const resumePromises = Array.from(this._connections.values()).map((conn) => conn.resume().catch(() => {}));
     await Promise.all(resumePromises);
   }
 
   async reconnectFailedConnections(): Promise<void> {
     const failedConnections = this.getConnectionsByState('ERROR');
-    const reconnectPromises = failedConnections.map((conn) =>
-      conn.reconnect().catch(() => {})
-    );
+    const reconnectPromises = failedConnections.map((conn) => conn.reconnect().catch(() => {}));
     await Promise.all(reconnectPromises);
   }
 

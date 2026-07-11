@@ -41,8 +41,9 @@ describe('EventType', () => {
       expect(() => new EventType(longType)).toThrow('EventType must not exceed 100 characters');
     });
 
-    it('should throw error for invalid characters (uppercase)', () => {
-      expect(() => new EventType('UserCreated')).toThrow('EventType must match pattern');
+    it('should convert uppercase characters to lowercase', () => {
+      const eventType = new EventType('UserCreated');
+      expect(eventType.value).toBe('usercreated');
     });
 
     it('should throw error for invalid characters (spaces)', () => {

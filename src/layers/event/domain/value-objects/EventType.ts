@@ -14,13 +14,16 @@ export class EventType {
   private _subcategory?: string;
 
   constructor(value: string) {
+    if (!value || typeof value !== 'string') {
+      throw new Error('EventType must be a non-empty string');
+    }
     this._value = value.toLowerCase().trim();
     this._validate();
     this._parseCategory();
   }
 
   private _validate(): void {
-    if (!this._value || typeof this._value !== 'string') {
+    if (!this._value) {
       throw new Error('EventType must be a non-empty string');
     }
     if (this._value.length > EventType.MAX_LENGTH) {
@@ -33,7 +36,7 @@ export class EventType {
 
   private _parseCategory(): void {
     const parts = this._value.split('.');
-    this._category = parts[0];
+    this._category! = parts[0];
     this._subcategory = parts.length > 1 ? parts.slice(1).join('.') : undefined;
   }
 
@@ -62,7 +65,7 @@ export class EventType {
 
   matches(pattern: string): boolean {
     const regex = new RegExp(
-      '^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.') + '$'
+      '^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.')
     );
     return regex.test(this._value);
   }

@@ -73,7 +73,9 @@ export class MemoryEventQueue implements IEventQueue {
     }
 
     this._processing = true;
-    await this._processQueue();
+    this._processQueue().catch(() => {
+      // Background processing errors are recorded in stats
+    });
   }
 
   async stopProcessing(): Promise<void> {

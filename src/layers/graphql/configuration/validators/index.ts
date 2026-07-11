@@ -1,0 +1,1 @@
+export { GraphqlConfigValidator } from './GraphqlValidator';

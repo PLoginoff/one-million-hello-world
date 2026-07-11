@@ -53,6 +53,10 @@ export class LRUEvictionStrategy<T> implements IEvictionStrategy<T> {
     this.accessOrder.set(key, this.accessCounter++);
   }
 
+  onRemove(key: string): void {
+    this.accessOrder.delete(key);
+  }
+
   reset(): void {
     this.accessOrder.clear();
     this.accessCounter = 0;

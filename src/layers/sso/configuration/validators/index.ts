@@ -1,0 +1,1 @@
+export { SsoConfigValidator } from './SsoValidator';

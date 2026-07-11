@@ -206,7 +206,7 @@ export class NetworkConnection implements INetworkConnection {
     this._reconnectionAttempts++;
     this._state = ConnectionState.RECONNECTING;
     await this.disconnect();
-    await this.connect(config || this._config!);
+    await this.connect(config || this._config);
   }
 
   async sendWithOptions(data: NetworkBuffer, options: DataTransmissionOptions): Promise<void> {
