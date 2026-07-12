@@ -1,6 +1,6 @@
 /**
  * HTTP Parser Factory
- * 
+ *
  * Factory for creating HTTP parser components and configurations.
  */
 
@@ -160,12 +160,7 @@ export class HttpParserFactory {
   /**
    * Create HTTP request entity
    */
-  static createHttpRequestEntity(
-    line: any,
-    headers: any,
-    body: any,
-    raw: any
-  ): HttpRequestEntity {
+  static createHttpRequestEntity(line: any, headers: any, body: any, raw: any): HttpRequestEntity {
     return HttpRequestEntity.create(line, headers, body, raw);
   }
 
@@ -179,11 +174,7 @@ export class HttpParserFactory {
   /**
    * Create HTTP response entity
    */
-  static createHttpResponseEntity(
-    line: any,
-    headers: any,
-    body: any
-  ): HttpResponseEntity {
+  static createHttpResponseEntity(line: any, headers: any, body: any): HttpResponseEntity {
     return HttpResponseEntity.create(line, headers, body);
   }
 

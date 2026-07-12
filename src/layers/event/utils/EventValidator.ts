@@ -1,6 +1,6 @@
 /**
  * EventValidator - Utility
- * 
+ *
  * Validates event structure and content.
  * Provides schema validation and business rule enforcement.
  */
@@ -39,7 +39,7 @@ export class EventValidator {
   }
 
   removeRule(ruleName: string): boolean {
-    const index = this._rules.findIndex(r => r.name === ruleName);
+    const index = this._rules.findIndex((r) => r.name === ruleName);
     if (index !== -1) {
       this._rules.splice(index, 1);
       return true;
@@ -117,7 +117,7 @@ export class EventValidator {
 
     this._rules.push({
       name: 'correlation-id-required',
-      validate: (event) => event.metadata !== undefined && event.metadata.correlationId !== undefined && event.metadata.correlationId.length > 0,
+      validate: (event) => event.metadata?.correlationId !== undefined && event.metadata.correlationId.length > 0,
       errorMessage: 'Event metadata must have a correlation ID',
     });
 

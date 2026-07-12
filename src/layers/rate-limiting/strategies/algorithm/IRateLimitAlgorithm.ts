@@ -1,6 +1,6 @@
 /**
  * Rate Limit Algorithm Interface
- * 
+ *
  * Defines contract for different rate limiting algorithms.
  */
 
@@ -15,7 +15,11 @@ export interface IRateLimitAlgorithm {
   /**
    * Check if request is allowed
    */
-  isAllowed(key: RateLimitKey, limit: number, window: number): {
+  isAllowed(
+    key: RateLimitKey,
+    limit: number,
+    window: number
+  ): {
     allowed: boolean;
     remaining: number;
     resetAt: number;

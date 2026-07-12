@@ -1,6 +1,6 @@
 /**
  * Default Service Configurations
- * 
+ *
  * Pre-configured settings for common service scenarios.
  */
 

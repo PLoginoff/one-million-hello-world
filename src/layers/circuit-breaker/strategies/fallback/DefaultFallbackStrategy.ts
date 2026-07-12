@@ -1,6 +1,6 @@
 /**
  * Default Fallback Strategy
- * 
+ *
  * Default implementation that throws error when circuit is open.
  */
 

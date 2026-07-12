@@ -1,6 +1,6 @@
 /**
  * Configuration Layer
- * 
+ *
  * Cache configuration management with validation and builders.
  */
 

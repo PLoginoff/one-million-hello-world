@@ -1,6 +1,6 @@
 /**
  * Pagination Engine Layer Types
- * 
+ *
  * Type definitions for applying pagination to data collections.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Data Access Implementation
- * 
+ *
  * Concrete implementation of IDataAccess.
  * Handles raw data storage and retrieval without any business logic.
  */
@@ -52,11 +52,7 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
       if (!entity) {
         return {
           success: false,
-          error: this._createError(
-            DataAccessOperation.READ,
-            'ENTITY_NOT_FOUND',
-            `Entity with ID ${id} not found`
-          ),
+          error: this._createError(DataAccessOperation.READ, 'ENTITY_NOT_FOUND', `Entity with ID ${id} not found`),
         };
       }
 
@@ -81,11 +77,7 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
       if (this._config.maxStorageSize && this._data.size >= this._config.maxStorageSize) {
         return {
           success: false,
-          error: this._createError(
-            DataAccessOperation.WRITE,
-            'STORAGE_FULL',
-            'Maximum storage size reached'
-          ),
+          error: this._createError(DataAccessOperation.WRITE, 'STORAGE_FULL', 'Maximum storage size reached'),
         };
       }
 
@@ -115,11 +107,7 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
       if (!this._data.has(id)) {
         return {
           success: false,
-          error: this._createError(
-            DataAccessOperation.DELETE,
-            'ENTITY_NOT_FOUND',
-            `Entity with ID ${id} not found`
-          ),
+          error: this._createError(DataAccessOperation.DELETE, 'ENTITY_NOT_FOUND', `Entity with ID ${id} not found`),
         };
       }
 
@@ -295,6 +283,13 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
   }
 
   async restoreSnapshot(snapshot: DataSnapshot<T>): Promise<DataAccessResult<void>> {
+    if (!snapshot || !(snapshot.data instanceof Map) || !(snapshot.metadata instanceof Map)) {
+      return {
+        success: false,
+        error: this._createError(DataAccessOperation.READ, 'INVALID_SNAPSHOT', 'Invalid snapshot format'),
+      };
+    }
+
     try {
       this._data = new Map(snapshot.data);
       this._metadata = new Map(snapshot.metadata);
@@ -324,7 +319,7 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
     };
   }
 
-  setConfig(config: DataAccessConfig): void {
+  setConfig(config: Partial<DataAccessConfig>): void {
     this._config = { ...this._config, ...config };
   }
 

@@ -1,6 +1,6 @@
 /**
  * Router Configuration Validator
- * 
+ *
  * Validates router configuration options.
  */
 

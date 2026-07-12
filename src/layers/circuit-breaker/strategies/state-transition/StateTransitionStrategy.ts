@@ -1,13 +1,13 @@
 /**
  * State Transition Strategy Interface
- * 
+ *
  * Defines the contract for state transition strategies.
  */
 
 export interface IStateTransitionStrategy {
   /**
    * Determine if transition should occur
-   * 
+   *
    * @param context - Transition context
    * @returns True if transition should occur
    */
@@ -15,7 +15,7 @@ export interface IStateTransitionStrategy {
 
   /**
    * Get target state
-   * 
+   *
    * @param context - Transition context
    * @returns Target state
    */
@@ -23,7 +23,7 @@ export interface IStateTransitionStrategy {
 
   /**
    * Get transition reason
-   * 
+   *
    * @param context - Transition context
    * @returns Transition reason
    */

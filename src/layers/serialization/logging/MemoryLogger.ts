@@ -1,6 +1,6 @@
 /**
  * Memory Logger
- * 
+ *
  * Logger that stores entries in memory.
  */
 
@@ -11,11 +11,7 @@ export class MemoryLogger extends BaseLogger {
   private _entries: LogEntry[];
   private _maxEntries: number;
 
-  constructor(
-    name: string = 'MemoryLogger',
-    level: LogLevel = LogLevel.INFO,
-    maxEntries: number = 1000
-  ) {
+  constructor(name: string = 'MemoryLogger', level: LogLevel = LogLevel.INFO, maxEntries: number = 1000) {
     super(name, level);
     this._entries = [];
     this._maxEntries = maxEntries;
@@ -40,7 +36,7 @@ export class MemoryLogger extends BaseLogger {
    * Gets entries by log level
    */
   getEntriesByLevel(level: LogLevel): LogEntry[] {
-    return this._entries.filter(entry => entry.level === level);
+    return this._entries.filter((entry) => entry.level === level);
   }
 
   /**

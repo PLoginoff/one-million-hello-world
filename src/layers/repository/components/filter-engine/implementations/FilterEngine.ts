@@ -52,23 +52,40 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     const effectiveContext = context ? { ...this._context, ...context } : this._context;
 
     try {
-      let filteredData = [...data];
       this._stats.totalFilters += filters.length;
+      const evaluatedIndexes = new Set<number>();
 
-      for (const filter of filters) {
-        const compiled = this.compile(filter);
-        filteredData = filteredData.filter((item) => {
-          return this._evaluateFilter(item, compiled, effectiveContext);
-        });
-        this._stats.appliedFilters++;
-
-        if (this._chainConfig.shortCircuitEvaluation && filteredData.length === 0) {
-          this._stats.skippedFilters += filters.length - this._stats.appliedFilters;
-          break;
+      const filteredData = data.filter((item) => {
+        if (filters.length === 0) {
+          return true;
         }
-      }
 
-      const executionTime = Date.now() - startTime;
+        let matches = this._evaluateFilter(item, this.compile(filters[0]), effectiveContext);
+        evaluatedIndexes.add(0);
+
+        for (let i = 1; i < filters.length; i++) {
+          const nextOperator = filters[i].logicalOperator || LogicalOperator.AND;
+
+          if (this._chainConfig.shortCircuitEvaluation) {
+            if (
+              (nextOperator === LogicalOperator.AND && !matches) ||
+              (nextOperator === LogicalOperator.OR && matches)
+            ) {
+              break;
+            }
+          }
+
+          const current = this._evaluateFilter(item, this.compile(filters[i]), effectiveContext);
+          evaluatedIndexes.add(i);
+          matches = nextOperator === LogicalOperator.OR ? matches || current : matches && current;
+        }
+        return matches;
+      });
+
+      this._stats.appliedFilters += evaluatedIndexes.size;
+      this._stats.skippedFilters += filters.length - evaluatedIndexes.size;
+
+      const executionTime = Math.max(1, Date.now() - startTime);
       this._updateAverageExecutionTime(executionTime);
 
       return {
@@ -82,7 +99,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
         success: false,
         data: [],
         filteredCount: 0,
-        executionTime: Date.now() - startTime,
+        executionTime: Math.max(1, Date.now() - startTime),
         error: {
           code: 'FILTER_ERROR',
           message: error instanceof Error ? error.message : 'Unknown filter error',
@@ -130,7 +147,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
         }
       }
 
-      const executionTime = Date.now() - startTime;
+      const executionTime = Math.max(1, Date.now() - startTime);
       this._updateAverageExecutionTime(executionTime);
 
       return {
@@ -144,7 +161,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
         success: false,
         data: [],
         filteredCount: 0,
-        executionTime: Date.now() - startTime,
+        executionTime: Math.max(1, Date.now() - startTime),
         error: {
           code: 'FILTER_ERROR',
           message: error instanceof Error ? error.message : 'Unknown filter error',
@@ -235,7 +252,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     }
 
     return {
-      field: filters[0]!.field,
+      field: filters[0].field,
       operator: filters[0].operator,
       value: filters,
       negated: false,
@@ -252,7 +269,10 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
 
   private _evaluateFilter(item: T, compiled: CompiledFilter, context: FilterContext): boolean {
     try {
-      return compiled.predicate(item);
+      const entity = item as Record<string, unknown>;
+      const filter = compiled.filter;
+      const result = this._compareValues(entity[filter.field], filter.operator, filter.value, context);
+      return filter.negated ? !result : result;
     } catch (error) {
       return context.nullHandling === NullHandling.TREAT_AS_MATCH;
     }
@@ -269,15 +289,28 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     };
   }
 
-  private _compareValues(fieldValue: unknown, operator: string, filterValue: unknown): boolean {
+  private _compareValues(
+    fieldValue: unknown,
+    operator: string,
+    filterValue: unknown,
+    context?: FilterContext
+  ): boolean {
     if (fieldValue === undefined || fieldValue === null) {
       return false;
     }
 
+    const caseSensitive = context ? context.caseSensitive : this._context.caseSensitive;
+
     switch (operator) {
       case 'EQUALS':
+        if (typeof fieldValue === 'string' && typeof filterValue === 'string' && !caseSensitive) {
+          return fieldValue.toLowerCase() === filterValue.toLowerCase();
+        }
         return fieldValue === filterValue;
       case 'NOT_EQUALS':
+        if (typeof fieldValue === 'string' && typeof filterValue === 'string' && !caseSensitive) {
+          return fieldValue.toLowerCase() !== filterValue.toLowerCase();
+        }
         return fieldValue !== filterValue;
       case 'CONTAINS':
         return typeof fieldValue === 'string' && String(fieldValue).includes(String(filterValue));

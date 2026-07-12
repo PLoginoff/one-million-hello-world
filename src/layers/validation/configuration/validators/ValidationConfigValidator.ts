@@ -1,6 +1,6 @@
 /**
  * Validation Configuration Validator
- * 
+ *
  * Validates validation configuration options.
  */
 

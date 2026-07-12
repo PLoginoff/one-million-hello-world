@@ -1,9 +1,9 @@
 /**
  * Event Layer
- * 
+ *
  * This module exports all public interfaces, implementations, and types
  * for the Event Layer with 8-layer architecture.
- * 
+ *
  * Architecture Layers:
  * 1. Domain Layer - Core business entities and value objects
  * 2. Core Layer - Event bus implementation and core logic
@@ -13,7 +13,7 @@
  * 6. Monitoring Layer - Observability and logging
  * 7. Configuration Layer - Configuration management
  * 8. Testing Layer - Testing utilities
- * 
+ *
  * @module EventLayer
  */
 

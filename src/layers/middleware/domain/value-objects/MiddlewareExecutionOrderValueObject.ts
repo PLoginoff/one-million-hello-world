@@ -1,6 +1,6 @@
 /**
  * Middleware Execution Order Value Object
- * 
+ *
  * Represents execution order for middleware chain.
  */
 

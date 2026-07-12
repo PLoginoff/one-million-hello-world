@@ -1,6 +1,6 @@
 /**
  * Type Guards
- * 
+ *
  * Runtime type checking utilities for serialization data.
  */
 

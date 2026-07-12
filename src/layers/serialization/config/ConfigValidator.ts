@@ -1,6 +1,6 @@
 /**
  * Configuration Validator
- * 
+ *
  * Validates serialization configuration using schema.
  */
 
@@ -16,7 +16,7 @@ export class ConfigValidator {
 
   /**
    * Validates configuration
-   * 
+   *
    * @param config - Configuration to validate
    * @returns Validation result
    */
@@ -26,7 +26,7 @@ export class ConfigValidator {
 
   /**
    * Validates configuration and throws if invalid
-   * 
+   *
    * @param config - Configuration to validate
    * @throws Error if validation fails
    */
@@ -39,7 +39,7 @@ export class ConfigValidator {
 
   /**
    * Validates and applies defaults
-   * 
+   *
    * @param config - Configuration to validate
    * @returns Validated configuration with defaults
    */
@@ -50,7 +50,7 @@ export class ConfigValidator {
 
   /**
    * Gets the schema
-   * 
+   *
    * @returns Config schema
    */
   getSchema(): ConfigSchema {
@@ -59,7 +59,7 @@ export class ConfigValidator {
 
   /**
    * Sets a custom schema
-   * 
+   *
    * @param schema - New schema definition
    */
   setSchema(schema: SchemaDefinition): void {
@@ -68,7 +68,7 @@ export class ConfigValidator {
 
   /**
    * Adds a property to the schema
-   * 
+   *
    * @param key - Property key
    * @param property - Property definition
    */
@@ -80,7 +80,7 @@ export class ConfigValidator {
 
   /**
    * Removes a property from the schema
-   * 
+   *
    * @param key - Property key
    */
   removeProperty(key: string): void {

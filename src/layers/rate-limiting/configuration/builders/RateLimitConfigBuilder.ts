@@ -1,6 +1,6 @@
 /**
  * Rate Limit Configuration Builder
- * 
+ *
  * Fluent builder for creating rate limiting configurations.
  */
 

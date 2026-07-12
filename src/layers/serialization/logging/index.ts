@@ -1,6 +1,6 @@
 /**
  * Logging Module
- * 
+ *
  * Exports logging abstraction components.
  */
 

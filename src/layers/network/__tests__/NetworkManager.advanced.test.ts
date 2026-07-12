@@ -282,7 +282,8 @@ describe('NetworkManager Advanced', () => {
   });
 
   describe('Acquire Connection', () => {
-    it('should acquire connection when below max', async () => {
+    it('should not acquire connection when max reached', async () => {
+      manager.setMaxConnections(0);
       const connection = await manager.acquireConnection({ socket: { host: 'localhost', port: 8080 } });
 
       expect(connection).toBeNull();

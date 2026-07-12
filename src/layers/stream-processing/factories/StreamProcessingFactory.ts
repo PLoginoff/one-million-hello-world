@@ -1,5 +1,8 @@
 import { StreamProcessing } from '../implementations/StreamProcessing';
-import { DefaultStreamProcessingStrategy, OptimizedStreamProcessingStrategy } from '../strategies/StreamProcessingStrategy';
+import {
+  DefaultStreamProcessingStrategy,
+  OptimizedStreamProcessingStrategy,
+} from '../strategies/StreamProcessingStrategy';
 
 export class StreamProcessingFactory {
   static createDefault(): StreamProcessing {

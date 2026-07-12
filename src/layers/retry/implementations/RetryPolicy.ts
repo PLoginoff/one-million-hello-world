@@ -1,16 +1,12 @@
 /**
  * Retry Policy Implementation
- * 
+ *
  * Concrete implementation of IRetryPolicy.
  * Handles exponential backoff, jitter, and idempotency.
  */
 
 import { IRetryPolicy } from '../interfaces/IRetryPolicy';
-import {
-  RetryStrategy,
-  RetryResult,
-  RetryConfig,
-} from '../types/retry-types';
+import { RetryStrategy, RetryResult, RetryConfig } from '../types/retry-types';
 
 export class RetryPolicy implements IRetryPolicy {
   private _config: RetryConfig;

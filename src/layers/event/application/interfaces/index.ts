@@ -1,6 +1,6 @@
 /**
  * Application Layer Interfaces
- * 
+ *
  * Exports all application interfaces.
  */
 

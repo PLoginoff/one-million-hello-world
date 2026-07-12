@@ -1,6 +1,6 @@
 /**
  * Serializer Builder
- * 
+ *
  * Fluent builder for creating configured Serializer instances.
  */
 
@@ -79,7 +79,7 @@ export class SerializerBuilder {
 
   /**
    * Sets the current version
-   * 
+   *
    * @param version - Version string
    * @returns This builder for chaining
    */
@@ -123,7 +123,7 @@ export class SerializerBuilder {
 
   /**
    * Enables or disables strict mode
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -134,7 +134,7 @@ export class SerializerBuilder {
 
   /**
    * Sets the maximum data size
-   * 
+   *
    * @param maxSize - Maximum size in bytes
    * @returns This builder for chaining
    */
@@ -145,7 +145,7 @@ export class SerializerBuilder {
 
   /**
    * Sets the timeout for operations
-   * 
+   *
    * @param timeout - Timeout in milliseconds
    * @returns This builder for chaining
    */
@@ -156,7 +156,7 @@ export class SerializerBuilder {
 
   /**
    * Adds a custom serialization strategy
-   * 
+   *
    * @param format - Format name
    * @param strategy - Strategy instance
    * @returns This builder for chaining
@@ -168,7 +168,7 @@ export class SerializerBuilder {
 
   /**
    * Adds a validator
-   * 
+   *
    * @param validator - Validator instance
    * @returns This builder for chaining
    */
@@ -179,7 +179,7 @@ export class SerializerBuilder {
 
   /**
    * Adds multiple validators
-   * 
+   *
    * @param validators - Array of validators
    * @returns This builder for chaining
    */
@@ -190,7 +190,7 @@ export class SerializerBuilder {
 
   /**
    * Adds a plugin
-   * 
+   *
    * @param plugin - Plugin instance
    * @returns This builder for chaining
    */
@@ -201,7 +201,7 @@ export class SerializerBuilder {
 
   /**
    * Adds multiple plugins
-   * 
+   *
    * @param plugins - Array of plugins
    * @returns This builder for chaining
    */
@@ -212,7 +212,7 @@ export class SerializerBuilder {
 
   /**
    * Adds a hook
-   * 
+   *
    * @param hook - Hook instance
    * @returns This builder for chaining
    */
@@ -223,7 +223,7 @@ export class SerializerBuilder {
 
   /**
    * Adds multiple hooks
-   * 
+   *
    * @param hooks - Array of hooks
    * @returns This builder for chaining
    */
@@ -234,7 +234,7 @@ export class SerializerBuilder {
 
   /**
    * Sets the versioning strategy
-   * 
+   *
    * @param strategy - Versioning strategy
    * @returns This builder for chaining
    */
@@ -245,7 +245,7 @@ export class SerializerBuilder {
 
   /**
    * Merges additional configuration
-   * 
+   *
    * @param config - Additional configuration
    * @returns This builder for chaining
    */
@@ -256,7 +256,7 @@ export class SerializerBuilder {
 
   /**
    * Builds the Serializer instance
-   * 
+   *
    * @returns Configured Serializer instance
    */
   build(): Serializer {
@@ -288,7 +288,7 @@ export class SerializerBuilder {
 
   /**
    * Resets the builder to default state
-   * 
+   *
    * @returns This builder for chaining
    */
   reset(): SerializerBuilder {
@@ -303,7 +303,7 @@ export class SerializerBuilder {
 
   /**
    * Gets the current configuration builder
-   * 
+   *
    * @returns ConfigBuilder instance
    */
   getConfigBuilder(): ConfigBuilder {

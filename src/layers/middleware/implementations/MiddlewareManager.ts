@@ -1,6 +1,6 @@
 /**
  * Middleware Manager Implementation
- * 
+ *
  * Concrete implementation of IMiddlewareManager.
  * Handles logging, metrics, tracing, and correlation IDs.
  */
@@ -152,8 +152,8 @@ export class MiddlewareManager implements IMiddlewareManager {
   }
 
   getMetricStatistics(metricName: string): MetricStatistics {
-    const metrics = this._metrics.filter(m => m.name === metricName);
-    const values = metrics.map(m => m.value);
+    const metrics = this._metrics.filter((m) => m.name === metricName);
+    const values = metrics.map((m) => m.value);
 
     if (values.length === 0) {
       return {
@@ -172,8 +172,8 @@ export class MiddlewareManager implements IMiddlewareManager {
     const count = sorted.length;
     const sum = sorted.reduce((a, b) => a + b, 0);
     const avg = sum / count;
-    const min = sorted[0];
-    const max = sorted[count - 1];
+    const min = sorted[0] ?? 0;
+    const max = sorted[count - 1] ?? 0;
 
     const p50Index = Math.floor(count * 0.5);
     const p95Index = Math.floor(count * 0.95);
@@ -225,8 +225,9 @@ export class MiddlewareManager implements IMiddlewareManager {
     if (existingSpan) {
       existingSpan.endTime = new Date();
       existingSpan.duration = existingSpan.endTime.getTime() - existingSpan.startTime.getTime();
-      if (existingSpan.status) {
-        this._statistics.spansByStatus[existingSpan.status] = (this._statistics.spansByStatus[existingSpan.status] || 0) + 1;
+      if (existingSpan.status != null) {
+        this._statistics.spansByStatus[existingSpan.status] =
+          (this._statistics.spansByStatus[existingSpan.status] || 0) + 1;
       }
     }
   }
@@ -298,27 +299,27 @@ export class MiddlewareManager implements IMiddlewareManager {
   getFilteredLogs(filter: LogFilter): LogEntry[] {
     let filtered = [...this._logs];
 
-    if (filter.level) {
-      filtered = filtered.filter(log => log.level === filter.level);
+    if (filter.level != null) {
+      filtered = filtered.filter((log) => log.level === filter.level);
     }
-    if (filter.category) {
-      filtered = filtered.filter(log => log.category === filter.category);
+    if (filter.category != null) {
+      filtered = filtered.filter((log) => log.category === filter.category);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(log => log.timestamp >= filter.startTime);
+      filtered = filtered.filter((log) => log.timestamp >= filter.startTime!);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(log => log.timestamp <= filter.endTime);
+      filtered = filtered.filter((log) => log.timestamp <= filter.endTime!);
     }
     if (filter.correlationId) {
-      filtered = filtered.filter(log => log.correlationId === filter.correlationId);
+      filtered = filtered.filter((log) => log.correlationId === filter.correlationId);
     }
     if (filter.userId) {
-      filtered = filtered.filter(log => log.userId === filter.userId);
+      filtered = filtered.filter((log) => log.userId === filter.userId);
     }
     if (filter.messagePattern) {
       const regex = new RegExp(filter.messagePattern, 'i');
-      filtered = filtered.filter(log => regex.test(log.message));
+      filtered = filtered.filter((log) => regex.test(log.message));
     }
     if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
@@ -335,21 +336,22 @@ export class MiddlewareManager implements IMiddlewareManager {
     let filtered = [...this._metrics];
 
     if (filter.name) {
-      filtered = filtered.filter(metric => metric.name === filter.name);
+      filtered = filtered.filter((metric) => metric.name === filter.name);
     }
-    if (filter.type) {
-      filtered = filtered.filter(metric => metric.type === filter.type);
+    if (filter.type != null) {
+      filtered = filtered.filter((metric) => metric.type === filter.type);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(metric => metric.timestamp >= filter.startTime);
+      filtered = filtered.filter((metric) => metric.timestamp >= filter.startTime!);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(metric => metric.timestamp <= filter.endTime);
+      filtered = filtered.filter((metric) => metric.timestamp <= filter.endTime!);
     }
     if (filter.labels) {
-      filtered = filtered.filter(metric => {
+      const labels = filter.labels;
+      filtered = filtered.filter((metric) => {
         if (!metric.labels) return false;
-        return Object.entries(filter.labels).every(([key, value]) => metric.labels![key] === value);
+        return Object.entries(labels).every(([key, value]) => metric.labels?.[key] === value);
       });
     }
     if (filter.limit !== undefined) {
@@ -367,25 +369,25 @@ export class MiddlewareManager implements IMiddlewareManager {
     let filtered = Array.from(this._spans.values());
 
     if (filter.traceId) {
-      filtered = filtered.filter(span => span.traceId === filter.traceId);
+      filtered = filtered.filter((span) => span.traceId === filter.traceId);
     }
     if (filter.operationName) {
-      filtered = filtered.filter(span => span.operationName === filter.operationName);
+      filtered = filtered.filter((span) => span.operationName === filter.operationName);
     }
-    if (filter.status) {
-      filtered = filtered.filter(span => span.status === filter.status);
+    if (filter.status != null) {
+      filtered = filtered.filter((span) => span.status === filter.status);
     }
     if (filter.startTime) {
-      filtered = filtered.filter(span => span.startTime >= filter.startTime);
+      filtered = filtered.filter((span) => span.startTime >= filter.startTime!);
     }
     if (filter.endTime) {
-      filtered = filtered.filter(span => span.endTime && span.endTime <= filter.endTime);
+      filtered = filtered.filter((span) => span.endTime && span.endTime <= filter.endTime!);
     }
     if (filter.minDuration) {
-      filtered = filtered.filter(span => span.duration && span.duration >= filter.minDuration);
+      filtered = filtered.filter((span) => span.duration && span.duration >= filter.minDuration!);
     }
     if (filter.maxDuration) {
-      filtered = filtered.filter(span => span.duration && span.duration <= filter.maxDuration);
+      filtered = filtered.filter((span) => span.duration && span.duration <= filter.maxDuration!);
     }
     if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
@@ -416,7 +418,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     const loggingCheck = {
       name: 'logging',
-      status: this._config.enableLogging ? 'pass' as const : 'warn' as const,
+      status: this._config.enableLogging ? ('pass' as const) : ('warn' as const),
       message: this._config.enableLogging ? 'Logging enabled' : 'Logging disabled',
       duration: 0,
       timestamp: new Date(),
@@ -426,7 +428,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     const metricsCheck = {
       name: 'metrics',
-      status: this._config.enableMetrics ? 'pass' as const : 'warn' as const,
+      status: this._config.enableMetrics ? ('pass' as const) : ('warn' as const),
       message: this._config.enableMetrics ? 'Metrics enabled' : 'Metrics disabled',
       duration: 0,
       timestamp: new Date(),
@@ -436,7 +438,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     const tracingCheck = {
       name: 'tracing',
-      status: this._config.enableTracing ? 'pass' as const : 'warn' as const,
+      status: this._config.enableTracing ? ('pass' as const) : ('warn' as const),
       message: this._config.enableTracing ? 'Tracing enabled' : 'Tracing disabled',
       duration: 0,
       timestamp: new Date(),
@@ -446,7 +448,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     const correlationCheck = {
       name: 'correlation',
-      status: this._config.enableCorrelation ? 'pass' as const : 'warn' as const,
+      status: this._config.enableCorrelation ? ('pass' as const) : ('warn' as const),
       message: this._config.enableCorrelation ? 'Correlation enabled' : 'Correlation disabled',
       duration: 0,
       timestamp: new Date(),
@@ -454,7 +456,7 @@ export class MiddlewareManager implements IMiddlewareManager {
     checks.push(correlationCheck);
     if (!this._config.enableCorrelation) score -= 25;
 
-    const status = score >= 80 ? 'healthy' as const : score >= 50 ? 'degraded' as const : 'unhealthy' as const;
+    const status = score >= 80 ? ('healthy' as const) : score >= 50 ? ('degraded' as const) : ('unhealthy' as const);
 
     return {
       status,
@@ -512,9 +514,9 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     const summary = {
       totalSteps: steps.length,
-      successfulSteps: steps.filter(s => s.status === 'success').length,
-      failedSteps: steps.filter(s => s.status === 'error').length,
-      warningSteps: steps.filter(s => s.status === 'warning').length,
+      successfulSteps: steps.filter((s) => s.status === 'success').length,
+      failedSteps: steps.filter((s) => s.status === 'error').length,
+      warningSteps: steps.filter((s) => s.status === 'warning').length,
       overallStatus: 'success' as const,
       totalDuration,
     };
@@ -546,9 +548,9 @@ export class MiddlewareManager implements IMiddlewareManager {
     const messageCounts: Record<string, number> = {};
     const errors: LogEntry[] = [];
 
-    logs.forEach(log => {
+    logs.forEach((log) => {
       byLevel[log.level] = (byLevel[log.level] || 0) + 1;
-      if (log.category) {
+      if (log.category != null) {
         byCategory[log.category] = (byCategory[log.category] || 0) + 1;
       }
       messageCounts[log.message] = (messageCounts[log.message] || 0) + 1;
@@ -563,8 +565,8 @@ export class MiddlewareManager implements IMiddlewareManager {
       .map(([message, count]) => ({ message, count }));
 
     const timeRange = {
-      start: logs.length > 0 ? logs[0].timestamp : new Date(),
-      end: logs.length > 0 ? logs[logs.length - 1].timestamp : new Date(),
+      start: logs.length > 0 ? (logs[0]?.timestamp ?? new Date()) : new Date(),
+      end: logs.length > 0 ? (logs[logs.length - 1]?.timestamp ?? new Date()) : new Date(),
     };
 
     return {
@@ -579,16 +581,16 @@ export class MiddlewareManager implements IMiddlewareManager {
 
   aggregateMetrics(metricName: string, filter?: MetricFilter): MetricAggregationResult {
     const allMetrics = filter ? this.getFilteredMetrics(filter) : this._metrics;
-    const metrics = allMetrics.filter(m => m.name === metricName);
+    const metrics = allMetrics.filter((m) => m.name === metricName);
 
     const statistics = this.getMetricStatistics(metricName);
 
     const timeRange = {
-      start: metrics.length > 0 ? metrics[0].timestamp : new Date(),
-      end: metrics.length > 0 ? metrics[metrics.length - 1].timestamp : new Date(),
+      start: metrics.length > 0 ? (metrics[0]?.timestamp ?? new Date()) : new Date(),
+      end: metrics.length > 0 ? (metrics[metrics.length - 1]?.timestamp ?? new Date()) : new Date(),
     };
 
-    const labels = metrics.length > 0 && metrics[0].labels ? metrics[0].labels : undefined;
+    const labels = metrics.length > 0 ? metrics[0]?.labels : undefined;
 
     return {
       name: metricName,
@@ -661,7 +663,7 @@ export class MiddlewareManager implements IMiddlewareManager {
   removePipelineStage(pipelineName: string, stageName: string): void {
     const pipeline = this._pipelines.get(pipelineName);
     if (pipeline) {
-      pipeline.stages = pipeline.stages.filter(s => s.name !== stageName);
+      pipeline.stages = pipeline.stages.filter((s) => s.name !== stageName);
     }
   }
 
@@ -696,6 +698,6 @@ export class MiddlewareManager implements IMiddlewareManager {
   }
 
   getSpansByTraceId(traceId: string): TraceSpan[] {
-    return Array.from(this._spans.values()).filter(span => span.traceId === traceId);
+    return Array.from(this._spans.values()).filter((span) => span.traceId === traceId);
   }
 }

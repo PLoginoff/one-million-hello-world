@@ -1,6 +1,6 @@
 /**
  * Security Factory
- * 
+ *
  * Factory for creating security components and configurations.
  */
 
@@ -108,7 +108,7 @@ export class SecurityFactory {
   ): SecurityContextEntity {
     if (authenticated) {
       return SecurityContextEntity.createAuthenticated(
-        userId,
+        userId ?? '',
         roles,
         permissions,
         ipAddress,

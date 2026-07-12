@@ -16,10 +16,7 @@ export class LoadBalancerEntity {
   }
 
   static create(data: Record<string, unknown>): LoadBalancerEntity {
-    return new LoadBalancerEntity(
-      `load-balancer-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new LoadBalancerEntity(`load-balancer-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

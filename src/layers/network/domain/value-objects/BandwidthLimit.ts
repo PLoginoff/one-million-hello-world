@@ -1,6 +1,6 @@
 /**
  * Bandwidth Limit Value Object
- * 
+ *
  * Represents bandwidth throttling limits for connections.
  */
 
@@ -10,12 +10,7 @@ export class BandwidthLimit {
   readonly refillRate: number;
   readonly enabled: boolean;
 
-  private constructor(
-    maxBytesPerSecond: number,
-    bucketSize: number,
-    refillRate: number,
-    enabled: boolean,
-  ) {
+  private constructor(maxBytesPerSecond: number, bucketSize: number, refillRate: number, enabled: boolean) {
     if (maxBytesPerSecond < 0) {
       throw new Error('Max bytes per second cannot be negative');
     }
@@ -42,22 +37,13 @@ export class BandwidthLimit {
    * Create bandwidth limit with max bytes per second
    */
   static create(maxBytesPerSecond: number): BandwidthLimit {
-    return new BandwidthLimit(
-      maxBytesPerSecond,
-      maxBytesPerSecond,
-      maxBytesPerSecond,
-      true,
-    );
+    return new BandwidthLimit(maxBytesPerSecond, maxBytesPerSecond, maxBytesPerSecond, true);
   }
 
   /**
    * Create bandwidth limit with custom bucket and refill rate
    */
-  static withBucket(
-    maxBytesPerSecond: number,
-    bucketSize: number,
-    refillRate: number,
-  ): BandwidthLimit {
+  static withBucket(maxBytesPerSecond: number, bucketSize: number, refillRate: number): BandwidthLimit {
     return new BandwidthLimit(maxBytesPerSecond, bucketSize, refillRate, true);
   }
 
@@ -147,10 +133,12 @@ export class BandwidthLimit {
    * Check if equals another limit
    */
   equals(other: BandwidthLimit): boolean {
-    return this.maxBytesPerSecond === other.maxBytesPerSecond &&
-           this.bucketSize === other.bucketSize &&
-           this.refillRate === other.refillRate &&
-           this.enabled === other.enabled;
+    return (
+      this.maxBytesPerSecond === other.maxBytesPerSecond &&
+      this.bucketSize === other.bucketSize &&
+      this.refillRate === other.refillRate &&
+      this.enabled === other.enabled
+    );
   }
 
   /**

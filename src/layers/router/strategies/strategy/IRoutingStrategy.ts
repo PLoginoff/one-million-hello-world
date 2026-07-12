@@ -1,6 +1,6 @@
 /**
  * Routing Strategy Interface
- * 
+ *
  * Defines contract for different routing strategies.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Type Validator
- * 
+ *
  * Validates data types for serialization.
  */
 

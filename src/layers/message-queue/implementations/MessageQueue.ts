@@ -1,24 +1,19 @@
 /**
  * Message Queue Implementation
- * 
+ *
  * Concrete implementation of IMessageQueue.
  * Handles async processing and dead letter queues.
  */
 
 import { IMessageQueue, MessageHandler } from '../interfaces/IMessageQueue';
-import {
-  Message,
-  QueueStats,
-  QueueConfig,
-  QueueResult,
-} from '../types/message-queue-types';
+import { Message, QueueStats, QueueConfig, QueueResult } from '../types/message-queue-types';
 
 export class MessageQueue implements IMessageQueue {
   private _queue: Message[];
   private _deadLetterQueue: Message[];
   private _config: QueueConfig;
   private _stats: QueueStats;
-  private _handler: MessageHandler | null;
+  private _handler: MessageHandler<any> | null;
   private _isRunning: boolean;
   private _processing: boolean;
 

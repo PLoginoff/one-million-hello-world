@@ -1,6 +1,6 @@
 /**
  * Rate Limit Key
- * 
+ *
  * Represents a unique identifier for rate limiting.
  */
 

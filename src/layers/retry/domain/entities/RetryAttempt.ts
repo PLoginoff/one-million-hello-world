@@ -23,7 +23,7 @@ export class RetryAttemptEntity {
     status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled',
     parameters: Record<string, unknown>,
     metadata?: AttemptMetadata,
-    result?: unknown,
+    result?: unknown
   ) {
     this.attemptId = attemptId;
     this.retryId = retryId;
@@ -108,7 +108,7 @@ export class RetryAttemptEntity {
       status,
       this.parameters,
       this.metadata,
-      this.result,
+      this.result
     );
   }
 
@@ -123,7 +123,7 @@ export class RetryAttemptEntity {
       this.status,
       this.parameters,
       this.metadata,
-      result,
+      result
     );
   }
 
@@ -138,7 +138,7 @@ export class RetryAttemptEntity {
       this.status,
       this.parameters,
       this.metadata.update(updates),
-      this.result,
+      this.result
     );
   }
 
@@ -153,7 +153,7 @@ export class RetryAttemptEntity {
       this.status,
       { ...this.parameters },
       this.metadata.clone(),
-      this.result,
+      this.result
     );
   }
 

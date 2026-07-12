@@ -1,5 +1,8 @@
 import { PerformanceTesting } from '../implementations/PerformanceTesting';
-import { DefaultPerformanceTestingStrategy, OptimizedPerformanceTestingStrategy } from '../strategies/PerformanceTestingStrategy';
+import {
+  DefaultPerformanceTestingStrategy,
+  OptimizedPerformanceTestingStrategy,
+} from '../strategies/PerformanceTestingStrategy';
 
 export class PerformanceTestingFactory {
   static createDefault(): PerformanceTesting {

@@ -1,6 +1,6 @@
 /**
  * Middleware Error
- * 
+ *
  * Custom error class for middleware errors.
  */
 
@@ -23,7 +23,11 @@ export class MiddlewareError extends Error {
   /**
    * Create execution error
    */
-  static executionFailed(message: string = 'Middleware execution failed', middlewareId?: string, originalError?: Error): MiddlewareError {
+  static executionFailed(
+    message: string = 'Middleware execution failed',
+    middlewareId?: string,
+    originalError?: Error
+  ): MiddlewareError {
     return new MiddlewareError('EXECUTION_FAILED', message, middlewareId, originalError);
   }
 

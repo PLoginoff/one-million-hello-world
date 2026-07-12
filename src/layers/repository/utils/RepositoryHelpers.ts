@@ -52,9 +52,9 @@ export class RepositoryHelpers {
       return null;
     }
     return {
-      host: match[1]!,
+      host: match[1],
       port: parseInt(match[2], 10),
-      database: match[3]!,
+      database: match[3],
     };
   }
 }

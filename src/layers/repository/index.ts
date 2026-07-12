@@ -1,6 +1,6 @@
 /**
  * Repository Layer
- * 
+ *
  * Exports repository interfaces, implementations, and types
  */
 

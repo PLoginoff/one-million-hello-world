@@ -1,6 +1,6 @@
 /**
  * Default Middleware Configurations
- * 
+ *
  * Pre-configured settings for common middleware scenarios.
  */
 

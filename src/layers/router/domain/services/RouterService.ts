@@ -1,6 +1,6 @@
 /**
  * Router Service
- * 
+ *
  * Provides routing logic and route management.
  */
 
@@ -39,11 +39,7 @@ export class RouterService {
    */
   findRoute(path: string, method: string): RouteEntity | undefined {
     const routes = Array.from(this.routes.values());
-    return routes.find(route => 
-      route.matchesPath(path) && 
-      route.matchesMethod(method) &&
-      route.isEnabled()
-    );
+    return routes.find((route) => route.matchesPath(path) && route.matchesMethod(method) && route.isEnabled());
   }
 
   /**
@@ -57,9 +53,7 @@ export class RouterService {
    * Get routes by method
    */
   getRoutesByMethod(method: string): RouteEntity[] {
-    return Array.from(this.routes.values()).filter(route => 
-      route.data.method === method.toUpperCase()
-    );
+    return Array.from(this.routes.values()).filter((route) => route.data.method === method.toUpperCase());
   }
 
   /**

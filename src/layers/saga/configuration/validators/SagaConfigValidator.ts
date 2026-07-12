@@ -53,14 +53,14 @@ export class SagaConfigValidator {
           path: `sagaConfig.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...configValidation.warnings.map((w: any) => ({
           path: `sagaConfig.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

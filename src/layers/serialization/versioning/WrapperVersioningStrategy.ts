@@ -1,6 +1,6 @@
 /**
  * Wrapper Versioning Strategy
- * 
+ *
  * Wraps data in a version envelope.
  */
 

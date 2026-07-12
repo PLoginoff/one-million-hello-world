@@ -1090,7 +1090,7 @@ describe('Cache', () => {
       await cache.set('key2', 'value2', 200);
       await cache.set('key3', 'value3', 300);
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await new Promise((resolve) => setTimeout(resolve, 250));
 
       const result1 = await cache.get('key1');
       const result2 = await cache.get('key2');

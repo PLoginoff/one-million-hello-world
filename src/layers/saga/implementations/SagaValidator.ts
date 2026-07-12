@@ -1,6 +1,6 @@
 /**
  * Saga Validator Implementation
- * 
+ *
  * Concrete implementation of ISagaValidator.
  * Validates saga steps for correctness.
  */
@@ -59,7 +59,8 @@ export class SagaValidator implements ISagaValidator {
     const warnings: ValidationError[] = [];
 
     for (let i = 0; i < steps.length; i++) {
-      const result = this.validateStep(steps[i], i);
+      const step = steps[i];
+      const result = this.validateStep(step, i);
       errors.push(...result.errors);
       warnings.push(...result.warnings);
     }
@@ -81,7 +82,8 @@ export class SagaValidator implements ISagaValidator {
     const nameMap = new Map<string, number[]>();
 
     for (let i = 0; i < steps.length; i++) {
-      const name = (steps[i])!.name;
+      const step = steps[i];
+      const name = step.name;
       const indices = nameMap.get(name) || [];
       indices.push(i);
       nameMap.set(name, indices);

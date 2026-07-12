@@ -1,6 +1,6 @@
 /**
  * Composite Validator
- * 
+ *
  * Composite validator that combines multiple validators.
  */
 
@@ -36,7 +36,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Adds a validator to the composite
-   * 
+   *
    * @param validator - Validator to add
    * @returns This validator for chaining
    */
@@ -47,7 +47,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Removes a validator from the composite
-   * 
+   *
    * @param validator - Validator to remove
    * @returns This validator for chaining
    */
@@ -61,7 +61,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Clears all validators
-   * 
+   *
    * @returns This validator for chaining
    */
   clearValidators(): CompositeValidator {
@@ -71,7 +71,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Gets all validators
-   * 
+   *
    * @returns Array of validators
    */
   getValidators(): IValidator[] {
@@ -80,7 +80,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Gets the number of validators
-   * 
+   *
    * @returns Number of validators
    */
   getValidatorCount(): number {
@@ -89,7 +89,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Sets the validation mode
-   * 
+   *
    * @param mode - Validation mode
    * @returns This validator for chaining
    */
@@ -100,7 +100,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Gets the validation mode
-   * 
+   *
    * @returns Current mode
    */
   getMode(): 'all' | 'any' | 'first' {
@@ -109,7 +109,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Validates using all validators (AND logic)
-   * 
+   *
    * @param data - Data to validate
    * @returns Combined validation result
    */
@@ -136,7 +136,7 @@ export class CompositeValidator extends BaseValidator {
 
   /**
    * Validates using any validator (OR logic)
-   * 
+   *
    * @param data - Data to validate
    * @returns Combined validation result
    */

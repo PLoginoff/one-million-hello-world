@@ -1,6 +1,6 @@
 /**
  * Validator Factory Interface
- * 
+ *
  * Defines the contract for creating validators.
  */
 
@@ -9,7 +9,7 @@ import { IValidator } from '../validation/IValidator';
 export interface IValidatorFactory {
   /**
    * Creates a validator by name
-   * 
+   *
    * @param name - Validator name
    * @param config - Optional configuration
    * @returns Validator instance
@@ -19,7 +19,7 @@ export interface IValidatorFactory {
 
   /**
    * Registers a validator
-   * 
+   *
    * @param name - Validator name
    * @param factory - Validator factory function
    */
@@ -27,7 +27,7 @@ export interface IValidatorFactory {
 
   /**
    * Checks if a validator is registered
-   * 
+   *
    * @param name - Validator name
    * @returns True if registered
    */
@@ -35,7 +35,7 @@ export interface IValidatorFactory {
 
   /**
    * Gets all registered validator names
-   * 
+   *
    * @returns Array of validator names
    */
   getValidatorNames(): string[];

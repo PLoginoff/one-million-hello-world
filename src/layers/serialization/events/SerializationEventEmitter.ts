@@ -1,6 +1,6 @@
 /**
  * Serialization Event Emitter
- * 
+ *
  * Event emitter for serialization-related events.
  */
 
@@ -28,7 +28,7 @@ export class SerializationEventEmitter {
 
   /**
    * Subscribes to an event
-   * 
+   *
    * @param event - Event name
    * @param handler - Event handler
    * @returns Subscription ID
@@ -56,7 +56,7 @@ export class SerializationEventEmitter {
 
   /**
    * Subscribes to an event (only once)
-   * 
+   *
    * @param event - Event name
    * @param handler - Event handler
    * @returns Subscription ID
@@ -80,7 +80,7 @@ export class SerializationEventEmitter {
 
   /**
    * Unsubscribes from an event
-   * 
+   *
    * @param event - Event name
    * @param id - Subscription ID
    * @returns True if unsubscribed
@@ -91,7 +91,7 @@ export class SerializationEventEmitter {
       return false;
     }
 
-    const index = listeners.findIndex(l => l.id === id);
+    const index = listeners.findIndex((l) => l.id === id);
     if (index > -1) {
       listeners.splice(index, 1);
       if (listeners.length === 0) {
@@ -105,7 +105,7 @@ export class SerializationEventEmitter {
 
   /**
    * Removes all listeners for an event
-   * 
+   *
    * @param event - Event name
    */
   removeAllListeners(event?: string): void {
@@ -125,7 +125,7 @@ export class SerializationEventEmitter {
 
   /**
    * Emits an event
-   * 
+   *
    * @param event - Event name
    * @param data - Event data
    * @returns True if event had listeners
@@ -162,7 +162,7 @@ export class SerializationEventEmitter {
 
   /**
    * Emits an event asynchronously
-   * 
+   *
    * @param event - Event name
    * @param data - Event data
    * @returns Promise resolving to true if event had listeners
@@ -202,7 +202,7 @@ export class SerializationEventEmitter {
 
   /**
    * Gets the number of listeners for an event
-   * 
+   *
    * @param event - Event name
    * @returns Number of listeners
    */
@@ -212,7 +212,7 @@ export class SerializationEventEmitter {
 
   /**
    * Gets all event names with listeners
-   * 
+   *
    * @returns Array of event names
    */
   eventNames(): string[] {
@@ -221,7 +221,7 @@ export class SerializationEventEmitter {
 
   /**
    * Gets the maximum number of listeners
-   * 
+   *
    * @returns Max listeners
    */
   getMaxListeners(): number {
@@ -230,7 +230,7 @@ export class SerializationEventEmitter {
 
   /**
    * Sets the maximum number of listeners
-   * 
+   *
    * @param max - Maximum listeners
    */
   setMaxListeners(max: number): void {
@@ -239,7 +239,7 @@ export class SerializationEventEmitter {
 
   /**
    * Enables or disables the event emitter
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -248,7 +248,7 @@ export class SerializationEventEmitter {
 
   /**
    * Checks if the event emitter is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -257,7 +257,7 @@ export class SerializationEventEmitter {
 
   /**
    * Gets all subscriptions
-   * 
+   *
    * @returns Array of subscriptions
    */
   getSubscriptions(): EventSubscription[] {
@@ -280,7 +280,7 @@ export class SerializationEventEmitter {
 
   /**
    * Generates a unique subscription ID
-   * 
+   *
    * @returns Unique ID
    */
   private _generateId(): string {

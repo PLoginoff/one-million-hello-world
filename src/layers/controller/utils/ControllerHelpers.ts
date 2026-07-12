@@ -1,6 +1,6 @@
 /**
  * Controller Helpers
- * 
+ *
  * Utility functions for controller operations.
  */
 
@@ -54,7 +54,10 @@ export class ControllerHelpers {
    * Generate controller ID from name
    */
   static generateControllerId(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * Validation Strategy Interface
- * 
+ *
  * Defines contract for different validation strategies.
  */
 

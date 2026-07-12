@@ -1,6 +1,6 @@
 /**
  * Transforming Validator
- * 
+ *
  * Validator that transforms data before validation.
  */
 
@@ -14,12 +14,7 @@ export class TransformingValidator extends BaseValidator {
   private _transform: TransformFunction;
   private _preserveOriginal: boolean;
 
-  constructor(
-    name: string,
-    validator: IValidator,
-    transform: TransformFunction,
-    preserveOriginal: boolean = false
-  ) {
+  constructor(name: string, validator: IValidator, transform: TransformFunction, preserveOriginal: boolean = false) {
     super(name);
     this._validator = validator;
     this._transform = transform;
@@ -31,15 +26,13 @@ export class TransformingValidator extends BaseValidator {
       const transformed = this._transform(data);
       return this._validator.validate(transformed);
     } catch (error) {
-      return this._failure([
-        `Transform error: ${error instanceof Error ? error.message : String(error)}`
-      ]);
+      return this._failure([`Transform error: ${error instanceof Error ? error.message : String(error)}`]);
     }
   }
 
   /**
    * Gets the inner validator
-   * 
+   *
    * @returns Inner validator
    */
   getValidator(): IValidator {
@@ -48,7 +41,7 @@ export class TransformingValidator extends BaseValidator {
 
   /**
    * Sets the inner validator
-   * 
+   *
    * @param validator - New validator
    * @returns This validator for chaining
    */
@@ -59,7 +52,7 @@ export class TransformingValidator extends BaseValidator {
 
   /**
    * Gets the transform function
-   * 
+   *
    * @returns Transform function
    */
   getTransform(): TransformFunction {
@@ -68,7 +61,7 @@ export class TransformingValidator extends BaseValidator {
 
   /**
    * Sets the transform function
-   * 
+   *
    * @param transform - New transform function
    * @returns This validator for chaining
    */
@@ -79,7 +72,7 @@ export class TransformingValidator extends BaseValidator {
 
   /**
    * Checks if original data should be preserved
-   * 
+   *
    * @returns True if preserving original
    */
   isPreservingOriginal(): boolean {
@@ -88,7 +81,7 @@ export class TransformingValidator extends BaseValidator {
 
   /**
    * Sets whether to preserve original data
-   * 
+   *
    * @param preserve - Preserve flag
    * @returns This validator for chaining
    */

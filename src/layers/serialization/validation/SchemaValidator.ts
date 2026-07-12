@@ -1,6 +1,6 @@
 /**
  * Schema Validator
- * 
+ *
  * Validates data against a schema.
  */
 
@@ -46,13 +46,7 @@ export class SchemaValidator implements IValidator {
     return true;
   }
 
-  private _validate(
-    data: unknown,
-    schema: Schema,
-    path: string,
-    errors: string[],
-    warnings: string[]
-  ): void {
+  private _validate(data: unknown, schema: Schema, path: string, errors: string[], warnings: string[]): void {
     if (schema.type) {
       const actualType = typeof data;
       if (actualType !== schema.type) {
@@ -83,7 +77,7 @@ export class SchemaValidator implements IValidator {
     }
 
     if (typeof data === 'string') {
-      const str = data as string;
+      const str = data;
 
       if (schema.minLength !== undefined && str.length < schema.minLength) {
         errors.push(`${path || 'root'}: String length ${str.length} is less than minimum ${schema.minLength}`);

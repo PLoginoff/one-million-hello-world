@@ -1,6 +1,6 @@
 /**
  * Validator Factory
- * 
+ *
  * Factory for creating validators.
  */
 
@@ -39,7 +39,7 @@ export class ValidatorFactory implements IValidatorFactory {
 
   /**
    * Unregisters a validator
-   * 
+   *
    * @param name - Validator name
    */
   unregisterValidator(name: string): void {
@@ -55,7 +55,7 @@ export class ValidatorFactory implements IValidatorFactory {
 
   private _registerDefaultValidators(): void {
     this._validators.set('type', (config?: Record<string, unknown>) => {
-      const expectedType = config?.expectedType as string ?? 'object';
+      const expectedType = (config?.expectedType as string) ?? 'object';
       return new TypeValidator(expectedType);
     });
 

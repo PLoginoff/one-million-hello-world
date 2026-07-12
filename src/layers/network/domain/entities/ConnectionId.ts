@@ -1,6 +1,6 @@
 /**
  * Connection ID Entity
- * 
+ *
  * Represents a unique identifier for a network connection.
  * Provides validation and formatting capabilities.
  */
@@ -12,10 +12,10 @@ export class ConnectionId {
 
   private constructor(value: string, prefix: string, timestamp: number) {
     if (!value || value.length === 0) {
-      throw new Error('Connection ID cannot be empty');
+      throw new Error('Cache key cannot be empty');
     }
     if (value.length > 128) {
-      throw new Error('Connection ID cannot exceed 128 characters');
+      throw new Error('Cache key cannot exceed 128 characters');
     }
     this.value = value;
     this.prefix = prefix;
@@ -91,7 +91,7 @@ export class ConnectionId {
    * Check if connection ID is expired
    */
   isExpired(maxAge: number): boolean {
-    return this.getAge() > maxAge;
+    return this.getAge() >= maxAge;
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * Retry Policy
- * 
+ *
  * Retry policy for resilience.
  */
 
@@ -87,7 +87,7 @@ export class RetryPolicy {
    * Sleeps for specified milliseconds
    */
   private async _sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -95,8 +95,7 @@ export class RetryPolicy {
    */
   private _sleepSync(ms: number): void {
     const start = Date.now();
-    while (Date.now() - start < ms) {
-    }
+    while (Date.now() - start < ms) {}
   }
 
   /**

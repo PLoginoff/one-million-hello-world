@@ -16,10 +16,7 @@ export class InboxEntity {
   }
 
   static create(data: Record<string, unknown>): InboxEntity {
-    return new InboxEntity(
-      `inbox-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new InboxEntity(`inbox-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

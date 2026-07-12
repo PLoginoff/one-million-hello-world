@@ -1,6 +1,6 @@
 /**
  * EventBusConfig - Configuration
- * 
+ *
  * Configuration object for event bus and related components.
  * Provides type-safe configuration with defaults and validation.
  */

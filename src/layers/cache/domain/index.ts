@@ -1,6 +1,6 @@
 /**
  * Domain Layer
- * 
+ *
  * Core domain logic, entities, value objects, and services.
  * This layer contains business rules and is independent of infrastructure.
  */

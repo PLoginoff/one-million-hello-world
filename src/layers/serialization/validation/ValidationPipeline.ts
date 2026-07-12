@@ -1,6 +1,6 @@
 /**
  * Validation Pipeline
- * 
+ *
  * Manages a chain of validators for data validation.
  */
 
@@ -11,7 +11,7 @@ export class ValidationPipeline {
 
   /**
    * Adds a validator to the pipeline
-   * 
+   *
    * @param validator - Validator to add
    */
   addValidator(validator: IValidator): void {
@@ -20,7 +20,7 @@ export class ValidationPipeline {
 
   /**
    * Removes a validator from the pipeline
-   * 
+   *
    * @param validator - Validator to remove
    */
   removeValidator(validator: IValidator): void {
@@ -39,7 +39,7 @@ export class ValidationPipeline {
 
   /**
    * Validates data using all validators in the pipeline
-   * 
+   *
    * @param data - Data to validate
    * @returns Combined validation result
    */
@@ -62,7 +62,7 @@ export class ValidationPipeline {
 
   /**
    * Gets the number of validators in the pipeline
-   * 
+   *
    * @returns Number of validators
    */
   getValidatorCount(): number {
@@ -71,7 +71,7 @@ export class ValidationPipeline {
 
   /**
    * Gets all validators
-   * 
+   *
    * @returns Array of validators
    */
   getValidators(): IValidator[] {

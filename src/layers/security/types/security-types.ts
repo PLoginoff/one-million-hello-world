@@ -1,6 +1,6 @@
 /**
  * Security Layer Types
- * 
+ *
  * This module defines all type definitions for the Security Layer,
  * including authentication, authorization, CORS, threat detection,
  * rate limiting, IP filtering, and security monitoring.

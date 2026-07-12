@@ -1,12 +1,12 @@
 /**
  * Router Layer
- * 
+ *
  * This module exports all public interfaces, implementations, and types
  * for the Router Layer (Layer 7 of the 25-layer architecture).
- * 
+ *
  * The Router Layer provides route matching, parameter extraction,
  * and wildcard support.
- * 
+ *
  * @module RouterLayer
  */
 

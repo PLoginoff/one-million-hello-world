@@ -1,6 +1,6 @@
 /**
  * Default Rate Limiting Configurations
- * 
+ *
  * Pre-configured settings for common rate limiting scenarios.
  */
 

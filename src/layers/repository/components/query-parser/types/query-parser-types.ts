@@ -1,6 +1,6 @@
 /**
  * Query Parser Layer Types
- * 
+ *
  * Type definitions for parsing and validating query expressions.
  */
 
@@ -23,7 +23,7 @@ export interface ParsedFilter {
   field: string;
   operator: FilterOperator;
   value: unknown;
-  negated: boolean;
+  negated?: boolean;
   logicalOperator: LogicalOperator;
 }
 

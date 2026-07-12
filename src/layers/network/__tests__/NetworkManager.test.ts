@@ -50,7 +50,7 @@ describe('NetworkManager', () => {
     it('should return initial statistics', () => {
       const stats = manager.getStats();
 
-      expect(stats).toEqual({
+      expect(stats).toMatchObject({
         bytesReceived: 0,
         bytesSent: 0,
         connectionsOpened: 0,

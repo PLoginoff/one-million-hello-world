@@ -1,6 +1,6 @@
 /**
  * Feature Flag Value Object
- * 
+ *
  * Represents feature flag configuration.
  * Immutable value object for feature flag management.
  */
@@ -158,7 +158,7 @@ export class FeatureFlag {
   private _evaluateCondition(
     condition: FlagCondition,
     userId: string,
-    userAttributes?: Record<string, unknown>,
+    userAttributes?: Record<string, unknown>
   ): boolean {
     const value = condition.value;
 
@@ -166,7 +166,7 @@ export class FeatureFlag {
       case 'user-id':
         return this._evaluateOperator(condition.operator, userId, value);
       case 'user-group':
-        const groups = userAttributes?.['groups'] as string[] || [];
+        const groups = (userAttributes?.['groups'] as string[]) || [];
         return groups.some((group) => this._evaluateOperator(condition.operator, group, value));
       case 'custom':
         if (userAttributes) {

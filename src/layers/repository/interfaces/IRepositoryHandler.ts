@@ -1,14 +1,12 @@
 /**
  * Repository Handler Interface
- * 
+ *
  * Defines the contract for repository operation handlers
  * that encapsulate business logic for data operations.
  */
 
 import { DomainEntity } from '../../domain/types/domain-types';
-import {
-  QueryOptions,
-} from '../types/repository-types';
+import { QueryOptions } from '../types/repository-types';
 
 /**
  * Handler context for repository operations
@@ -54,7 +52,7 @@ export interface HandlerMetrics {
 export interface IRepositoryHandler<T extends DomainEntity> {
   /**
    * Handles a find operation
-   * 
+   *
    * @param options - Query options
    * @param context - Handler context
    * @returns Handler result with entities
@@ -63,7 +61,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Handles a find by ID operation
-   * 
+   *
    * @param id - Entity ID
    * @param context - Handler context
    * @returns Handler result with entity
@@ -72,7 +70,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Handles a save operation
-   * 
+   *
    * @param entity - Entity to save
    * @param context - Handler context
    * @returns Handler result with saved entity
@@ -81,7 +79,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Handles a delete operation
-   * 
+   *
    * @param id - Entity ID
    * @param context - Handler context
    * @returns Handler result
@@ -90,7 +88,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Handles a count operation
-   * 
+   *
    * @param options - Query options
    * @param context - Handler context
    * @returns Handler result with count
@@ -99,7 +97,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Handles an exists operation
-   * 
+   *
    * @param id - Entity ID
    * @param context - Handler context
    * @returns Handler result with boolean
@@ -108,7 +106,7 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Creates a handler context
-   * 
+   *
    * @param operation - Operation name
    * @param metadata - Optional metadata
    * @returns Handler context
@@ -117,14 +115,14 @@ export interface IRepositoryHandler<T extends DomainEntity> {
 
   /**
    * Sets handler configuration
-   * 
+   *
    * @param config - Handler configuration
    */
   setConfig(config: HandlerConfig): void;
 
   /**
    * Gets handler configuration
-   * 
+   *
    * @returns Handler configuration
    */
   getConfig(): HandlerConfig;

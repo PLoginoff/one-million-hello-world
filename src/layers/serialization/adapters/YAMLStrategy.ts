@@ -1,6 +1,6 @@
 /**
  * YAML Serialization Strategy (Adapter)
- * 
+ *
  * Adapter for YAML serialization using a simple implementation.
  * In production, this would use a library like js-yaml.
  */
@@ -45,7 +45,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Converts data to YAML format (simple implementation)
-   * 
+   *
    * @param data - Data to convert
    * @returns YAML string
    */
@@ -76,9 +76,7 @@ export class YAMLStrategy implements ISerializationStrategy {
       if (data.length === 0) {
         return '[]';
       }
-      return data
-        .map(item => `${spaces}- ${this._toYAML(item, 0)}`)
-        .join('\n');
+      return data.map((item) => `${spaces}- ${this._toYAML(item, 0)}`).join('\n');
     }
 
     if (typeof data === 'object') {
@@ -86,9 +84,7 @@ export class YAMLStrategy implements ISerializationStrategy {
       if (entries.length === 0) {
         return '{}';
       }
-      return entries
-        .map(([key, value]) => `${spaces}${key}: ${this._toYAML(value, 0)}`)
-        .join('\n');
+      return entries.map(([key, value]) => `${spaces}${key}: ${this._toYAML(value, 0)}`).join('\n');
     }
 
     return 'null';
@@ -96,7 +92,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Converts YAML string to data (simple implementation)
-   * 
+   *
    * @param data - YAML string
    * @returns Parsed data
    */
@@ -107,7 +103,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Parses YAML lines into data structure
-   * 
+   *
    * @param lines - Lines to parse
    * @param baseIndent - Base indentation level
    * @returns Parsed data
@@ -118,7 +114,7 @@ export class YAMLStrategy implements ISerializationStrategy {
     }
 
     const firstLine = lines[0];
-    const indent = firstLine.search!(/\S/);
+    const indent = firstLine.search(/\S/);
 
     if (firstLine.trim().startsWith('- ')) {
       return this._parseArray(lines, baseIndent);
@@ -133,7 +129,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Parses array from YAML lines
-   * 
+   *
    * @param lines - Lines to parse
    * @param baseIndent - Base indentation level
    * @returns Parsed array
@@ -165,7 +161,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Parses object from YAML lines
-   * 
+   *
    * @param lines - Lines to parse
    * @param baseIndent - Base indentation level
    * @returns Parsed object
@@ -205,7 +201,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Gets child lines for nested structures
-   * 
+   *
    * @param lines - All lines
    * @param startIndex - Start index
    * @param minIndent - Minimum indentation
@@ -232,7 +228,7 @@ export class YAMLStrategy implements ISerializationStrategy {
 
   /**
    * Parses a value string
-   * 
+   *
    * @param value - Value string
    * @returns Parsed value
    */

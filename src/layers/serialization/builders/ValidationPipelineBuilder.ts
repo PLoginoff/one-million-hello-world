@@ -1,6 +1,6 @@
 /**
  * Validation Pipeline Builder
- * 
+ *
  * Fluent builder for creating configured ValidationPipeline instances.
  */
 
@@ -18,7 +18,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Adds a validator to the pipeline
-   * 
+   *
    * @param validator - Validator instance
    * @returns This builder for chaining
    */
@@ -29,7 +29,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Adds multiple validators to the pipeline
-   * 
+   *
    * @param validators - Array of validators
    * @returns This builder for chaining
    */
@@ -40,7 +40,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Enables or disables the pipeline
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -51,7 +51,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Adds validators only if condition is true
-   * 
+   *
    * @param condition - Condition to check
    * @param validators - Validators to add if condition is true
    * @returns This builder for chaining
@@ -65,12 +65,12 @@ export class ValidationPipelineBuilder {
 
   /**
    * Builds the ValidationPipeline instance
-   * 
+   *
    * @returns Configured ValidationPipeline instance
    */
   build(): ValidationPipeline {
     const pipeline = new ValidationPipeline();
-    
+
     for (const validator of this._validators) {
       if (validator instanceof Object && 'setEnabled' in validator) {
         (validator as any).setEnabled(this._enabled);
@@ -83,7 +83,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Resets the builder to default state
-   * 
+   *
    * @returns This builder for chaining
    */
   reset(): ValidationPipelineBuilder {
@@ -94,7 +94,7 @@ export class ValidationPipelineBuilder {
 
   /**
    * Gets the current validator count
-   * 
+   *
    * @returns Number of validators
    */
   getValidatorCount(): number {

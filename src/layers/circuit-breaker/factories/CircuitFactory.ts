@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Factory
- * 
+ *
  * Factory for creating circuit breaker instances with proper configuration.
  */
 

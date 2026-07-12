@@ -1,16 +1,10 @@
 /**
  * Hook Manager
- * 
+ *
  * Manages serialization hooks for extensibility.
  */
 
-import {
-  HookType,
-  HookContext,
-  HookFunction,
-  ErrorHookFunction,
-  SerializationHook,
-} from './SerializationHook';
+import { HookType, HookContext, HookFunction, ErrorHookFunction, SerializationHook } from './SerializationHook';
 
 export class HookManager {
   private _hooks: Map<HookType, Array<{ hook: SerializationHook; priority: number }>> = new Map();
@@ -18,7 +12,7 @@ export class HookManager {
 
   /**
    * Registers a hook
-   * 
+   *
    * @param hook - Hook to register
    */
   registerHook(hook: SerializationHook): void {
@@ -26,7 +20,7 @@ export class HookManager {
       this._hooks.set(hook.type, []);
     }
 
-    const hooks = this._hooks.get(hook.type);
+    const hooks = this._hooks.get(hook.type)!;
     hooks.push({
       hook,
       priority: hook.priority ?? 100,
@@ -37,7 +31,7 @@ export class HookManager {
 
   /**
    * Unregisters a hook by name
-   * 
+   *
    * @param type - Hook type
    * @param name - Hook name
    */
@@ -53,7 +47,7 @@ export class HookManager {
 
   /**
    * Executes hooks of a specific type
-   * 
+   *
    * @param type - Hook type
    * @param data - Data to process
    * @param context - Hook context
@@ -78,7 +72,7 @@ export class HookManager {
 
   /**
    * Executes error hooks
-   * 
+   *
    * @param error - Error to handle
    * @param context - Hook context
    */
@@ -99,7 +93,7 @@ export class HookManager {
 
   /**
    * Enables or disables hooks
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -108,7 +102,7 @@ export class HookManager {
 
   /**
    * Checks if hooks are enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -117,7 +111,7 @@ export class HookManager {
 
   /**
    * Gets all hooks of a specific type
-   * 
+   *
    * @param type - Hook type
    * @returns Array of hooks
    */
@@ -134,7 +128,7 @@ export class HookManager {
 
   /**
    * Clears hooks of a specific type
-   * 
+   *
    * @param type - Hook type
    */
   clearType(type: HookType): void {

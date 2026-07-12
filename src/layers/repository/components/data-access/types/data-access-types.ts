@@ -1,6 +1,6 @@
 /**
  * Data Access Layer Types
- * 
+ *
  * Type definitions for the lowest-level data access operations.
  * This layer only handles raw data storage and retrieval without any business logic.
  */

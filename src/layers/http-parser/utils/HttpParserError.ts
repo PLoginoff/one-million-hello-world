@@ -1,6 +1,6 @@
 /**
  * HTTP Parser Error
- * 
+ *
  * Custom error class for HTTP parser errors.
  */
 
@@ -22,66 +22,42 @@ export class HttpParserError extends Error {
    * Create invalid method error
    */
   static invalidMethod(method: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.INVALID_METHOD,
-      `Invalid HTTP method: ${method}`,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.INVALID_METHOD, `Invalid HTTP method: ${method}`, position);
   }
 
   /**
    * Create invalid version error
    */
   static invalidVersion(version: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.INVALID_VERSION,
-      `Invalid HTTP version: ${version}`,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.INVALID_VERSION, `Invalid HTTP version: ${version}`, position);
   }
 
   /**
    * Create invalid header error
    */
   static invalidHeader(header: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.INVALID_HEADER,
-      `Invalid header: ${header}`,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.INVALID_HEADER, `Invalid header: ${header}`, position);
   }
 
   /**
    * Create invalid body error
    */
   static invalidBody(message: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.INVALID_BODY,
-      message,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.INVALID_BODY, message, position);
   }
 
   /**
    * Create malformed request error
    */
   static malformedRequest(message: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.MALFORMED_REQUEST,
-      message,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.MALFORMED_REQUEST, message, position);
   }
 
   /**
    * Create incomplete data error
    */
   static incompleteData(message: string, position?: number): HttpParserError {
-    return new HttpParserError(
-      ParseErrorCode.INCOMPLETE_DATA,
-      message,
-      position
-    );
+    return new HttpParserError(ParseErrorCode.INCOMPLETE_DATA, message, position);
   }
 
   /**

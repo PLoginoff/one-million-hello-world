@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Configuration Validators
- * 
+ *
  * Exports configuration validators.
  */
 

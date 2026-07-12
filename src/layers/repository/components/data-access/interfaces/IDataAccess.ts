@@ -1,6 +1,6 @@
 /**
  * Data Access Interface
- * 
+ *
  * Defines the contract for the lowest-level data access operations.
  * This layer only handles raw data storage and retrieval without any business logic.
  */
@@ -22,7 +22,7 @@ import {
 export interface IDataAccess<T extends DomainEntity> {
   /**
    * Reads an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @returns Data access result with entity
    */
@@ -30,7 +30,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Writes an entity to storage
-   * 
+   *
    * @param entity - Entity to write
    * @returns Data access result with written entity
    */
@@ -38,7 +38,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Deletes an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @returns Data access result
    */
@@ -46,7 +46,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Checks if an entity exists
-   * 
+   *
    * @param id - Entity ID
    * @returns Data access result with boolean
    */
@@ -54,28 +54,28 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Counts all entities
-   * 
+   *
    * @returns Data access result with count
    */
   count(): Promise<DataAccessResult<number>>;
 
   /**
    * Reads all entities
-   * 
+   *
    * @returns Data access result with array of entities
    */
   readAll(): Promise<DataAccessResult<T[]>>;
 
   /**
    * Clears all data from storage
-   * 
+   *
    * @returns Data access result
    */
   clear(): Promise<DataAccessResult<void>>;
 
   /**
    * Performs bulk write operations
-   * 
+   *
    * @param entities - Array of entities to write
    * @returns Bulk operation result
    */
@@ -83,7 +83,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Performs bulk delete operations
-   * 
+   *
    * @param ids - Array of entity IDs to delete
    * @returns Bulk operation result
    */
@@ -91,14 +91,14 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Creates a data snapshot
-   * 
+   *
    * @returns Data snapshot
    */
   createSnapshot(): DataSnapshot<T>;
 
   /**
    * Restores from a data snapshot
-   * 
+   *
    * @param snapshot - Data snapshot to restore
    * @returns Data access result
    */
@@ -106,28 +106,28 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Gets storage statistics
-   * 
+   *
    * @returns Storage statistics
    */
   getStats(): StorageStats;
 
   /**
    * Sets data access configuration
-   * 
+   *
    * @param config - Data access configuration
    */
-  setConfig(config: DataAccessConfig): void;
+  setConfig(config: Partial<DataAccessConfig>): void;
 
   /**
    * Gets current data access configuration
-   * 
+   *
    * @returns Current data access configuration
    */
   getConfig(): DataAccessConfig;
 
   /**
    * Creates an index on a field
-   * 
+   *
    * @param config - Index configuration
    * @returns Data access result
    */
@@ -135,7 +135,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Drops an index on a field
-   * 
+   *
    * @param field - Field name
    * @returns Data access result
    */
@@ -143,7 +143,7 @@ export interface IDataAccess<T extends DomainEntity> {
 
   /**
    * Gets operation count for a specific operation type
-   * 
+   *
    * @param operation - Operation type
    * @returns Operation count
    */

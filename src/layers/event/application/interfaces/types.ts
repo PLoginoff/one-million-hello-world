@@ -1,6 +1,6 @@
 /**
  * Application Layer Types
- * 
+ *
  * Shared types for application layer components.
  */
 

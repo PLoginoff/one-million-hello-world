@@ -1,6 +1,6 @@
 /**
  * Decorator Layer Types
- * 
+ *
  * This module defines all type definitions for the Decorator Layer,
  * including runtime decoration and cross-cutting concerns.
  */

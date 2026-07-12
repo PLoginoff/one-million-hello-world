@@ -1,13 +1,12 @@
 /**
  * Cache Configuration Builder
- * 
+ *
  * Fluent builder for creating cache configurations.
  */
 
 import { InvalidationStrategy } from '../../types/cache-types';
 import { CacheConfigOptions, DefaultConfigs } from '../defaults/DefaultConfigs';
 import { CacheConfigValidator } from '../validators/CacheConfigValidator';
-
 
 export class CacheConfigBuilder {
   private config: CacheConfigOptions;

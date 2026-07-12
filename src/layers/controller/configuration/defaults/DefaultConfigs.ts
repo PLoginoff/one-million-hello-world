@@ -1,6 +1,6 @@
 /**
  * Default Controller Configurations
- * 
+ *
  * Pre-configured settings for common controller scenarios.
  */
 

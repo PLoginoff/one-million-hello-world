@@ -1,6 +1,6 @@
 /**
  * Header Versioning Strategy
- * 
+ *
  * Adds version as a custom header in the serialized data.
  */
 

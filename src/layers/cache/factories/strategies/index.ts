@@ -1,6 +1,6 @@
 /**
  * Strategy Factories
- * 
+ *
  * Exports strategy factories.
  */
 

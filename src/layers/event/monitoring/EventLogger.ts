@@ -1,6 +1,6 @@
 /**
  * EventLogger - Monitoring Implementation
- * 
+ *
  * Logs events for debugging and auditing purposes.
  * Provides structured logging with multiple log levels.
  */
@@ -16,7 +16,7 @@ export interface LogEntry {
   timestamp: Date;
   level: LogLevel;
   message: string;
-  context?: Record<string, unknown>;
+  context?: Record<string, unknown> | null;
 }
 
 export interface LoggerOptions {
@@ -33,44 +33,44 @@ export class EventLogger {
   private _maxEntries: number;
 
   constructor(options: LoggerOptions = {}) {
-    this._level = options.level || LogLevel.INFO;
+    this._level = options.level ?? LogLevel.INFO;
     this._enableConsole = options.enableConsole !== false;
     this._entries = [];
     this._maxEntries = options.maxEntries || 10000;
   }
 
-  debug(message: string, context?: Record<string, unknown>): void {
+  debug(message: string, context?: Record<string, unknown> | null): void {
     this._log(LogLevel.DEBUG, message, context);
   }
 
-  info(message: string, context?: Record<string, unknown>): void {
+  info(message: string, context?: Record<string, unknown> | null): void {
     this._log(LogLevel.INFO, message, context);
   }
 
-  warn(message: string, context?: Record<string, unknown>): void {
+  warn(message: string, context?: Record<string, unknown> | null): void {
     this._log(LogLevel.WARN, message, context);
   }
 
-  error(message: string, context?: Record<string, unknown>): void {
+  error(message: string, context?: Record<string, unknown> | null): void {
     this._log(LogLevel.ERROR, message, context);
   }
 
   getEntries(level?: LogLevel, limit?: number): LogEntry[] {
     let entries = this._entries;
 
-    if (level) {
-      entries = entries.filter(entry => entry.level === level);
+    if (level != null) {
+      entries = entries.filter((entry) => entry.level === level);
     }
 
     if (limit) {
       entries = entries.slice(-limit);
     }
 
-    return entries.map(entry => ({ ...entry }));
+    return entries.map((entry) => ({ ...entry }));
   }
 
   getRecentEntries(count: number): LogEntry[] {
-    return this._entries.slice(-count).map(entry => ({ ...entry }));
+    return this._entries.slice(-count).map((entry) => ({ ...entry }));
   }
 
   clear(): void {
@@ -85,7 +85,7 @@ export class EventLogger {
     return this._level;
   }
 
-  private _log(level: LogLevel, message: string, context?: Record<string, unknown>): void {
+  private _log(level: LogLevel, message: string, context?: Record<string, unknown> | null): void {
     if (!this._shouldLog(level)) {
       return;
     }

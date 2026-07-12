@@ -1,6 +1,6 @@
 /**
  * Registry Module
- * 
+ *
  * Exports registry classes for centralized component management.
  */
 

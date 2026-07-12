@@ -1,6 +1,6 @@
 /**
  * Rate Limit Error
- * 
+ *
  * Custom error class for rate limiting errors.
  */
 

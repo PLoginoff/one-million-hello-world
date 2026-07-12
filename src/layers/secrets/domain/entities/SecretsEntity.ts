@@ -16,10 +16,7 @@ export class SecretsEntity {
   }
 
   static create(data: Record<string, unknown>): SecretsEntity {
-    return new SecretsEntity(
-      `secrets-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new SecretsEntity(`secrets-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

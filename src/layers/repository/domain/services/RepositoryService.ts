@@ -1,6 +1,6 @@
 /**
  * Repository Service
- * 
+ *
  * Provides repository management logic.
  */
 
@@ -45,16 +45,14 @@ export class RepositoryService {
    * Get enabled repositories
    */
   getEnabledRepositories(): RepositoryEntity[] {
-    return Array.from(this.repositories.values()).filter(r => r.isEnabled());
+    return Array.from(this.repositories.values()).filter((r) => r.isEnabled());
   }
 
   /**
    * Find repository by name
    */
   findByName(name: string): RepositoryEntity | undefined {
-    return Array.from(this.repositories.values()).find(
-      r => r.data.name === name
-    );
+    return Array.from(this.repositories.values()).find((r) => r.data.name === name);
   }
 
   /**

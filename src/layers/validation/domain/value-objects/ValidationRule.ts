@@ -208,7 +208,10 @@ export class ValidationRule {
     });
   }
 
-  private _validateConstraint(constraint: ValidationConstraint, value: unknown): { isValid: boolean; message?: string } {
+  private _validateConstraint(
+    constraint: ValidationConstraint,
+    value: unknown
+  ): { isValid: boolean; message?: string } {
     switch (constraint.type) {
       case 'required':
         if (value === null || value === undefined || value === '') {

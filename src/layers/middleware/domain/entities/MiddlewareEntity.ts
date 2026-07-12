@@ -1,6 +1,6 @@
 /**
  * Middleware Entity
- * 
+ *
  * Represents a middleware with execution metadata.
  */
 
@@ -32,11 +32,7 @@ export class MiddlewareEntity {
   /**
    * Create request middleware
    */
-  static createRequest(
-    id: string,
-    name: string,
-    priority: number = 0
-  ): MiddlewareEntity {
+  static createRequest(id: string, name: string, priority: number = 0): MiddlewareEntity {
     return new MiddlewareEntity({
       id,
       name,
@@ -50,11 +46,7 @@ export class MiddlewareEntity {
   /**
    * Create response middleware
    */
-  static createResponse(
-    id: string,
-    name: string,
-    priority: number = 0
-  ): MiddlewareEntity {
+  static createResponse(id: string, name: string, priority: number = 0): MiddlewareEntity {
     return new MiddlewareEntity({
       id,
       name,
@@ -68,11 +60,7 @@ export class MiddlewareEntity {
   /**
    * Create error middleware
    */
-  static createError(
-    id: string,
-    name: string,
-    priority: number = 0
-  ): MiddlewareEntity {
+  static createError(id: string, name: string, priority: number = 0): MiddlewareEntity {
     return new MiddlewareEntity({
       id,
       name,
@@ -86,11 +74,7 @@ export class MiddlewareEntity {
   /**
    * Create global middleware
    */
-  static createGlobal(
-    id: string,
-    name: string,
-    priority: number = 0
-  ): MiddlewareEntity {
+  static createGlobal(id: string, name: string, priority: number = 0): MiddlewareEntity {
     return new MiddlewareEntity({
       id,
       name,

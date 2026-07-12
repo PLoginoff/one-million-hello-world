@@ -1,6 +1,6 @@
 /**
  * Domain Layer
- * 
+ *
  * Exports all domain entities, value objects, and services.
  */
 

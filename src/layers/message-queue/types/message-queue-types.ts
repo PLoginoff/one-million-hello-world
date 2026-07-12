@@ -1,6 +1,6 @@
 /**
  * Message Queue Layer Types
- * 
+ *
  * This module defines all type definitions for the Message Queue Layer,
  * including async processing and dead letter queues.
  */

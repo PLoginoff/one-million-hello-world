@@ -1,6 +1,6 @@
 /**
  * Security Configuration Builder
- * 
+ *
  * Fluent builder for creating security configurations.
  */
 

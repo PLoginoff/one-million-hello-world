@@ -16,10 +16,7 @@ export class DeadLetterEntity {
   }
 
   static create(data: Record<string, unknown>): DeadLetterEntity {
-    return new DeadLetterEntity(
-      `dead-letter-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new DeadLetterEntity(`dead-letter-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

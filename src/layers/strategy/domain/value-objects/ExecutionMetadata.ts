@@ -1,6 +1,6 @@
 /**
  * Execution Metadata Value Object
- * 
+ *
  * Represents metadata for strategy execution.
  * Immutable value object for tracking execution performance.
  */

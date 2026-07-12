@@ -115,11 +115,11 @@ describe('RateLimiter Advanced', () => {
       expect(result.allowed).toBe(true);
     });
 
-    it('should reset fixed window after window expires', () => {
+    it('should reset fixed window after window expires', async () => {
       limiter.setRateLimitConfig({
         ...limiter.getRateLimitConfig(),
         requestsPerWindow: 2,
-        windowSizeMs: 1,
+        windowSizeMs: 50,
       });
 
       const identifier: RateLimitIdentifier = {
@@ -131,10 +131,9 @@ describe('RateLimiter Advanced', () => {
       expect(limiter.checkFixedWindow(identifier).allowed).toBe(true);
       expect(limiter.checkFixedWindow(identifier).allowed).toBe(false);
 
-      setTimeout(() => {
-        const result = limiter.checkFixedWindow(identifier);
-        expect(result.allowed).toBe(true);
-      }, 10);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      const result = limiter.checkFixedWindow(identifier);
+      expect(result.allowed).toBe(true);
     });
   });
 
@@ -468,10 +467,10 @@ describe('RateLimiter Advanced', () => {
   });
 
   describe('Bucket Cleanup', () => {
-    it('should cleanup expired buckets', () => {
+    it('should cleanup expired buckets', async () => {
       limiter.setRateLimitConfig({
         ...limiter.getRateLimitConfig(),
-        windowSizeMs: 1,
+        windowSizeMs: 25,
       });
 
       const identifier: RateLimitIdentifier = {
@@ -486,11 +485,10 @@ describe('RateLimiter Advanced', () => {
         raw: Buffer.from('GET / HTTP/1.1\r\n\r\n', 'utf-8'),
       }, undefined, identifier);
 
-      setTimeout(() => {
-        limiter.cleanupExpiredBuckets();
-        const bucketCount = limiter.getBucketCount();
-        expect(bucketCount).toBe(0);
-      }, 10);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      limiter.cleanupExpiredBuckets();
+      const bucketCount = limiter.getBucketCount();
+      expect(bucketCount).toBe(0);
     });
   });
 

@@ -37,7 +37,7 @@ export class ValidationResultEntity {
     errors: ValidationError[],
     warnings: ValidationWarning[],
     data?: unknown,
-    metadata?: ValidationMetadata,
+    metadata?: ValidationMetadata
   ) {
     this.validationId = validationId;
     this.ruleId = ruleId;
@@ -101,14 +101,16 @@ export class ValidationResultEntity {
       errors || this.errors,
       warnings || this.warnings,
       this.data,
-      this.metadata,
+      this.metadata
     );
   }
 
   /**
    * Create a copy with updated metadata
    */
-  withMetadata(updates: Partial<import('./../value-objects/ValidationMetadata').ValidationMetadataData>): ValidationResultEntity {
+  withMetadata(
+    updates: Partial<import('./../value-objects/ValidationMetadata').ValidationMetadataData>
+  ): ValidationResultEntity {
     return new ValidationResultEntity(
       this.validationId,
       this.ruleId,
@@ -116,7 +118,7 @@ export class ValidationResultEntity {
       this.errors,
       this.warnings,
       this.data,
-      this.metadata.update(updates),
+      this.metadata.update(updates)
     );
   }
 
@@ -131,7 +133,7 @@ export class ValidationResultEntity {
       [...this.errors],
       [...this.warnings],
       this.data,
-      this.metadata.clone(),
+      this.metadata.clone()
     );
   }
 

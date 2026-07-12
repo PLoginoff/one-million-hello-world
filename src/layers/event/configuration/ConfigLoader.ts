@@ -1,6 +1,6 @@
 /**
  * ConfigLoader - Configuration
- * 
+ *
  * Loads configuration from various sources.
  * Supports environment variables, files, and programmatic configuration.
  */

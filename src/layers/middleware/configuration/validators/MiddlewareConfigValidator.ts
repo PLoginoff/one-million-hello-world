@@ -1,6 +1,6 @@
 /**
  * Middleware Configuration Validator
- * 
+ *
  * Validates middleware configuration options.
  */
 

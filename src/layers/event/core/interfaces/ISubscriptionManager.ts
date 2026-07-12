@@ -1,6 +1,6 @@
 /**
  * ISubscriptionManager - Core Interface
- * 
+ *
  * Interface for managing event subscriptions.
  * Handles subscription lifecycle, storage, and retrieval.
  */
@@ -10,7 +10,7 @@ import { EventHandler } from './IEventBus';
 export interface Subscription {
   id: string;
   eventType: string;
-  handler: EventHandler;
+  handler: EventHandler<any>;
   once: boolean;
   createdAt: Date;
   lastExecutedAt?: Date;
@@ -18,7 +18,7 @@ export interface Subscription {
 }
 
 export interface ISubscriptionManager {
-  add(eventType: string, handler: EventHandler, once: boolean): Subscription;
+  add<T>(eventType: string, handler: EventHandler<T>, once: boolean): Subscription;
   remove(subscriptionId: string): boolean;
   get(subscriptionId: string): Subscription | undefined;
   getByEventType(eventType: string): Subscription[];

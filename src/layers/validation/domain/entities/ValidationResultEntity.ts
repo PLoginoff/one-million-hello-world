@@ -1,6 +1,6 @@
 /**
  * Validation Result Entity
- * 
+ *
  * Represents the result of a validation operation.
  */
 
@@ -112,14 +112,14 @@ export class ValidationResultEntity {
    * Get errors for specific field
    */
   getFieldErrors(field: string): string[] {
-    return this.data.errors.filter(e => e.field === field).map(e => e.message);
+    return this.data.errors.filter((e) => e.field === field).map((e) => e.message);
   }
 
   /**
    * Get warnings for specific field
    */
   getFieldWarnings(field: string): string[] {
-    return this.data.warnings.filter(w => w.field === field).map(w => w.message);
+    return this.data.warnings.filter((w) => w.field === field).map((w) => w.message);
   }
 
   /**
@@ -140,13 +140,13 @@ export class ValidationResultEntity {
    * Convert error messages to string
    */
   errorsToString(): string {
-    return this.data.errors.map(e => `${e.field}: ${e.message}`).join(', ');
+    return this.data.errors.map((e) => `${e.field}: ${e.message}`).join(', ');
   }
 
   /**
    * Convert warning messages to string
    */
   warningsToString(): string {
-    return this.data.warnings.map(w => `${w.field}: ${w.message}`).join(', ');
+    return this.data.warnings.map((w) => `${w.field}: ${w.message}`).join(', ');
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Serialization Hook Types
- * 
+ *
  * Defines hook types and contexts for serialization operations.
  */
 
@@ -19,15 +19,9 @@ export interface HookContext {
   metadata?: Record<string, unknown>;
 }
 
-export type HookFunction<T = unknown> = (
-  data: T,
-  context: HookContext
-) => T | Promise<T>;
+export type HookFunction<T = unknown> = (data: T, context: HookContext) => T | Promise<T>;
 
-export type ErrorHookFunction = (
-  error: Error,
-  context: HookContext
-) => void | Promise<void>;
+export type ErrorHookFunction = (error: Error, context: HookContext) => void | Promise<void>;
 
 export interface SerializationHook {
   type: HookType;

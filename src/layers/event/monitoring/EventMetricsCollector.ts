@@ -1,6 +1,6 @@
 /**
  * EventMetricsCollector - Monitoring Implementation
- * 
+ *
  * Collects and aggregates event metrics for monitoring.
  * Provides time-series data and statistics.
  */
@@ -56,12 +56,12 @@ export class EventMetricsCollector implements IEventMetrics {
 
   getTimeSeries(metric: string, duration?: number): TimeSeriesDataPoint[] {
     const data = this._timeSeries.get(metric) || [];
-    
+
     if (duration) {
       const cutoff = new Date(Date.now() - duration);
-      return data.filter(point => point.timestamp >= cutoff);
+      return data.filter((point) => point.timestamp >= cutoff);
     }
-    
+
     return [...data];
   }
 
@@ -113,7 +113,7 @@ export class EventMetricsCollector implements IEventMetrics {
       this._timeSeries.set(metric, []);
     }
 
-    const data = this._timeSeries.get(metric);
+    const data = this._timeSeries.get(metric)!;
     data.push({
       timestamp: new Date(),
       value,

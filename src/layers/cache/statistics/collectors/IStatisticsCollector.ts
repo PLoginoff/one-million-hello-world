@@ -1,6 +1,6 @@
 /**
  * Statistics Collector Interface
- * 
+ *
  * Defines contract for collecting cache statistics.
  */
 

@@ -7,7 +7,7 @@
  */
 
 import { Router } from '../implementations/Router';
-import { HttpRequest } from '../../http-parser/types/http-parser-types';
+import { HttpRequest, HttpVersion } from '../../http-parser/types/http-parser-types';
 import {
   HttpMethod,
   Route,
@@ -16,6 +16,7 @@ import {
   MiddlewareDefinition,
   RoutePriority,
   RouteStatus,
+  MiddlewareOrder,
 } from '../types/router-types';
 
 describe('Router Advanced', () => {
@@ -251,7 +252,7 @@ describe('Router Advanced', () => {
     it('should register middleware', () => {
       const middleware: MiddlewareDefinition = {
         name: 'auth',
-        order: 'BEFORE',
+        order: MiddlewareOrder.BEFORE,
         handler: 'authHandler',
         enabled: true,
       };
@@ -266,7 +267,7 @@ describe('Router Advanced', () => {
     it('should remove middleware', () => {
       const middleware: MiddlewareDefinition = {
         name: 'auth',
-        order: 'BEFORE',
+        order: MiddlewareOrder.BEFORE,
         handler: 'authHandler',
         enabled: true,
       };
@@ -281,7 +282,7 @@ describe('Router Advanced', () => {
     it('should enable middleware', () => {
       const middleware: MiddlewareDefinition = {
         name: 'auth',
-        order: 'BEFORE',
+        order: MiddlewareOrder.BEFORE,
         handler: 'authHandler',
         enabled: false,
       };
@@ -296,7 +297,7 @@ describe('Router Advanced', () => {
     it('should disable middleware', () => {
       const middleware: MiddlewareDefinition = {
         name: 'auth',
-        order: 'BEFORE',
+        order: MiddlewareOrder.BEFORE,
         handler: 'authHandler',
         enabled: true,
       };
@@ -439,7 +440,7 @@ describe('Router Advanced', () => {
       router.setConfig({ enableCaching: true });
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -462,7 +463,7 @@ describe('Router Advanced', () => {
       router.setConfig({ enableCaching: true });
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),

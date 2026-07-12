@@ -1,6 +1,6 @@
 /**
  * Service Error
- * 
+ *
  * Custom error class for service errors.
  */
 

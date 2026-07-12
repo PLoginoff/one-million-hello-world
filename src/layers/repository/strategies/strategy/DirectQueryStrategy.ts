@@ -1,6 +1,6 @@
 /**
  * Direct Query Strategy
- * 
+ *
  * Executes queries directly without caching.
  */
 

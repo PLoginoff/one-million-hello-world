@@ -1,6 +1,6 @@
 /**
  * Service Service
- * 
+ *
  * Provides service management logic.
  */
 
@@ -45,16 +45,14 @@ export class ServiceService {
    * Get enabled services
    */
   getEnabledServices(): ServiceEntity[] {
-    return Array.from(this.services.values()).filter(s => s.isEnabled());
+    return Array.from(this.services.values()).filter((s) => s.isEnabled());
   }
 
   /**
    * Find service by name
    */
   findByName(name: string): ServiceEntity | undefined {
-    return Array.from(this.services.values()).find(
-      s => s.data.name === name
-    );
+    return Array.from(this.services.values()).find((s) => s.data.name === name);
   }
 
   /**

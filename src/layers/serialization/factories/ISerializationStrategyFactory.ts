@@ -1,6 +1,6 @@
 /**
  * Serialization Strategy Factory Interface
- * 
+ *
  * Defines the contract for creating serialization strategies.
  */
 
@@ -10,7 +10,7 @@ import { SerializationFormat } from '../types/serialization-types';
 export interface ISerializationStrategyFactory {
   /**
    * Creates a strategy for the given format
-   * 
+   *
    * @param format - Serialization format
    * @returns Strategy instance
    * @throws Error if format is not supported
@@ -19,7 +19,7 @@ export interface ISerializationStrategyFactory {
 
   /**
    * Registers a strategy for a format
-   * 
+   *
    * @param format - Serialization format
    * @param strategy - Strategy factory function
    */
@@ -27,7 +27,7 @@ export interface ISerializationStrategyFactory {
 
   /**
    * Checks if a format is supported
-   * 
+   *
    * @param format - Serialization format
    * @returns True if supported
    */
@@ -35,7 +35,7 @@ export interface ISerializationStrategyFactory {
 
   /**
    * Gets all supported formats
-   * 
+   *
    * @returns Array of supported formats
    */
   getSupportedFormats(): SerializationFormat[];

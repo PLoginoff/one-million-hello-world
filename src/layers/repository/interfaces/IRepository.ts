@@ -1,16 +1,12 @@
 /**
  * Repository Interface
- * 
+ *
  * Defines the contract for repository operations
  * including data access abstraction and query builders.
  */
 
 import { DomainEntity } from '../../domain/types/domain-types';
-import {
-  QueryOptions,
-  RepositoryResult,
-  RepositoryConfig,
-} from '../types/repository-types';
+import { QueryOptions, RepositoryResult, RepositoryConfig } from '../types/repository-types';
 import { IQueryBuilder } from './IQueryBuilder';
 
 /**
@@ -19,7 +15,7 @@ import { IQueryBuilder } from './IQueryBuilder';
 export interface IRepository<T extends DomainEntity> {
   /**
    * Finds an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @returns Repository result with entity
    */
@@ -27,7 +23,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Finds entities matching query options
-   * 
+   *
    * @param options - Query options
    * @returns Repository result with array of entities
    */
@@ -35,7 +31,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Saves an entity (create or update)
-   * 
+   *
    * @param entity - Entity to save
    * @returns Repository result with saved entity
    */
@@ -43,7 +39,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Deletes an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @returns Repository result
    */
@@ -51,7 +47,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Counts entities matching query options
-   * 
+   *
    * @param options - Query options
    * @returns Repository result with count
    */
@@ -59,7 +55,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Checks if an entity exists by ID
-   * 
+   *
    * @param id - Entity ID
    * @returns Repository result with boolean
    */
@@ -67,14 +63,14 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Sets repository configuration
-   * 
+   *
    * @param config - Repository configuration
    */
   setConfig(config: RepositoryConfig): void;
 
   /**
    * Gets current repository configuration
-   * 
+   *
    * @returns Current repository configuration
    */
   getConfig(): RepositoryConfig;
@@ -86,7 +82,7 @@ export interface IRepository<T extends DomainEntity> {
 
   /**
    * Gets the query builder for this repository
-   * 
+   *
    * @returns Query builder instance
    */
   getQueryBuilder(): IQueryBuilder;

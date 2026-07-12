@@ -33,13 +33,7 @@ export class OrchestratorPattern {
 class SagaOrchestrator {
   async execute(sagaId: string, config: SagaConfig, steps: any[]): Promise<SagaExecutionEntity> {
     const executionId = `exec_${Date.now()}`;
-    return new SagaExecutionEntity(
-      executionId,
-      sagaId,
-      'pending',
-      steps,
-      [],
-    );
+    return new SagaExecutionEntity(executionId, sagaId, 'pending', steps, []);
   }
 
   async compensate(execution: SagaExecutionEntity): Promise<SagaExecutionEntity> {

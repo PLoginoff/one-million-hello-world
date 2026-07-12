@@ -1,6 +1,6 @@
 /**
  * Cache Helper Utilities
- * 
+ *
  * Utility functions for cache operations.
  */
 
@@ -20,7 +20,7 @@ export class CacheHelper {
    * Generate a cache key from multiple parts
    */
   static generateKey(...parts: string[]): string {
-    return parts.filter(part => part.length > 0).join(':');
+    return parts.filter((part) => part.length > 0).join(':');
   }
 
   /**
@@ -84,7 +84,7 @@ export class CacheHelper {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   /**
@@ -103,7 +103,7 @@ export class CacheHelper {
   static deepClone<T>(obj: T): T {
     if (obj === null || typeof obj !== 'object') return obj;
     if (obj instanceof Date) return new Date(obj.getTime()) as any;
-    if (obj instanceof Array) return obj.map(item => CacheHelper.deepClone(item)) as any;
+    if (obj instanceof Array) return obj.map((item) => CacheHelper.deepClone(item)) as any;
     if (obj instanceof Object) {
       const clonedObj = {} as any;
       for (const key in obj) {

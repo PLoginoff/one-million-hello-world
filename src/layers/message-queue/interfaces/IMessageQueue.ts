@@ -1,6 +1,6 @@
 /**
  * Message Queue Interface
- * 
+ *
  * Defines the contract for message queue operations
  * including async processing and dead letter queues.
  */
@@ -18,7 +18,7 @@ export type MessageHandler<T = unknown> = (data: T) => void | Promise<void>;
 export interface IMessageQueue {
   /**
    * Enqueues a message
-   * 
+   *
    * @param data - Message data
    * @param priority - Message priority (higher = more important)
    * @returns Queue result
@@ -27,7 +27,7 @@ export interface IMessageQueue {
 
   /**
    * Dequeues and processes a message
-   * 
+   *
    * @param handler - Message handler function
    * @returns Promise that resolves when message is processed
    */
@@ -35,7 +35,7 @@ export interface IMessageQueue {
 
   /**
    * Registers a handler for automatic processing
-   * 
+   *
    * @param handler - Message handler function
    */
   registerHandler<T>(handler: MessageHandler<T>): void;
@@ -52,21 +52,21 @@ export interface IMessageQueue {
 
   /**
    * Gets queue statistics
-   * 
+   *
    * @returns Queue statistics
    */
   getStats(): QueueStats;
 
   /**
    * Sets queue configuration
-   * 
+   *
    * @param config - Queue configuration
    */
   setConfig(config: QueueConfig): void;
 
   /**
    * Gets current queue configuration
-   * 
+   *
    * @returns Current queue configuration
    */
   getConfig(): QueueConfig;
@@ -78,7 +78,7 @@ export interface IMessageQueue {
 
   /**
    * Gets dead letter queue messages
-   * 
+   *
    * @returns Array of dead letter messages
    */
   getDeadLetterQueue<T>(): Message<T>[];

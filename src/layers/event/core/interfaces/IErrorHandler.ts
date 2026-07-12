@@ -1,6 +1,6 @@
 /**
  * IErrorHandler - Core Interface
- * 
+ *
  * Interface for handling errors in event processing.
  * Provides error capture, logging, and recovery strategies.
  */

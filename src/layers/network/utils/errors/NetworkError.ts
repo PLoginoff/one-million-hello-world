@@ -1,6 +1,6 @@
 /**
  * Network Error
- * 
+ *
  * Base error class for network-related errors.
  */
 
@@ -31,7 +31,7 @@ export class NetworkError extends Error {
     message: string,
     connectionId?: string,
     endpoint?: string,
-    retryable: boolean = true,
+    retryable: boolean = true
   ) {
     super(message);
     this.name = 'NetworkError';
@@ -46,108 +46,50 @@ export class NetworkError extends Error {
   /**
    * Create connection failed error
    */
-  static connectionFailed(
-    message: string,
-    connectionId?: string,
-    endpoint?: string,
-  ): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.CONNECTION_FAILED,
-      message,
-      connectionId,
-      endpoint,
-      true,
-    );
+  static connectionFailed(message: string, connectionId?: string, endpoint?: string): NetworkError {
+    return new NetworkError(NetworkErrorCode.CONNECTION_FAILED, message, connectionId, endpoint, true);
   }
 
   /**
    * Create connection timeout error
    */
-  static connectionTimeout(
-    message: string,
-    connectionId?: string,
-    endpoint?: string,
-  ): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.CONNECTION_TIMEOUT,
-      message,
-      connectionId,
-      endpoint,
-      true,
-    );
+  static connectionTimeout(message: string, connectionId?: string, endpoint?: string): NetworkError {
+    return new NetworkError(NetworkErrorCode.CONNECTION_TIMEOUT, message, connectionId, endpoint, true);
   }
 
   /**
    * Create connection refused error
    */
-  static connectionRefused(
-    message: string,
-    connectionId?: string,
-    endpoint?: string,
-  ): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.CONNECTION_REFUSED,
-      message,
-      connectionId,
-      endpoint,
-      false,
-    );
+  static connectionRefused(message: string, connectionId?: string, endpoint?: string): NetworkError {
+    return new NetworkError(NetworkErrorCode.CONNECTION_REFUSED, message, connectionId, endpoint, false);
   }
 
   /**
    * Create invalid endpoint error
    */
   static invalidEndpoint(message: string, endpoint?: string): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.INVALID_ENDPOINT,
-      message,
-      undefined,
-      endpoint,
-      false,
-    );
+    return new NetworkError(NetworkErrorCode.INVALID_ENDPOINT, message, undefined, endpoint, false);
   }
 
   /**
    * Create invalid config error
    */
   static invalidConfig(message: string): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.INVALID_CONFIG,
-      message,
-      undefined,
-      undefined,
-      false,
-    );
+    return new NetworkError(NetworkErrorCode.INVALID_CONFIG, message, undefined, undefined, false);
   }
 
   /**
    * Create pool exhausted error
    */
   static poolExhausted(message: string): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.POOL_EXHAUSTED,
-      message,
-      undefined,
-      undefined,
-      true,
-    );
+    return new NetworkError(NetworkErrorCode.POOL_EXHAUSTED, message, undefined, undefined, true);
   }
 
   /**
    * Create SSL error
    */
-  static sslError(
-    message: string,
-    connectionId?: string,
-    endpoint?: string,
-  ): NetworkError {
-    return new NetworkError(
-      NetworkErrorCode.SSL_ERROR,
-      message,
-      connectionId,
-      endpoint,
-      false,
-    );
+  static sslError(message: string, connectionId?: string, endpoint?: string): NetworkError {
+    return new NetworkError(NetworkErrorCode.SSL_ERROR, message, connectionId, endpoint, false);
   }
 
   /**

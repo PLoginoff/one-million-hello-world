@@ -6,4 +6,10 @@
 
 export { OperationMetadata, OperationMetadataData } from './OperationMetadata';
 export { FacadeConfig, FacadeConfigData, RetryPolicy } from './FacadeConfig';
-export { ServiceComposition, ServiceCompositionData, ServiceDefinition, ExecutionOrder, TimeoutStrategy } from './ServiceComposition';
+export {
+  ServiceComposition,
+  ServiceCompositionData,
+  ServiceDefinition,
+  ExecutionOrder,
+  TimeoutStrategy,
+} from './ServiceComposition';

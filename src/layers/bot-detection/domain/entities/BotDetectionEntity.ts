@@ -16,10 +16,7 @@ export class BotDetectionEntity {
   }
 
   static create(data: Record<string, unknown>): BotDetectionEntity {
-    return new BotDetectionEntity(
-      `bot-detection-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new BotDetectionEntity(`bot-detection-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

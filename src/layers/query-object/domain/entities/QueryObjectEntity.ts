@@ -16,10 +16,7 @@ export class QueryObjectEntity {
   }
 
   static create(data: Record<string, unknown>): QueryObjectEntity {
-    return new QueryObjectEntity(
-      `query-object-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new QueryObjectEntity(`query-object-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

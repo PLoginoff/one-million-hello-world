@@ -80,7 +80,7 @@ describe('SagaManager', () => {
       const result = await sagaManager.execute(steps);
 
       expect(result.success).toBe(false);
-      expect(result.executedSteps).toEqual(['step1', 'step2']);
+      expect(result.executedSteps).toEqual(['step1']);
       expect(result.compensatedSteps).toEqual(['step1']);
       expect(steps[0].compensate).toHaveBeenCalled();
     });

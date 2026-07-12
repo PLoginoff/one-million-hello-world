@@ -128,8 +128,8 @@ export class LayerRegistry {
   getStatus(): Record<string, Record<string, unknown>> {
     const status: Record<string, Record<string, unknown>> = {};
     for (const [key, value] of Object.entries(this)) {
-      if (typeof (value as any).getStatus === 'function') {
-        status[key] = (value as any).getStatus();
+      if (typeof value.getStatus === 'function') {
+        status[key] = value.getStatus();
       }
     }
     return status;

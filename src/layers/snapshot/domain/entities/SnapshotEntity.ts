@@ -16,10 +16,7 @@ export class SnapshotEntity {
   }
 
   static create(data: Record<string, unknown>): SnapshotEntity {
-    return new SnapshotEntity(
-      `snapshot-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new SnapshotEntity(`snapshot-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

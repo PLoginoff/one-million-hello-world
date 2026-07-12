@@ -16,10 +16,7 @@ export class CqrsEntity {
   }
 
   static create(data: Record<string, unknown>): CqrsEntity {
-    return new CqrsEntity(
-      `cqrs-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new CqrsEntity(`cqrs-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

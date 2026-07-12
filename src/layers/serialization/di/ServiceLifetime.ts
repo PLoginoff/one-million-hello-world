@@ -1,6 +1,6 @@
 /**
  * Service Lifetime
- * 
+ *
  * Defines the lifecycle of a service in the DI container.
  */
 

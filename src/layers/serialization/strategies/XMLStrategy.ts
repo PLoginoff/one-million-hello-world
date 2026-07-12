@@ -1,6 +1,6 @@
 /**
  * XML Serialization Strategy
- * 
+ *
  * Implements basic XML serialization and deserialization.
  */
 
@@ -25,7 +25,13 @@ export class XMLStrategy implements ISerializationStrategy {
   }
 
   canSerialize(data: unknown): boolean {
-    return typeof data === 'object' || data === null || typeof data === 'string' || typeof data === 'number' || typeof data === 'boolean';
+    return (
+      typeof data === 'object' ||
+      data === null ||
+      typeof data === 'string' ||
+      typeof data === 'number' ||
+      typeof data === 'boolean'
+    );
   }
 
   canDeserialize(data: string): boolean {

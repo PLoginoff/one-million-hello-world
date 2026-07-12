@@ -1,6 +1,6 @@
 /**
  * Cache Level Value Object
- * 
+ *
  * Represents cache hierarchy level (L1, L2, L3).
  * Immutable value object with ordering capabilities.
  */

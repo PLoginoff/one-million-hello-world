@@ -1,6 +1,6 @@
 /**
  * Saga Manager Implementation
- * 
+ *
  * Concrete implementation of ISagaManager.
  * Orchestrates distributed transactions with compensation
  * using multiple abstraction layers.
@@ -38,11 +38,7 @@ export class SagaManager implements ISagaManager {
     const sagaState = new SagaState(this._logger);
     const errorHandler = new ErrorHandler(this._logger);
     const compensationStrategy = new CompensationStrategy(this._logger, true);
-    const compensationOrchestrator = new CompensationOrchestrator(
-      compensationStrategy,
-      errorHandler,
-      this._logger,
-    );
+    const compensationOrchestrator = new CompensationOrchestrator(compensationStrategy, errorHandler, this._logger);
     const stepExecutor = new StepExecutor(this._logger, false);
 
     this._orchestrator = new SagaOrchestrator(
@@ -50,7 +46,7 @@ export class SagaManager implements ISagaManager {
       compensationOrchestrator,
       sagaState,
       errorHandler,
-      this._logger,
+      this._logger
     );
   }
 

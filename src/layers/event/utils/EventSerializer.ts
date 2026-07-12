@@ -1,6 +1,6 @@
 /**
  * EventSerializer - Utility
- * 
+ *
  * Serializes and deserializes events for transport and storage.
  * Supports multiple serialization formats.
  */
@@ -77,11 +77,11 @@ export class EventSerializer {
   }
 
   serializeBatch(events: Event[]): string[] {
-    return events.map(event => this.serialize(event));
+    return events.map((event) => this.serialize(event));
   }
 
   deserializeBatch(serialized: string[]): Event[] {
-    return serialized.map(s => this.deserialize(s));
+    return serialized.map((s) => this.deserialize(s));
   }
 
   private _serializeProtobuf(data: SerializedEvent): string {

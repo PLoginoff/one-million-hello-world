@@ -1,6 +1,6 @@
 /**
  * Compression Configuration Builder
- * 
+ *
  * Fluent builder for creating compression configurations.
  * Provides a type-safe way to construct complex configurations.
  */

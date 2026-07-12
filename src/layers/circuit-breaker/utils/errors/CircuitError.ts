@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Errors
- * 
+ *
  * Custom error classes for circuit breaker operations.
  */
 

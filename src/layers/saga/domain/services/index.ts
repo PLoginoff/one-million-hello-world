@@ -4,9 +4,4 @@
  * Exports all domain services for the Saga domain layer.
  */
 
-export {
-  SagaValidationService,
-  ValidationResult,
-  ValidationError,
-  ValidationWarning,
-} from './SagaValidationService';
+export { SagaValidationService, ValidationResult, ValidationError, ValidationWarning } from './SagaValidationService';

@@ -38,7 +38,7 @@ describe('SecurityManager', () => {
           allowedOrigins: ['https://example.com'],
           allowedMethods: ['GET'],
           allowedHeaders: ['Content-Type'],
-          exposedHeaders: [],
+          exposedHeaders: [] as string[],
           credentials: false,
           maxAge: 3600,
         },
@@ -151,8 +151,8 @@ describe('SecurityManager', () => {
     it('should fail when not authenticated', () => {
       const context = {
         isAuthenticated: false,
-        roles: [],
-        permissions: [],
+        roles: [] as string[],
+        permissions: [] as string[],
         ipAddress: '127.0.0.1',
         userAgent: 'test',
       };
@@ -167,7 +167,7 @@ describe('SecurityManager', () => {
         isAuthenticated: true,
         userId: 'user-123',
         roles: ['user'],
-        permissions: [],
+        permissions: [] as string[],
         ipAddress: '127.0.0.1',
         userAgent: 'test',
       };
@@ -199,7 +199,7 @@ describe('SecurityManager', () => {
           allowedOrigins: ['https://example.com'],
           allowedMethods: ['GET'],
           allowedHeaders: ['Content-Type'],
-          exposedHeaders: [],
+          exposedHeaders: [] as string[],
           credentials: false,
           maxAge: 86400,
         },
@@ -223,7 +223,7 @@ describe('SecurityManager', () => {
           allowedOrigins: ['https://example.com'],
           allowedMethods: ['GET'],
           allowedHeaders: ['Content-Type'],
-          exposedHeaders: [],
+          exposedHeaders: [] as string[],
           credentials: false,
           maxAge: 86400,
         },

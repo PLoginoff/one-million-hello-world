@@ -1,6 +1,6 @@
 /**
  * Repository Handler Implementation
- * 
+ *
  * Concrete implementation of IRepositoryHandler.
  * Encapsulates business logic for repository operations
  * with validation, metrics, and middleware support.
@@ -16,16 +16,8 @@ import {
   HandlerMetrics,
   HandlerConfig,
 } from '../interfaces/IRepositoryHandler';
-import {
-  QueryOptions,
-  RepositoryResult,
-} from '../types/repository-types';
-import {
-  RepositoryOperation,
-  HandlerMiddleware,
-  ValidationRule,
-  ValidationResult,
-} from '../types/handler-types';
+import { QueryOptions, RepositoryResult } from '../types/repository-types';
+import { RepositoryOperation, HandlerMiddleware, ValidationRule, ValidationResult } from '../types/handler-types';
 
 export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHandler<T> {
   private _repository: IRepository<T>;
@@ -48,16 +40,39 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
     this._initializeMiddlewares();
   }
 
-  async handleFind(
-    options?: QueryOptions,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<T[]>> {
+  async handleFind(options?: QueryOptions, _context?: HandlerContext): Promise<HandlerResult<T[]>> {
     const startTime = Date.now();
 
     try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.FIND,
-        () => this._repository.find(options)
+      const result = await this._executeWithMiddleware(RepositoryOperation.FIND, () => this._repository.find(options));
+
+      const metrics = this._createMetrics(startTime);
+
+      return {
+        success: result.success,
+        data: result.data,
+        error: result.error ? this._convertError(result.error) : undefined,
+        metrics,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: 'HANDLER_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown handler error',
+          retryable: true,
+        },
+        metrics: this._createMetrics(startTime),
+      };
+    }
+  }
+
+  async handleFindById(id: string, _context?: HandlerContext): Promise<HandlerResult<T>> {
+    const startTime = Date.now();
+
+    try {
+      const result = await this._executeWithMiddleware(RepositoryOperation.FIND_BY_ID, () =>
+        this._repository.findById(id)
       );
 
       const metrics = this._createMetrics(startTime);
@@ -81,43 +96,7 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
     }
   }
 
-  async handleFindById(
-    id: string,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<T>> {
-    const startTime = Date.now();
-
-    try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.FIND_BY_ID,
-        () => this._repository.findById(id)
-      );
-
-      const metrics = this._createMetrics(startTime);
-
-      return {
-        success: result.success,
-        data: result.data,
-        error: result.error ? this._convertError(result.error) : undefined,
-        metrics,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          code: 'HANDLER_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown handler error',
-          retryable: true,
-        },
-        metrics: this._createMetrics(startTime),
-      };
-    }
-  }
-
-  async handleSave(
-    entity: T,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<T>> {
+  async handleSave(entity: T, _context?: HandlerContext): Promise<HandlerResult<T>> {
     const startTime = Date.now();
 
     if (this._config.enableValidation) {
@@ -136,9 +115,62 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
     }
 
     try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.SAVE,
-        () => this._repository.save(entity)
+      const result = await this._executeWithMiddleware(RepositoryOperation.SAVE, () => this._repository.save(entity));
+
+      const metrics = this._createMetrics(startTime);
+
+      return {
+        success: result.success,
+        data: result.data,
+        error: result.error ? this._convertError(result.error) : undefined,
+        metrics,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: 'HANDLER_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown handler error',
+          retryable: true,
+        },
+        metrics: this._createMetrics(startTime),
+      };
+    }
+  }
+
+  async handleDelete(id: string, _context?: HandlerContext): Promise<HandlerResult<void>> {
+    const startTime = Date.now();
+
+    try {
+      const result = await this._executeWithMiddleware(RepositoryOperation.DELETE, () => this._repository.delete(id));
+
+      const metrics = this._createMetrics(startTime);
+
+      return {
+        success: result.success,
+        data: result.data,
+        error: result.error ? this._convertError(result.error) : undefined,
+        metrics,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: 'HANDLER_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown handler error',
+          retryable: true,
+        },
+        metrics: this._createMetrics(startTime),
+      };
+    }
+  }
+
+  async handleCount(options?: QueryOptions, _context?: HandlerContext): Promise<HandlerResult<number>> {
+    const startTime = Date.now();
+
+    try {
+      const result = await this._executeWithMiddleware(RepositoryOperation.COUNT, () =>
+        this._repository.count(options)
       );
 
       const metrics = this._createMetrics(startTime);
@@ -162,83 +194,11 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
     }
   }
 
-  async handleDelete(
-    id: string,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<void>> {
+  async handleExists(id: string, _context?: HandlerContext): Promise<HandlerResult<boolean>> {
     const startTime = Date.now();
 
     try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.DELETE,
-        () => this._repository.delete(id)
-      );
-
-      const metrics = this._createMetrics(startTime);
-
-      return {
-        success: result.success,
-        data: result.data,
-        error: result.error ? this._convertError(result.error) : undefined,
-        metrics,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          code: 'HANDLER_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown handler error',
-          retryable: true,
-        },
-        metrics: this._createMetrics(startTime),
-      };
-    }
-  }
-
-  async handleCount(
-    options?: QueryOptions,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<number>> {
-    const startTime = Date.now();
-
-    try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.COUNT,
-        () => this._repository.count(options)
-      );
-
-      const metrics = this._createMetrics(startTime);
-
-      return {
-        success: result.success,
-        data: result.data,
-        error: result.error ? this._convertError(result.error) : undefined,
-        metrics,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: {
-          code: 'HANDLER_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown handler error',
-          retryable: true,
-        },
-        metrics: this._createMetrics(startTime),
-      };
-    }
-  }
-
-  async handleExists(
-    id: string,
-    _context?: HandlerContext
-  ): Promise<HandlerResult<boolean>> {
-    const startTime = Date.now();
-
-    try {
-      const result = await this._executeWithMiddleware(
-        RepositoryOperation.EXISTS,
-        () => this._repository.exists(id)
-      );
+      const result = await this._executeWithMiddleware(RepositoryOperation.EXISTS, () => this._repository.exists(id));
 
       const metrics = this._createMetrics(startTime);
 

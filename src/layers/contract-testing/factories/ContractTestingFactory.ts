@@ -1,5 +1,8 @@
 import { ContractTesting } from '../implementations/ContractTesting';
-import { DefaultContractTestingStrategy, OptimizedContractTestingStrategy } from '../strategies/ContractTestingStrategy';
+import {
+  DefaultContractTestingStrategy,
+  OptimizedContractTestingStrategy,
+} from '../strategies/ContractTestingStrategy';
 
 export class ContractTestingFactory {
   static createDefault(): ContractTesting {

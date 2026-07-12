@@ -1,6 +1,6 @@
 /**
  * IDomainEvent - Domain Interface
- * 
+ *
  * Base interface for all domain events in the system.
  * Defines the contract that all domain events must follow.
  */

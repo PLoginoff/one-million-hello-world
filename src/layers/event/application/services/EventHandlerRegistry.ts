@@ -1,6 +1,6 @@
 /**
  * EventHandlerRegistry - Application Service
- * 
+ *
  * Registry for managing event handlers with priority support.
  * Provides handler discovery and lifecycle management.
  */
@@ -71,7 +71,7 @@ export class EventHandlerRegistry implements IEventHandlerRegistry {
   }
 
   getAll(): HandlerRegistration[] {
-    return Array.from(this._registrations.values()).map(reg => ({ ...reg }));
+    return Array.from(this._registrations.values()).map((reg) => ({ ...reg }));
   }
 
   getByPriority(eventType: string): HandlerRegistration[] {

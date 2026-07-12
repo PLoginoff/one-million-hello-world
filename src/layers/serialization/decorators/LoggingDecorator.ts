@@ -1,6 +1,6 @@
 /**
  * Logging Decorator
- * 
+ *
  * Decorator that adds logging functionality to serialization strategies.
  */
 
@@ -45,11 +45,7 @@ export class LoggingDecorator implements ISerializationStrategy {
   private _enabled: boolean;
   private _logData: boolean;
 
-  constructor(
-    strategy: ISerializationStrategy,
-    logger?: ILogger,
-    logData: boolean = false
-  ) {
+  constructor(strategy: ISerializationStrategy, logger?: ILogger, logData: boolean = false) {
     this._strategy = strategy;
     this._logger = logger ?? new ConsoleLogger();
     this._enabled = true;
@@ -58,7 +54,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   serialize(data: unknown): string {
     const startTime = Date.now();
-    
+
     if (this._enabled) {
       this._logger.debug(`Starting serialization with ${this._strategy.getFormatName()} strategy`);
       if (this._logData) {
@@ -71,9 +67,7 @@ export class LoggingDecorator implements ISerializationStrategy {
       const duration = Date.now() - startTime;
 
       if (this._enabled) {
-        this._logger.log(
-          `Serialization completed in ${duration}ms using ${this._strategy.getFormatName()}`
-        );
+        this._logger.log(`Serialization completed in ${duration}ms using ${this._strategy.getFormatName()}`);
         if (this._logData) {
           this._logger.debug(`Result: ${result.substring(0, 100)}...`);
         }
@@ -93,7 +87,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   deserialize(data: string): unknown {
     const startTime = Date.now();
-    
+
     if (this._enabled) {
       this._logger.debug(`Starting deserialization with ${this._strategy.getFormatName()} strategy`);
       if (this._logData) {
@@ -106,9 +100,7 @@ export class LoggingDecorator implements ISerializationStrategy {
       const duration = Date.now() - startTime;
 
       if (this._enabled) {
-        this._logger.log(
-          `Deserialization completed in ${duration}ms using ${this._strategy.getFormatName()}`
-        );
+        this._logger.log(`Deserialization completed in ${duration}ms using ${this._strategy.getFormatName()}`);
         if (this._logData) {
           this._logger.debug(`Result: ${JSON.stringify(result).substring(0, 100)}...`);
         }
@@ -136,31 +128,27 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   canSerialize(data: unknown): boolean {
     const result = this._strategy.canSerialize(data);
-    
+
     if (this._enabled) {
-      this._logger.debug(
-        `Can serialize check for ${this._strategy.getFormatName()}: ${result}`
-      );
+      this._logger.debug(`Can serialize check for ${this._strategy.getFormatName()}: ${result}`);
     }
-    
+
     return result;
   }
 
   canDeserialize(data: string): boolean {
     const result = this._strategy.canDeserialize(data);
-    
+
     if (this._enabled) {
-      this._logger.debug(
-        `Can deserialize check for ${this._strategy.getFormatName()}: ${result}`
-      );
+      this._logger.debug(`Can deserialize check for ${this._strategy.getFormatName()}: ${result}`);
     }
-    
+
     return result;
   }
 
   /**
    * Enables or disables logging
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -169,7 +157,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   /**
    * Checks if logging is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -178,7 +166,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   /**
    * Enables or disables logging of data content
-   * 
+   *
    * @param logData - Log data flag
    */
   setLogData(logData: boolean): void {
@@ -187,7 +175,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   /**
    * Gets the underlying strategy
-   * 
+   *
    * @returns Wrapped strategy
    */
   getStrategy(): ISerializationStrategy {
@@ -196,7 +184,7 @@ export class LoggingDecorator implements ISerializationStrategy {
 
   /**
    * Gets the logger
-   * 
+   *
    * @returns Logger instance
    */
   getLogger(): ILogger {

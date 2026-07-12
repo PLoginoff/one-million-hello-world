@@ -1,6 +1,6 @@
 /**
  * Serialization Error
- * 
+ *
  * Custom error class for serialization operations with detailed error information.
  */
 
@@ -16,15 +16,10 @@ export class SerializationError extends Error {
   public timestamp: Date;
   public readonly innerError?: Error;
 
-  constructor(
-    code: SerializationErrorCode,
-    message?: string,
-    context: ErrorContext = {},
-    innerError?: Error
-  ) {
+  constructor(code: SerializationErrorCode, message?: string, context: ErrorContext = {}, innerError?: Error) {
     const errorMessage = message || getErrorMessage(code);
     super(errorMessage);
-    
+
     this.name = 'SerializationError';
     this.code = code;
     this.context = context;
@@ -36,12 +31,7 @@ export class SerializationError extends Error {
    * Creates a serialization failed error
    */
   static serializationFailed(context: ErrorContext = {}, innerError?: Error): SerializationError {
-    return new SerializationError(
-      SerializationErrorCode.SERIALIZATION_FAILED,
-      undefined,
-      context,
-      innerError
-    );
+    return new SerializationError(SerializationErrorCode.SERIALIZATION_FAILED, undefined, context, innerError);
   }
 
   /**
@@ -59,12 +49,7 @@ export class SerializationError extends Error {
    * Creates a deserialization failed error
    */
   static deserializationFailed(context: ErrorContext = {}, innerError?: Error): SerializationError {
-    return new SerializationError(
-      SerializationErrorCode.DESERIALIZATION_FAILED,
-      undefined,
-      context,
-      innerError
-    );
+    return new SerializationError(SerializationErrorCode.DESERIALIZATION_FAILED, undefined, context, innerError);
   }
 
   /**
@@ -82,11 +67,9 @@ export class SerializationError extends Error {
    * Creates a content negotiation failed error
    */
   static contentNegotiationFailed(acceptHeader: string): SerializationError {
-    return new SerializationError(
-      SerializationErrorCode.CONTENT_NEGOTIATION_FAILED,
-      'Content negotiation failed',
-      { acceptHeader }
-    );
+    return new SerializationError(SerializationErrorCode.CONTENT_NEGOTIATION_FAILED, 'Content negotiation failed', {
+      acceptHeader,
+    });
   }
 
   /**
@@ -99,11 +82,13 @@ export class SerializationError extends Error {
       message: this.message,
       context: this.context,
       timestamp: this.timestamp.toISOString(),
-      innerError: this.innerError ? {
-        name: this.innerError.name,
-        message: this.innerError.message,
-        stack: this.innerError.stack,
-      } : undefined,
+      innerError: this.innerError
+        ? {
+            name: this.innerError.name,
+            message: this.innerError.message,
+            stack: this.innerError.stack,
+          }
+        : undefined,
       stack: this.stack,
     };
   }

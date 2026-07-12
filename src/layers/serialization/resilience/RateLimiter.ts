@@ -1,6 +1,6 @@
 /**
  * Rate Limiter
- * 
+ *
  * Rate limiter for resilience.
  */
 
@@ -90,7 +90,7 @@ export class RateLimiter {
     const now = Date.now();
     const windowStart = now - this._config.windowMs;
 
-    this._requests = this._requests.filter(time => time > windowStart);
+    this._requests = this._requests.filter((time) => time > windowStart);
 
     if (this._requests.length < this._config.maxRequests) {
       this._requests.push(now);
@@ -107,7 +107,7 @@ export class RateLimiter {
     const now = Date.now();
     const windowStart = now - this._config.windowMs;
 
-    this._requests = this._requests.filter(time => time > windowStart);
+    this._requests = this._requests.filter((time) => time > windowStart);
 
     if (this._requests.length < this._config.maxRequests) {
       this._requests.push(now);
@@ -136,7 +136,7 @@ export class RateLimiter {
   private _cleanup(): void {
     const now = Date.now();
     const windowStart = now - this._config.windowMs;
-    this._requests = this._requests.filter(time => time > windowStart);
+    this._requests = this._requests.filter((time) => time > windowStart);
   }
 
   /**

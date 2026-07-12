@@ -1,6 +1,6 @@
 /**
  * Policy Entity
- * 
+ *
  * Represents a security policy with rules and conditions.
  */
 
@@ -118,18 +118,14 @@ export class PolicyEntity {
    * Check if policy applies to resource and action
    */
   appliesTo(resource: string, action: string): boolean {
-    return this.data.rules.some(
-      rule => rule.resource === resource && rule.action === action
-    );
+    return this.data.rules.some((rule) => rule.resource === resource && rule.action === action);
   }
 
   /**
    * Get rule for resource and action
    */
   getRule(resource: string, action: string): PolicyRule | undefined {
-    return this.data.rules.find(
-      rule => rule.resource === resource && rule.action === action
-    );
+    return this.data.rules.find((rule) => rule.resource === resource && rule.action === action);
   }
 
   /**
@@ -156,7 +152,7 @@ export class PolicyEntity {
   clone(): PolicyEntity {
     return new PolicyEntity({
       ...this.data,
-      rules: this.data.rules.map(rule => ({ ...rule })),
+      rules: this.data.rules.map((rule) => ({ ...rule })),
     });
   }
 
@@ -166,7 +162,7 @@ export class PolicyEntity {
   toObject(): PolicyData {
     return {
       ...this.data,
-      rules: this.data.rules.map(rule => ({ ...rule })),
+      rules: this.data.rules.map((rule) => ({ ...rule })),
     };
   }
 

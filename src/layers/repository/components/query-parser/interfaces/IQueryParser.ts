@@ -1,14 +1,10 @@
 /**
  * Query Parser Interface
- * 
+ *
  * Defines the contract for parsing and validating query expressions.
  */
 
-import {
-  ParseResult,
-  ParsedQuery,
-  ParserConfig,
-} from '../types/query-parser-types';
+import { ParseResult, ParsedQuery, ParserConfig } from '../types/query-parser-types';
 
 /**
  * Interface for query parsing operations
@@ -16,7 +12,7 @@ import {
 export interface IQueryParser {
   /**
    * Parses a query string into a parsed query
-   * 
+   *
    * @param query - Query string to parse
    * @returns Parse result with parsed query
    */
@@ -24,7 +20,7 @@ export interface IQueryParser {
 
   /**
    * Parses a filter expression
-   * 
+   *
    * @param expression - Filter expression
    * @returns Parse result with parsed filter
    */
@@ -32,7 +28,7 @@ export interface IQueryParser {
 
   /**
    * Parses a sort expression
-   * 
+   *
    * @param expression - Sort expression
    * @returns Parse result with parsed sort
    */
@@ -40,7 +36,7 @@ export interface IQueryParser {
 
   /**
    * Parses a pagination expression
-   * 
+   *
    * @param expression - Pagination expression
    * @returns Parse result with parsed pagination
    */
@@ -48,7 +44,7 @@ export interface IQueryParser {
 
   /**
    * Parses an aggregation expression
-   * 
+   *
    * @param expression - Aggregation expression
    * @returns Parse result with parsed aggregation
    */
@@ -56,72 +52,72 @@ export interface IQueryParser {
 
   /**
    * Validates a parsed query
-   * 
+   *
    * @param query - Parsed query to validate
    * @returns Parse result with validation errors if any
    */
-  validate(query: ParsedQuery): ParseResult;
+  validate(query: any): ParseResult;
 
   /**
    * Serializes a parsed query to a string
-   * 
+   *
    * @param query - Parsed query to serialize
    * @returns Serialized query string
    */
-  serialize(query: ParsedQuery): string;
+  serialize(query: any): string;
 
   /**
    * Sets parser configuration
-   * 
+   *
    * @param config - Parser configuration
    */
   setConfig(config: Partial<ParserConfig>): void;
 
   /**
    * Gets current parser configuration
-   * 
+   *
    * @returns Current parser configuration
    */
   getConfig(): ParserConfig;
 
   /**
    * Adds an allowed field
-   * 
+   *
    * @param field - Field name
    */
   addAllowedField(field: string): void;
 
   /**
    * Removes an allowed field
-   * 
+   *
    * @param field - Field name
    */
   removeAllowedField(field: string): void;
 
   /**
    * Adds a forbidden field
-   * 
+   *
    * @param field - Field name
    */
   addForbiddenField(field: string): void;
 
   /**
    * Removes a forbidden field
-   * 
+   *
    * @param field - Field name
    */
   removeForbiddenField(field: string): void;
 
   /**
    * Gets all allowed fields
-   * 
+   *
    * @returns Array of allowed field names
    */
   getAllowedFields(): string[];
 
   /**
    * Gets all forbidden fields
-   * 
+   *
    * @returns Array of forbidden field names
    */
   getForbiddenFields(): string[];
@@ -133,7 +129,7 @@ export interface IQueryParser {
 
   /**
    * Gets parser statistics
-   * 
+   *
    * @returns Parser statistics
    */
   getStats(): {

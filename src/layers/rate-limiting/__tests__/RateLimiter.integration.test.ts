@@ -363,6 +363,8 @@ describe('RateLimiter Integration', () => {
         userId: 'user-security',
         roles: ['user'],
         permissions: [],
+        ipAddress: '127.0.0.1',
+        userAgent: 'test-agent',
       };
 
       const request: HttpRequest = {

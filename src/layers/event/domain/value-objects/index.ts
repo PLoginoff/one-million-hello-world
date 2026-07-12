@@ -1,6 +1,6 @@
 /**
  * Domain Value Objects
- * 
+ *
  * Exports all value objects from the domain layer.
  */
 

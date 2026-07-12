@@ -1,6 +1,6 @@
 /**
  * State Transition Value Object
- * 
+ *
  * Represents a single state transition with metadata.
  * Immutable value object for tracking circuit state changes.
  */

@@ -1,6 +1,6 @@
 /**
  * IEventSubscriber - Infrastructure Interface
- * 
+ *
  * Interface for subscribing to events from external systems.
  * Supports multiple subscription strategies and backends.
  */

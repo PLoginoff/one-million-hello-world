@@ -1,6 +1,6 @@
 /**
  * Transient Strategy
- * 
+ *
  * Creates a new instance for each request.
  */
 

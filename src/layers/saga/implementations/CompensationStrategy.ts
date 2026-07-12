@@ -1,6 +1,6 @@
 /**
  * Compensation Strategy Implementation
- * 
+ *
  * Concrete implementation of ICompensationStrategy.
  * Provides reverse-order compensation with error handling.
  */
@@ -24,7 +24,7 @@ export class CompensationStrategy implements ICompensationStrategy {
       this._logger.debug(`Compensating step: ${step.name}`, { stepIndex, data });
       await step.compensate(data);
       this._logger.info(`Successfully compensated step: ${step.name}`);
-      
+
       return {
         stepName: step.name,
         success: true,
@@ -32,7 +32,7 @@ export class CompensationStrategy implements ICompensationStrategy {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown compensation error';
       this._logger.error(`Failed to compensate step: ${step.name}`, { error: errorMessage });
-      
+
       return {
         stepName: step.name,
         success: false,

@@ -1,6 +1,6 @@
 /**
  * Network Connection Implementation
- * 
+ *
  * Concrete implementation of INetworkConnection using Node.js net module.
  * Manages individual TCP socket connections with state tracking.
  */
@@ -206,7 +206,7 @@ export class NetworkConnection implements INetworkConnection {
     this._reconnectionAttempts++;
     this._state = ConnectionState.RECONNECTING;
     await this.disconnect();
-    await this.connect(config || this._config);
+    await this.connect(config || this._config!);
   }
 
   async sendWithOptions(data: NetworkBuffer, options: DataTransmissionOptions): Promise<void> {
@@ -346,11 +346,11 @@ export class NetworkConnection implements INetworkConnection {
   }
 
   isWritable(): boolean {
-    return this._state === ConnectionState.CONNECTED && this._socket && this._socket.writable;
+    return this._state === ConnectionState.CONNECTED && this._socket?.writable;
   }
 
   isReadable(): boolean {
-    return this._state === ConnectionState.CONNECTED && this._socket && this._socket.readable;
+    return this._state === ConnectionState.CONNECTED && this._socket?.readable;
   }
 
   destroySoon(): void {
@@ -367,15 +367,21 @@ export class NetworkConnection implements INetworkConnection {
   }
 
   getConfig(): ConnectionConfig {
-    return this._connectionConfig || {
-      socket: this._config || { host: '', port: 0 },
-    };
+    return (
+      this._connectionConfig || {
+        socket: this._config || { host: '', port: 0 },
+      }
+    );
   }
 
   updateConfig(config: Partial<ConnectionConfig>): void {
-    if (this._connectionConfig) {
-      this._connectionConfig = { ...this._connectionConfig, ...config };
+    if (!this._connectionConfig) {
+      this._connectionConfig = {
+        socket: this._config || { host: '', port: 0 },
+        priority: this._priority,
+      };
     }
+    this._connectionConfig = { ...this._connectionConfig, ...config };
   }
 
   getSendBufferSize(): number {
@@ -480,7 +486,7 @@ export class NetworkConnection implements INetworkConnection {
 
   private _performUptimeCheck(now: number): HealthCheck {
     const uptime = now - this._createdAt.getTime();
-    const isHealthy = uptime > 0;
+    const isHealthy = uptime >= 0;
     return {
       name: 'uptime',
       status: isHealthy ? 'pass' : 'fail',

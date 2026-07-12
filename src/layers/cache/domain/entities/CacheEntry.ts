@@ -1,6 +1,6 @@
 /**
  * Cache Entry Entity
- * 
+ *
  * Represents a single cache entry with metadata.
  * Immutable entity that stores cached data with access tracking.
  */
@@ -13,12 +13,7 @@ export class CacheEntry<T> {
   accessCount: number;
   lastAccessedAt: number;
 
-  constructor(
-    key: string,
-    value: T,
-    ttl: number,
-    createdAt: number = Date.now(),
-  ) {
+  constructor(key: string, value: T, ttl: number, createdAt: number = Date.now()) {
     this.key = key;
     this.value = value;
     this.ttl = ttl;

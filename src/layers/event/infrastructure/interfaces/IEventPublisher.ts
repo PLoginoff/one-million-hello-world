@@ -1,6 +1,6 @@
 /**
  * IEventPublisher - Infrastructure Interface
- * 
+ *
  * Interface for publishing events to external systems.
  * Supports multiple publishing strategies and backends.
  */

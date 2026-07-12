@@ -1,6 +1,6 @@
 /**
  * Cached Query Strategy
- * 
+ *
  * Executes queries with caching.
  */
 

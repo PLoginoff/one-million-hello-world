@@ -16,10 +16,7 @@ export class MfaEntity {
   }
 
   static create(data: Record<string, unknown>): MfaEntity {
-    return new MfaEntity(
-      `mfa-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new MfaEntity(`mfa-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

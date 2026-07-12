@@ -1,6 +1,6 @@
 /**
  * Service Entity
- * 
+ *
  * Represents a service with metadata.
  */
 

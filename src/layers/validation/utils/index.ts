@@ -1,6 +1,6 @@
 /**
  * Utils Layer
- * 
+ *
  * Exports utility functions and error classes.
  */
 

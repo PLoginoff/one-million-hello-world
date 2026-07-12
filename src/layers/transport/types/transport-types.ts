@@ -1,6 +1,6 @@
 /**
  * Transport Layer Types
- * 
+ *
  * This module defines all type definitions for the Transport Layer,
  * including HTTP response, streaming, and chunked encoding.
  */

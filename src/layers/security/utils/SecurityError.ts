@@ -1,6 +1,6 @@
 /**
  * Security Error
- * 
+ *
  * Custom error class for security-related errors.
  */
 

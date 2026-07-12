@@ -1,6 +1,6 @@
 /**
  * Controller Strategy Interface
- * 
+ *
  * Defines contract for different controller strategies.
  */
 

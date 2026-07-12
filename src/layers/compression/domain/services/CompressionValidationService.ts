@@ -1,6 +1,6 @@
 /**
  * Compression Validation Service
- * 
+ *
  * Domain service for validating compression operations and configurations.
  * Provides validation logic for compression algorithms, thresholds, and results.
  */

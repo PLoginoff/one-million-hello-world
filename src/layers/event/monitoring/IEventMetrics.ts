@@ -1,6 +1,6 @@
 /**
  * IEventMetrics - Monitoring Interface
- * 
+ *
  * Interface for collecting and reporting event metrics.
  * Provides observability into event system performance.
  */

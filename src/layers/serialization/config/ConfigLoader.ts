@@ -1,6 +1,6 @@
 /**
  * Configuration Loader
- * 
+ *
  * Loads configuration from various sources.
  */
 
@@ -30,7 +30,7 @@ export class ConfigLoader {
 
   /**
    * Adds a configuration source
-   * 
+   *
    * @param source - Configuration source
    * @returns This loader for chaining
    */
@@ -41,7 +41,7 @@ export class ConfigLoader {
 
   /**
    * Removes a configuration source
-   * 
+   *
    * @param source - Configuration source
    * @returns This loader for chaining
    */
@@ -55,7 +55,7 @@ export class ConfigLoader {
 
   /**
    * Clears all configuration sources
-   * 
+   *
    * @returns This loader for chaining
    */
   clearSources(): ConfigLoader {
@@ -65,7 +65,7 @@ export class ConfigLoader {
 
   /**
    * Loads configuration from all sources
-   * 
+   *
    * @returns Merged configuration
    */
   async load(): Promise<SerializationConfig> {
@@ -81,7 +81,7 @@ export class ConfigLoader {
 
   /**
    * Loads configuration synchronously
-   * 
+   *
    * @returns Merged configuration
    */
   loadSync(): SerializationConfig {
@@ -97,7 +97,7 @@ export class ConfigLoader {
 
   /**
    * Gets the validator
-   * 
+   *
    * @returns Config validator
    */
   getValidator(): ConfigValidator {
@@ -106,7 +106,7 @@ export class ConfigLoader {
 
   /**
    * Sets the validator
-   * 
+   *
    * @param validator - New validator
    * @returns This loader for chaining
    */

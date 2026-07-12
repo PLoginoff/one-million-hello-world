@@ -1,6 +1,6 @@
 /**
  * HTTP Request Parser Implementation
- * 
+ *
  * Concrete implementation of IHttpRequestParser.
  * Parses raw HTTP request data into structured HttpRequest objects.
  */
@@ -144,7 +144,7 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   parse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpRequest> {
-    const parserConfig = config || this._defaultConfig;
+    const parserConfig = { ...this._defaultConfig, ...config };
     this._state = ParserState.PARSING_REQUEST_LINE;
 
     try {
@@ -268,7 +268,7 @@ export class HttpRequestParser implements IHttpRequestParser {
       };
     }
 
-    const [method, path, version] = parts;
+    const [method, path, version] = parts as [string, string, string];
 
     if (!Object.values(HttpMethod).includes(method as HttpMethod)) {
       return {
@@ -376,7 +376,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     if (!baseResult.success || !baseResult.data) {
       this._state = ParserState.ERROR;
       this._stats.errorCount++;
-      const errorCode = baseResult.error?.code || ParseErrorCode.MALFORMED_REQUEST;
+      const errorCode = baseResult.error?.code ?? ParseErrorCode.MALFORMED_REQUEST;
       const currentCount = this._stats.parseErrors.get(errorCode) || 0;
       this._stats.parseErrors.set(errorCode, currentCount + 1);
       return {
@@ -438,9 +438,11 @@ export class HttpRequestParser implements IHttpRequestParser {
     this._stats.totalHeadersParsed += extendedRequest.headers.size;
     this._stats.totalBodiesParsed += extendedRequest.body.length;
     this._stats.lastParseTime = Date.now() - this._parseStartTime;
-    this._stats.averageParseTime = this._stats.totalRequestsParsed > 0
-      ? (this._stats.averageParseTime * (this._stats.totalRequestsParsed - 1) + this._stats.lastParseTime) / this._stats.totalRequestsParsed
-      : 0;
+    this._stats.averageParseTime =
+      this._stats.totalRequestsParsed > 0
+        ? (this._stats.averageParseTime * (this._stats.totalRequestsParsed - 1) + this._stats.lastParseTime) /
+          this._stats.totalRequestsParsed
+        : 0;
 
     return {
       success: true,
@@ -491,7 +493,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     }
 
     const parts = contentType.split(';');
-    const [type, subtype] = parts[0].split('/');
+    const [type, subtype] = parts[0].split('/') as [string, string];
 
     const mimeType: MimeType = {
       type: type || '',
@@ -499,7 +501,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
 
     for (let i = 1; i < parts.length; i++) {
-      const [key, value] = parts[i].trim().split('=');
+      const [key, value] = parts[i].trim().split('=') as [string, string | undefined];
       if (key === 'charset' && value) {
         mimeType.charset = value;
       } else if (key === 'boundary' && value) {
@@ -524,7 +526,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
 
     for (let i = 1; i < parts.length; i++) {
-      const [key, value] = parts[i].trim().split('=');
+      const [key, value] = parts[i].trim().split('=') as [string, string | undefined];
       const cleanValue = value ? value.replace(/"/g, '') : '';
 
       if (key === 'filename') {
@@ -751,7 +753,7 @@ export class HttpRequestParser implements IHttpRequestParser {
       };
     }
 
-    const [version, statusCode, ...reasonParts] = parts;
+    const [version, statusCode, ...reasonParts] = parts as [string, string, ...string[]];
     const reasonPhrase = reasonParts.join(' ');
 
     if (!Object.values(HttpVersion).includes(version as HttpVersion)) {
@@ -785,7 +787,10 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
   }
 
-  parseResponseExtended(raw: Buffer, config?: Partial<ExtendedParserConfig>): ExtendedParseResult<ExtendedHttpResponse> {
+  parseResponseExtended(
+    raw: Buffer,
+    config?: Partial<ExtendedParserConfig>
+  ): ExtendedParseResult<ExtendedHttpResponse> {
     this._parseStartTime = Date.now();
     this._state = ParserState.PARSING_REQUEST_LINE;
     this._warnings = [];
@@ -796,7 +801,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     if (!baseResult.success || !baseResult.data) {
       this._state = ParserState.ERROR;
       this._stats.errorCount++;
-      const errorCode = baseResult.error?.code || ParseErrorCode.MALFORMED_REQUEST;
+      const errorCode = baseResult.error?.code ?? ParseErrorCode.MALFORMED_REQUEST;
       const currentCount = this._stats.parseErrors.get(errorCode) || 0;
       this._stats.parseErrors.set(errorCode, currentCount + 1);
       return {
@@ -890,7 +895,10 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   getSecurityHeadersConfig(): SecurityHeadersConfig {
-    return { ...this._securityHeadersConfig, customSecurityHeaders: new Map(this._securityHeadersConfig.customSecurityHeaders) };
+    return {
+      ...this._securityHeadersConfig,
+      customSecurityHeaders: new Map(this._securityHeadersConfig.customSecurityHeaders),
+    };
   }
 
   setCorsConfig(config: Partial<CorsConfig>): void {

@@ -1,6 +1,6 @@
 /**
  * Validation Rule Entity
- * 
+ *
  * Represents a validation rule with metadata.
  */
 
@@ -78,12 +78,7 @@ export class ValidationRuleEntity {
   /**
    * Create pattern validation rule
    */
-  static createPatternRule(
-    id: string,
-    name: string,
-    pattern: string,
-    required: boolean = false
-  ): ValidationRuleEntity {
+  static createPatternRule(id: string, name: string, pattern: string, required: boolean = false): ValidationRuleEntity {
     return new ValidationRuleEntity({
       id,
       name,
@@ -135,11 +130,17 @@ export class ValidationRuleEntity {
     }
 
     if (this.data.minLength !== undefined && typeof value === 'string' && value.length < this.data.minLength) {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must be at least ${this.data.minLength} characters` };
+      return {
+        valid: false,
+        error: this.data.errorMessage || `${this.data.name} must be at least ${this.data.minLength} characters`,
+      };
     }
 
     if (this.data.maxLength !== undefined && typeof value === 'string' && value.length > this.data.maxLength) {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must not exceed ${this.data.maxLength} characters` };
+      return {
+        valid: false,
+        error: this.data.errorMessage || `${this.data.name} must not exceed ${this.data.maxLength} characters`,
+      };
     }
 
     if (this.data.min !== undefined && typeof value === 'number' && value < this.data.min) {

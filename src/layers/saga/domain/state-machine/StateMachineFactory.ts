@@ -19,7 +19,11 @@ export class StateMachineFactory {
   /**
    * Create step state machine
    */
-  static createStepStateMachine(stepId: string, initialState: StepState = 'pending', context?: unknown): StepStateMachine {
+  static createStepStateMachine(
+    stepId: string,
+    initialState: StepState = 'pending',
+    context?: unknown
+  ): StepStateMachine {
     return new StepStateMachine(stepId, initialState, context);
   }
 
@@ -29,7 +33,7 @@ export class StateMachineFactory {
   static createSagaStateMachineWithTransitions(
     initialState: SagaState,
     transitions: any[],
-    context?: unknown,
+    context?: unknown
   ): SagaStateMachine {
     const machine = new SagaStateMachine(initialState, context);
     for (const transition of transitions) {
@@ -45,7 +49,7 @@ export class StateMachineFactory {
     stepId: string,
     initialState: StepState,
     transitions: any[],
-    context?: unknown,
+    context?: unknown
   ): StepStateMachine {
     const machine = new StepStateMachine(stepId, initialState, context);
     for (const transition of transitions) {

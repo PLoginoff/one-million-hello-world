@@ -1,6 +1,6 @@
 /**
  * Middleware Manager Interface
- * 
+ *
  * Defines the contract for middleware chains and cross-cutting concerns.
  */
 
@@ -21,21 +21,21 @@ import {
 export interface IMiddlewareManager<T = unknown> {
   /**
    * Adds a middleware to the chain
-   * 
+   *
    * @param middleware - Middleware to add
    */
   addMiddleware(middleware: Middleware<T>): void;
 
   /**
    * Removes a middleware from the chain
-   * 
+   *
    * @param name - Middleware name
    */
   removeMiddleware(name: string): void;
 
   /**
    * Gets a middleware by name
-   * 
+   *
    * @param name - Middleware name
    * @returns Middleware or undefined
    */
@@ -43,28 +43,28 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Gets all middlewares
-   * 
+   *
    * @returns Array of middlewares
    */
   getMiddlewares(): Middleware<T>[];
 
   /**
    * Enables a middleware
-   * 
+   *
    * @param name - Middleware name
    */
   enableMiddleware(name: string): void;
 
   /**
    * Disables a middleware
-   * 
+   *
    * @param name - Middleware name
    */
   disableMiddleware(name: string): void;
 
   /**
    * Creates a middleware chain
-   * 
+   *
    * @param middlewares - Array of middlewares
    * @returns Middleware chain
    */
@@ -72,7 +72,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Executes a middleware chain
-   * 
+   *
    * @param context - Middleware context
    * @param chain - Middleware chain
    * @returns Middleware result
@@ -81,7 +81,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Executes all middlewares
-   * 
+   *
    * @param context - Middleware context
    * @returns Middleware result
    */
@@ -89,7 +89,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Creates a middleware pipeline
-   * 
+   *
    * @param name - Pipeline name
    * @param middlewares - Array of middlewares
    * @param parallel - Whether to execute in parallel
@@ -99,7 +99,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Executes a middleware pipeline
-   * 
+   *
    * @param pipeline - Middleware pipeline
    * @param context - Middleware context
    * @returns Middleware result
@@ -108,21 +108,21 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Sets middleware configuration
-   * 
+   *
    * @param config - Middleware configuration
    */
   setConfig(config: Partial<MiddlewareConfig>): void;
 
   /**
    * Gets current middleware configuration
-   * 
+   *
    * @returns Current middleware configuration
    */
   getConfig(): MiddlewareConfig;
 
   /**
    * Gets middleware statistics
-   * 
+   *
    * @returns Middleware statistics
    */
   getStats(): MiddlewareStats;
@@ -144,7 +144,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Gets middlewares for a specific operation
-   * 
+   *
    * @param operation - Operation name
    * @returns Array of middlewares for the operation
    */
@@ -152,7 +152,7 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Adds a middleware for a specific operation
-   * 
+   *
    * @param operation - Operation name
    * @param middleware - Middleware to add
    */
@@ -160,14 +160,14 @@ export interface IMiddlewareManager<T = unknown> {
 
   /**
    * Removes middlewares for a specific operation
-   * 
+   *
    * @param operation - Operation name
    */
   removeMiddlewaresForOperation(operation: string): void;
 
   /**
    * Creates a middleware context
-   * 
+   *
    * @param operation - Operation name
    * @param data - Data to process
    * @param metadata - Optional metadata

@@ -1,6 +1,6 @@
 /**
  * Factories Module
- * 
+ *
  * Exports factory interfaces and implementations.
  */
 

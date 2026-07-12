@@ -1,6 +1,6 @@
 /**
  * Middleware Layer Types
- * 
+ *
  * Type definitions for middleware chains and cross-cutting concerns.
  */
 

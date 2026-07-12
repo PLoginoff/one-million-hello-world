@@ -1,6 +1,6 @@
 /**
  * Controller Configuration Builder
- * 
+ *
  * Fluent builder for creating controller configurations.
  */
 

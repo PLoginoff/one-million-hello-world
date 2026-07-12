@@ -1,6 +1,6 @@
 /**
  * Repository Facade Interface
- * 
+ *
  * Defines the contract for the repository facade that provides a unified interface.
  */
 
@@ -20,7 +20,7 @@ import {
 export interface IRepositoryFacade<T extends DomainEntity> {
   /**
    * Finds entities matching query options
-   * 
+   *
    * @param options - Facade query options
    * @returns Repository facade result with array of entities
    */
@@ -28,7 +28,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Finds an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @param options - Facade query options
    * @returns Repository facade result with entity
@@ -37,7 +37,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Finds one entity matching query options
-   * 
+   *
    * @param options - Facade query options
    * @returns Repository facade result with entity or null
    */
@@ -45,7 +45,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Saves an entity (create or update)
-   * 
+   *
    * @param entity - Entity to save
    * @param options - Facade query options
    * @returns Repository facade result with saved entity
@@ -54,7 +54,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Updates an entity
-   * 
+   *
    * @param id - Entity ID
    * @param updates - Partial updates
    * @param options - Facade query options
@@ -64,7 +64,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Deletes an entity by ID
-   * 
+   *
    * @param id - Entity ID
    * @param options - Facade query options
    * @returns Repository facade result
@@ -73,7 +73,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Deletes multiple entities
-   * 
+   *
    * @param ids - Array of entity IDs
    * @param options - Bulk operation options
    * @returns Repository facade result with number of deleted entities
@@ -82,7 +82,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Counts entities matching query options
-   * 
+   *
    * @param options - Facade query options
    * @returns Repository facade result with count
    */
@@ -90,7 +90,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Checks if an entity exists by ID
-   * 
+   *
    * @param id - Entity ID
    * @param options - Facade query options
    * @returns Repository facade result with boolean
@@ -99,39 +99,45 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Performs aggregation
-   * 
+   *
    * @param aggregation - Aggregation query
    * @param options - Facade query options
    * @returns Repository facade result with aggregation result
    */
-  aggregate(aggregation: Record<string, unknown>, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<Record<string, unknown>>>;
+  aggregate(
+    aggregation: Record<string, unknown>,
+    options?: FacadeQueryOptions
+  ): Promise<RepositoryFacadeResult<Record<string, unknown>>>;
 
   /**
    * Performs bulk save operation
-   * 
+   *
    * @param entities - Array of entities to save
    * @param options - Bulk operation options
    * @returns Repository facade result with bulk operation result
    */
-  bulkSave(entities: T[], options?: BulkOperationOptions): Promise<RepositoryFacadeResult<{ successful: T[]; failed: Array<{ item: T; error: string }> }>>;
+  bulkSave(
+    entities: T[],
+    options?: BulkOperationOptions
+  ): Promise<RepositoryFacadeResult<{ successful: T[]; failed: Array<{ item: T; error: string }> }>>;
 
   /**
    * Sets repository facade configuration
-   * 
+   *
    * @param config - Repository facade configuration
    */
   setConfig(config: Partial<RepositoryFacadeConfig>): void;
 
   /**
    * Gets current repository facade configuration
-   * 
+   *
    * @returns Current repository facade configuration
    */
   getConfig(): RepositoryFacadeConfig;
 
   /**
    * Gets repository facade statistics
-   * 
+   *
    * @returns Repository facade statistics
    */
   getStats(): RepositoryFacadeStats;
@@ -143,42 +149,42 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Performs health check
-   * 
+   *
    * @returns Health check result
    */
   healthCheck(): Promise<HealthCheckResult>;
 
   /**
    * Clears all caches
-   * 
+   *
    * @returns Repository facade result
    */
   clearCache(): Promise<RepositoryFacadeResult<void>>;
 
   /**
    * Clears all data
-   * 
+   *
    * @returns Repository facade result
    */
   clearData(): Promise<RepositoryFacadeResult<void>>;
 
   /**
    * Gets the total number of entities
-   * 
+   *
    * @returns Repository facade result with total count
    */
   getTotalCount(): Promise<RepositoryFacadeResult<number>>;
 
   /**
    * Gets repository layer information
-   * 
+   *
    * @returns Map of layer name to layer information
    */
   getLayerInfo(): Map<string, Record<string, unknown>>;
 
   /**
    * Enables a layer
-   * 
+   *
    * @param layer - Layer name
    * @returns Repository facade result
    */
@@ -186,7 +192,7 @@ export interface IRepositoryFacade<T extends DomainEntity> {
 
   /**
    * Disables a layer
-   * 
+   *
    * @param layer - Layer name
    * @returns Repository facade result
    */

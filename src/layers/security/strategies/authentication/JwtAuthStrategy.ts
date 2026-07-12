@@ -1,6 +1,6 @@
 /**
  * JWT Authentication Strategy
- * 
+ *
  * Implements JWT-based authentication.
  */
 
@@ -38,14 +38,7 @@ export class JwtAuthStrategy implements IAuthenticationStrategy {
     const token = this.generateToken(userId, roles);
     return {
       success: true,
-      context: SecurityContextEntity.createAuthenticated(
-        userId,
-        roles,
-        [],
-        '',
-        '',
-        SecurityLevel.HIGH
-      ),
+      context: SecurityContextEntity.createAuthenticated(userId, roles, [], '', '', SecurityLevel.HIGH),
     };
   }
 
@@ -55,7 +48,7 @@ export class JwtAuthStrategy implements IAuthenticationStrategy {
     error?: string;
   } {
     const tokenData = this.tokens.get(token);
-    
+
     if (!tokenData) {
       return {
         valid: false,

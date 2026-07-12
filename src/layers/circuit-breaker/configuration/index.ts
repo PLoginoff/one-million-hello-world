@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Configuration Layer
- * 
+ *
  * Exports all configuration components for the Circuit Breaker layer.
  */
 

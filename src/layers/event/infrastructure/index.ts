@@ -1,6 +1,6 @@
 /**
  * Infrastructure Layer
- * 
+ *
  * Infrastructure layer providing storage, publishing, and queue capabilities.
  */
 

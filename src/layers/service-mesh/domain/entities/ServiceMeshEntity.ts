@@ -16,10 +16,7 @@ export class ServiceMeshEntity {
   }
 
   static create(data: Record<string, unknown>): ServiceMeshEntity {
-    return new ServiceMeshEntity(
-      `service-mesh-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new ServiceMeshEntity(`service-mesh-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -16,10 +16,7 @@ export class AuthorizationEntity {
   }
 
   static create(data: Record<string, unknown>): AuthorizationEntity {
-    return new AuthorizationEntity(
-      `authorization-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new AuthorizationEntity(`authorization-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -1,6 +1,6 @@
 /**
  * Connection Statistics Service
- * 
+ *
  * Domain service for calculating and aggregating connection statistics.
  */
 
@@ -88,10 +88,7 @@ export class ConnectionStatisticsService {
   /**
    * Calculate throughput statistics
    */
-  static calculateThroughput(
-    metadata: ConnectionMetadata,
-    timeWindow: number,
-  ): number {
+  static calculateThroughput(metadata: ConnectionMetadata, timeWindow: number): number {
     const bytes = metadata.getTotalBytes();
     const age = Math.min(metadata.getAge(), timeWindow);
     return age > 0 ? (bytes / age) * 1000 : 0;
@@ -100,10 +97,7 @@ export class ConnectionStatisticsService {
   /**
    * Calculate request rate
    */
-  static calculateRequestRate(
-    metadata: ConnectionMetadata,
-    timeWindow: number,
-  ): number {
+  static calculateRequestRate(metadata: ConnectionMetadata, timeWindow: number): number {
     const requests = metadata.requestCount;
     const age = Math.min(metadata.getAge(), timeWindow);
     return age > 0 ? (requests / age) * 1000 : 0;
@@ -112,10 +106,7 @@ export class ConnectionStatisticsService {
   /**
    * Calculate response rate
    */
-  static calculateResponseRate(
-    metadata: ConnectionMetadata,
-    timeWindow: number,
-  ): number {
+  static calculateResponseRate(metadata: ConnectionMetadata, timeWindow: number): number {
     const responses = metadata.responseCount;
     const age = Math.min(metadata.getAge(), timeWindow);
     return age > 0 ? (responses / age) * 1000 : 0;
@@ -124,11 +115,7 @@ export class ConnectionStatisticsService {
   /**
    * Generate time series data for a metric
    */
-  static generateTimeSeries(
-    samples: number[],
-    interval: number,
-    startTime: number = Date.now(),
-  ): TimeSeriesData[] {
+  static generateTimeSeries(samples: number[], interval: number, startTime: number = Date.now()): TimeSeriesData[] {
     const data: TimeSeriesData[] = [];
     for (let i = 0; i < samples.length; i++) {
       data.push({
@@ -142,10 +129,7 @@ export class ConnectionStatisticsService {
   /**
    * Calculate moving average
    */
-  static calculateMovingAverage(
-    data: TimeSeriesData[],
-    windowSize: number,
-  ): TimeSeriesData[] {
+  static calculateMovingAverage(data: TimeSeriesData[], windowSize: number): TimeSeriesData[] {
     if (data.length === 0 || windowSize <= 0) return [];
 
     const result: TimeSeriesData[] = [];
@@ -155,7 +139,7 @@ export class ConnectionStatisticsService {
       const sum = window.reduce((acc, d) => acc + d.value, 0);
       const average = sum / window.length;
       result.push({
-        timestamp: (data[i])!.timestamp,
+        timestamp: data[i].timestamp,
         value: average,
       });
     }
@@ -167,7 +151,7 @@ export class ConnectionStatisticsService {
    */
   static calculatePercentile(values: number[], percentile: number): number {
     if (values.length === 0) return 0;
-    
+
     const sorted = [...values].sort((a, b) => a - b);
     const index = Math.ceil((percentile / 100) * sorted.length) - 1;
     return sorted[Math.max(0, index)] ?? 0;

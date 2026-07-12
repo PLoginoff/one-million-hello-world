@@ -1,6 +1,6 @@
 /**
  * Serialization Layer Types
- * 
+ *
  * This module defines all type definitions for the Serialization Layer,
  * including response serialization, versioning, and content negotiation.
  */

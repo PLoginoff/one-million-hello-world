@@ -1,6 +1,6 @@
 /**
  * Distributed Storage
- * 
+ *
  * Exports distributed storage implementation.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Connection Priority Value Object
- * 
+ *
  * Represents the priority level for connection resource allocation.
  */
 

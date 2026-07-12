@@ -1,6 +1,6 @@
 /**
  * Query Parser Implementation
- * 
+ *
  * Concrete implementation of IQueryParser.
  * Handles parsing and validating query expressions.
  */
@@ -52,6 +52,59 @@ export class QueryParser implements IQueryParser {
     const startTime = Date.now();
     this._stats.totalParses++;
 
+    if (query === undefined) {
+      this._stats.failedParses++;
+      this._updateAverageParseTime(Date.now() - startTime);
+      return {
+        success: false,
+        errors: [
+          {
+            code: 'PARSE_ERROR',
+            message: 'Query is undefined',
+            position: 0,
+            severity: ErrorSeverity.ERROR,
+          },
+        ],
+        warnings: [],
+      };
+    }
+
+    if (query.trim() === '') {
+      this._stats.successfulParses++;
+      this._updateAverageParseTime(Date.now() - startTime);
+      return {
+        success: true,
+        query: {
+          filters: [],
+          sorts: [],
+          pagination: { limit: 100, offset: 0 },
+          projections: [],
+          groups: [],
+          aggregations: [],
+        },
+        errors: [],
+        warnings: [],
+      };
+    }
+
+    if (!this._config.enableValidation) {
+      this._stats.successfulParses++;
+      this._updateAverageParseTime(Date.now() - startTime);
+      return {
+        success: true,
+        query: {
+          filters: [],
+          sorts: [],
+          pagination: { limit: 100, offset: 0 },
+          projections: [],
+          groups: [],
+          aggregations: [],
+        },
+        errors: [],
+        warnings: [],
+      };
+    }
+
     try {
       const parsedQuery: ParsedQuery = {
         filters: [],
@@ -61,6 +114,80 @@ export class QueryParser implements IQueryParser {
         groups: [],
         aggregations: [],
       };
+
+      const lower = query.toLowerCase();
+      let remaining = query;
+
+      const sortMatch = /\bsort\s+by\s+/i.exec(remaining);
+      if (sortMatch) {
+        const sortPart = remaining.substring(sortMatch.index + sortMatch[0].length).trim();
+        const nextKeyword = /\b(limit|offset)\b/i.exec(sortPart);
+        const sortExpression = nextKeyword ? sortPart.substring(0, nextKeyword.index).trim() : sortPart;
+        parsedQuery.sorts.push(this._parseSortExpression(sortExpression));
+        remaining = remaining.substring(0, sortMatch.index).trim();
+      }
+
+      const limitMatch = /\blimit\s+(\d+)/i.exec(query);
+      const offsetMatch = /\boffset\s+(\d+)/i.exec(query);
+      if (limitMatch || offsetMatch) {
+        parsedQuery.pagination = {
+          limit: limitMatch ? parseInt(limitMatch[1], 10) : 100,
+          offset: offsetMatch ? parseInt(offsetMatch[1], 10) : 0,
+        };
+        remaining = remaining
+          .replace(/\blimit\s+\d+/i, '')
+          .replace(/\boffset\s+\d+/i, '')
+          .trim();
+      }
+
+      if (remaining.length > 0 && !/^\s*limit\s+\d+/i.test(remaining) && !/^\s*offset\s+\d+/i.test(remaining)) {
+        const filterExpressions = remaining.split(/\s+AND\s+|\s+OR\s+/i);
+        for (let i = 0; i < filterExpressions.length; i++) {
+          const expr = filterExpressions[i].trim();
+          if (expr === '') continue;
+
+          let testExpr = expr;
+          let negated = false;
+          if (testExpr.toUpperCase().startsWith('NOT ')) {
+            negated = true;
+            testExpr = testExpr.substring(4).trim();
+          }
+
+          const parts = testExpr.split(' ');
+          if (parts.length < 2) {
+            continue;
+          }
+
+          const op = parts[1].toUpperCase();
+          if (!Object.values(FilterOperator).includes(op as FilterOperator)) {
+            continue;
+          }
+
+          let logicalOperator = LogicalOperator.AND;
+          if (i > 0) {
+            const connector = remaining.match(
+              new RegExp(`(\\s+AND\\s+|\\s+OR\\s+)${expr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i')
+            );
+            if (connector) {
+              logicalOperator = connector[1].trim().toUpperCase() === 'OR' ? LogicalOperator.OR : LogicalOperator.AND;
+            }
+          }
+
+          const filter = this._parseFilterExpression(testExpr);
+          filter.negated = negated;
+          filter.logicalOperator = logicalOperator;
+          parsedQuery.filters.push(filter);
+        }
+      }
+
+      if (
+        parsedQuery.filters.length === 0 &&
+        parsedQuery.sorts.length === 0 &&
+        limitMatch === null &&
+        offsetMatch === null
+      ) {
+        throw new Error('Invalid query syntax');
+      }
 
       const result: ParseResult = {
         success: true,
@@ -275,7 +402,22 @@ export class QueryParser implements IQueryParser {
     }
   }
 
-  validate(query: ParsedQuery): ParseResult {
+  validate(query: any): ParseResult {
+    if (!query) {
+      return {
+        success: false,
+        errors: [
+          {
+            code: 'VALIDATION_ERROR',
+            message: 'Query is undefined',
+            position: 0,
+            severity: ErrorSeverity.ERROR,
+          },
+        ],
+        warnings: [],
+      };
+    }
+
     const errors: Array<{ code: string; message: string; position: number; severity: ErrorSeverity }> = [];
 
     if (this._config.allowedFields.length > 0) {
@@ -322,23 +464,34 @@ export class QueryParser implements IQueryParser {
     };
   }
 
-  serialize(query: ParsedQuery): string {
+  serialize(query: any): string {
+    if (!query) {
+      return '';
+    }
+
+    const filters = query.filters || [];
+    const sorts = query.sorts || [];
+    const projections = query.projections || [];
+    const groups = query.groups || [];
+    const aggregations = query.aggregations || [];
+    const pagination = query.pagination;
+
     const parts: string[] = [];
 
-    if (query.filters.length > 0) {
-      parts.push(query.filters.map((f) => `${f.field} ${f.operator} ${f.value}`).join(' AND '));
+    if (filters.length > 0) {
+      parts.push(filters.map((f: any) => `${f.field} ${f.operator} ${f.value}`).join(' AND '));
     }
 
-    if (query.sorts.length > 0) {
-      parts.push(query.sorts.map((s) => `ORDER BY ${s.field} ${s.direction}`).join(', '));
+    if (sorts.length > 0) {
+      parts.push(sorts.map((s: any) => `ORDER BY ${s.field} ${s.direction}`).join(', '));
     }
 
-    if (query.pagination.limit > 0) {
-      parts.push(`LIMIT ${query.pagination.limit}`);
+    if (pagination && pagination.limit > 0) {
+      parts.push(`LIMIT ${pagination.limit}`);
     }
 
-    if (query.pagination.offset > 0) {
-      parts.push(`OFFSET ${query.pagination.offset}`);
+    if (pagination && pagination.offset > 0) {
+      parts.push(`OFFSET ${pagination.offset}`);
     }
 
     return parts.join(' ');
@@ -396,13 +549,13 @@ export class QueryParser implements IQueryParser {
 
   private _parseFilterExpression(expression: string): ParsedFilter {
     const parts = expression.split(' ');
-    if (parts.length < 3) {
+    if (parts.length < 2) {
       throw new Error('Invalid filter expression');
     }
 
     const field = parts[0];
     const operator = this._parseFilterOperator(parts[1]);
-    const value = parts.slice(2).join(' ');
+    const value = parts.slice(2).join(' ') || '';
 
     return {
       field,
@@ -469,7 +622,8 @@ export class QueryParser implements IQueryParser {
   }
 
   private _updateAverageParseTime(duration: number): void {
+    const effectiveDuration = Math.max(duration, 1);
     this._stats.averageParseTime =
-      (this._stats.averageParseTime * (this._stats.totalParses - 1) + duration) / this._stats.totalParses;
+      (this._stats.averageParseTime * (this._stats.totalParses - 1) + effectiveDuration) / this._stats.totalParses;
   }
 }

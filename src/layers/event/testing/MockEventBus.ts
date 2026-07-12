@@ -1,6 +1,6 @@
 /**
  * MockEventBus - Testing Utility
- * 
+ *
  * Mock implementation of IEventBus for testing purposes.
  * Provides spy functionality and call tracking.
  */
@@ -115,18 +115,18 @@ export class MockEventBus implements IEventBus {
   }
 
   wasEventPublished(eventType: string): boolean {
-    return this._publishedEvents.some(e => e.type.value === eventType);
+    return this._publishedEvents.some((e) => e.type.value === eventType);
   }
 
   getPublishedEventsByType(eventType: string): Event[] {
-    return this._publishedEvents.filter(e => e.type.value === eventType);
+    return this._publishedEvents.filter((e) => e.type.value === eventType);
   }
 
   wasHandlerCalled(eventType: string): boolean {
-    return this._calls.some(call => call.eventType === eventType);
+    return this._calls.some((call) => call.eventType === eventType);
   }
 
   getHandlerCallCount(eventType: string): number {
-    return this._calls.filter(call => call.eventType === eventType).length;
+    return this._calls.filter((call) => call.eventType === eventType).length;
   }
 }

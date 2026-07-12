@@ -1,6 +1,6 @@
 /**
  * Strict Parsing Strategy
- * 
+ *
  * Enforces strict HTTP protocol compliance.
  */
 
@@ -13,7 +13,10 @@ export class StrictParsingStrategy implements IParsingStrategy {
     return 'STRICT';
   }
 
-  parseRequest(raw: any, config: ParserConfigOptions): {
+  parseRequest(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;
@@ -139,7 +142,10 @@ export class StrictParsingStrategy implements IParsingStrategy {
     }
   }
 
-  parseResponse(raw: any, config: ParserConfigOptions): {
+  parseResponse(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;
@@ -245,6 +251,5 @@ export class StrictParsingStrategy implements IParsingStrategy {
     }
   }
 
-  reset(): void {
-  }
+  reset(): void {}
 }

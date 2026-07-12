@@ -7,11 +7,7 @@ export function createHelloWorldHandler(service: IService): HandlerFunction {
     const requestId = context.requestId;
     const correlationId = context.correlationId;
 
-    const serviceContext = service.createContext(
-      context.userId,
-      correlationId,
-      requestId
-    );
+    const serviceContext = service.createContext(context.userId, correlationId, requestId);
 
     const input: GetHelloWorldInput = {
       language: context.parameters['language'] || 'en',

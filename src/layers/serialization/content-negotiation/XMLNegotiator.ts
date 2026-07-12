@@ -1,6 +1,6 @@
 /**
  * XML Content Negotiator
- * 
+ *
  * Handles XML content type negotiation.
  */
 

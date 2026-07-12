@@ -1,6 +1,6 @@
 /**
  * Base Content Negotiator
- * 
+ *
  * Abstract base class providing common functionality for content negotiators.
  */
 
@@ -44,7 +44,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Gets negotiator name
-   * 
+   *
    * @returns Negotiator name
    */
   getName(): string {
@@ -53,7 +53,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Adds a supported content type
-   * 
+   *
    * @param contentType - Content type to add
    */
   addSupportedType(contentType: ContentType): void {
@@ -64,7 +64,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Removes a supported content type
-   * 
+   *
    * @param contentType - Content type to remove
    */
   removeSupportedType(contentType: ContentType): void {
@@ -76,7 +76,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Checks if content type is supported
-   * 
+   *
    * @param contentType - Content type to check
    * @returns True if supported
    */
@@ -86,24 +86,24 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Parses accept header into array of content types with priorities
-   * 
+   *
    * @param acceptHeader - Accept header string
    * @returns Array of content types with q-values
    */
   protected _parseAcceptHeader(acceptHeader: string): Array<{ type: string; q: number }> {
     return acceptHeader
       .split(',')
-      .map(part => {
+      .map((part) => {
         const [type, qPart] = part.trim().split(';');
-        const q = qPart?.includes('q=') ? parseFloat(qPart.split('=')[1]) : 1.0;
-        return { type: type.trim!(), q: isNaN(q) ? 1.0 : q };
+        const q = qPart?.includes('q=') ? parseFloat(qPart.split('=')[1] ?? '1') : 1.0;
+        return { type: type.trim(), q: isNaN(q) ? 1.0 : q };
       })
       .sort((a, b) => b.q - a.q);
   }
 
   /**
    * Extracts the base type from content type (e.g., "application/json" -> "application")
-   * 
+   *
    * @param contentType - Content type string
    * @returns Base type
    */
@@ -113,7 +113,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
 
   /**
    * Checks if accept header accepts a specific content type
-   * 
+   *
    * @param acceptHeader - Accept header string
    * @param contentType - Content type to check
    * @returns True if accepted

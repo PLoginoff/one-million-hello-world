@@ -1,6 +1,6 @@
 /**
  * Serializer Implementation
- * 
+ *
  * Concrete implementation of ISerializer with all advanced features:
  * - Strategy pattern for serialization formats
  * - Chain of responsibility for content negotiation
@@ -59,10 +59,7 @@ export class Serializer implements ISerializer {
     this._registerDefaultStrategies();
 
     this._contentNegotiator = new ContentNegotiationManager();
-    this._versioningManager = new VersioningManager(
-      new WrapperVersioningStrategy(),
-      this._config.currentVersion
-    );
+    this._versioningManager = new VersioningManager(new WrapperVersioningStrategy(), this._config.currentVersion);
     this._versioningManager.setEnabled(this._config.enableVersioning);
     this._validationPipeline = new ValidationPipeline();
     this._pluginManager = new PluginManager();
@@ -103,15 +100,11 @@ export class Serializer implements ISerializer {
       let processedData = data;
 
       if (!opts.skipHooks && this._config.enableHooks) {
-        processedData = await this._hookManager.executeHook(
-          HookType.BEFORE_SERIALIZE,
-          processedData,
-          context
-        );
+        processedData = await this._hookManager.executeHook(HookType.BEFORE_SERIALIZE, processedData, context);
       }
 
       if (!opts.skipPlugins && this._config.enablePlugins) {
-        processedData = await this._pluginManager.executeBeforeSerialize(processedData) as T;
+        processedData = (await this._pluginManager.executeBeforeSerialize(processedData)) as T;
       }
 
       if (opts.validate && this._config.enableValidation) {
@@ -148,11 +141,7 @@ export class Serializer implements ISerializer {
       }
 
       if (!opts.skipHooks && this._config.enableHooks) {
-        serialized = await this._hookManager.executeHook(
-          HookType.AFTER_SERIALIZE,
-          serialized,
-          context
-        ) as string;
+        serialized = await this._hookManager.executeHook(HookType.AFTER_SERIALIZE, serialized, context);
       }
 
       return {
@@ -163,9 +152,10 @@ export class Serializer implements ISerializer {
         metadata: opts.metadata,
       };
     } catch (error) {
-      const serializationError = error instanceof SerializationError
-        ? error
-        : SerializationError.serializationFailed({}, error instanceof Error ? error : undefined);
+      const serializationError =
+        error instanceof SerializationError
+          ? error
+          : SerializationError.serializationFailed({}, error instanceof Error ? error : undefined);
 
       await this._hookManager.executeErrorHooks(serializationError, context);
 
@@ -202,11 +192,7 @@ export class Serializer implements ISerializer {
       let processedData = data;
 
       if (!opts.skipHooks && this._config.enableHooks) {
-        processedData = await this._hookManager.executeHook(
-          HookType.BEFORE_DESERIALIZE,
-          processedData,
-          context
-        ) as string;
+        processedData = await this._hookManager.executeHook(HookType.BEFORE_DESERIALIZE, processedData, context);
       }
 
       if (!opts.skipPlugins && this._config.enablePlugins) {
@@ -231,18 +217,14 @@ export class Serializer implements ISerializer {
         });
       }
 
-      let deserialized = strategy.deserialize(processedData) as unknown;
+      let deserialized = strategy.deserialize(processedData);
 
       if (!opts.skipPlugins && this._config.enablePlugins) {
         deserialized = await this._pluginManager.executeAfterDeserialize(deserialized);
       }
 
       if (!opts.skipHooks && this._config.enableHooks) {
-        deserialized = await this._hookManager.executeHook(
-          HookType.AFTER_DESERIALIZE,
-          deserialized,
-          context
-        );
+        deserialized = await this._hookManager.executeHook(HookType.AFTER_DESERIALIZE, deserialized, context);
       }
 
       if (opts.validate && this._config.enableValidation) {
@@ -264,9 +246,10 @@ export class Serializer implements ISerializer {
         metadata: opts.metadata,
       } as ExtendedSerializationResult & { data?: T };
     } catch (error) {
-      const serializationError = error instanceof SerializationError
-        ? error
-        : SerializationError.deserializationFailed({}, error instanceof Error ? error : undefined);
+      const serializationError =
+        error instanceof SerializationError
+          ? error
+          : SerializationError.deserializationFailed({}, error instanceof Error ? error : undefined);
 
       await this._hookManager.executeErrorHooks(serializationError, context);
 

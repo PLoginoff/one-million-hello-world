@@ -1,6 +1,6 @@
 /**
  * Serialization Error Codes
- * 
+ *
  * Enumeration of all possible serialization error codes.
  */
 
@@ -52,7 +52,7 @@ export enum SerializationErrorCode {
 
 /**
  * Gets error message for error code
- * 
+ *
  * @param code - Error code
  * @returns Error message
  */

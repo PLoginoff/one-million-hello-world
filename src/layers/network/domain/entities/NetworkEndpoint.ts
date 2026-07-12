@@ -1,6 +1,6 @@
 /**
  * Network Endpoint Entity
- * 
+ *
  * Represents a network endpoint with host and port.
  * Provides validation and formatting capabilities.
  */
@@ -57,7 +57,7 @@ export class NetworkEndpoint {
     const hostParts = withoutProtocol.split('/');
     const hostPort = hostParts[0] || 'localhost';
     const [host, portStr] = hostPort.split(':');
-    const port = portStr ? parseInt(portStr, 10) : (protocol === 'https' || protocol === 'wss' ? 443 : 80);
+    const port = portStr ? parseInt(portStr, 10) : protocol === 'https' || protocol === 'wss' ? 443 : 80;
     const secure = protocol === 'https' || protocol === 'wss';
     return new NetworkEndpoint(host || 'localhost', port, protocol, secure);
   }

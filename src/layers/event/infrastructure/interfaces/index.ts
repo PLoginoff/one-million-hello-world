@@ -1,6 +1,6 @@
 /**
  * Infrastructure Layer Interfaces
- * 
+ *
  * Exports all infrastructure interfaces.
  */
 

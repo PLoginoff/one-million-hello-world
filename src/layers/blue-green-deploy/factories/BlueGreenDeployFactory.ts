@@ -1,5 +1,8 @@
 import { BlueGreenDeploy } from '../implementations/BlueGreenDeploy';
-import { DefaultBlueGreenDeployStrategy, OptimizedBlueGreenDeployStrategy } from '../strategies/BlueGreenDeployStrategy';
+import {
+  DefaultBlueGreenDeployStrategy,
+  OptimizedBlueGreenDeployStrategy,
+} from '../strategies/BlueGreenDeployStrategy';
 
 export class BlueGreenDeployFactory {
   static createDefault(): BlueGreenDeploy {

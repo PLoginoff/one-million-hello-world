@@ -1,6 +1,6 @@
 /**
  * Strategy Configuration Layer
- * 
+ *
  * Exports all configuration components for the Strategy layer.
  */
 

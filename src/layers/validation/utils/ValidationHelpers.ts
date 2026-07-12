@@ -1,6 +1,6 @@
 /**
  * Validation Helpers
- * 
+ *
  * Utility functions for validation operations.
  */
 
@@ -143,6 +143,6 @@ export class ValidationHelpers {
       if (!current[key]) current[key] = {};
       return current[key];
     }, obj);
-    target[lastKey] = value;
+    target[lastKey!] = value;
   }
 }

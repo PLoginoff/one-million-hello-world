@@ -1,6 +1,6 @@
 /**
  * Time-Based Invalidation Strategy
- * 
+ *
  * Invalidates entries based on TTL expiration.
  */
 

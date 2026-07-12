@@ -1,6 +1,6 @@
 /**
  * Router Factory
- * 
+ *
  * Factory for creating router components and configurations.
  */
 

@@ -5,7 +5,12 @@
  * Provides a type-safe way to construct complex configurations.
  */
 
-import { SagaConfig as DomainSagaConfig, RetryPolicy, CompensationStrategy, IsolationLevel } from '../../domain/value-objects/SagaConfig';
+import {
+  SagaConfig as DomainSagaConfig,
+  RetryPolicy,
+  CompensationStrategy,
+  IsolationLevel,
+} from '../../domain/value-objects/SagaConfig';
 import { SagaConfigDefaults } from '../defaults/SagaDefaults';
 
 export interface SagaBuilderConfig {

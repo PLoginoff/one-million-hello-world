@@ -16,10 +16,7 @@ export class SsoEntity {
   }
 
   static create(data: Record<string, unknown>): SsoEntity {
-    return new SsoEntity(
-      `sso-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new SsoEntity(`sso-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

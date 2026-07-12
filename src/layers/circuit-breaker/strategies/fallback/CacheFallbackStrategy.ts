@@ -1,6 +1,6 @@
 /**
  * Cache Fallback Strategy
- * 
+ *
  * Fallback strategy that returns cached data when available.
  */
 

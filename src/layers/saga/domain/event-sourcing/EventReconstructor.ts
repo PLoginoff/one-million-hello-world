@@ -21,15 +21,15 @@ export class EventReconstructor {
     const sortedEvents = [...events].sort((a, b) => a.getTimestamp() - b.getTimestamp());
     const firstEvent = sortedEvents[0];
 
-    let executionId = firstEvent.getExecutionId!();
+    const executionId = firstEvent.getExecutionId();
     let sagaId = 'unknown';
     let status: 'pending' | 'running' | 'completed' | 'failed' | 'compensating' | 'compensated' = 'pending';
     let metadata = new SagaMetadata({
-          startTime: firstEvent.getTimestamp!(),
-          duration: 0,
-          attemptCount: 1,
-          lastAttemptTime: firstEvent.getTimestamp(),
-        });
+      startTime: firstEvent.getTimestamp(),
+      duration: 0,
+      attemptCount: 1,
+      lastAttemptTime: firstEvent.getTimestamp(),
+    });
 
     for (const event of sortedEvents) {
       switch (event.getEventType()) {
@@ -61,21 +61,14 @@ export class EventReconstructor {
       }
     }
 
-    return new SagaExecutionEntity(
-      executionId,
-      sagaId,
-      status,
-      [],
-      [],
-      metadata,
-    );
+    return new SagaExecutionEntity(executionId, sagaId, status, [], [], metadata);
   }
 
   /**
    * Get state at specific version
    */
   getStateAtVersion(events: SagaEvent[], version: number): SagaExecutionEntity | null {
-    const versionedEvents = events.filter(e => e.getVersion() <= version);
+    const versionedEvents = events.filter((e) => e.getVersion() <= version);
     return this.reconstructFromEvents(versionedEvents);
   }
 
@@ -83,7 +76,7 @@ export class EventReconstructor {
    * Get state at specific timestamp
    */
   getStateAtTimestamp(events: SagaEvent[], timestamp: number): SagaExecutionEntity | null {
-    const timestampedEvents = events.filter(e => e.getTimestamp() <= timestamp);
+    const timestampedEvents = events.filter((e) => e.getTimestamp() <= timestamp);
     return this.reconstructFromEvents(timestampedEvents);
   }
 
@@ -93,7 +86,7 @@ export class EventReconstructor {
   getTimeline(events: SagaEvent[]): Array<{ timestamp: number; eventType: string; description: string }> {
     const sortedEvents = [...events].sort((a, b) => a.getTimestamp() - b.getTimestamp());
 
-    return sortedEvents.map(event => ({
+    return sortedEvents.map((event) => ({
       timestamp: event.getTimestamp(),
       eventType: event.getEventType(),
       description: this._getEventDescription(event.getEventType()),

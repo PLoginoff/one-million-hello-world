@@ -1,6 +1,6 @@
 /**
  * EventExecutor - Core Implementation
- * 
+ *
  * Executes event handlers with performance tracking and error handling.
  * Supports both synchronous and asynchronous execution modes.
  */
@@ -19,11 +19,11 @@ export class EventExecutor implements IEventExecutor {
 
   execute<T>(event: Event<T>, handler: EventHandler<T>): ExecutionResult {
     const startTime = performance.now();
-    
+
     try {
       handler(event);
       const executionTime = performance.now() - startTime;
-      
+
       return {
         success: true,
         handlerExecuted: true,
@@ -38,9 +38,9 @@ export class EventExecutor implements IEventExecutor {
         timestamp: new Date(),
         eventData: event.payload.data,
       };
-      
+
       this._errorHandler.handle(errorContext);
-      
+
       return {
         success: false,
         handlerExecuted: true,
@@ -52,11 +52,11 @@ export class EventExecutor implements IEventExecutor {
 
   async executeAsync<T>(event: Event<T>, handler: EventHandler<T>): Promise<ExecutionResult> {
     const startTime = performance.now();
-    
+
     try {
       await handler(event);
       const executionTime = performance.now() - startTime;
-      
+
       return {
         success: true,
         handlerExecuted: true,
@@ -71,9 +71,9 @@ export class EventExecutor implements IEventExecutor {
         timestamp: new Date(),
         eventData: event.payload.data,
       };
-      
+
       this._errorHandler.handle(errorContext);
-      
+
       return {
         success: false,
         handlerExecuted: true,
@@ -84,11 +84,11 @@ export class EventExecutor implements IEventExecutor {
   }
 
   executeBatch<T>(event: Event<T>, handlers: EventHandler<T>[]): ExecutionResult[] {
-    return handlers.map(handler => this.execute(event, handler));
+    return handlers.map((handler) => this.execute(event, handler));
   }
 
   async executeBatchAsync<T>(event: Event<T>, handlers: EventHandler<T>[]): Promise<ExecutionResult[]> {
-    const promises = handlers.map(handler => this.executeAsync(event, handler));
+    const promises = handlers.map((handler) => this.executeAsync(event, handler));
     return Promise.all(promises);
   }
 }

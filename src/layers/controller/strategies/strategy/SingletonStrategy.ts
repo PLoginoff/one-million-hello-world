@@ -1,6 +1,6 @@
 /**
  * Singleton Strategy
- * 
+ *
  * Creates and reuses a single instance per controller.
  */
 

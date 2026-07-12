@@ -1,6 +1,6 @@
 /**
  * EventBus - Core Implementation
- * 
+ *
  * Main event bus implementation with subscription management,
  * async publishing, and error handling.
  */
@@ -51,10 +51,10 @@ export class EventBus implements IEventBus {
 
     for (const subscription of subscriptions) {
       const result = this._executor.execute(event, subscription.handler);
-      
+
       if (result.success) {
         this._subscriptionManager.updateExecution(subscription.id);
-        
+
         if (subscription.once) {
           toRemove.push(subscription.id);
         }
@@ -70,17 +70,20 @@ export class EventBus implements IEventBus {
     const subscriptions = this._subscriptionManager.getByEventType(event.type.value);
     const toRemove: string[] = [];
 
-    const results = await this._executor.executeBatchAsync(event, subscriptions.map(s => s.handler));
+    const results = await this._executor.executeBatchAsync(
+      event,
+      subscriptions.map((s) => s.handler)
+    );
 
     for (let i = 0; i < subscriptions.length; i++) {
       const subscription = subscriptions[i];
       const result = results[i];
-      
+
       if (result.success) {
         this._subscriptionManager.updateExecution(subscription.id);
-        
+
         if (subscription.once) {
-          toRemove.push!(subscription.id);
+          toRemove.push(subscription.id);
         }
       }
     }

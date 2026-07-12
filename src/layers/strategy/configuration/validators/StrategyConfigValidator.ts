@@ -53,14 +53,14 @@ export class StrategyConfigValidator {
           path: `strategyConfig.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...configValidation.warnings.map((w: any) => ({
           path: `strategyConfig.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

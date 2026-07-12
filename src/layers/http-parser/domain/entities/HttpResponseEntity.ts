@@ -1,6 +1,6 @@
 /**
  * HTTP Response Entity
- * 
+ *
  * Represents a parsed HTTP response with validation and metadata.
  */
 
@@ -14,11 +14,7 @@ export class HttpResponseEntity {
   readonly parsedAt: Date;
   readonly size: number;
 
-  private constructor(
-    line: HttpStatusLine,
-    headers: HttpHeaders,
-    body: Buffer
-  ) {
+  private constructor(line: HttpStatusLine, headers: HttpHeaders, body: Buffer) {
     this.validateStatusLine(line);
     this.validateHeaders(headers);
     this.validateBody(body);
@@ -33,11 +29,7 @@ export class HttpResponseEntity {
   /**
    * Create HTTP response entity
    */
-  static create(
-    line: HttpStatusLine,
-    headers: HttpHeaders,
-    body: Buffer
-  ): HttpResponseEntity {
+  static create(line: HttpStatusLine, headers: HttpHeaders, body: Buffer): HttpResponseEntity {
     return new HttpResponseEntity(line, headers, body);
   }
 
@@ -137,11 +129,7 @@ export class HttpResponseEntity {
    * Clone the response entity
    */
   clone(): HttpResponseEntity {
-    return new HttpResponseEntity(
-      { ...this.line },
-      new Map(this.headers),
-      Buffer.from(this.body)
-    );
+    return new HttpResponseEntity({ ...this.line }, new Map(this.headers), Buffer.from(this.body));
   }
 
   /**

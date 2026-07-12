@@ -667,7 +667,7 @@ describe('FilterEngine', () => {
      */
     it('should fail validation for filter without field', () => {
       const filter: ParsedFilter = {
-        field: 'age',
+        field: '',
         operator: FilterOperator.GREATER_THAN,
         value: 30,
         negated: false,
@@ -685,7 +685,7 @@ describe('FilterEngine', () => {
     it('should fail validation for filter without operator', () => {
       const filter: ParsedFilter = {
         field: 'name',
-        operator: '',
+        operator: '' as any,
         value: 'John',
         negated: false,
         logicalOperator: LogicalOperator.AND,

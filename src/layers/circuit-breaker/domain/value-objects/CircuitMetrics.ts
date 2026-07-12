@@ -1,6 +1,6 @@
 /**
  * Circuit Metrics Value Object
- * 
+ *
  * Represents circuit breaker metrics and performance data.
  * Immutable value object for tracking circuit performance.
  */

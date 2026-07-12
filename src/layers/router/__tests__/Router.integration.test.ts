@@ -7,7 +7,7 @@
  */
 
 import { Router } from '../implementations/Router';
-import { HttpRequest } from '../../http-parser/types/http-parser-types';
+import { HttpRequest, HttpVersion } from '../../http-parser/types/http-parser-types';
 import {
   HttpMethod,
   Route,
@@ -60,7 +60,7 @@ describe('Router Integration', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -87,7 +87,7 @@ describe('Router Integration', () => {
       router.setConfig({ caseSensitive: false } as RouterConfig);
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -291,7 +291,7 @@ describe('Router Integration', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -318,7 +318,7 @@ describe('Router Integration', () => {
       });
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /users HTTP/1.1\r\n\r\n', 'utf-8'),
@@ -381,7 +381,7 @@ describe('Router Integration', () => {
       router.registerMiddleware(middleware);
 
       const request: HttpRequest = {
-        line: { method: HttpMethod.GET, path: '/api/users', version: 'HTTP/1.1' },
+        line: { method: HttpMethod.GET, path: '/api/users', version: HttpVersion.HTTP_1_1 },
         headers: new Map(),
         body: Buffer.from(''),
         raw: Buffer.from('GET /api/users HTTP/1.1\r\n\r\n', 'utf-8'),

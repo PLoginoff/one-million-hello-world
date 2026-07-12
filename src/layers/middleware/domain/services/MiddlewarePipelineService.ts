@@ -1,6 +1,6 @@
 /**
  * Middleware Pipeline Service
- * 
+ *
  * Manages middleware pipeline with order control.
  */
 
@@ -8,7 +8,9 @@ import { MiddlewareEntity } from '../entities/MiddlewareEntity';
 import { MiddlewareContextEntity } from '../entities/MiddlewareContextEntity';
 import { MiddlewareExecutionOrderValueObject } from '../value-objects/MiddlewareExecutionOrderValueObject';
 
-export type PipelineHandler = (context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity;
+export type PipelineHandler = (
+  context: MiddlewareContextEntity
+) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity;
 
 export class MiddlewarePipelineService {
   private middlewares: Array<{
@@ -37,7 +39,7 @@ export class MiddlewarePipelineService {
    * Remove middleware from pipeline
    */
   remove(middlewareId: string): void {
-    this.middlewares = this.middlewares.filter(m => m.entity.data.id !== middlewareId);
+    this.middlewares = this.middlewares.filter((m) => m.entity.data.id !== middlewareId);
   }
 
   /**
@@ -58,9 +60,9 @@ export class MiddlewarePipelineService {
    * Reorder middlewares based on execution order
    */
   private reorder(): void {
-    const first = this.middlewares.filter(m => m.order.isFirst());
-    const last = this.middlewares.filter(m => m.order.isLast());
-    const others = this.middlewares.filter(m => !m.order.isFirst() && !m.order.isLast());
+    const first = this.middlewares.filter((m) => m.order.isFirst());
+    const last = this.middlewares.filter((m) => m.order.isLast());
+    const others = this.middlewares.filter((m) => !m.order.isFirst() && !m.order.isLast());
 
     others.sort((a, b) => {
       if (a.order.isBefore() && b.order.isAfter()) return -1;

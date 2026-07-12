@@ -1,6 +1,6 @@
 /**
  * Middleware Strategy Interface
- * 
+ *
  * Defines contract for different middleware execution strategies.
  */
 

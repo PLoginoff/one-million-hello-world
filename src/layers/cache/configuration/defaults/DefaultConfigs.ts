@@ -1,6 +1,6 @@
 /**
  * Default Cache Configurations
- * 
+ *
  * Pre-configured settings for common use cases.
  */
 

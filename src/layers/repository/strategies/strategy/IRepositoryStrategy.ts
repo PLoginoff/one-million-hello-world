@@ -1,6 +1,6 @@
 /**
  * Repository Strategy Interface
- * 
+ *
  * Defines contract for different repository strategies.
  */
 

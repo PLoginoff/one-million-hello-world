@@ -53,14 +53,14 @@ export class FacadeConfigValidator {
           path: `facadeConfig.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...configValidation.warnings.map((w: any) => ({
           path: `facadeConfig.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

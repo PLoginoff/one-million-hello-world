@@ -1,6 +1,6 @@
 /**
  * Validation Layer Types
- * 
+ *
  * This module defines all type definitions for the Validation Layer,
  * including schema validation, sanitization, and type checking.
  */
@@ -141,9 +141,9 @@ export interface ValidationContext {
  */
 export interface ValidationSchema {
   fields: Record<string, FieldValidation>;
-  strictMode: boolean;
-  sanitize: boolean;
-  version: string;
+  strictMode?: boolean;
+  sanitize?: boolean;
+  version?: string;
   nestedSchemas?: Record<string, ValidationSchema>;
   crossFieldRules?: CrossFieldRule[];
   conditionalRules?: ConditionalRule[];
@@ -245,7 +245,7 @@ export interface SanitizationMetrics {
  */
 export interface Sanitizer {
   name: string;
-  type: SanitizerType;
+  type: SanitizerType | string;
   options?: SanitizerOptions;
 }
 
@@ -267,7 +267,7 @@ export enum SanitizerType {
   ENCODE_URI = 'ENCODE_URI',
   DECODE_URI = 'DECODE_URI',
   STRIP_TAGS = 'STRIP_TAGS',
-  CUSTOM = 'CUSTOM',
+  CUSTOM = 'CUSTOM_SANITIZER',
 }
 
 /**

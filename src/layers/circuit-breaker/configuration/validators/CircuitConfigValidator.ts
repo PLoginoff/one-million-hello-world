@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Configuration Validator
- * 
+ *
  * Validates circuit breaker configurations before use.
  * Ensures configurations are valid and safe to apply.
  */
@@ -53,14 +53,14 @@ export class CircuitConfigValidator {
           path: `threshold.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...thresholdValidation.warnings.map((w) => ({
           path: `threshold.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

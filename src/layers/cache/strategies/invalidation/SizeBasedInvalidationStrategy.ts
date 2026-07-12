@@ -1,6 +1,6 @@
 /**
  * Size-Based Invalidation Strategy
- * 
+ *
  * Invalidates entries when cache size exceeds limit.
  * This works in conjunction with eviction strategies.
  */

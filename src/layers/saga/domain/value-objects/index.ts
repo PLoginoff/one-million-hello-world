@@ -5,5 +5,12 @@
  */
 
 export { SagaMetadata, SagaMetadataData } from './SagaMetadata';
-export { SagaConfig, SagaConfigData, RetryPolicy, BackoffStrategy, CompensationStrategy, IsolationLevel } from './SagaConfig';
+export {
+  SagaConfig,
+  SagaConfigData,
+  RetryPolicy,
+  BackoffStrategy,
+  CompensationStrategy,
+  IsolationLevel,
+} from './SagaConfig';
 export { SagaStepDefinition, SagaStepDefinitionData, StepRetryPolicy } from './SagaStepDefinition';

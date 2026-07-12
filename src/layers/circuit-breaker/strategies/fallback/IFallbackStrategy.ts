@@ -1,13 +1,13 @@
 /**
  * Fallback Strategy Interface
- * 
+ *
  * Defines the contract for fallback strategies when circuit is open.
  */
 
 export interface IFallbackStrategy<T> {
   /**
    * Execute fallback logic
-   * 
+   *
    * @param context - Fallback execution context
    * @returns Fallback result
    */
@@ -15,14 +15,14 @@ export interface IFallbackStrategy<T> {
 
   /**
    * Check if fallback is available
-   * 
+   *
    * @returns True if fallback is available
    */
   isAvailable(): boolean;
 
   /**
    * Get fallback strategy name
-   * 
+   *
    * @returns Strategy name
    */
   getName(): string;

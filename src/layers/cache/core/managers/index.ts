@@ -1,6 +1,6 @@
 /**
  * Core Managers
- * 
+ *
  * Exports core cache managers.
  */
 

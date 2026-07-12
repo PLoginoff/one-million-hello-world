@@ -1,6 +1,6 @@
 /**
  * Serialization Event Types
- * 
+ *
  * Enumeration of serialization-related event types.
  */
 

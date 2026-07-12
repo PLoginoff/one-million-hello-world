@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Configuration Builder
- * 
+ *
  * Fluent builder for creating circuit breaker configurations.
  * Provides a type-safe way to construct complex configurations.
  */

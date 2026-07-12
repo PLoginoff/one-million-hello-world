@@ -1,6 +1,6 @@
 /**
  * Factories Layer
- * 
+ *
  * Exports factory components for creating repository objects.
  */
 

@@ -1,5 +1,8 @@
 import { DistributedTracing } from '../implementations/DistributedTracing';
-import { DefaultDistributedTracingStrategy, OptimizedDistributedTracingStrategy } from '../strategies/DistributedTracingStrategy';
+import {
+  DefaultDistributedTracingStrategy,
+  OptimizedDistributedTracingStrategy,
+} from '../strategies/DistributedTracingStrategy';
 
 export class DistributedTracingFactory {
   static createDefault(): DistributedTracing {

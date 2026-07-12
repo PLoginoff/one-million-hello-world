@@ -18,7 +18,11 @@ export class RetryCondition {
 
   constructor(data: RetryConditionData) {
     this._validateCondition(data);
-    this.data = { ...data, retryableErrors: [...data.retryableErrors], retryableStatusCodes: [...data.retryableStatusCodes] };
+    this.data = {
+      ...data,
+      retryableErrors: [...data.retryableErrors],
+      retryableStatusCodes: [...data.retryableStatusCodes],
+    };
   }
 
   /**

@@ -19,13 +19,7 @@ export class ChoreographyPattern {
    */
   async execute(sagaId: string, steps: any[]): Promise<SagaExecutionEntity> {
     const executionId = `exec_${Date.now()}`;
-    const execution = new SagaExecutionEntity(
-      executionId,
-      sagaId,
-      'pending',
-      steps,
-      [],
-    );
+    const execution = new SagaExecutionEntity(executionId, sagaId, 'pending', steps, []);
 
     this._eventBus.publish('saga-started', { executionId, sagaId });
 

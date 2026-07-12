@@ -1,6 +1,6 @@
 /**
  * Logger Interface
- * 
+ *
  * Defines the contract for logging operations
  * in the Saga Layer.
  */
@@ -15,7 +15,7 @@ export enum LogLevel {
 export interface ILogger {
   /**
    * Logs a debug message
-   * 
+   *
    * @param message - Message to log
    * @param context - Optional context data
    */
@@ -23,7 +23,7 @@ export interface ILogger {
 
   /**
    * Logs an info message
-   * 
+   *
    * @param message - Message to log
    * @param context - Optional context data
    */
@@ -31,7 +31,7 @@ export interface ILogger {
 
   /**
    * Logs a warning message
-   * 
+   *
    * @param message - Message to log
    * @param context - Optional context data
    */
@@ -39,7 +39,7 @@ export interface ILogger {
 
   /**
    * Logs an error message
-   * 
+   *
    * @param message - Message to log
    * @param context - Optional context data
    */
@@ -47,28 +47,28 @@ export interface ILogger {
 
   /**
    * Sets the minimum log level
-   * 
+   *
    * @param level - Minimum log level
    */
   setLogLevel(level: LogLevel): void;
 
   /**
    * Gets the current log level
-   * 
+   *
    * @returns Current log level
    */
   getLogLevel(): LogLevel;
 
   /**
    * Enables or disables logging
-   * 
+   *
    * @param enabled - Whether logging is enabled
    */
   setEnabled(enabled: boolean): void;
 
   /**
    * Checks if logging is enabled
-   * 
+   *
    * @returns Whether logging is enabled
    */
   isEnabled(): boolean;

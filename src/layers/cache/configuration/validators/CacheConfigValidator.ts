@@ -1,6 +1,6 @@
 /**
  * Cache Configuration Validator
- * 
+ *
  * Validates cache configuration settings.
  */
 

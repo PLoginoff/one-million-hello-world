@@ -1,6 +1,6 @@
 /**
  * IEventExecutor - Core Interface
- * 
+ *
  * Interface for executing event handlers.
  * Handles synchronous and asynchronous execution with error handling.
  */

@@ -1,6 +1,6 @@
 /**
  * Security Context Entity
- * 
+ *
  * Represents security context for a request with authentication and authorization data.
  */
 
@@ -90,14 +90,14 @@ export class SecurityContextEntity {
    * Check if user has any of the roles
    */
   hasAnyRole(roles: string[]): boolean {
-    return roles.some(role => this.hasRole(role));
+    return roles.some((role) => this.hasRole(role));
   }
 
   /**
    * Check if user has all roles
    */
   hasAllRoles(roles: string[]): boolean {
-    return roles.every(role => this.hasRole(role));
+    return roles.every((role) => this.hasRole(role));
   }
 
   /**
@@ -111,7 +111,7 @@ export class SecurityContextEntity {
    * Check if user has any of the permissions
    */
   hasAnyPermission(permissions: string[]): boolean {
-    return permissions.some(permission => this.hasPermission(permission));
+    return permissions.some((permission) => this.hasPermission(permission));
   }
 
   /**

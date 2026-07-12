@@ -106,7 +106,7 @@ export class MonitorSagaUseCase {
     for (const step of execution.steps) {
       const status = step.status as string;
       if (status in breakdown) {
-        (breakdown[status])!++;
+        breakdown[status]++;
       }
     }
 

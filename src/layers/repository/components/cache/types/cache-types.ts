@@ -1,6 +1,6 @@
 /**
  * Cache Layer Types
- * 
+ *
  * Type definitions for caching operations with TTL and eviction policies.
  */
 

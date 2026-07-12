@@ -16,10 +16,7 @@ export class IdentityEntity {
   }
 
   static create(data: Record<string, unknown>): IdentityEntity {
-    return new IdentityEntity(
-      `identity-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new IdentityEntity(`identity-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -1,6 +1,6 @@
 /**
  * Authentication Strategy Interface
- * 
+ *
  * Defines contract for different authentication strategies.
  */
 

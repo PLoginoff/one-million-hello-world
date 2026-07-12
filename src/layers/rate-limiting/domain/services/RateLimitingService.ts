@@ -1,6 +1,6 @@
 /**
  * Rate Limiting Service
- * 
+ *
  * Provides rate limiting logic and enforcement.
  */
 
@@ -17,7 +17,11 @@ export class RateLimitingService {
   /**
    * Check if request is allowed
    */
-  isAllowed(key: RateLimitKey, limit: number, window: number): {
+  isAllowed(
+    key: RateLimitKey,
+    limit: number,
+    window: number
+  ): {
     allowed: boolean;
     remaining: number;
     resetAt: number;

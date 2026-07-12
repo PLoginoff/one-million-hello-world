@@ -1,6 +1,6 @@
 /**
  * Serialization Strategy Factory
- * 
+ *
  * Factory for creating serialization strategies.
  */
 
@@ -60,7 +60,7 @@ export class SerializationStrategyFactory implements ISerializationStrategyFacto
 
   /**
    * Unregisters a strategy for a format
-   * 
+   *
    * @param format - Serialization format
    */
   unregisterStrategy(format: SerializationFormat | string): void {

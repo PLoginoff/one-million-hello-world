@@ -1,16 +1,11 @@
 /**
  * Circuit Breaker Interface
- * 
+ *
  * Defines the contract for circuit breaker operations
  * including fault tolerance and fallback strategies.
  */
 
-import {
-  CircuitState,
-  CircuitStats,
-  CircuitConfig,
-  CircuitResult,
-} from '../types/circuit-breaker-types';
+import { CircuitState, CircuitStats, CircuitConfig, CircuitResult } from '../types/circuit-breaker-types';
 
 /**
  * Fallback function type
@@ -23,7 +18,7 @@ export type FallbackFunction<T> = () => T | Promise<T>;
 export interface ICircuitBreaker {
   /**
    * Executes operation with circuit breaker protection
-   * 
+   *
    * @param operation - Operation to execute
    * @param fallback - Fallback function
    * @returns Circuit result
@@ -32,14 +27,14 @@ export interface ICircuitBreaker {
 
   /**
    * Gets current circuit state
-   * 
+   *
    * @returns Current circuit state
    */
   getState(): CircuitState;
 
   /**
    * Gets circuit statistics
-   * 
+   *
    * @returns Circuit statistics
    */
   getStats(): CircuitStats;
@@ -51,14 +46,14 @@ export interface ICircuitBreaker {
 
   /**
    * Sets circuit breaker configuration
-   * 
+   *
    * @param config - Circuit configuration
    */
   setConfig(config: CircuitConfig): void;
 
   /**
    * Gets current circuit configuration
-   * 
+   *
    * @returns Current circuit configuration
    */
   getConfig(): CircuitConfig;

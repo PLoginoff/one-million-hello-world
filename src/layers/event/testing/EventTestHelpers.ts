@@ -1,6 +1,6 @@
 /**
  * EventTestHelpers - Testing Utility
- * 
+ *
  * Helper functions for event testing.
  * Provides assertion helpers and test utilities.
  */
@@ -30,7 +30,7 @@ export class EventTestHelpers {
 
   static assertEventSequence(events: Event[]): void {
     for (let i = 1; i < events.length; i++) {
-      expect((events[i])!.occurredAfter(events[i - 1])).toBe(true);
+      expect(events[i].occurredAfter(events[i - 1])).toBe(true);
     }
   }
 
@@ -42,11 +42,7 @@ export class EventTestHelpers {
     expect(event.payload.data).toEqual(expectedPayload);
   }
 
-  static waitForEvent(
-    eventType: string,
-    callback: () => void,
-    timeout: number = 5000
-  ): Promise<Event> {
+  static waitForEvent(eventType: string, callback: () => void, timeout: number = 5000): Promise<Event> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         reject(new Error(`Timeout waiting for event: ${eventType}`));
@@ -62,7 +58,7 @@ export class EventTestHelpers {
   }
 
   static async delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   static generateTestEvents(count: number): Event<{ index: number }>[] {
@@ -102,11 +98,11 @@ export class EventTestHelpers {
   }
 
   static extractEventIds(events: Event[]): string[] {
-    return events.map(e => e.id.value);
+    return events.map((e) => e.id.value);
   }
 
   static extractEventTypes(events: Event[]): string[] {
-    return events.map(e => e.type.value);
+    return events.map((e) => e.type.value);
   }
 
   static groupEventsByType(events: Event[]): Map<string, Event[]> {
@@ -126,11 +122,11 @@ export class EventTestHelpers {
   }
 
   static filterEventsByType(events: Event[], eventType: string): Event[] {
-    return events.filter(e => e.type.value === eventType);
+    return events.filter((e) => e.type.value === eventType);
   }
 
   static filterEventsByCorrelation(events: Event[], correlationId: string): Event[] {
-    return events.filter(e => e.metadata.correlationId === correlationId);
+    return events.filter((e) => e.metadata.correlationId === correlationId);
   }
 
   static countEventsByType(events: Event[]): Map<string, number> {

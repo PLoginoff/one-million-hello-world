@@ -1,16 +1,12 @@
 /**
  * Compressor Implementation
- * 
+ *
  * Concrete implementation of ICompressor.
  * Handles Gzip, Brotli, and dynamic compression.
  */
 
 import { ICompressor } from '../interfaces/ICompressor';
-import {
-  CompressionAlgorithm,
-  CompressionResult,
-  CompressionConfig,
-} from '../types/compression-types';
+import { CompressionAlgorithm, CompressionResult, CompressionConfig } from '../types/compression-types';
 
 export class Compressor implements ICompressor {
   private _config: CompressionConfig;

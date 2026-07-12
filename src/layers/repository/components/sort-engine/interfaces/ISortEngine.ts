@@ -1,6 +1,6 @@
 /**
  * Sort Engine Interface
- * 
+ *
  * Defines the contract for applying sorting to data collections.
  */
 
@@ -21,7 +21,7 @@ import {
 export interface ISortEngine<T = unknown> {
   /**
    * Applies sorts to data
-   * 
+   *
    * @param data - Data to sort
    * @param sorts - Array of parsed sorts
    * @param context - Sort execution context
@@ -31,7 +31,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Compiles a sort for optimized execution
-   * 
+   *
    * @param sort - Parsed sort to compile
    * @returns Compiled sort
    */
@@ -39,7 +39,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Applies compiled sorts to data
-   * 
+   *
    * @param data - Data to sort
    * @param sorts - Array of compiled sorts
    * @param context - Sort execution context
@@ -49,7 +49,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Applies multi-level sort to data
-   * 
+   *
    * @param data - Data to sort
    * @param multiLevelSort - Multi-level sort configuration
    * @param context - Sort execution context
@@ -59,49 +59,49 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Sets sort context
-   * 
+   *
    * @param context - Sort execution context
    */
   setContext(context: Partial<SortContext>): void;
 
   /**
    * Gets current sort context
-   * 
+   *
    * @returns Current sort context
    */
   getContext(): SortContext;
 
   /**
    * Sets sort configuration
-   * 
+   *
    * @param config - Sort configuration
    */
   setConfig(config: Partial<SortConfig>): void;
 
   /**
    * Gets current sort configuration
-   * 
+   *
    * @returns Current sort configuration
    */
   getConfig(): SortConfig;
 
   /**
    * Sets sort algorithm
-   * 
+   *
    * @param algorithm - Sort algorithm
    */
   setAlgorithm(algorithm: SortAlgorithm): void;
 
   /**
    * Gets current sort algorithm
-   * 
+   *
    * @returns Current sort algorithm
    */
   getAlgorithm(): SortAlgorithm;
 
   /**
    * Gets sort statistics
-   * 
+   *
    * @returns Sort statistics
    */
   getStats(): SortStats;
@@ -118,7 +118,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Validates a sort
-   * 
+   *
    * @param sort - Parsed sort to validate
    * @returns Boolean indicating if sort is valid
    */
@@ -126,7 +126,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Estimates sort cost
-   * 
+   *
    * @param sorts - Array of parsed sorts
    * @param dataLength - Length of data to sort
    * @returns Estimated cost
@@ -135,7 +135,7 @@ export interface ISortEngine<T = unknown> {
 
   /**
    * Reverses a sort
-   * 
+   *
    * @param sort - Parsed sort to reverse
    * @returns Reversed sort
    */

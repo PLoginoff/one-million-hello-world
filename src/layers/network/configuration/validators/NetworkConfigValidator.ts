@@ -1,6 +1,6 @@
 /**
  * Network Configuration Validator
- * 
+ *
  * Validates network configuration parameters.
  */
 

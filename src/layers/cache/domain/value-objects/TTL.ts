@@ -1,6 +1,6 @@
 /**
  * TTL (Time To Live) Value Object
- * 
+ *
  * Represents time-to-live duration for cache entries.
  * Immutable value object with validation.
  */

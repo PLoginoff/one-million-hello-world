@@ -1,6 +1,6 @@
 /**
  * Application Layer
- * 
+ *
  * Application layer providing event handling and dispatching services.
  */
 

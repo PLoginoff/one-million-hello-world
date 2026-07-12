@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker
- * 
+ *
  * Circuit breaker pattern for resilience.
  */
 

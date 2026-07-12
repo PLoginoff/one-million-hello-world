@@ -16,10 +16,7 @@ export class RulesEngineEntity {
   }
 
   static create(data: Record<string, unknown>): RulesEngineEntity {
-    return new RulesEngineEntity(
-      `rules-engine-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new RulesEngineEntity(`rules-engine-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

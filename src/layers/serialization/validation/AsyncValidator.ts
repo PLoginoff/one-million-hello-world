@@ -1,6 +1,6 @@
 /**
  * Async Validator
- * 
+ *
  * Validator that supports asynchronous validation.
  */
 
@@ -37,7 +37,7 @@ export class AsyncValidator extends BaseValidator {
 
   /**
    * Gets the async validation function
-   * 
+   *
    * @returns Async validation function
    */
   getAsyncValidator(): AsyncValidationFunction {
@@ -46,7 +46,7 @@ export class AsyncValidator extends BaseValidator {
 
   /**
    * Sets the async validation function
-   * 
+   *
    * @param validator - New async validator
    * @returns This validator for chaining
    */
@@ -57,7 +57,7 @@ export class AsyncValidator extends BaseValidator {
 
   /**
    * Gets the timeout
-   * 
+   *
    * @returns Timeout in milliseconds or undefined
    */
   getTimeout(): number | undefined {
@@ -66,7 +66,7 @@ export class AsyncValidator extends BaseValidator {
 
   /**
    * Sets the timeout
-   * 
+   *
    * @param timeout - Timeout in milliseconds
    * @returns This validator for chaining
    */
@@ -77,7 +77,7 @@ export class AsyncValidator extends BaseValidator {
 
   /**
    * Validates with timeout
-   * 
+   *
    * @param data - Data to validate
    * @returns Validation result
    */
@@ -89,10 +89,7 @@ export class AsyncValidator extends BaseValidator {
     });
 
     try {
-      return await Promise.race([
-        this._asyncValidator(data),
-        timeoutPromise,
-      ]) as ValidationResult;
+      return await Promise.race([this._asyncValidator(data), timeoutPromise]);
     } catch (error) {
       return {
         valid: false,

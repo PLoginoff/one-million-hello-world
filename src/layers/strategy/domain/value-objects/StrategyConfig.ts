@@ -1,6 +1,6 @@
 /**
  * Strategy Configuration Value Object
- * 
+ *
  * Represents strategy configuration.
  * Immutable value object for strategy management.
  */

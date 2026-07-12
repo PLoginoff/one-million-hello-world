@@ -1,6 +1,6 @@
 /**
  * Controller Layer Types
- * 
+ *
  * This module defines all type definitions for the Controller Layer,
  * including request handling, orchestration, and response codes.
  */

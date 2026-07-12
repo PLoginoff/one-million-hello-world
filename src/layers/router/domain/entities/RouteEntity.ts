@@ -1,6 +1,6 @@
 /**
  * Route Entity
- * 
+ *
  * Represents a route with metadata.
  */
 

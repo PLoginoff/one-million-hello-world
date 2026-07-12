@@ -1,6 +1,6 @@
 /**
  * IEventStore - Infrastructure Interface
- * 
+ *
  * Interface for persisting and retrieving events.
  * Provides event sourcing capabilities and event history.
  */

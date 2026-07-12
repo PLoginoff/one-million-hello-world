@@ -16,9 +16,25 @@ export { Validator } from './implementations/Validator';
 export * from './types/validation-types';
 
 // New Clean Architecture exports
-export { ValidationResultEntity as NewValidationResultEntity, ValidationError as NewValidationError, ValidationWarning as NewValidationWarning } from './domain/entities/ValidationResult';
+export {
+  ValidationResultEntity as NewValidationResultEntity,
+  ValidationError as NewValidationError,
+  ValidationWarning as NewValidationWarning,
+} from './domain/entities/ValidationResult';
 export { ValidationMetadata, ValidationMetadataData } from './domain/value-objects/ValidationMetadata';
-export { ValidationRule as NewValidationRule, ValidationRuleData as NewValidationRuleData, FieldType as NewFieldType, ValidationConstraint, ConstraintType, RuleSeverity, RuleValidationError, RuleValidationWarning } from './domain/value-objects/ValidationRule';
-export { ValidationSchema as NewValidationSchema, ValidationSchemaData as NewValidationSchemaData } from './domain/value-objects/ValidationSchema';
+export {
+  ValidationRule as NewValidationRule,
+  ValidationRuleData as NewValidationRuleData,
+  FieldType as NewFieldType,
+  ValidationConstraint,
+  ConstraintType,
+  RuleSeverity,
+  RuleValidationError,
+  RuleValidationWarning,
+} from './domain/value-objects/ValidationRule';
+export {
+  ValidationSchema as NewValidationSchema,
+  ValidationSchemaData as NewValidationSchemaData,
+} from './domain/value-objects/ValidationSchema';
 export * from './strategies';
 export * from './factories';

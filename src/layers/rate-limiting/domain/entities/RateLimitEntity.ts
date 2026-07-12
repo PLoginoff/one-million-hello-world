@@ -1,6 +1,6 @@
 /**
  * Rate Limit Entity
- * 
+ *
  * Represents a rate limit rule with metadata.
  */
 
@@ -31,11 +31,7 @@ export class RateLimitEntity {
   /**
    * Create new rate limit
    */
-  static createNew(
-    identifier: string,
-    limit: number,
-    window: number
-  ): RateLimitEntity {
+  static createNew(identifier: string, limit: number, window: number): RateLimitEntity {
     const now = Date.now();
     return new RateLimitEntity({
       identifier,

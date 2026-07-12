@@ -1,6 +1,6 @@
 /**
  * Plugin Registry
- * 
+ *
  * Central registry for serialization plugins with metadata.
  */
 
@@ -30,7 +30,7 @@ export class PluginRegistry {
 
   /**
    * Registers a plugin with metadata
-   * 
+   *
    * @param key - Unique key for the plugin
    * @param plugin - Plugin instance
    * @param metadata - Plugin metadata
@@ -50,7 +50,7 @@ export class PluginRegistry {
 
   /**
    * Unregisters a plugin
-   * 
+   *
    * @param key - Plugin key
    */
   unregister(key: string): void {
@@ -71,7 +71,7 @@ export class PluginRegistry {
 
   /**
    * Gets a plugin by key
-   * 
+   *
    * @param key - Plugin key
    * @returns Plugin or undefined
    */
@@ -81,7 +81,7 @@ export class PluginRegistry {
 
   /**
    * Gets a plugin by name
-   * 
+   *
    * @param name - Plugin name
    * @returns Plugin or undefined
    */
@@ -92,7 +92,7 @@ export class PluginRegistry {
 
   /**
    * Gets plugin metadata by key
-   * 
+   *
    * @param key - Plugin key
    * @returns Metadata or undefined
    */
@@ -102,7 +102,7 @@ export class PluginRegistry {
 
   /**
    * Gets all registered plugins
-   * 
+   *
    * @returns Array of plugins with metadata
    */
   getAll(): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
@@ -115,50 +115,50 @@ export class PluginRegistry {
 
   /**
    * Gets plugins by category
-   * 
+   *
    * @param category - Category name
    * @returns Array of matching plugins
    */
   getByCategory(category: string): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
     const keys = this._categoryMap.get(category) ?? [];
-    return keys.map(key => ({
+    return keys.map((key) => ({
       key,
-      plugin: this.get(key),
-      metadata: this.getMetadata(key),
+      plugin: this.get(key)!,
+      metadata: this.getMetadata(key)!,
     }));
   }
 
   /**
    * Gets plugins by tag
-   * 
+   *
    * @param tag - Tag to filter by
    * @returns Array of matching plugins
    */
   getByTag(tag: string): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.tags?.includes(tag));
+    return this.getAll().filter((entry) => entry.metadata.tags?.includes(tag));
   }
 
   /**
    * Gets enabled plugins
-   * 
+   *
    * @returns Array of enabled plugins
    */
   getEnabled(): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.enabled !== false);
+    return this.getAll().filter((entry) => entry.metadata.enabled !== false);
   }
 
   /**
    * Gets disabled plugins
-   * 
+   *
    * @returns Array of disabled plugins
    */
   getDisabled(): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.enabled === false);
+    return this.getAll().filter((entry) => entry.metadata.enabled === false);
   }
 
   /**
    * Gets plugins by priority (highest first)
-   * 
+   *
    * @returns Array of plugins sorted by priority
    */
   getByPriority(): Array<{ key: string; plugin: ISerializationPlugin; metadata: PluginMetadata }> {
@@ -171,7 +171,7 @@ export class PluginRegistry {
 
   /**
    * Checks if a plugin is registered
-   * 
+   *
    * @param key - Plugin key
    * @returns True if registered
    */
@@ -181,7 +181,7 @@ export class PluginRegistry {
 
   /**
    * Checks if a plugin name is registered
-   * 
+   *
    * @param name - Plugin name
    * @returns True if registered
    */
@@ -191,7 +191,7 @@ export class PluginRegistry {
 
   /**
    * Enables a plugin
-   * 
+   *
    * @param key - Plugin key
    */
   enable(key: string): void {
@@ -203,7 +203,7 @@ export class PluginRegistry {
 
   /**
    * Disables a plugin
-   * 
+   *
    * @param key - Plugin key
    */
   disable(key: string): void {
@@ -215,7 +215,7 @@ export class PluginRegistry {
 
   /**
    * Gets all categories
-   * 
+   *
    * @returns Array of category names
    */
   getCategories(): string[] {
@@ -233,7 +233,7 @@ export class PluginRegistry {
 
   /**
    * Gets the number of registered plugins
-   * 
+   *
    * @returns Number of plugins
    */
   size(): number {

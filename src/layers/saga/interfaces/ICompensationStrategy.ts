@@ -1,6 +1,6 @@
 /**
  * Compensation Strategy Interface
- * 
+ *
  * Defines the contract for compensation strategies
  * in the Saga Layer.
  */
@@ -23,7 +23,7 @@ export interface CompensationResult {
 export interface ICompensationStrategy {
   /**
    * Executes compensation for a single step
-   * 
+   *
    * @param context - Compensation context
    * @returns Compensation result
    */
@@ -31,7 +31,7 @@ export interface ICompensationStrategy {
 
   /**
    * Executes compensation for multiple steps
-   * 
+   *
    * @param contexts - Array of compensation contexts
    * @returns Array of compensation results
    */
@@ -39,7 +39,7 @@ export interface ICompensationStrategy {
 
   /**
    * Determines if compensation should continue after an error
-   * 
+   *
    * @param error - Error that occurred
    * @param context - Compensation context
    * @returns Whether to continue compensation
@@ -48,7 +48,7 @@ export interface ICompensationStrategy {
 
   /**
    * Gets the strategy name
-   * 
+   *
    * @returns Strategy name
    */
   getStrategyName(): string;

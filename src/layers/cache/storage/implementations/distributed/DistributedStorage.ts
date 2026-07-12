@@ -25,7 +25,7 @@ export class DistributedStorage<T> implements IStorage<T> {
     if (typeof optionsOrNodeId === 'string') {
       this.nodeId = optionsOrNodeId;
     } else {
-      this.nodeId = optionsOrNodeId?.nodeId ?? (optionsOrNodeId?.nodes && optionsOrNodeId.nodes.length > 0 ? optionsOrNodeId.nodes[0] : 'node-1');
+      this.nodeId = optionsOrNodeId?.nodeId ?? optionsOrNodeId?.nodes?.[0] ?? 'node-1';
     }
   }
 

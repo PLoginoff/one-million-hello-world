@@ -1,6 +1,6 @@
 /**
  * Metrics Collector Interface
- * 
+ *
  * Defines the contract for collecting metrics.
  */
 

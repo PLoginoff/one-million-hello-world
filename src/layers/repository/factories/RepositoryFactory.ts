@@ -1,6 +1,6 @@
 /**
  * Repository Factory
- * 
+ *
  * Factory for creating repository components and configurations.
  */
 

@@ -20,18 +20,14 @@ export class ExecuteSagaUseCase {
   /**
    * Execute a saga with given steps
    */
-  async execute(
-    sagaId: string,
-    config: SagaConfig,
-    steps: SagaStepDefinition[],
-  ): Promise<SagaExecutionEntity> {
+  async execute(sagaId: string, config: SagaConfig, steps: SagaStepDefinition[]): Promise<SagaExecutionEntity> {
     const executionId = this._generateExecutionId();
     const execution = new SagaExecutionEntity(
       executionId,
       sagaId,
       'pending',
       this._createSagaSteps(steps),
-      this._createCompensationSteps(steps),
+      this._createCompensationSteps(steps)
     );
 
     const configValidation = this._validationService.validateSagaConfig(config);
@@ -42,7 +38,9 @@ export class ExecuteSagaUseCase {
     for (const step of steps) {
       const stepValidation = this._validationService.validateSagaStepDefinition(step);
       if (!stepValidation.isValid) {
-        throw new Error(`Invalid step ${step.getStepId()}: ${stepValidation.errors.map((e: any) => e.message).join(', ')}`);
+        throw new Error(
+          `Invalid step ${step.getStepId()}: ${stepValidation.errors.map((e: any) => e.message).join(', ')}`
+        );
       }
     }
 
@@ -52,11 +50,8 @@ export class ExecuteSagaUseCase {
   /**
    * Execute a single step
    */
-  async executeStep(
-    execution: SagaExecutionEntity,
-    stepId: string,
-  ): Promise<SagaExecutionEntity> {
-    const step = execution.steps.find(s => s.stepId === stepId);
+  async executeStep(execution: SagaExecutionEntity, stepId: string): Promise<SagaExecutionEntity> {
+    const step = execution.steps.find((s) => s.stepId === stepId);
     if (!step) {
       throw new Error(`Step ${stepId} not found`);
     }
@@ -69,9 +64,7 @@ export class ExecuteSagaUseCase {
   /**
    * Compensate a failed saga
    */
-  async compensate(
-    execution: SagaExecutionEntity,
-  ): Promise<SagaExecutionEntity> {
+  async compensate(execution: SagaExecutionEntity): Promise<SagaExecutionEntity> {
     if (!execution.isFailed() && !execution.isCompensating()) {
       throw new Error('Can only compensate failed or compensating sagas');
     }
@@ -82,10 +75,7 @@ export class ExecuteSagaUseCase {
   /**
    * Complete a saga
    */
-  async complete(
-    execution: SagaExecutionEntity,
-    result?: unknown,
-  ): Promise<SagaExecutionEntity> {
+  async complete(execution: SagaExecutionEntity, result?: unknown): Promise<SagaExecutionEntity> {
     const completedExecution = execution.withStatus('completed').withResult(result);
     return completedExecution.withMetadata({
       endTime: Date.now(),
@@ -96,10 +86,7 @@ export class ExecuteSagaUseCase {
   /**
    * Fail a saga
    */
-  async fail(
-    execution: SagaExecutionEntity,
-    error: Error,
-  ): Promise<SagaExecutionEntity> {
+  async fail(execution: SagaExecutionEntity, error: Error): Promise<SagaExecutionEntity> {
     const failedExecution = execution.withStatus('failed').withError(error);
     return failedExecution.withMetadata({
       endTime: Date.now(),
@@ -113,7 +100,7 @@ export class ExecuteSagaUseCase {
   }
 
   private _createSagaSteps(definitions: SagaStepDefinition[]): any[] {
-    return definitions.map(def => ({
+    return definitions.map((def) => ({
       stepId: def.getStepId(),
       name: def.getName(),
       status: 'pending' as const,
@@ -122,8 +109,8 @@ export class ExecuteSagaUseCase {
 
   private _createCompensationSteps(definitions: SagaStepDefinition[]): any[] {
     return definitions
-      .filter(def => def.hasCompensation())
-      .map(def => ({
+      .filter((def) => def.hasCompensation())
+      .map((def) => ({
         stepId: `comp_${def.getStepId()}`,
         originalStepId: def.getStepId(),
         name: `Compensate ${def.getName()}`,

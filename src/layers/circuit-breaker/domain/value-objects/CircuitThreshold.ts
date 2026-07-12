@@ -1,6 +1,6 @@
 /**
  * Circuit Threshold Value Object
- * 
+ *
  * Represents circuit breaker threshold configuration.
  * Immutable value object for threshold management.
  */

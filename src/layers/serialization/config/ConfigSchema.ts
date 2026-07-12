@@ -1,6 +1,6 @@
 /**
  * Configuration Schema
- * 
+ *
  * Schema definition for configuration validation.
  */
 
@@ -60,7 +60,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
 
   /**
    * Validates a single property
-   * 
+   *
    * @param key - Property key
    * @param value - Property value
    * @param property - Property schema
@@ -108,7 +108,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
 
   /**
    * Checks if value matches type
-   * 
+   *
    * @param value - Value to check
    * @param type - Expected type
    * @returns True if type matches
@@ -132,7 +132,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
 
   /**
    * Gets default values for missing properties
-   * 
+   *
    * @returns Object with default values
    */
   getDefaults(): Partial<T> {
@@ -162,7 +162,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
 
   /**
    * Gets the schema definition
-   * 
+   *
    * @returns Schema definition
    */
   getSchema(): SchemaDefinition {

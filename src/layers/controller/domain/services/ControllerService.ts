@@ -1,6 +1,6 @@
 /**
  * Controller Service
- * 
+ *
  * Provides controller management logic.
  */
 
@@ -45,16 +45,14 @@ export class ControllerService {
    * Get enabled controllers
    */
   getEnabledControllers(): ControllerEntity[] {
-    return Array.from(this.controllers.values()).filter(c => c.isEnabled());
+    return Array.from(this.controllers.values()).filter((c) => c.isEnabled());
   }
 
   /**
    * Find controller by base path
    */
   findByBasePath(basePath: string): ControllerEntity | undefined {
-    return Array.from(this.controllers.values()).find(
-      c => c.data.basePath === basePath
-    );
+    return Array.from(this.controllers.values()).find((c) => c.data.basePath === basePath);
   }
 
   /**

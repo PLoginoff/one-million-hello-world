@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Strategy Factory
- * 
+ *
  * Factory for creating circuit breaker strategy instances.
  */
 

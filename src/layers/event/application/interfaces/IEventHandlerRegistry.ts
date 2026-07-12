@@ -1,6 +1,6 @@
 /**
  * IEventHandlerRegistry - Application Interface
- * 
+ *
  * Interface for registering and managing event handlers.
  * Provides handler discovery and lifecycle management.
  */

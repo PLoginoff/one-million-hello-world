@@ -1,6 +1,6 @@
 /**
  * Middleware Factory
- * 
+ *
  * Factory for creating middleware components and configurations.
  */
 

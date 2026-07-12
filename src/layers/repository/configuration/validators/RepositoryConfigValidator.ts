@@ -1,6 +1,6 @@
 /**
  * Repository Configuration Validator
- * 
+ *
  * Validates repository configuration options.
  */
 

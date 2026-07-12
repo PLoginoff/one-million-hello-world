@@ -1,6 +1,6 @@
 /**
  * Strategy Configuration Defaults
- * 
+ *
  * Exports default configuration presets.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Route Matcher Service
- * 
+ *
  * Provides route matching and parameter extraction.
  */
 
@@ -15,7 +15,7 @@ export class RouteMatcherService {
    */
   static match(pattern: string, path: string): MatchResult {
     const params: Record<string, string> = {};
-    
+
     if (pattern === path) {
       return { matched: true, params };
     }
@@ -31,9 +31,9 @@ export class RouteMatcherService {
       const patternPart = patternParts[i];
       const pathPart = pathParts[i];
 
-      if (patternPart.startsWith!(':')) {
-        const paramName = patternPart.substring!(1);
-        (params[paramName])! = pathPart;
+      if (patternPart.startsWith(':')) {
+        const paramName = patternPart.substring(1);
+        params[paramName] = pathPart;
       } else if (patternPart !== pathPart) {
         return { matched: false, params };
       }

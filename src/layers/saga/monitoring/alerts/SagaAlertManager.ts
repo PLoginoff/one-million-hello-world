@@ -108,7 +108,7 @@ export class SagaAlertManager {
    * Get alerts by severity
    */
   getAlertsBySeverity(severity: string): Alert[] {
-    return this._alerts.filter(a => a.severity === severity);
+    return this._alerts.filter((a) => a.severity === severity);
   }
 
   /**

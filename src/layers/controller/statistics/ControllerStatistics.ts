@@ -1,6 +1,6 @@
 /**
  * Controller Statistics
- * 
+ *
  * Tracks and aggregates controller execution metrics.
  */
 

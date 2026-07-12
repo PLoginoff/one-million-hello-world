@@ -1,6 +1,6 @@
 /**
  * Content Negotiation Manager
- * 
+ *
  * Manages the chain of responsibility for content negotiation.
  */
 

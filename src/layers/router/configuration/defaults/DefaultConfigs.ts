@@ -1,6 +1,6 @@
 /**
  * Default Router Configurations
- * 
+ *
  * Pre-configured settings for common routing scenarios.
  */
 

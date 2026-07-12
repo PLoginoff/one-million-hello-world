@@ -1,6 +1,6 @@
 /**
  * Serializer Interface
- * 
+ *
  * Defines the contract for serialization operations
  * including response serialization, versioning, and content negotiation.
  */
@@ -25,7 +25,7 @@ import { SerializationHook, HookType } from '../hooks/SerializationHook';
 export interface ISerializer {
   /**
    * Serializes data to specified format
-   * 
+   *
    * @param data - Data to serialize
    * @param format - Serialization format
    * @param options - Serialization options
@@ -39,7 +39,7 @@ export interface ISerializer {
 
   /**
    * Deserializes data from specified format
-   * 
+   *
    * @param data - Data to deserialize
    * @param format - Serialization format
    * @param options - Serialization options
@@ -53,7 +53,7 @@ export interface ISerializer {
 
   /**
    * Negotiates content type based on accept header
-   * 
+   *
    * @param acceptHeader - Accept header value
    * @returns Negotiated content type
    */
@@ -61,21 +61,21 @@ export interface ISerializer {
 
   /**
    * Sets serialization configuration
-   * 
+   *
    * @param config - Serialization configuration
    */
   setConfig(config: Partial<SerializationConfig>): void;
 
   /**
    * Gets current serialization configuration
-   * 
+   *
    * @returns Current serialization configuration
    */
   getConfig(): SerializationConfig;
 
   /**
    * Registers a serialization strategy
-   * 
+   *
    * @param format - Format name
    * @param strategy - Serialization strategy
    */
@@ -83,7 +83,7 @@ export interface ISerializer {
 
   /**
    * Gets a serialization strategy
-   * 
+   *
    * @param format - Format name
    * @returns Serialization strategy or undefined
    */
@@ -91,42 +91,42 @@ export interface ISerializer {
 
   /**
    * Adds a validator to the validation pipeline
-   * 
+   *
    * @param validator - Validator to add
    */
   addValidator(validator: IValidator): void;
 
   /**
    * Removes a validator from the validation pipeline
-   * 
+   *
    * @param validator - Validator to remove
    */
   removeValidator(validator: IValidator): void;
 
   /**
    * Registers a plugin
-   * 
+   *
    * @param plugin - Plugin to register
    */
   registerPlugin(plugin: ISerializationPlugin): Promise<void>;
 
   /**
    * Unregisters a plugin
-   * 
+   *
    * @param name - Plugin name
    */
   unregisterPlugin(name: string): Promise<void>;
 
   /**
    * Registers a hook
-   * 
+   *
    * @param hook - Hook to register
    */
   registerHook(hook: SerializationHook): void;
 
   /**
    * Unregisters a hook
-   * 
+   *
    * @param type - Hook type
    * @param name - Hook name
    */
@@ -134,21 +134,21 @@ export interface ISerializer {
 
   /**
    * Sets the versioning strategy
-   * 
+   *
    * @param strategy - Versioning strategy
    */
   setVersioningStrategy(strategy: IVersioningStrategy): void;
 
   /**
    * Enables or disables versioning
-   * 
+   *
    * @param enabled - Enable flag
    */
   setVersioningEnabled(enabled: boolean): void;
 
   /**
    * Sets the current version
-   * 
+   *
    * @param version - Version string
    */
   setCurrentVersion(version: string): void;

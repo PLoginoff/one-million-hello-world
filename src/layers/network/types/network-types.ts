@@ -1,6 +1,6 @@
 /**
  * Network Layer Types
- * 
+ *
  * This module defines all type definitions for the Network Layer,
  * including socket configurations, connection states, network events,
  * security settings, performance metrics, and advanced features.
@@ -172,7 +172,7 @@ export interface ConnectionMetadata {
   totalBytesReceived: number;
   requestCount: number;
   errorCount: number;
-  userContext?: Record<string, unknown>;
+  userContext?: Record<string, unknown> | null;
 }
 
 /**
@@ -247,11 +247,7 @@ export interface NetworkErrorEvent extends NetworkEvent {
  * Union type for all network events
  */
 export type AnyNetworkEvent =
-  | ConnectionOpenedEvent
-  | ConnectionClosedEvent
-  | DataReceivedEvent
-  | DataSentEvent
-  | NetworkErrorEvent;
+  ConnectionOpenedEvent | ConnectionClosedEvent | DataReceivedEvent | DataSentEvent | NetworkErrorEvent;
 
 /**
  * Network layer interface for event handlers

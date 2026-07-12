@@ -1,6 +1,6 @@
 /**
  * Timing Decorator
- * 
+ *
  * Decorator for timing function execution.
  */
 

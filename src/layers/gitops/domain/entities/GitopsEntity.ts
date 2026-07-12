@@ -16,10 +16,7 @@ export class GitopsEntity {
   }
 
   static create(data: Record<string, unknown>): GitopsEntity {
-    return new GitopsEntity(
-      `gitops-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new GitopsEntity(`gitops-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

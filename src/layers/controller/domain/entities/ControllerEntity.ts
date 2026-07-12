@@ -1,6 +1,6 @@
 /**
  * Controller Entity
- * 
+ *
  * Represents a controller with metadata.
  */
 

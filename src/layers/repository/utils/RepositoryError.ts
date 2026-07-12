@@ -1,6 +1,6 @@
 /**
  * Repository Error
- * 
+ *
  * Custom error class for repository errors.
  */
 

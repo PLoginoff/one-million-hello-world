@@ -8,7 +8,18 @@
 export interface SagaEvent {
   eventId: string;
   executionId: string;
-  eventType: 'saga-started' | 'saga-completed' | 'saga-failed' | 'saga-compensating' | 'saga-compensated' | 'step-started' | 'step-completed' | 'step-failed' | 'compensation-started' | 'compensation-completed' | 'compensation-failed';
+  eventType:
+    | 'saga-started'
+    | 'saga-completed'
+    | 'saga-failed'
+    | 'saga-compensating'
+    | 'saga-compensated'
+    | 'step-started'
+    | 'step-completed'
+    | 'step-failed'
+    | 'compensation-started'
+    | 'compensation-completed'
+    | 'compensation-failed';
   timestamp: number;
   data: unknown;
   metadata?: Record<string, unknown>;
@@ -36,21 +47,21 @@ export class InMemorySagaEventRepository implements SagaEventRepository {
   }
 
   async findByExecutionId(executionId: string): Promise<SagaEvent[]> {
-    return this._storage.filter(e => e.executionId === executionId);
+    return this._storage.filter((e) => e.executionId === executionId);
   }
 
   async findByEventType(eventType: string): Promise<SagaEvent[]> {
-    return this._storage.filter(e => e.eventType === eventType);
+    return this._storage.filter((e) => e.eventType === eventType);
   }
 
   async findByTimeRange(startTime: number, endTime: number): Promise<SagaEvent[]> {
-    return this._storage.filter(e => e.timestamp >= startTime && e.timestamp <= endTime);
+    return this._storage.filter((e) => e.timestamp >= startTime && e.timestamp <= endTime);
   }
 
   async deleteByExecutionId(executionId: string): Promise<void> {
     const indices: number[] = [];
     for (let i = 0; i < this._storage.length; i++) {
-      if (this._storage![i].executionId === executionId) {
+      if (this._storage[i].executionId === executionId) {
         indices.push(i);
       }
     }

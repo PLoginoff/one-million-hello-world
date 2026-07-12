@@ -1,6 +1,6 @@
 /**
  * Middleware Manager Interface
- * 
+ *
  * Defines the contract for middleware operations
  * including logging, metrics, tracing, and correlation IDs.
  */
@@ -37,7 +37,7 @@ import {
 export interface IMiddlewareManager {
   /**
    * Logs a message with specified level
-   * 
+   *
    * @param level - Log level
    * @param message - Log message
    * @param context - Additional context
@@ -46,7 +46,7 @@ export interface IMiddlewareManager {
 
   /**
    * Logs a message with category
-   * 
+   *
    * @param level - Log level
    * @param category - Log category
    * @param message - Log message
@@ -56,14 +56,14 @@ export interface IMiddlewareManager {
 
   /**
    * Records a metric
-   * 
+   *
    * @param metric - Metric data to record
    */
   recordMetric(metric: MetricData): void;
 
   /**
    * Gets metric statistics
-   * 
+   *
    * @param metricName - Name of the metric
    * @returns Metric statistics
    */
@@ -71,7 +71,7 @@ export interface IMiddlewareManager {
 
   /**
    * Creates a new trace span
-   * 
+   *
    * @param operationName - Name of the operation
    * @param parentSpanId - Optional parent span ID
    * @returns Created trace span
@@ -80,14 +80,14 @@ export interface IMiddlewareManager {
 
   /**
    * Finishes a trace span
-   * 
+   *
    * @param span - Span to finish
    */
   finishSpan(span: TraceSpan): void;
 
   /**
    * Adds an event to a span
-   * 
+   *
    * @param span - Span to add event to
    * @param event - Event to add
    */
@@ -95,7 +95,7 @@ export interface IMiddlewareManager {
 
   /**
    * Adds a link to a span
-   * 
+   *
    * @param span - Span to add link to
    * @param link - Link to add
    */
@@ -103,7 +103,7 @@ export interface IMiddlewareManager {
 
   /**
    * Sets span status
-   * 
+   *
    * @param span - Span to set status for
    * @param status - Status to set
    * @param error - Optional error details
@@ -112,7 +112,7 @@ export interface IMiddlewareManager {
 
   /**
    * Gets or creates correlation context
-   * 
+   *
    * @param request - HTTP request
    * @returns Correlation context
    */
@@ -120,28 +120,28 @@ export interface IMiddlewareManager {
 
   /**
    * Sets middleware configuration
-   * 
+   *
    * @param config - Middleware configuration
    */
   setConfig(config: Partial<MiddlewareConfig>): void;
 
   /**
    * Gets current middleware configuration
-   * 
+   *
    * @returns Current middleware configuration
    */
   getConfig(): MiddlewareConfig;
 
   /**
    * Gets all log entries
-   * 
+   *
    * @returns Array of log entries
    */
   getLogs(): LogEntry[];
 
   /**
    * Gets filtered log entries
-   * 
+   *
    * @param filter - Log filter
    * @returns Filtered log entries
    */
@@ -149,14 +149,14 @@ export interface IMiddlewareManager {
 
   /**
    * Gets all metrics
-   * 
+   *
    * @returns Array of metric data
    */
   getMetrics(): MetricData[];
 
   /**
    * Gets filtered metrics
-   * 
+   *
    * @param filter - Metric filter
    * @returns Filtered metrics
    */
@@ -164,14 +164,14 @@ export interface IMiddlewareManager {
 
   /**
    * Gets all spans
-   * 
+   *
    * @returns Array of trace spans
    */
   getSpans(): TraceSpan[];
 
   /**
    * Gets filtered spans
-   * 
+   *
    * @param filter - Span filter
    * @returns Filtered spans
    */
@@ -199,21 +199,21 @@ export interface IMiddlewareManager {
 
   /**
    * Gets health status
-   * 
+   *
    * @returns Middleware health status
    */
   getHealthStatus(): MiddlewareHealthStatus;
 
   /**
    * Runs diagnostics
-   * 
+   *
    * @returns Middleware diagnostics
    */
   runDiagnostics(): MiddlewareDiagnostics;
 
   /**
    * Gets statistics
-   * 
+   *
    * @returns Middleware statistics
    */
   getStatistics(): MiddlewareStatistics;
@@ -225,7 +225,7 @@ export interface IMiddlewareManager {
 
   /**
    * Aggregates logs
-   * 
+   *
    * @param filter - Optional log filter
    * @returns Log aggregation result
    */
@@ -233,7 +233,7 @@ export interface IMiddlewareManager {
 
   /**
    * Aggregates metrics
-   * 
+   *
    * @param metricName - Name of the metric
    * @param filter - Optional metric filter
    * @returns Metric aggregation result
@@ -242,21 +242,21 @@ export interface IMiddlewareManager {
 
   /**
    * Adds a pipeline
-   * 
+   *
    * @param pipeline - Pipeline to add
    */
   addPipeline(pipeline: MiddlewarePipeline): void;
 
   /**
    * Removes a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline to remove
    */
   removePipeline(pipelineName: string): void;
 
   /**
    * Gets a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline
    * @returns Pipeline or undefined
    */
@@ -264,14 +264,14 @@ export interface IMiddlewareManager {
 
   /**
    * Gets all pipelines
-   * 
+   *
    * @returns Array of pipelines
    */
   getPipelines(): MiddlewarePipeline[];
 
   /**
    * Adds a stage to a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline
    * @param stage - Stage to add
    */
@@ -279,7 +279,7 @@ export interface IMiddlewareManager {
 
   /**
    * Removes a stage from a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline
    * @param stageName - Name of the stage to remove
    */
@@ -287,14 +287,14 @@ export interface IMiddlewareManager {
 
   /**
    * Enables a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline
    */
   enablePipeline(pipelineName: string): void;
 
   /**
    * Disables a pipeline
-   * 
+   *
    * @param pipelineName - Name of the pipeline
    */
   disablePipeline(pipelineName: string): void;
@@ -311,7 +311,7 @@ export interface IMiddlewareManager {
 
   /**
    * Gets correlation context by request ID
-   * 
+   *
    * @param requestId - Request ID
    * @returns Correlation context or undefined
    */
@@ -319,7 +319,7 @@ export interface IMiddlewareManager {
 
   /**
    * Gets span by span ID
-   * 
+   *
    * @param spanId - Span ID
    * @returns Span or undefined
    */
@@ -327,7 +327,7 @@ export interface IMiddlewareManager {
 
   /**
    * Gets spans by trace ID
-   * 
+   *
    * @param traceId - Trace ID
    * @returns Array of spans
    */

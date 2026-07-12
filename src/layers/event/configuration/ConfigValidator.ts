@@ -1,6 +1,6 @@
 /**
  * ConfigValidator - Configuration
- * 
+ *
  * Validates event bus configuration.
  * Ensures configuration values are within acceptable ranges.
  */
@@ -36,7 +36,7 @@ export class ConfigValidator {
       if (!result) {
         const severity = rule.severity || 'error';
         const entry = {
-          field: rule.field || rule.name,
+          field: rule.field ?? rule.name ?? 'unknown',
           message: rule.defaultMessage,
           value: rule.field ? (config as any)[rule.field] : undefined,
         };
@@ -60,7 +60,7 @@ export class ConfigValidator {
   }
 
   removeRule(fieldName: string): boolean {
-    const index = this._rules.findIndex(r => r.field === fieldName);
+    const index = this._rules.findIndex((r) => r.field === fieldName);
     if (index !== -1) {
       this._rules.splice(index, 1);
       return true;

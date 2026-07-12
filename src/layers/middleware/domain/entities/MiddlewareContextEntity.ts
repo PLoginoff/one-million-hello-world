@@ -1,6 +1,6 @@
 /**
  * Middleware Context Entity
- * 
+ *
  * Represents context passed through middleware chain.
  */
 

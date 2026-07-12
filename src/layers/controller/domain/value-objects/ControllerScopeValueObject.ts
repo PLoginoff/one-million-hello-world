@@ -1,6 +1,6 @@
 /**
  * Controller Scope Value Object
- * 
+ *
  * Represents controller scope for dependency injection.
  */
 

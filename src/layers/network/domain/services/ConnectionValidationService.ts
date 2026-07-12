@@ -1,6 +1,6 @@
 /**
  * Connection Validation Service
- * 
+ *
  * Domain service for validating network connection parameters.
  */
 
@@ -45,10 +45,7 @@ export class ConnectionValidationService {
   /**
    * Validate connection type
    */
-  static validateConnectionType(
-    connectionType: ConnectionType,
-    endpoint: NetworkEndpoint,
-  ): ValidationResult {
+  static validateConnectionType(connectionType: ConnectionType, endpoint: NetworkEndpoint): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -70,17 +67,12 @@ export class ConnectionValidationService {
   /**
    * Validate connection state transition
    */
-  static validateStateTransition(
-    from: ConnectionState,
-    to: ConnectionState,
-  ): ValidationResult {
+  static validateStateTransition(from: ConnectionState, to: ConnectionState): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     if (!from.canTransitionTo(to.value)) {
-      errors.push(
-        `Invalid state transition from ${from.toString()} to ${to.toString()}`,
-      );
+      errors.push(`Invalid state transition from ${from.toString()} to ${to.toString()}`);
     }
 
     return {
@@ -169,10 +161,7 @@ export class ConnectionValidationService {
   /**
    * Validate keep-alive settings
    */
-  static validateKeepAlive(
-    keepAlive: boolean,
-    keepAliveInitialDelay: number,
-  ): ValidationResult {
+  static validateKeepAlive(keepAlive: boolean, keepAliveInitialDelay: number): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 

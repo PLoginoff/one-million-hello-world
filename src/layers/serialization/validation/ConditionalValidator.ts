@@ -1,6 +1,6 @@
 /**
  * Conditional Validator
- * 
+ *
  * Validator that validates only when a condition is met.
  */
 
@@ -14,12 +14,7 @@ export class ConditionalValidator extends BaseValidator {
   private _condition: ValidationCondition;
   private _invertCondition: boolean;
 
-  constructor(
-    name: string,
-    validator: IValidator,
-    condition: ValidationCondition,
-    invertCondition: boolean = false
-  ) {
+  constructor(name: string, validator: IValidator, condition: ValidationCondition, invertCondition: boolean = false) {
     super(name);
     this._validator = validator;
     this._condition = condition;
@@ -27,9 +22,7 @@ export class ConditionalValidator extends BaseValidator {
   }
 
   validate(data: unknown): ValidationResult {
-    const shouldValidate = this._invertCondition 
-      ? !this._condition(data)
-      : this._condition(data);
+    const shouldValidate = this._invertCondition ? !this._condition(data) : this._condition(data);
 
     if (!shouldValidate) {
       return this._success();
@@ -40,7 +33,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Gets the inner validator
-   * 
+   *
    * @returns Inner validator
    */
   getValidator(): IValidator {
@@ -49,7 +42,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Sets the inner validator
-   * 
+   *
    * @param validator - New validator
    * @returns This validator for chaining
    */
@@ -60,7 +53,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Gets the condition
-   * 
+   *
    * @returns Condition function
    */
   getCondition(): ValidationCondition {
@@ -69,7 +62,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Sets the condition
-   * 
+   *
    * @param condition - New condition
    * @returns This validator for chaining
    */
@@ -80,7 +73,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Checks if condition is inverted
-   * 
+   *
    * @returns True if inverted
    */
   isInverted(): boolean {
@@ -89,7 +82,7 @@ export class ConditionalValidator extends BaseValidator {
 
   /**
    * Sets whether to invert the condition
-   * 
+   *
    * @param invert - Invert flag
    * @returns This validator for chaining
    */

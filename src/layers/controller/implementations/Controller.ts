@@ -1,6 +1,6 @@
 /**
  * Controller Implementation
- * 
+ *
  * Concrete implementation of IController.
  * Handles request processing, orchestration, and response generation.
  */
@@ -23,11 +23,7 @@ export class Controller implements IController {
     this._handlers = new Map();
   }
 
-  async handle(
-    request: HttpRequest,
-    handler: HandlerFunction,
-    context: ControllerContext
-  ): Promise<ControllerResult> {
+  async handle(request: HttpRequest, handler: HandlerFunction, context: ControllerContext): Promise<ControllerResult> {
     try {
       return await handler(context);
     } catch (error) {
@@ -64,11 +60,7 @@ export class Controller implements IController {
     };
   }
 
-  createErrorResponse(
-    message: string,
-    statusCode: number = 500,
-    details?: Record<string, unknown>
-  ): ControllerResult {
+  createErrorResponse(message: string, statusCode: number = 500, details?: Record<string, unknown>): ControllerResult {
     const error: ControllerError = {
       code: statusCode as HttpStatusCode,
       message,

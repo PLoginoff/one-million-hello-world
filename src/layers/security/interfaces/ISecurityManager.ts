@@ -1,6 +1,6 @@
 /**
  * Security Manager Interface
- * 
+ *
  * Defines the contract for security operations including
  * authentication, authorization, CORS, and threat detection.
  */
@@ -34,7 +34,7 @@ import {
 export interface ISecurityManager {
   /**
    * Authenticates a request based on credentials
-   * 
+   *
    * @param request - HTTP request to authenticate
    * @param credentials - Authentication credentials
    * @returns Authentication result with security context
@@ -43,7 +43,7 @@ export interface ISecurityManager {
 
   /**
    * Authorizes a request based on security context and required permissions
-   * 
+   *
    * @param context - Security context from authentication
    * @param requiredPermissions - Required permissions for access
    * @returns True if authorized, false otherwise
@@ -52,7 +52,7 @@ export interface ISecurityManager {
 
   /**
    * Validates CORS headers for a request
-   * 
+   *
    * @param request - HTTP request to validate
    * @returns True if CORS is valid, false otherwise
    */
@@ -60,7 +60,7 @@ export interface ISecurityManager {
 
   /**
    * Detects security threats in a request
-   * 
+   *
    * @param request - HTTP request to analyze
    * @returns Threat detection result
    */
@@ -68,21 +68,21 @@ export interface ISecurityManager {
 
   /**
    * Sets the security policy configuration
-   * 
+   *
    * @param config - Security policy configuration
    */
-  setSecurityPolicy(config: SecurityPolicyConfig): void;
+  setSecurityPolicy(config: Partial<SecurityPolicyConfig> | any): void;
 
   /**
    * Gets the current security policy configuration
-   * 
+   *
    * @returns Current security policy configuration
    */
   getSecurityPolicy(): SecurityPolicyConfig;
 
   /**
    * Validates request size against policy limits
-   * 
+   *
    * @param request - HTTP request to validate
    * @returns True if size is within limits, false otherwise
    */
@@ -90,7 +90,7 @@ export interface ISecurityManager {
 
   /**
    * Extracts security context from request headers
-   * 
+   *
    * @param request - HTTP request
    * @returns Security context or null if not authenticated
    */
@@ -98,7 +98,7 @@ export interface ISecurityManager {
 
   /**
    * Authenticates with extended result including metrics
-   * 
+   *
    * @param request - HTTP request to authenticate
    * @param credentials - Authentication credentials
    * @returns Extended authentication result
@@ -107,7 +107,7 @@ export interface ISecurityManager {
 
   /**
    * Detects threats with extended result
-   * 
+   *
    * @param request - HTTP request to analyze
    * @returns Extended threat detection result
    */
@@ -115,7 +115,7 @@ export interface ISecurityManager {
 
   /**
    * Validates IP address against filtering rules
-   * 
+   *
    * @param ipAddress - IP address to validate
    * @returns True if IP is allowed, false otherwise
    */
@@ -123,7 +123,7 @@ export interface ISecurityManager {
 
   /**
    * Validates user agent against filtering rules
-   * 
+   *
    * @param userAgent - User agent string to validate
    * @returns True if user agent is allowed, false otherwise
    */
@@ -131,7 +131,7 @@ export interface ISecurityManager {
 
   /**
    * Validates request signature
-   * 
+   *
    * @param request - HTTP request to validate
    * @returns True if signature is valid, false otherwise
    */
@@ -139,7 +139,7 @@ export interface ISecurityManager {
 
   /**
    * Validates request timestamp
-   * 
+   *
    * @param request - HTTP request to validate
    * @returns True if timestamp is valid, false otherwise
    */
@@ -147,7 +147,7 @@ export interface ISecurityManager {
 
   /**
    * Validates request nonce
-   * 
+   *
    * @param request - HTTP request to validate
    * @returns True if nonce is valid, false otherwise
    */
@@ -155,7 +155,7 @@ export interface ISecurityManager {
 
   /**
    * Checks rate limit for IP address
-   * 
+   *
    * @param ipAddress - IP address to check
    * @returns True if under rate limit, false otherwise
    */
@@ -163,7 +163,7 @@ export interface ISecurityManager {
 
   /**
    * Gets security statistics
-   * 
+   *
    * @returns Security statistics
    */
   getStats(): SecurityStats;
@@ -175,21 +175,21 @@ export interface ISecurityManager {
 
   /**
    * Gets security health status
-   * 
+   *
    * @returns Security health status
    */
   getHealthStatus(): SecurityHealthStatus;
 
   /**
    * Runs security diagnostics
-   * 
+   *
    * @returns Security diagnostics information
    */
   runDiagnostics(): SecurityDiagnostics;
 
   /**
    * Logs security event
-   * 
+   *
    * @param event - Security event to log
    * @param request - HTTP request
    * @param context - Security context
@@ -198,7 +198,7 @@ export interface ISecurityManager {
 
   /**
    * Gets audit log entries
-   * 
+   *
    * @param limit - Maximum number of entries to return
    * @returns Audit log entries
    */
@@ -211,7 +211,7 @@ export interface ISecurityManager {
 
   /**
    * Adds security warning
-   * 
+   *
    * @param warning - Security warning to add
    */
   addWarning(warning: SecurityWarning): void;
@@ -223,14 +223,14 @@ export interface ISecurityManager {
 
   /**
    * Gets all warnings
-   * 
+   *
    * @returns Array of security warnings
    */
   getWarnings(): SecurityWarning[];
 
   /**
    * Gets IP information
-   * 
+   *
    * @param ipAddress - IP address to analyze
    * @returns IP information
    */
@@ -238,7 +238,7 @@ export interface ISecurityManager {
 
   /**
    * Gets rate limit entry for IP
-   * 
+   *
    * @param ipAddress - IP address
    * @returns Rate limit entry
    */
@@ -246,7 +246,7 @@ export interface ISecurityManager {
 
   /**
    * Adds nonce entry
-   * 
+   *
    * @param nonce - Nonce value
    * @param ipAddress - IP address
    */
@@ -254,7 +254,7 @@ export interface ISecurityManager {
 
   /**
    * Checks if nonce is used
-   * 
+   *
    * @param nonce - Nonce value
    * @returns True if nonce is used, false otherwise
    */
@@ -267,7 +267,7 @@ export interface ISecurityManager {
 
   /**
    * Creates extended security context
-   * 
+   *
    * @param request - HTTP request
    * @param userId - User ID
    * @param authMethod - Authentication method
@@ -277,7 +277,7 @@ export interface ISecurityManager {
 
   /**
    * Validates required headers
-   * 
+   *
    * @param request - HTTP request
    * @returns True if all required headers present, false otherwise
    */
@@ -285,7 +285,7 @@ export interface ISecurityManager {
 
   /**
    * Validates content type
-   * 
+   *
    * @param request - HTTP request
    * @returns True if content type is allowed, false otherwise
    */
@@ -293,7 +293,7 @@ export interface ISecurityManager {
 
   /**
    * Validates header size
-   * 
+   *
    * @param request - HTTP request
    * @returns True if header size is within limits, false otherwise
    */
@@ -301,7 +301,7 @@ export interface ISecurityManager {
 
   /**
    * Gets threat patterns for threat type
-   * 
+   *
    * @param threatType - Type of threat
    * @returns Array of threat patterns
    */
@@ -309,7 +309,7 @@ export interface ISecurityManager {
 
   /**
    * Adds custom threat pattern
-   * 
+   *
    * @param threatType - Type of threat
    * @param pattern - Pattern to add
    */
@@ -317,7 +317,7 @@ export interface ISecurityManager {
 
   /**
    * Removes threat pattern
-   * 
+   *
    * @param threatType - Type of threat
    * @param pattern - Pattern to remove
    */

@@ -1,6 +1,6 @@
 /**
  * String Serialization Strategy
- * 
+ *
  * Implements string serialization and deserialization.
  */
 

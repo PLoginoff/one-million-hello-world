@@ -1,6 +1,6 @@
 /**
  * Trie Routing Strategy
- * 
+ *
  * Matches routes using a trie data structure for efficient lookup.
  */
 
@@ -41,7 +41,7 @@ export class TrieRoutingStrategy implements IRoutingStrategy {
         if (!node.children.has(segment)) {
           node.children.set(segment, { children: new Map(), routes: [] });
         }
-        node = node.children.get(segment);
+        node = node.children.get(segment)!;
       }
     }
 
@@ -58,7 +58,7 @@ export class TrieRoutingStrategy implements IRoutingStrategy {
 
     for (const segment of segments) {
       if (node.children.has(segment)) {
-        node = node.children.get(segment);
+        node = node.children.get(segment)!;
       } else if (node.paramNode) {
         node = node.paramNode;
       } else {
@@ -66,7 +66,7 @@ export class TrieRoutingStrategy implements IRoutingStrategy {
       }
     }
 
-    return node.routes.find(route => route.matchesMethod(method) && route.isEnabled());
+    return node.routes.find((route) => route.matchesMethod(method) && route.isEnabled());
   }
 
   private buildTrie(routes: RouteEntity[]): void {

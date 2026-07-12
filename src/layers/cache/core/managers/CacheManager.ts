@@ -1,6 +1,6 @@
 /**
  * Cache Manager
- * 
+ *
  * Main cache manager orchestrating all cache operations.
  * Refactored to use layered architecture.
  */
@@ -23,9 +23,7 @@ export class CacheManager<T = unknown> {
   private config: CacheConfigOptions;
 
   constructor(config?: Partial<CacheConfigOptions>) {
-    this.config = config 
-      ? DefaultConfigs.custom(config) 
-      : DefaultConfigs.DEFAULT;
+    this.config = config ? DefaultConfigs.custom(config) : DefaultConfigs.DEFAULT;
 
     const storage = new InMemoryStorage<T>();
     const evictionStrategy = this.createEvictionStrategy(this.config.invalidationStrategy);
@@ -37,7 +35,7 @@ export class CacheManager<T = unknown> {
       evictionStrategy,
       invalidationStrategy,
       statsCollector,
-      this.config,
+      this.config
     );
   }
 
@@ -80,7 +78,7 @@ export class CacheManager<T = unknown> {
    * Get cache statistics
    */
   getStats(): CacheStats {
-    return this.cacheService.getStats() as CacheStats;
+    return this.cacheService.getStats();
   }
 
   /**

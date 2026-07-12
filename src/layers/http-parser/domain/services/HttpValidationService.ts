@@ -1,6 +1,6 @@
 /**
  * HTTP Validation Service
- * 
+ *
  * Provides validation logic for HTTP requests, responses, and components.
  */
 
@@ -11,7 +11,10 @@ export class HttpValidationService {
   /**
    * Validate HTTP request
    */
-  static validateRequest(request: HttpRequest, rules?: ValidationRules): {
+  static validateRequest(
+    request: HttpRequest,
+    rules?: ValidationRules
+  ): {
     valid: boolean;
     errors: string[];
   } {

@@ -1,5 +1,8 @@
 import { MutationTesting } from '../implementations/MutationTesting';
-import { DefaultMutationTestingStrategy, OptimizedMutationTestingStrategy } from '../strategies/MutationTestingStrategy';
+import {
+  DefaultMutationTestingStrategy,
+  OptimizedMutationTestingStrategy,
+} from '../strategies/MutationTestingStrategy';
 
 export class MutationTestingFactory {
   static createDefault(): MutationTesting {

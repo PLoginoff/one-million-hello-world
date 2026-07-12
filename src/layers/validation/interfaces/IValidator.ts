@@ -1,6 +1,6 @@
 /**
  * Validator Interface
- * 
+ *
  * Defines the contract for validation operations
  * including schema validation, sanitization, and type checking.
  */
@@ -32,7 +32,7 @@ import {
 export interface IValidator {
   /**
    * Validates request data against a schema
-   * 
+   *
    * @param request - HTTP request to validate
    * @param schema - Validation schema
    * @returns Validation result with errors and warnings
@@ -41,17 +41,21 @@ export interface IValidator {
 
   /**
    * Validates request data with extended result
-   * 
+   *
    * @param request - HTTP request to validate
    * @param schema - Validation schema
    * @param context - Validation context
    * @returns Extended validation result with metrics
    */
-  validateExtended(request: HttpRequest, schema: ValidationSchema, context?: ValidationContext): ExtendedValidationResult;
+  validateExtended(
+    request: HttpRequest,
+    schema: ValidationSchema,
+    context?: ValidationContext
+  ): ExtendedValidationResult;
 
   /**
    * Sanitizes request data
-   * 
+   *
    * @param request - HTTP request to sanitize
    * @returns Sanitization result with sanitized data
    */
@@ -59,7 +63,7 @@ export interface IValidator {
 
   /**
    * Sanitizes a single field value
-   * 
+   *
    * @param field - Field name
    * @param value - Field value
    * @param sanitizers - Sanitizers to apply
@@ -69,7 +73,7 @@ export interface IValidator {
 
   /**
    * Checks type of a value
-   * 
+   *
    * @param value - Value to check
    * @param expectedType - Expected type
    * @returns True if type matches, false otherwise
@@ -78,7 +82,7 @@ export interface IValidator {
 
   /**
    * Validates a single field value
-   * 
+   *
    * @param field - Field name
    * @param value - Field value
    * @param rules - Validation rules
@@ -89,122 +93,135 @@ export interface IValidator {
 
   /**
    * Validates a nested schema
-   * 
+   *
    * @param data - Data to validate
    * @param schema - Nested validation schema
    * @param path - Current validation path
    * @param context - Validation context
    * @returns Validation result
    */
-  validateNestedSchema(data: unknown, schema: ValidationSchema, path: string, context?: ValidationContext): ValidationResult;
+  validateNestedSchema(
+    data: unknown,
+    schema: ValidationSchema,
+    path: string,
+    context?: ValidationContext
+  ): ValidationResult;
 
   /**
    * Validates cross-field rules
-   * 
+   *
    * @param data - Data to validate
    * @param rules - Cross-field rules
    * @param context - Validation context
    * @returns Validation result
    */
-  validateCrossFieldRules(data: Record<string, unknown>, rules: CrossFieldRule[], context?: ValidationContext): ValidationResult;
+  validateCrossFieldRules(
+    data: Record<string, unknown>,
+    rules: CrossFieldRule[],
+    context?: ValidationContext
+  ): ValidationResult;
 
   /**
    * Validates conditional rules
-   * 
+   *
    * @param data - Data to validate
    * @param rules - Conditional rules
    * @param context - Validation context
    * @returns Validation result
    */
-  validateConditionalRules(data: Record<string, unknown>, rules: ConditionalRule[], context?: ValidationContext): ValidationResult;
+  validateConditionalRules(
+    data: Record<string, unknown>,
+    rules: ConditionalRule[],
+    context?: ValidationContext
+  ): ValidationResult;
 
   /**
    * Sets default validation schema
-   * 
+   *
    * @param schema - Default validation schema
    */
   setDefaultSchema(schema: ValidationSchema): void;
 
   /**
    * Gets the default validation schema
-   * 
+   *
    * @returns Current default validation schema
    */
   getDefaultSchema(): ValidationSchema;
 
   /**
    * Sets validation configuration
-   * 
+   *
    * @param config - Validation configuration
    */
   setValidationConfig(config: ValidationConfig): void;
 
   /**
    * Gets validation configuration
-   * 
+   *
    * @returns Current validation configuration
    */
   getValidationConfig(): ValidationConfig;
 
   /**
    * Adds a cross-field rule
-   * 
+   *
    * @param rule - Cross-field rule to add
    */
   addCrossFieldRule(rule: CrossFieldRule): void;
 
   /**
    * Removes a cross-field rule
-   * 
+   *
    * @param ruleId - Rule ID to remove
    */
   removeCrossFieldRule(ruleId: string): void;
 
   /**
    * Gets all cross-field rules
-   * 
+   *
    * @returns Array of cross-field rules
    */
   getCrossFieldRules(): CrossFieldRule[];
 
   /**
    * Adds a conditional rule
-   * 
+   *
    * @param rule - Conditional rule to add
    */
   addConditionalRule(rule: ConditionalRule): void;
 
   /**
    * Removes a conditional rule
-   * 
+   *
    * @param ruleId - Rule ID to remove
    */
   removeConditionalRule(ruleId: string): void;
 
   /**
    * Gets all conditional rules
-   * 
+   *
    * @returns Array of conditional rules
    */
   getConditionalRules(): ConditionalRule[];
 
   /**
    * Gets validation health status
-   * 
+   *
    * @returns Health status of validation system
    */
   getHealthStatus(): ValidationHealthStatus;
 
   /**
    * Runs validation diagnostics
-   * 
+   *
    * @returns Diagnostics result
    */
   runDiagnostics(): ValidationDiagnostics;
 
   /**
    * Gets validation statistics
-   * 
+   *
    * @returns Validation statistics
    */
   getStatistics(): ValidationStatistics;
@@ -216,7 +233,7 @@ export interface IValidator {
 
   /**
    * Validates UUID format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid UUID, false otherwise
    */
@@ -224,7 +241,7 @@ export interface IValidator {
 
   /**
    * Validates phone number format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid phone number, false otherwise
    */
@@ -232,7 +249,7 @@ export interface IValidator {
 
   /**
    * Validates credit card format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid credit card, false otherwise
    */
@@ -240,7 +257,7 @@ export interface IValidator {
 
   /**
    * Validates IP address format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid IP address, false otherwise
    */
@@ -248,7 +265,7 @@ export interface IValidator {
 
   /**
    * Validates hex color format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid hex color, false otherwise
    */
@@ -256,7 +273,7 @@ export interface IValidator {
 
   /**
    * Validates Base64 format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid Base64, false otherwise
    */
@@ -264,7 +281,7 @@ export interface IValidator {
 
   /**
    * Validates JSON format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid JSON, false otherwise
    */
@@ -272,7 +289,7 @@ export interface IValidator {
 
   /**
    * Validates XML format
-   * 
+   *
    * @param value - Value to validate
    * @returns True if valid XML, false otherwise
    */
@@ -280,7 +297,7 @@ export interface IValidator {
 
   /**
    * Adds a custom validator
-   * 
+   *
    * @param name - Validator name
    * @param validator - Validator function
    */
@@ -288,14 +305,14 @@ export interface IValidator {
 
   /**
    * Removes a custom validator
-   * 
+   *
    * @param name - Validator name
    */
   removeCustomValidator(name: string): void;
 
   /**
    * Gets error message by error code
-   * 
+   *
    * @param code - Error code
    * @param field - Field name
    * @returns Error message
@@ -304,7 +321,7 @@ export interface IValidator {
 
   /**
    * Gets warning message by warning code
-   * 
+   *
    * @param code - Warning code
    * @param field - Field name
    * @returns Warning message
@@ -313,7 +330,7 @@ export interface IValidator {
 
   /**
    * Creates validation context
-   * 
+   *
    * @param request - HTTP request
    * @returns Validation context
    */
@@ -321,7 +338,7 @@ export interface IValidator {
 
   /**
    * Validates array length
-   * 
+   *
    * @param value - Array to validate
    * @param minLength - Minimum length
    * @param maxLength - Maximum length
@@ -331,7 +348,7 @@ export interface IValidator {
 
   /**
    * Validates object keys
-   * 
+   *
    * @param value - Object to validate
    * @param requiredKeys - Required keys
    * @param allowedKeys - Allowed keys
@@ -341,7 +358,7 @@ export interface IValidator {
 
   /**
    * Applies sanitizers to value
-   * 
+   *
    * @param value - Value to sanitize
    * @param sanitizers - Sanitizers to apply
    * @returns Sanitized value

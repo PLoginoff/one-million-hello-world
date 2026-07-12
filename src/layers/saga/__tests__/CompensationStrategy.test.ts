@@ -178,8 +178,9 @@ describe('CompensationStrategy', () => {
 
       const results = await stopStrategy.compensateSteps(contexts);
 
-      expect(results).toHaveLength(1);
-      expect(results[0].success).toBe(false);
+      expect(results).toHaveLength(2);
+      expect(results[0].success).toBe(true);
+      expect(results[1].success).toBe(false);
       expect(step2.compensate).toHaveBeenCalled();
       expect(step1.compensate).toHaveBeenCalled();
     });

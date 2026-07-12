@@ -16,10 +16,7 @@ export class DataQualityEntity {
   }
 
   static create(data: Record<string, unknown>): DataQualityEntity {
-    return new DataQualityEntity(
-      `data-quality-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new DataQualityEntity(`data-quality-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

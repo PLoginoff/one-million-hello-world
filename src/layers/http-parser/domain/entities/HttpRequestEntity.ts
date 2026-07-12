@@ -1,6 +1,6 @@
 /**
  * HTTP Request Entity
- * 
+ *
  * Represents a parsed HTTP request with validation and metadata.
  */
 
@@ -15,12 +15,7 @@ export class HttpRequestEntity {
   readonly parsedAt: Date;
   readonly size: number;
 
-  private constructor(
-    line: HttpRequestLine,
-    headers: HttpHeaders,
-    body: Buffer,
-    raw: Buffer
-  ) {
+  private constructor(line: HttpRequestLine, headers: HttpHeaders, body: Buffer, raw: Buffer) {
     this.validateRequestLine(line);
     this.validateHeaders(headers);
     this.validateBody(body);
@@ -36,12 +31,7 @@ export class HttpRequestEntity {
   /**
    * Create HTTP request entity
    */
-  static create(
-    line: HttpRequestLine,
-    headers: HttpHeaders,
-    body: Buffer,
-    raw: Buffer
-  ): HttpRequestEntity {
+  static create(line: HttpRequestLine, headers: HttpHeaders, body: Buffer, raw: Buffer): HttpRequestEntity {
     return new HttpRequestEntity(line, headers, body, raw);
   }
 
@@ -58,14 +48,14 @@ export class HttpRequestEntity {
 
     const requestLine = HttpRequestEntity.parseRequestLine(lines[0]);
     const emptyLineIndex = lines.indexOf('');
-    
+
     if (emptyLineIndex === -1) {
       throw new Error('Missing empty line between headers and body');
     }
 
     const headerLines = lines.slice(1, emptyLineIndex);
     const headers = HttpRequestEntity.parseHeaders(headerLines);
-    
+
     const bodyStart = emptyLineIndex + 1;
     const bodyLines = lines.slice(bodyStart);
     const body = Buffer.from(bodyLines.join('\r\n'), 'utf-8');
@@ -221,7 +211,7 @@ export class HttpRequestEntity {
       throw new Error(`Invalid request line format: ${line}`);
     }
 
-    const [method, path, version] = parts;
+    const [method, path, version] = parts as [string, string, string];
 
     if (!Object.values(HttpMethod).includes(method as HttpMethod)) {
       throw new Error(`Invalid HTTP method: ${method}`);

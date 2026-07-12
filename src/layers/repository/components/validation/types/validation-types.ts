@@ -1,6 +1,6 @@
 /**
  * Validation Layer Types
- * 
+ *
  * Type definitions for data validation and business rules.
  */
 

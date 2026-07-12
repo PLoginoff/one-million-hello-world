@@ -1,6 +1,6 @@
 /**
  * Validation Error
- * 
+ *
  * Custom error class for validation errors.
  */
 
@@ -9,7 +9,12 @@ export class ValidationError extends Error {
   readonly field?: string;
   readonly severity: 'info' | 'warning' | 'error' | 'critical';
 
-  constructor(code: string, message: string, field?: string, severity: 'info' | 'warning' | 'error' | 'critical' = 'error') {
+  constructor(
+    code: string,
+    message: string,
+    field?: string,
+    severity: 'info' | 'warning' | 'error' | 'critical' = 'error'
+  ) {
     super(message);
     this.name = 'ValidationError';
     this.code = code;

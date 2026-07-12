@@ -1,6 +1,6 @@
 /**
  * Security Level Value Object
- * 
+ *
  * Represents security level with comparison capabilities.
  */
 

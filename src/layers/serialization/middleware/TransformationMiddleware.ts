@@ -1,6 +1,6 @@
 /**
  * Transformation Middleware
- * 
+ *
  * Middleware that transforms data in the pipeline.
  */
 
@@ -44,7 +44,7 @@ export class TransformationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Sets the transform function
-   * 
+   *
    * @param transform - New transform function
    * @returns This middleware for chaining
    */
@@ -55,7 +55,7 @@ export class TransformationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Enables or disables the middleware
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This middleware for chaining
    */
@@ -66,7 +66,7 @@ export class TransformationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Checks if the middleware is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {

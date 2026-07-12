@@ -1,6 +1,6 @@
 /**
  * Base Validator
- * 
+ *
  * Abstract base class providing common functionality for validators.
  */
 
@@ -19,7 +19,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Gets validator name
-   * 
+   *
    * @returns Validator name
    */
   getValidatorName(): string {
@@ -28,7 +28,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Gets validator name (alias for getValidatorName)
-   * 
+   *
    * @returns Validator name
    */
   getName(): string {
@@ -37,7 +37,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Checks if validator is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -46,7 +46,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Enables or disables the validator
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -55,7 +55,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Creates a successful validation result
-   * 
+   *
    * @param warnings - Optional warnings
    * @returns Validation result
    */
@@ -69,7 +69,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Creates a failed validation result
-   * 
+   *
    * @param errors - Error messages
    * @param warnings - Optional warnings
    * @returns Validation result
@@ -84,7 +84,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Adds error message to result
-   * 
+   *
    * @param result - Validation result
    * @param message - Error message
    * @returns Updated result
@@ -99,7 +99,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Adds warning message to result
-   * 
+   *
    * @param result - Validation result
    * @param message - Warning message
    * @returns Updated result
@@ -113,7 +113,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Validates if data is not null/undefined
-   * 
+   *
    * @param data - Data to validate
    * @returns True if valid
    */
@@ -123,7 +123,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Validates if data is of expected type
-   * 
+   *
    * @param data - Data to validate
    * @param type - Expected type
    * @returns True if type matches
@@ -134,7 +134,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Validates if data is an object
-   * 
+   *
    * @param data - Data to validate
    * @returns True if object
    */
@@ -144,7 +144,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Validates if data is an array
-   * 
+   *
    * @param data - Data to validate
    * @returns True if array
    */
@@ -154,7 +154,7 @@ export abstract class BaseValidator implements IValidator {
 
   /**
    * Validates if string is not empty
-   * 
+   *
    * @param data - Data to validate
    * @returns True if not empty
    */

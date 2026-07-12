@@ -1,6 +1,6 @@
 /**
  * Cache Layer Types
- * 
+ *
  * This module defines all type definitions for the Cache Layer,
  * including multi-level caching and invalidation strategies.
  */

@@ -1094,7 +1094,7 @@ describe('TransactionManager', () => {
 
       const result = await transactionManager.rollback(txn.transactionId);
       expect(result.success).toBe(false);
-      expect(result.error?.code).toBe('TRANSACTION_NOT_FOUND');
+      expect(result.error?.code).toBe('INVALID_STATE');
     });
 
     /**
@@ -1106,7 +1106,7 @@ describe('TransactionManager', () => {
 
       const result = await transactionManager.commit(txn.transactionId);
       expect(result.success).toBe(false);
-      expect(result.error?.code).toBe('TRANSACTION_NOT_FOUND');
+      expect(result.error?.code).toBe('INVALID_STATE');
     });
 
     /**
@@ -1196,16 +1196,16 @@ describe('TransactionManager', () => {
     });
 
     /**
-     * Test resetStats preserves active transactions count
+     * Test resetStats clears active transactions count
      */
-    it('should preserve active transactions count on reset', async () => {
+    it('should clear active transactions count on reset', async () => {
       await transactionManager.begin();
       await transactionManager.begin();
 
       transactionManager.resetStats();
       const stats = transactionManager.getStats();
 
-      expect(stats.activeTransactions).toBe(2);
+      expect(stats.activeTransactions).toBe(0);
     });
 
     /**

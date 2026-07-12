@@ -94,7 +94,7 @@ export class SagaTracer {
       throw new Error(`Trace ${traceId} not found`);
     }
 
-    const span = trace.spans.find(s => s.spanId === spanId);
+    const span = trace.spans.find((s) => s.spanId === spanId);
     if (!span) {
       throw new Error(`Span ${spanId} not found in trace ${traceId}`);
     }
@@ -115,7 +115,7 @@ export class SagaTracer {
 
     trace.endTime = Date.now();
 
-    const rootSpan = trace.spans.find(s => s.spanId === trace.rootSpanId);
+    const rootSpan = trace.spans.find((s) => s.spanId === trace.rootSpanId);
     if (rootSpan) {
       rootSpan.endTime = trace.endTime;
       rootSpan.duration = trace.endTime - rootSpan.startTime;

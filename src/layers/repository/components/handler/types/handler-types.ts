@@ -1,6 +1,6 @@
 /**
  * Handler Layer Types
- * 
+ *
  * Type definitions for business logic handlers and operation orchestration.
  */
 
@@ -40,9 +40,9 @@ export interface HandlerContext {
 /**
  * Handler result
  */
-export interface HandlerResult<T> {
+export interface HandlerResult<T = any> {
   success: boolean;
-  data?: T;
+  data?: T | T[];
   error?: HandlerError;
   metrics: HandlerMetrics;
   metadata: Record<string, unknown>;
@@ -104,7 +104,7 @@ export interface HandlerStats {
 export interface OperationHandler<T extends DomainEntity> {
   operation: HandlerOperation;
   canHandle(operation: HandlerOperation): boolean;
-  handle(context: HandlerContext, input: unknown): Promise<HandlerResult<T>>;
+  handle(context: HandlerContext, input: unknown): Promise<HandlerResult<any>>;
 }
 
 /**

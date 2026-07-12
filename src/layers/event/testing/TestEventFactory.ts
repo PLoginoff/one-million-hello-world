@@ -1,6 +1,6 @@
 /**
  * TestEventFactory - Testing Utility
- * 
+ *
  * Factory for creating test events with various configurations.
  * Provides convenient methods for generating test data.
  */
@@ -24,11 +24,7 @@ export class TestEventFactory {
     });
   }
 
-  static createEventWithMetadata<T>(
-    type: string,
-    payload: T,
-    metadata: EventMetadata
-  ): Event<T> {
+  static createEventWithMetadata<T>(type: string, payload: T, metadata: EventMetadata): Event<T> {
     return new Event({
       type,
       payload,
@@ -36,11 +32,7 @@ export class TestEventFactory {
     });
   }
 
-  static createEventWithCorrelation<T>(
-    type: string,
-    payload: T,
-    correlationId: string
-  ): Event<T> {
+  static createEventWithCorrelation<T>(type: string, payload: T, correlationId: string): Event<T> {
     const metadata = new EventMetadata({
       source: 'test',
       correlationId,
@@ -62,7 +54,7 @@ export class TestEventFactory {
   }
 
   static createBatch<T>(type: string, payloads: T[]): Event<T>[] {
-    return payloads.map(payload => Event.create(type, payload));
+    return payloads.map((payload) => Event.create(type, payload));
   }
 
   static createSequentialEvents<T>(type: string, payloads: T[]): Event<T>[] {
@@ -83,7 +75,7 @@ export class TestEventFactory {
 
   static createCorrelatedEvents<T>(type: string, payloads: T[]): Event<T>[] {
     const correlationId = `test-correlation-${Date.now()}`;
-    return payloads.map(payload => {
+    return payloads.map((payload) => {
       const metadata = new EventMetadata({
         source: 'test',
         correlationId,
@@ -96,12 +88,7 @@ export class TestEventFactory {
     });
   }
 
-  static createEventWithCausation<T>(
-    type: string,
-    payload: T,
-    causationId: string,
-    correlationId?: string
-  ): Event<T> {
+  static createEventWithCausation<T>(type: string, payload: T, causationId: string, correlationId?: string): Event<T> {
     const metadata = new EventMetadata({
       source: 'test',
       correlationId: correlationId || `test-correlation-${Date.now()}`,
@@ -114,11 +101,7 @@ export class TestEventFactory {
     });
   }
 
-  static createEventWithTags<T>(
-    type: string,
-    payload: T,
-    tags: Record<string, string>
-  ): Event<T> {
+  static createEventWithTags<T>(type: string, payload: T, tags: Record<string, string>): Event<T> {
     const metadata = new EventMetadata({
       source: 'test',
       tags,

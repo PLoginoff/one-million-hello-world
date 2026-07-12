@@ -1,6 +1,6 @@
 /**
  * Errors Module
- * 
+ *
  * Exports custom error types for serialization layer.
  */
 

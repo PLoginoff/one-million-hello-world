@@ -1,6 +1,6 @@
 /**
  * Request Strategy
- * 
+ *
  * Creates a new instance per request context.
  */
 

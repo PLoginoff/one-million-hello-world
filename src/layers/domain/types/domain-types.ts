@@ -1,6 +1,6 @@
 /**
  * Domain Layer Types
- * 
+ *
  * This module defines all type definitions for the Domain Layer,
  * including core entities, value objects, and domain events.
  */
@@ -10,8 +10,8 @@
  */
 export interface DomainEntity {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 /**

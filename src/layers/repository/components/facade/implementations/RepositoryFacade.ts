@@ -1,6 +1,6 @@
 /**
  * Repository Facade Implementation
- * 
+ *
  * Concrete implementation of IRepositoryFacade.
  * Provides a unified interface for all repository layers.
  */
@@ -122,7 +122,10 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
 
       return {
         success: false,
-        error: this._createError('FIND_BY_ID_ERROR', error instanceof Error ? error.message : 'Unknown find by id error'),
+        error: this._createError(
+          'FIND_BY_ID_ERROR',
+          error instanceof Error ? error.message : 'Unknown find by id error'
+        ),
         metadata: this._createMetadata(Date.now() - startTime, []),
       };
     }
@@ -273,7 +276,10 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
 
       return {
         success: false,
-        error: this._createError('DELETE_MANY_ERROR', error instanceof Error ? error.message : 'Unknown delete many error'),
+        error: this._createError(
+          'DELETE_MANY_ERROR',
+          error instanceof Error ? error.message : 'Unknown delete many error'
+        ),
         metadata: this._createMetadata(Date.now() - startTime, []),
       };
     }
@@ -335,7 +341,10 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
     }
   }
 
-  async aggregate(aggregation: Record<string, unknown>, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<Record<string, unknown>>> {
+  async aggregate(
+    aggregation: Record<string, unknown>,
+    options?: FacadeQueryOptions
+  ): Promise<RepositoryFacadeResult<Record<string, unknown>>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -363,7 +372,10 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
     }
   }
 
-  async bulkSave(entities: T[], options?: BulkOperationOptions): Promise<RepositoryFacadeResult<{ successful: T[]; failed: Array<{ item: T; error: string }> }>> {
+  async bulkSave(
+    entities: T[],
+    options?: BulkOperationOptions
+  ): Promise<RepositoryFacadeResult<{ successful: T[]; failed: Array<{ item: T; error: string }> }>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -560,8 +572,7 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
   private _updateAverageExecutionTime(duration: number): void {
     const total = this._stats.totalOperations;
     if (total > 0) {
-      this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+      this._stats.averageExecutionTime = (this._stats.averageExecutionTime * (total - 1) + duration) / total;
     }
   }
 }

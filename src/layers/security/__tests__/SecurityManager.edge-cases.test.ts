@@ -73,7 +73,7 @@ describe('SecurityManager Edge Cases', () => {
         isAuthenticated: true,
         userId: 'user-123',
         roles: ['user'],
-        permissions: [],
+        permissions: [] as string[],
         ipAddress: '127.0.0.1',
         userAgent: 'Mozilla/5.0',
       };
@@ -86,8 +86,8 @@ describe('SecurityManager Edge Cases', () => {
     it('should handle unauthenticated context', () => {
       const context = {
         isAuthenticated: false,
-        roles: [],
-        permissions: [],
+        roles: [] as string[],
+        permissions: [] as string[],
         ipAddress: '127.0.0.1',
         userAgent: 'Mozilla/5.0',
       };

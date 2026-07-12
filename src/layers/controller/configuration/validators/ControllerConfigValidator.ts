@@ -1,6 +1,6 @@
 /**
  * Controller Configuration Validator
- * 
+ *
  * Validates controller configuration options.
  */
 

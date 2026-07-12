@@ -1,6 +1,6 @@
 /**
  * Repository Statistics
- * 
+ *
  * Tracks and aggregates repository operation metrics.
  */
 

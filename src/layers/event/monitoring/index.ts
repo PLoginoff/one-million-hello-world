@@ -1,6 +1,6 @@
 /**
  * Monitoring Layer
- * 
+ *
  * Monitoring and logging capabilities for the event system.
  */
 

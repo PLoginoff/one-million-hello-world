@@ -1,6 +1,6 @@
 /**
  * Adapters Module
- * 
+ *
  * Exports adapter implementations for external serialization formats.
  */
 

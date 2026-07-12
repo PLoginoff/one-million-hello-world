@@ -1,6 +1,6 @@
 /**
  * Compression Decorator
- * 
+ *
  * Decorator that adds compression functionality to serialization strategies.
  */
 
@@ -27,10 +27,7 @@ export class CompressionDecorator implements ISerializationStrategy {
   private _compression: ICompressionProvider;
   private _enabled: boolean;
 
-  constructor(
-    strategy: ISerializationStrategy,
-    compression?: ICompressionProvider
-  ) {
+  constructor(strategy: ISerializationStrategy, compression?: ICompressionProvider) {
     this._strategy = strategy;
     this._compression = compression ?? new Base64CompressionProvider();
     this._enabled = true;
@@ -38,7 +35,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   serialize(data: unknown): string {
     const serialized = this._strategy.serialize(data);
-    
+
     if (!this._enabled) {
       return serialized;
     }
@@ -48,7 +45,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   deserialize(data: string): unknown {
     let decompressedData = data;
-    
+
     if (this._enabled) {
       decompressedData = this._compression.decompress(data);
     }
@@ -82,7 +79,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   /**
    * Enables or disables compression
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -91,7 +88,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   /**
    * Checks if compression is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -100,7 +97,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   /**
    * Gets the underlying strategy
-   * 
+   *
    * @returns Wrapped strategy
    */
   getStrategy(): ISerializationStrategy {
@@ -109,7 +106,7 @@ export class CompressionDecorator implements ISerializationStrategy {
 
   /**
    * Gets the compression provider
-   * 
+   *
    * @returns Compression provider
    */
   getCompression(): ICompressionProvider {

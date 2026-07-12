@@ -1,6 +1,6 @@
 /**
  * Strategy Configuration Builder
- * 
+ *
  * Fluent builder for creating strategy configurations.
  * Provides a type-safe way to construct complex configurations.
  */

@@ -36,9 +36,9 @@ describe('Security Types', () => {
       expect(SecurityErrorCode.INVALID_CONTENT_TYPE).toBe('INVALID_CONTENT_TYPE');
     });
 
-    it('should have 16 error codes', () => {
+    it('should have 18 error codes', () => {
       const errorCodes = Object.values(SecurityErrorCode);
-      expect(errorCodes).toHaveLength(16);
+      expect(errorCodes).toHaveLength(18);
     });
   });
 
@@ -59,9 +59,9 @@ describe('Security Types', () => {
       expect(ThreatType.PROTOCOL_VIOLATION).toBe('PROTOCOL_VIOLATION');
     });
 
-    it('should have 13 threat types', () => {
+    it('should have 14 threat types', () => {
       const threatTypes = Object.values(ThreatType);
-      expect(threatTypes).toHaveLength(13);
+      expect(threatTypes).toHaveLength(14);
     });
   });
 

@@ -1,6 +1,6 @@
 /**
  * Service Configuration Validator
- * 
+ *
  * Validates service configuration options.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Network Factory
- * 
+ *
  * Factory for creating network components with proper configuration.
  */
 
@@ -56,19 +56,14 @@ export class NetworkFactory {
   /**
    * Create custom configuration
    */
-  static createCustomConfig(
-    builderFn: (builder: NetworkConfigBuilder) => NetworkConfigBuilder,
-  ): NetworkConfigOptions {
+  static createCustomConfig(builderFn: (builder: NetworkConfigBuilder) => NetworkConfigBuilder): NetworkConfigOptions {
     return builderFn(NetworkConfigBuilder.create()).build();
   }
 
   /**
    * Create exponential backoff strategy
    */
-  static createExponentialBackoffStrategy(
-    maxRetries?: number,
-    initialDelay?: number,
-  ): ExponentialBackoffStrategy {
+  static createExponentialBackoffStrategy(maxRetries?: number, initialDelay?: number): ExponentialBackoffStrategy {
     return new ExponentialBackoffStrategy({
       maxRetries,
       initialDelay,
@@ -78,10 +73,7 @@ export class NetworkFactory {
   /**
    * Create connection pool strategy
    */
-  static createConnectionPoolStrategy(
-    minConnections?: number,
-    maxConnections?: number,
-  ): ConnectionPoolStrategy {
+  static createConnectionPoolStrategy(minConnections?: number, maxConnections?: number): ConnectionPoolStrategy {
     return new ConnectionPoolStrategy({
       minConnections,
       maxConnections,
@@ -133,10 +125,7 @@ export class NetworkFactory {
   /**
    * Create connection metadata
    */
-  static createConnectionMetadata(
-    connectionId: string,
-    createdBy: string = 'system',
-  ): ConnectionMetadata {
+  static createConnectionMetadata(connectionId: string, createdBy: string = 'system'): ConnectionMetadata {
     return ConnectionMetadata.create(connectionId, createdBy);
   }
 
@@ -207,14 +196,8 @@ export class NetworkFactory {
 
     return {
       config: finalConfig,
-      reconnectionStrategy: this.createExponentialBackoffStrategy(
-        finalConfig.maxRetries,
-        finalConfig.retryDelay,
-      ),
-      poolStrategy: this.createConnectionPoolStrategy(
-        1,
-        finalConfig.maxConnections,
-      ),
+      reconnectionStrategy: this.createExponentialBackoffStrategy(finalConfig.maxRetries, finalConfig.retryDelay),
+      poolStrategy: this.createConnectionPoolStrategy(1, finalConfig.maxConnections),
       loadBalancer: this.createRoundRobinStrategy(),
       metrics: this.createMetrics(),
     };

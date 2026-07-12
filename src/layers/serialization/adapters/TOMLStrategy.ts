@@ -1,6 +1,6 @@
 /**
  * TOML Serialization Strategy
- * 
+ *
  * Adapter for TOML serialization format.
  */
 
@@ -99,7 +99,7 @@ export class TOMLStrategy implements ISerializationStrategy {
    * Converts array to TOML array string
    */
   private _arrayToTOML(arr: unknown[]): string {
-    const items = arr.map(item => {
+    const items = arr.map((item) => {
       if (typeof item === 'string') {
         return `"${this._escapeString(item)}"`;
       } else if (typeof item === 'boolean' || typeof item === 'number') {

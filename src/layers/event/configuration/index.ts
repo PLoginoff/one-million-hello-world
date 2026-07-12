@@ -1,6 +1,6 @@
 /**
  * Configuration Layer
- * 
+ *
  * Configuration management for the event system.
  */
 

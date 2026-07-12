@@ -1,6 +1,6 @@
 /**
  * Rule-Based Validation Strategy
- * 
+ *
  * Implements rule-based validation strategy.
  */
 
@@ -33,7 +33,7 @@ export class RuleBasedValidationStrategy implements IValidationStrategy {
     for (const [field, fieldRule] of this.rules.entries()) {
       const fieldValue = value[fieldRule.data.name];
       const validation = fieldRule.validate(fieldValue);
-      
+
       if (!validation.valid) {
         result = result.addError(fieldRule.data.name, validation.error || 'Validation failed');
       }

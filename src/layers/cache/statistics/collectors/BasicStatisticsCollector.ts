@@ -1,6 +1,6 @@
 /**
  * Basic Statistics Collector
- * 
+ *
  * Simple implementation of statistics collector.
  */
 

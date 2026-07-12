@@ -1,16 +1,11 @@
 /**
  * Event Bus Interface
- * 
+ *
  * Defines the contract for event operations
  * including event bus, Pub/Sub, and domain event propagation.
  */
 
-import {
-  EventHandler,
-  EventSubscription,
-  EventConfig,
-  EventStats,
-} from '../types/event-types';
+import { EventHandler, EventSubscription, EventConfig, EventStats } from '../types/event-types';
 
 /**
  * Interface for event bus operations
@@ -18,7 +13,7 @@ import {
 export interface IEventBus {
   /**
    * Subscribes to an event
-   * 
+   *
    * @param event - Event name
    * @param handler - Event handler function
    * @returns Subscription ID
@@ -27,7 +22,7 @@ export interface IEventBus {
 
   /**
    * Subscribes to an event once
-   * 
+   *
    * @param event - Event name
    * @param handler - Event handler function
    * @returns Subscription ID
@@ -36,14 +31,14 @@ export interface IEventBus {
 
   /**
    * Unsubscribes from an event
-   * 
+   *
    * @param subscriptionId - Subscription ID
    */
   unsubscribe(subscriptionId: string): void;
 
   /**
    * Publishes an event
-   * 
+   *
    * @param event - Event name
    * @param data - Event data
    */
@@ -51,7 +46,7 @@ export interface IEventBus {
 
   /**
    * Publishes an event asynchronously
-   * 
+   *
    * @param event - Event name
    * @param data - Event data
    */
@@ -59,21 +54,21 @@ export interface IEventBus {
 
   /**
    * Gets event statistics
-   * 
+   *
    * @returns Event statistics
    */
   getStats(): EventStats;
 
   /**
    * Sets event bus configuration
-   * 
+   *
    * @param config - Event configuration
    */
   setConfig(config: EventConfig): void;
 
   /**
    * Gets current event bus configuration
-   * 
+   *
    * @returns Current event configuration
    */
   getConfig(): EventConfig;

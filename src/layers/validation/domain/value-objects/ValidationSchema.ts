@@ -182,7 +182,10 @@ export class ValidationSchema {
     });
   }
 
-  private _validateRule(rule: ValidationRuleData, value: unknown): { isValid: boolean; errors: any[]; warnings: any[] } {
+  private _validateRule(
+    rule: ValidationRuleData,
+    value: unknown
+  ): { isValid: boolean; errors: any[]; warnings: any[] } {
     const errors: any[] = [];
     const warnings: any[] = [];
 

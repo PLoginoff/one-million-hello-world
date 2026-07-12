@@ -27,7 +27,11 @@ export class RateLimitDefaults {
   /**
    * Token bucket configuration
    */
-  static getTokenBucket(limit: number, window: number, unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'): RateLimitConfigDefaults {
+  static getTokenBucket(
+    limit: number,
+    window: number,
+    unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'
+  ): RateLimitConfigDefaults {
     return {
       rateLimitConfig: RateLimitConfig.createTokenBucket(limit, window, unit),
       enableMetrics: true,
@@ -38,7 +42,11 @@ export class RateLimitDefaults {
   /**
    * Sliding window configuration
    */
-  static getSlidingWindow(limit: number, window: number, unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'): RateLimitConfigDefaults {
+  static getSlidingWindow(
+    limit: number,
+    window: number,
+    unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'
+  ): RateLimitConfigDefaults {
     return {
       rateLimitConfig: RateLimitConfig.createSlidingWindow(limit, window, unit),
       enableMetrics: true,
@@ -49,7 +57,11 @@ export class RateLimitDefaults {
   /**
    * Distributed configuration
    */
-  static getDistributed(limit: number, window: number, unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'): RateLimitConfigDefaults {
+  static getDistributed(
+    limit: number,
+    window: number,
+    unit: 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'
+  ): RateLimitConfigDefaults {
     return {
       rateLimitConfig: RateLimitConfig.createDistributed(limit, window, unit),
       enableMetrics: true,

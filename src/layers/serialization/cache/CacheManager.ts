@@ -1,6 +1,6 @@
 /**
  * Cache Manager
- * 
+ *
  * Central manager for cache providers with namespacing.
  */
 
@@ -48,9 +48,7 @@ export class CacheManager {
 
     if (!provider) {
       const providerType = type ?? this._defaultProviderType;
-      provider = providerType === 'lru'
-        ? new LRUCacheProvider()
-        : new InMemoryCacheProvider();
+      provider = providerType === 'lru' ? new LRUCacheProvider() : new InMemoryCacheProvider();
       this._providers.set(name, provider);
     }
 

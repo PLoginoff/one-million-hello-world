@@ -1,6 +1,6 @@
 /**
  * Strategy Registry
- * 
+ *
  * Central registry for serialization strategies with metadata.
  */
 
@@ -30,7 +30,7 @@ export class StrategyRegistry {
 
   /**
    * Registers a strategy with metadata
-   * 
+   *
    * @param key - Unique key for the strategy
    * @param strategy - Strategy instance
    * @param metadata - Strategy metadata
@@ -88,7 +88,7 @@ export class StrategyRegistry {
 
   /**
    * Unregisters a strategy
-   * 
+   *
    * @param key - Strategy key
    */
   unregister(key: string): void {
@@ -102,7 +102,7 @@ export class StrategyRegistry {
 
   /**
    * Gets a strategy by key
-   * 
+   *
    * @param key - Strategy key
    * @returns Strategy or undefined
    */
@@ -112,7 +112,7 @@ export class StrategyRegistry {
 
   /**
    * Gets strategy metadata by key
-   * 
+   *
    * @param key - Strategy key
    * @returns Metadata or undefined
    */
@@ -122,7 +122,7 @@ export class StrategyRegistry {
 
   /**
    * Gets a strategy by format
-   * 
+   *
    * @param format - Format name
    * @returns Strategy or undefined
    */
@@ -133,7 +133,7 @@ export class StrategyRegistry {
 
   /**
    * Gets a strategy by content type
-   * 
+   *
    * @param contentType - Content type
    * @returns Strategy or undefined
    */
@@ -144,13 +144,11 @@ export class StrategyRegistry {
 
   /**
    * Gets all registered strategies
-   * 
+   *
    * @returns Array of strategies with metadata
    */
   getAll(): Map<string, ISerializationStrategy> {
-    return new Map(
-      Array.from(this._strategies.entries()).map(([key, entry]) => [key, entry.strategy])
-    );
+    return new Map(Array.from(this._strategies.entries()).map(([key, entry]) => [key, entry.strategy]));
   }
 
   /**
@@ -168,17 +166,17 @@ export class StrategyRegistry {
 
   /**
    * Gets strategies by tag
-   * 
+   *
    * @param tag - Tag to filter by
    * @returns Array of matching strategies
    */
   getByTag(tag: string): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
-    return this.getAllWithMetadata().filter(entry => entry.metadata.tags?.includes(tag));
+    return this.getAllWithMetadata().filter((entry) => entry.metadata.tags?.includes(tag));
   }
 
   /**
    * Checks if a strategy is registered
-   * 
+   *
    * @param key - Strategy key
    * @returns True if registered
    */
@@ -188,7 +186,7 @@ export class StrategyRegistry {
 
   /**
    * Checks if a format is supported
-   * 
+   *
    * @param format - Format name
    * @returns True if supported
    */
@@ -198,7 +196,7 @@ export class StrategyRegistry {
 
   /**
    * Checks if a content type is supported
-   * 
+   *
    * @param contentType - Content type
    * @returns True if supported
    */
@@ -208,7 +206,7 @@ export class StrategyRegistry {
 
   /**
    * Gets all supported formats
-   * 
+   *
    * @returns Array of format names
    */
   getSupportedFormats(): string[] {
@@ -217,7 +215,7 @@ export class StrategyRegistry {
 
   /**
    * Gets all supported content types
-   * 
+   *
    * @returns Array of content types
    */
   getSupportedContentTypes(): ContentType[] {
@@ -226,7 +224,7 @@ export class StrategyRegistry {
 
   /**
    * Gets strategies by priority (highest first)
-   * 
+   *
    * @returns Array of strategies sorted by priority
    */
   getByPriority(): Array<{ key: string; strategy: ISerializationStrategy; metadata: StrategyMetadata }> {
@@ -248,7 +246,7 @@ export class StrategyRegistry {
 
   /**
    * Gets the number of registered strategies
-   * 
+   *
    * @returns Number of strategies
    */
   size(): number {

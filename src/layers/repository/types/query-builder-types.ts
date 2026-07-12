@@ -1,14 +1,11 @@
 /**
  * Query Builder Types
- * 
+ *
  * Type definitions for the Query Builder layer
  * including logical operators and query conditions.
  */
 
-import {
-  QueryFilter,
-  QuerySort,
-} from './repository-types';
+import { QueryFilter, QuerySort } from './repository-types';
 
 /**
  * Logical operator for combining conditions

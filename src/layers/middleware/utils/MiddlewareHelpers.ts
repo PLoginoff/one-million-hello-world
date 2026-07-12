@@ -1,6 +1,6 @@
 /**
  * Middleware Helpers
- * 
+ *
  * Utility functions for middleware operations.
  */
 
@@ -27,16 +27,11 @@ export class MiddlewareHelpers {
   /**
    * Wrap handler with timeout
    */
-  static withTimeout(
-    handler: (context: any) => Promise<any>,
-    timeoutMs: number
-  ): (context: any) => Promise<any> {
+  static withTimeout(handler: (context: any) => Promise<any>, timeoutMs: number): (context: any) => Promise<any> {
     return async (context: any) => {
       return Promise.race([
         handler(context),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Middleware execution timeout')), timeoutMs)
-        ),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Middleware execution timeout')), timeoutMs)),
       ]);
     };
   }
@@ -51,18 +46,18 @@ export class MiddlewareHelpers {
   ): (context: any) => Promise<any> {
     return async (context: any) => {
       let lastError: Error | undefined;
-      
+
       for (let i = 0; i <= maxRetries; i++) {
         try {
           return await handler(context);
         } catch (error) {
           lastError = error as Error;
           if (i < maxRetries) {
-            await new Promise(resolve => setTimeout(resolve, delayMs * (i + 1)));
+            await new Promise((resolve) => setTimeout(resolve, delayMs * (i + 1)));
           }
         }
       }
-      
+
       throw lastError;
     };
   }
@@ -73,11 +68,11 @@ export class MiddlewareHelpers {
   static composeHandlers(...handlers: Array<(context: any) => Promise<any> | any>): (context: any) => Promise<any> {
     return async (context: any) => {
       let currentContext = context;
-      
+
       for (const handler of handlers) {
         currentContext = await handler(currentContext);
       }
-      
+
       return currentContext;
     };
   }
@@ -100,14 +95,11 @@ export class MiddlewareHelpers {
   /**
    * Create middleware that runs on specific paths
    */
-  static pathFilter(
-    paths: string[],
-    handler: (context: any) => Promise<any> | any
-  ): (context: any) => Promise<any> {
+  static pathFilter(paths: string[], handler: (context: any) => Promise<any> | any): (context: any) => Promise<any> {
     return async (context: any) => {
       const requestPath = context.request?.path || '';
-      const matches = paths.some(path => requestPath.startsWith(path));
-      
+      const matches = paths.some((path) => requestPath.startsWith(path));
+
       if (matches) {
         return await handler(context);
       }
@@ -124,8 +116,8 @@ export class MiddlewareHelpers {
   ): (context: any) => Promise<any> {
     return async (context: any) => {
       const requestMethod = context.request?.method?.toLowerCase() || '';
-      const matches = methods.some(method => method.toLowerCase() === requestMethod);
-      
+      const matches = methods.some((method) => method.toLowerCase() === requestMethod);
+
       if (matches) {
         return await handler(context);
       }

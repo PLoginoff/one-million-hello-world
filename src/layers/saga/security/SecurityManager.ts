@@ -61,7 +61,7 @@ export class SecurityManager {
     for (const policy of this._policies.values()) {
       for (const rule of policy.rules) {
         if (rule.resource === resource && rule.action === action) {
-          const hasRole = rule.roles.some(role => userRoles.has(role));
+          const hasRole = rule.roles.some((role) => userRoles.has(role));
           if (hasRole) {
             return true;
           }
@@ -112,7 +112,7 @@ export class SecurityManager {
    * Get audit logs by user
    */
   getAuditLogsByUser(userId: string, limit?: number): AuditLogEntry[] {
-    const logs = this._auditLogs.filter(l => l.userId === userId);
+    const logs = this._auditLogs.filter((l) => l.userId === userId);
     if (limit) {
       return logs.slice(-limit);
     }
@@ -133,9 +133,7 @@ export class SecurityManager {
     return {
       policyId: 'admin-policy',
       name: 'Admin Policy',
-      rules: [
-        { resource: '*', action: '*', roles: ['admin'] },
-      ],
+      rules: [{ resource: '*', action: '*', roles: ['admin'] }],
     };
   }
 

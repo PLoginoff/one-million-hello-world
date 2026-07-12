@@ -23,7 +23,7 @@ export class FacadeOperationEntity {
     status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled',
     parameters: Record<string, unknown>,
     metadata?: OperationMetadata,
-    result?: unknown,
+    result?: unknown
   ) {
     this.operationId = operationId;
     this.operationName = operationName;
@@ -108,7 +108,7 @@ export class FacadeOperationEntity {
       status,
       this.parameters,
       this.metadata,
-      this.result,
+      this.result
     );
   }
 
@@ -123,14 +123,16 @@ export class FacadeOperationEntity {
       this.status,
       this.parameters,
       this.metadata,
-      result,
+      result
     );
   }
 
   /**
    * Create a copy with updated metadata
    */
-  withMetadata(updates: Partial<import('./../value-objects/OperationMetadata').OperationMetadataData>): FacadeOperationEntity {
+  withMetadata(
+    updates: Partial<import('./../value-objects/OperationMetadata').OperationMetadataData>
+  ): FacadeOperationEntity {
     return new FacadeOperationEntity(
       this.operationId,
       this.operationName,
@@ -138,7 +140,7 @@ export class FacadeOperationEntity {
       this.status,
       this.parameters,
       this.metadata.update(updates),
-      this.result,
+      this.result
     );
   }
 
@@ -153,7 +155,7 @@ export class FacadeOperationEntity {
       this.status,
       { ...this.parameters },
       this.metadata.clone(),
-      this.result,
+      this.result
     );
   }
 

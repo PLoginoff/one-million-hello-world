@@ -21,7 +21,13 @@ export * from './types/facade-types';
 export { FacadeOperationEntity } from './domain/entities/FacadeOperation';
 export { OperationMetadata, OperationMetadataData } from './domain/value-objects/OperationMetadata';
 export { FacadeConfig, FacadeConfigData, RetryPolicy } from './domain/value-objects/FacadeConfig';
-export { ServiceComposition, ServiceCompositionData, ServiceDefinition, ExecutionOrder, TimeoutStrategy } from './domain/value-objects/ServiceComposition';
+export {
+  ServiceComposition,
+  ServiceCompositionData,
+  ServiceDefinition,
+  ExecutionOrder,
+  TimeoutStrategy,
+} from './domain/value-objects/ServiceComposition';
 export {
   FacadeValidationService,
   ValidationResult,
@@ -38,4 +44,3 @@ export {
   ConfigValidationError,
   ConfigValidationWarning,
 } from './configuration/validators/FacadeConfigValidator';
-

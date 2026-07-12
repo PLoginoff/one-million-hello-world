@@ -1,6 +1,6 @@
 /**
  * Base Serialization Strategy
- * 
+ *
  * Abstract base class providing common functionality for serialization strategies.
  */
 
@@ -47,7 +47,7 @@ export abstract class BaseSerializationStrategy implements ISerializationStrateg
 
   /**
    * Safely serializes data with error handling
-   * 
+   *
    * @param data - Data to serialize
    * @returns Serialized string or null if failed
    */
@@ -61,7 +61,7 @@ export abstract class BaseSerializationStrategy implements ISerializationStrateg
 
   /**
    * Safely deserializes data with error handling
-   * 
+   *
    * @param data - Data to deserialize
    * @returns Deserialized data or null if failed
    */
@@ -75,7 +75,7 @@ export abstract class BaseSerializationStrategy implements ISerializationStrateg
 
   /**
    * Validates if data is not null/undefined
-   * 
+   *
    * @param data - Data to validate
    * @returns True if data is valid
    */
@@ -85,7 +85,7 @@ export abstract class BaseSerializationStrategy implements ISerializationStrateg
 
   /**
    * Validates if string is not empty
-   * 
+   *
    * @param data - String to validate
    * @returns True if string is valid
    */

@@ -1,6 +1,6 @@
 /**
  * String Utilities
- * 
+ *
  * Utility functions for string manipulation.
  */
 
@@ -9,18 +9,14 @@ export class StringUtils {
    * Converts string to camelCase
    */
   static toCamelCase(str: string): string {
-    return str
-      .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '')
-      .replace(/^(.)/, c => c.toLowerCase());
+    return str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^(.)/, (c) => c.toLowerCase());
   }
 
   /**
    * Converts string to PascalCase
    */
   static toPascalCase(str: string): string {
-    return str
-      .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '')
-      .replace(/^(.)/, c => c.toUpperCase());
+    return str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^(.)/, (c) => c.toUpperCase());
   }
 
   /**
@@ -202,7 +198,7 @@ export class StringUtils {
       '"': '&quot;',
       "'": '&#39;',
     };
-    return str.replace(/[&<>"']/g, char => htmlEntities[char]);
+    return str.replace(/[&<>"']/g, (char) => htmlEntities[char]);
   }
 
   /**
@@ -216,7 +212,7 @@ export class StringUtils {
       '&quot;': '"',
       '&#39;': "'",
     };
-    return str.replace(/&(amp|lt|gt|quot|#39);/g, entity => htmlEntities[entity]);
+    return str.replace(/&(amp|lt|gt|quot|#39);/g, (entity) => htmlEntities[entity]);
   }
 
   /**

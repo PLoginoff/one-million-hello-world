@@ -1,6 +1,6 @@
 /**
  * Service Helpers
- * 
+ *
  * Utility functions for service operations.
  */
 
@@ -31,7 +31,10 @@ export class ServiceHelpers {
    * Generate service ID from name
    */
   static generateServiceId(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   }
 
   /**
@@ -41,7 +44,7 @@ export class ServiceHelpers {
     if (!this.validateVersion(version)) {
       return null;
     }
-    const [major, minor, patch] = version.split('.').map(Number);
+    const [major = 0, minor = 0, patch = 0] = version.split('.').map(Number);
     return { major, minor, patch };
   }
 

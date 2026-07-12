@@ -1,6 +1,6 @@
 /**
  * Controller Registry Service
- * 
+ *
  * Provides controller registration and lifecycle management.
  */
 

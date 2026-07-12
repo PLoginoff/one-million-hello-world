@@ -950,7 +950,7 @@ describe('QueryParser', () => {
      */
     it('should serialize empty query', () => {
       const query = {
-        filters: [],
+        filters: [] as any[],
         sorts: [] as unknown[],
         pagination: { limit: 0, offset: 0 },
         projections: [] as unknown[],
@@ -985,7 +985,7 @@ describe('QueryParser', () => {
      */
     it('should serialize query with only sorts', () => {
       const query = {
-        filters: [],
+        filters: [] as any[],
         sorts: [{ field: 'name', direction: SortDirection.ASC, nullPosition: NullPosition.LAST }],
         pagination: { limit: 0, offset: 0 },
         projections: [] as unknown[],
@@ -1002,7 +1002,7 @@ describe('QueryParser', () => {
      */
     it('should serialize query with only pagination', () => {
       const query = {
-        filters: [],
+        filters: [] as any[],
         sorts: [] as unknown[],
         pagination: { limit: 10, offset: 20 },
         projections: [] as unknown[],
@@ -1543,7 +1543,7 @@ describe('QueryParser', () => {
      */
     it('should handle pagination with cursor', () => {
       const query = {
-        filters: [],
+        filters: [] as any[],
         sorts: [] as unknown[],
         pagination: { limit: 10, offset: 0, cursor: 'abc123' },
         projections: [] as unknown[],

@@ -1,6 +1,6 @@
 /**
  * Cache Key Entity
- * 
+ *
  * Represents a cache key with validation and pattern matching capabilities.
  */
 

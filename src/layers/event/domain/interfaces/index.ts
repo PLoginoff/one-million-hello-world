@@ -1,6 +1,6 @@
 /**
  * Domain Interfaces
- * 
+ *
  * Exports all domain interfaces.
  */
 

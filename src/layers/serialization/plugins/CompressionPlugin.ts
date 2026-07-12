@@ -1,6 +1,6 @@
 /**
  * Compression Plugin
- * 
+ *
  * Example plugin that compresses/decompresses serialized data.
  */
 
@@ -27,7 +27,7 @@ export class CompressionPlugin implements ISerializationPlugin {
     if (!this._enabled) {
       return serialized;
     }
-    
+
     try {
       const compressed = btoa(serialized);
       console.log(`[CompressionPlugin] Compressed: ${serialized.length} -> ${compressed.length} chars`);

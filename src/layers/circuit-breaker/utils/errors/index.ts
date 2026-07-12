@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Error Classes
- * 
+ *
  * Exports all custom error classes.
  */
 

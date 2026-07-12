@@ -1,6 +1,6 @@
 /**
  * Query Builder Implementation
- * 
+ *
  * Concrete implementation of IQueryBuilder.
  * Provides fluent API for building complex database queries.
  */
@@ -146,7 +146,12 @@ export class QueryBuilder implements IQueryBuilder {
     return this;
   }
 
-  join(type: string, table: string, alias?: string, on?: Array<{ left: string; right: string; operator: string }>): IQueryBuilder {
+  join(
+    type: string,
+    table: string,
+    alias?: string,
+    on?: Array<{ left: string; right: string; operator: string }>
+  ): IQueryBuilder {
     const joinClause: JoinClause = {
       type: type as JoinType,
       table,

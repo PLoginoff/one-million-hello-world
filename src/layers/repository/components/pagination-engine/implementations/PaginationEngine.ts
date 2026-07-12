@@ -1,6 +1,6 @@
 /**
  * Pagination Engine Implementation
- * 
+ *
  * Concrete implementation of IPaginationEngine.
  * Handles applying pagination to data collections.
  */
@@ -119,7 +119,8 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
         totalPages: this.calculateTotalPages(data.length, effectiveLimit),
         hasNext: startIndex + effectiveLimit < data.length,
         hasPrevious: startIndex > 0,
-        nextCursor: paginatedData.length > 0 ? this.generateCursor(paginatedData[paginatedData.length - 1], 'id') : undefined,
+        nextCursor:
+          paginatedData.length > 0 ? this.generateCursor(paginatedData[paginatedData.length - 1], 'id') : undefined,
         previousCursor: startIndex > 0 ? this.generateCursor(data[Math.max(0, startIndex - 1)], 'id') : undefined,
       };
 
@@ -256,8 +257,7 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
   private _updateAveragePageSize(pageSize: number): void {
     const total = this._stats.totalPaginations;
     if (total > 0) {
-      this._stats.averagePageSize =
-        (this._stats.averagePageSize * (total - 1) + pageSize) / total;
+      this._stats.averagePageSize = (this._stats.averagePageSize * (total - 1) + pageSize) / total;
     }
   }
 
@@ -265,7 +265,7 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
     const total = this._stats.totalPaginations;
     if (total > 0) {
       this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+        (this._stats.averageExecutionTime * (total - 1) + Math.max(duration, 1)) / total;
     }
   }
 }

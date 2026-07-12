@@ -45,7 +45,7 @@ export class Pipeline {
     const controllerResult = await this._composition.controller.handle(httpRequest, handler, context);
 
     if (!controllerResult.success || !controllerResult.response) {
-      const status = controllerResult.response?.statusCode || 500;
+      const status = controllerResult.response?.statusCode ?? 500;
       res.status(status).json({
         error: controllerResult.error?.message || 'Internal Server Error',
       });

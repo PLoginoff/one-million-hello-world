@@ -1,6 +1,6 @@
 /**
  * Rate Limit Helpers
- * 
+ *
  * Utility functions for rate limiting operations.
  */
 
@@ -27,34 +27,37 @@ export class RateLimitHelpers {
    * Extract IP address from request
    */
   static extractIp(request: any): string {
-    return request.ip || 
-           request.connection?.remoteAddress || 
-           request.socket?.remoteAddress || 
-           request.headers?.['x-forwarded-for']?.split(',')[0] ||
-           '0.0.0.0';
+    return (
+      request.ip ||
+      request.connection?.remoteAddress ||
+      request.socket?.remoteAddress ||
+      request.headers?.['x-forwarded-for']?.split(',')[0] ||
+      '0.0.0.0'
+    );
   }
 
   /**
    * Extract user ID from request
    */
   static extractUserId(request: any): string | undefined {
-    return request.user?.id || 
-           request.session?.userId || 
-           request.headers?.['x-user-id'];
+    return request.user?.id || request.session?.userId || request.headers?.['x-user-id'];
   }
 
   /**
    * Extract API key from request
    */
   static extractApiKey(request: any): string | undefined {
-    return request.headers?.['x-api-key'] || 
-           request.headers?.['authorization']?.replace(/^Bearer /i, '');
+    return request.headers?.['x-api-key'] || request.headers?.['authorization']?.replace(/^Bearer /i, '');
   }
 
   /**
    * Generate rate limit headers
    */
-  static generateRateLimitHeaders(limit: number, remaining: number, resetAt: number): {
+  static generateRateLimitHeaders(
+    limit: number,
+    remaining: number,
+    resetAt: number
+  ): {
     'X-RateLimit-Limit': string;
     'X-RateLimit-Remaining': string;
     'X-RateLimit-Reset': string;
@@ -77,7 +80,7 @@ export class RateLimitHelpers {
    * Check if request should be rate limited based on path
    */
   static shouldRateLimit(path: string, excludedPaths: string[]): boolean {
-    return !excludedPaths.some(excluded => path.startsWith(excluded));
+    return !excludedPaths.some((excluded) => path.startsWith(excluded));
   }
 
   /**
@@ -115,7 +118,7 @@ export class RateLimitHelpers {
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
       const char = input.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(16);

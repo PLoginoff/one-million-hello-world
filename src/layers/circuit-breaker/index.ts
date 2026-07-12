@@ -40,11 +40,7 @@ export {
 } from './configuration/validators/CircuitConfigValidator';
 
 // Strategies Layer
-export {
-  IFallbackStrategy,
-  FallbackContext,
-  FallbackResult,
-} from './strategies/fallback/IFallbackStrategy';
+export { IFallbackStrategy, FallbackContext, FallbackResult } from './strategies/fallback/IFallbackStrategy';
 export { DefaultFallbackStrategy } from './strategies/fallback/DefaultFallbackStrategy';
 export { CacheFallbackStrategy, CacheFallbackOptions } from './strategies/fallback/CacheFallbackStrategy';
 export { DefaultValueFallbackStrategy } from './strategies/fallback/DefaultValueFallbackStrategy';

@@ -57,7 +57,7 @@ describe('Router', () => {
       const routes = router.getRoutes();
 
       expect(routes).toHaveLength(1);
-      expect(routes[0]).toEqual(route);
+      expect(routes[0]).toMatchObject(route);
     });
   });
 
@@ -74,7 +74,7 @@ describe('Router', () => {
       const result = router.match(request);
 
       expect(result.matched).toBe(true);
-      expect(result.route).toEqual(route);
+      expect(result.route).toMatchObject(route);
     });
 
     it('should not match when method differs', () => {

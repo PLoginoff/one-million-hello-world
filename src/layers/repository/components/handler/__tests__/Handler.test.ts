@@ -90,7 +90,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -120,7 +120,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -151,7 +151,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -555,7 +555,7 @@ describe('HandlerManager', () => {
       const result = await handlerManager.handleBulkSave(context, entities);
 
       expect(result.success).toBe(true);
-      expect(result.data?.successCount).toBe(2);
+      expect((result.data as BulkOperationResult<TestEntity>).successCount).toBe(2);
     });
 
     /**
@@ -596,7 +596,7 @@ describe('HandlerManager', () => {
       const result = await handlerManager.handleBulkDelete(context, ['1', '2']);
 
       expect(result.success).toBe(true);
-      expect(result.data?.successCount).toBe(2);
+      expect((result.data as BulkOperationResult<TestEntity>).successCount).toBe(2);
     });
   });
 
@@ -694,7 +694,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -727,7 +727,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -796,7 +796,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -829,7 +829,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -897,7 +897,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,
@@ -930,7 +930,7 @@ describe('HandlerManager', () => {
         handle: async (context, input) => {
           return {
             success: true,
-            data: [],
+            data: [] as TestEntity[],
             metrics: {
               executionTime: 0,
               cacheHitRate: 0,

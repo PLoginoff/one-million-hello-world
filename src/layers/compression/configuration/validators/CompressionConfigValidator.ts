@@ -1,6 +1,6 @@
 /**
  * Compression Configuration Validator
- * 
+ *
  * Validates compression configurations before use.
  * Ensures configurations are valid and safe to apply.
  */
@@ -53,14 +53,14 @@ export class CompressionConfigValidator {
           path: `algorithm.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...algorithmValidation.warnings.map((w) => ({
           path: `algorithm.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 
@@ -77,14 +77,14 @@ export class CompressionConfigValidator {
           path: `threshold.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...thresholdValidation.warnings.map((w) => ({
           path: `threshold.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

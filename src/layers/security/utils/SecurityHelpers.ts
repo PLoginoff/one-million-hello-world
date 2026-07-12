@@ -1,6 +1,6 @@
 /**
  * Security Helpers
- * 
+ *
  * Utility functions for security operations.
  */
 
@@ -24,7 +24,7 @@ export class SecurityHelpers {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
       const char = password.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return `hashed_${Math.abs(hash).toString(16)}`;
@@ -41,9 +41,7 @@ export class SecurityHelpers {
    * Sanitize input string
    */
   static sanitizeInput(input: string): string {
-    return input
-      .replace(/[<>]/g, '')
-      .trim();
+    return input.replace(/[<>]/g, '').trim();
   }
 
   /**
@@ -57,7 +55,7 @@ export class SecurityHelpers {
       '"': '&quot;',
       "'": '&#039;',
     };
-    return input.replace(/[&<>"']/g, m => map[m]);
+    return input.replace(/[&<>"']/g, (m) => map[m]);
   }
 
   /**
@@ -69,7 +67,7 @@ export class SecurityHelpers {
       /(--)|(\/\*)|(\*\/)/,
       /(\bOR\b|\bAND\b).*=.*=/i,
     ];
-    return patterns.some(pattern => pattern.test(input));
+    return patterns.some((pattern) => pattern.test(input));
   }
 
   /**
@@ -82,7 +80,7 @@ export class SecurityHelpers {
       /javascript:/gi,
       /on\w+\s*=/gi,
     ];
-    return patterns.some(pattern => pattern.test(input));
+    return patterns.some((pattern) => pattern.test(input));
   }
 
   /**
@@ -142,19 +140,14 @@ export class SecurityHelpers {
    * Get IP address from request
    */
   static getIpAddress(request: any): string {
-    return request.ip || 
-           request.connection?.remoteAddress || 
-           request.socket?.remoteAddress || 
-           '0.0.0.0';
+    return request.ip || request.connection?.remoteAddress || request.socket?.remoteAddress || '0.0.0.0';
   }
 
   /**
    * Get user agent from request
    */
   static getUserAgent(request: any): string {
-    return request.headers?.['user-agent'] || 
-           request.headers?.['User-Agent'] || 
-           'Unknown';
+    return request.headers?.['user-agent'] || request.headers?.['User-Agent'] || 'Unknown';
   }
 
   /**

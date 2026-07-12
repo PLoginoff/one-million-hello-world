@@ -1,6 +1,6 @@
 /**
  * Query Builder Layer Types
- * 
+ *
  * Type definitions for fluent query building API.
  */
 

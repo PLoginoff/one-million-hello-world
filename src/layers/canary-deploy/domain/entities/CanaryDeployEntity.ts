@@ -16,10 +16,7 @@ export class CanaryDeployEntity {
   }
 
   static create(data: Record<string, unknown>): CanaryDeployEntity {
-    return new CanaryDeployEntity(
-      `canary-deploy-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new CanaryDeployEntity(`canary-deploy-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

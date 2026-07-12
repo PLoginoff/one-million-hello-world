@@ -1,6 +1,6 @@
 /**
  * Logger Factory
- * 
+ *
  * Factory for creating logger instances.
  */
 

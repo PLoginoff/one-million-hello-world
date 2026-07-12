@@ -1,6 +1,6 @@
 /**
  * Compression Layer Types
- * 
+ *
  * This module defines all type definitions for the Compression Layer,
  * including Gzip, Brotli, and dynamic compression.
  */

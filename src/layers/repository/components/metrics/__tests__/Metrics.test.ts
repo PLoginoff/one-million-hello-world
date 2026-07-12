@@ -668,7 +668,7 @@ describe('MetricsCollector', () => {
     });
   });
 
-  describe('Edge Cases', () {
+  describe('Edge Cases', () => {
     /**
      * Test recording when metrics disabled
      */

@@ -1,6 +1,6 @@
 /**
  * Exponential Backoff Reconnection Strategy
- * 
+ *
  * Implements exponential backoff for reconnection attempts.
  */
 
@@ -22,7 +22,7 @@ export class ExponentialBackoffStrategy {
       initialDelay: config.initialDelay ?? 1000,
       maxDelay: config.maxDelay ?? 30000,
       backoffMultiplier: config.backoffMultiplier ?? 2,
-      jitter: config.jitter ?? true,
+      jitter: config.jitter ?? false,
     };
     this.attemptCount = 0;
   }
@@ -37,7 +37,7 @@ export class ExponentialBackoffStrategy {
 
     const delay = Math.min(
       this.config.initialDelay * Math.pow(this.config.backoffMultiplier, this.attemptCount),
-      this.config.maxDelay,
+      this.config.maxDelay
     );
 
     const finalDelay = this.config.jitter ? this.addJitter(delay) : delay;

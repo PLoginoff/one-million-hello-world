@@ -58,7 +58,7 @@ export class SagaTestRunner {
    * Run specific scenario
    */
   async runScenario(name: string): Promise<TestResult | null> {
-    const scenario = this._scenarios.find(s => s.name === name);
+    const scenario = this._scenarios.find((s) => s.name === name);
     if (!scenario) {
       return null;
     }
@@ -76,14 +76,14 @@ export class SagaTestRunner {
    * Get passed count
    */
   getPassedCount(): number {
-    return this._results.filter(r => r.passed).length;
+    return this._results.filter((r) => r.passed).length;
   }
 
   /**
    * Get failed count
    */
   getFailedCount(): number {
-    return this._results.filter(r => !r.passed).length;
+    return this._results.filter((r) => !r.passed).length;
   }
 
   /**

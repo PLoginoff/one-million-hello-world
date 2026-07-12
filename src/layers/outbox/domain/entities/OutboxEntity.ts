@@ -16,10 +16,7 @@ export class OutboxEntity {
   }
 
   static create(data: Record<string, unknown>): OutboxEntity {
-    return new OutboxEntity(
-      `outbox-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new OutboxEntity(`outbox-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -1,6 +1,6 @@
 /**
  * Core Layer Interfaces
- * 
+ *
  * Exports all core interfaces.
  */
 

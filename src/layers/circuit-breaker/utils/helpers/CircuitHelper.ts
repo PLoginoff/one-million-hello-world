@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Helpers
- * 
+ *
  * Utility functions for circuit breaker operations.
  */
 
@@ -100,7 +100,7 @@ export class CircuitHelper {
   static estimateTimeToRecovery(
     state: CircuitStateEntity,
     threshold: CircuitThreshold,
-    _metrics: CircuitMetrics,
+    _metrics: CircuitMetrics
   ): number {
     if (state.isClosed()) return 0;
     if (!state.isOpen()) return threshold.getTimeout();
@@ -114,11 +114,7 @@ export class CircuitHelper {
   /**
    * Get circuit status summary
    */
-  static getStatusSummary(
-    state: CircuitStateEntity,
-    metrics: CircuitMetrics,
-    _threshold: CircuitThreshold,
-  ): string {
+  static getStatusSummary(state: CircuitStateEntity, metrics: CircuitMetrics, _threshold: CircuitThreshold): string {
     const healthScore = CircuitHelper.calculateHealthScore(metrics, state);
     const efficiency = CircuitHelper.calculateEfficiency(metrics);
     const timeInState = CircuitHelper.formatDuration(state.getTimeSinceLastChange());

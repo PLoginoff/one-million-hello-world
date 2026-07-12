@@ -1,6 +1,6 @@
 /**
  * Base Content Negotiator
- * 
+ *
  * Abstract base class for content negotiators implementing Chain of Responsibility pattern.
  */
 
@@ -28,7 +28,7 @@ export abstract class BaseContentNegotiator implements IContentNegotiator {
 
   negotiate(acceptHeader: string): ContentType {
     const parsedTypes = this._parseAcceptHeader(acceptHeader);
-    
+
     for (const { type, q } of parsedTypes) {
       if (this._canHandle(type)) {
         return this._mapToContentType(type);
@@ -53,7 +53,7 @@ export abstract class BaseContentNegotiator implements IContentNegotiator {
     for (const type of types) {
       const [mimeType, qValue] = type.split(';');
       const q = qValue ? parseFloat(qValue.replace('q=', '')) : 1.0;
-      parsed.push({ type: mimeType.trim!(), q });
+      parsed.push({ type: mimeType.trim(), q });
     }
 
     return parsed.sort((a, b) => b.q - a.q);

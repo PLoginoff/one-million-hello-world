@@ -288,11 +288,11 @@ describe('SagaState', () => {
     it('should restore empty snapshot', () => {
       const snapshot = {
         status: SagaStatus.PENDING,
-        executedSteps: [],
-        compensatedSteps: [],
+        executedSteps: [] as string[],
+        compensatedSteps: [] as string[],
         currentStepIndex: 0,
         totalSteps: 0,
-        error: undefined,
+        error: undefined as string | undefined,
         timestamp: Date.now(),
       };
 
@@ -313,7 +313,7 @@ describe('SagaState', () => {
       const snapshot = {
         status: SagaStatus.FAILED,
         executedSteps: ['step1'],
-        compensatedSteps: [],
+        compensatedSteps: [] as string[],
         currentStepIndex: 1,
         totalSteps: 2,
         timestamp: Date.now(),

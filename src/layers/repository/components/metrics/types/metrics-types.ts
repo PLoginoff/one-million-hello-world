@@ -1,6 +1,6 @@
 /**
  * Metrics Layer Types
- * 
+ *
  * Type definitions for performance metrics and monitoring.
  */
 

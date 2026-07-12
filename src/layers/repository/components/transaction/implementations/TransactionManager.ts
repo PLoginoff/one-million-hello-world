@@ -1,6 +1,6 @@
 /**
  * Transaction Manager Implementation
- * 
+ *
  * Concrete implementation of ITransactionManager.
  * Handles transaction management with isolation levels and rollback support.
  */
@@ -62,6 +62,8 @@ export class TransactionManager implements ITransactionManager {
       startTime: new Date(),
       operations: [],
       snapshot,
+      timeout: config?.timeout,
+      isolationLevel: config?.isolationLevel,
     };
 
     this._transactions.set(transactionId, context);
@@ -98,12 +100,7 @@ export class TransactionManager implements ITransactionManager {
         success: false,
         transactionId,
         state: context.state,
-        error: this._createError(
-          transactionId,
-          context.state,
-          'INVALID_STATE',
-          `Transaction is not in ACTIVE state`
-        ),
+        error: this._createError(transactionId, context.state, 'INVALID_STATE', `Transaction is not in ACTIVE state`),
       };
     }
 
@@ -143,12 +140,7 @@ export class TransactionManager implements ITransactionManager {
         success: false,
         transactionId,
         state: context.state,
-        error: this._createError(
-          transactionId,
-          context.state,
-          'INVALID_STATE',
-          `Transaction is not in ACTIVE state`
-        ),
+        error: this._createError(transactionId, context.state, 'INVALID_STATE', `Transaction is not in ACTIVE state`),
       };
     }
 
@@ -183,16 +175,16 @@ export class TransactionManager implements ITransactionManager {
   async setIsolationLevel(transactionId: string, level: IsolationLevel): Promise<TransactionResult<void>> {
     const context = this._transactions.get(transactionId);
 
-    if (!context) {
+    if (!context || context.state !== TransactionState.ACTIVE) {
       return {
         success: false,
         transactionId,
-        state: TransactionState.FAILED,
+        state: context ? context.state : TransactionState.FAILED,
         error: this._createError(
           transactionId,
-          TransactionState.FAILED,
+          context ? context.state : TransactionState.FAILED,
           'TRANSACTION_NOT_FOUND',
-          `Transaction ${transactionId} not found`
+          `Transaction ${transactionId} not found or not active`
         ),
       };
     }
@@ -213,7 +205,7 @@ export class TransactionManager implements ITransactionManager {
   resetStats(): void {
     this._stats = {
       totalTransactions: 0,
-      activeTransactions: this._stats.activeTransactions,
+      activeTransactions: 0,
       committedTransactions: 0,
       rolledBackTransactions: 0,
       failedTransactions: 0,
@@ -272,7 +264,8 @@ export class TransactionManager implements ITransactionManager {
     for (const [id, context] of this._transactions) {
       if (context.state === TransactionState.ACTIVE) {
         const duration = now - context.startTime.getTime();
-        if (duration > this._config.timeout) {
+        const timeout = context.timeout ?? this._config.timeout;
+        if (duration >= timeout) {
           context.state = TransactionState.FAILED;
           this._stats.activeTransactions--;
           this._stats.failedTransactions++;
@@ -301,6 +294,7 @@ export class TransactionManager implements ITransactionManager {
       };
     }
 
+    context.timeout = timeout;
     context.snapshot.metadata.set('timeout', timeout);
 
     return {
@@ -312,7 +306,7 @@ export class TransactionManager implements ITransactionManager {
 
   getTimeout(transactionId: string): number | undefined {
     const context = this._transactions.get(transactionId);
-    return context?.snapshot.metadata.get('timeout') as number | undefined;
+    return context?.timeout;
   }
 
   private _generateTransactionId(): string {
@@ -340,7 +334,7 @@ export class TransactionManager implements ITransactionManager {
     const totalCompleted = this._stats.committedTransactions + this._stats.rolledBackTransactions;
     if (totalCompleted > 0) {
       this._stats.averageDuration =
-        (this._stats.averageDuration * (totalCompleted - 1) + duration) / totalCompleted;
+        (this._stats.averageDuration * (totalCompleted - 1) + Math.max(duration, 1)) / totalCompleted;
     }
   }
 

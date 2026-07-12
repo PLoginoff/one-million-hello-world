@@ -1,6 +1,6 @@
 /**
  * Invalidation Strategies
- * 
+ *
  * Exports all invalidation strategy implementations.
  */
 

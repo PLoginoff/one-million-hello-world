@@ -1,12 +1,12 @@
 /**
  * Controller Layer
- * 
+ *
  * This module exports all public interfaces, implementations, and types
  * for the Controller Layer (Layer 8 of the 25-layer architecture).
- * 
+ *
  * The Controller Layer provides request handling, orchestration,
  * and response code generation.
- * 
+ *
  * @module ControllerLayer
  */
 

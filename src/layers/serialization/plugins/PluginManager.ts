@@ -1,6 +1,6 @@
 /**
  * Plugin Manager
- * 
+ *
  * Manages serialization plugins lifecycle and execution.
  */
 
@@ -12,12 +12,12 @@ export class PluginManager {
 
   /**
    * Registers a plugin
-   * 
+   *
    * @param plugin - Plugin to register
    */
   async registerPlugin(plugin: ISerializationPlugin): Promise<void> {
     const existing = this._plugins.get(plugin.name);
-    if (existing && existing.cleanup) {
+    if (existing?.cleanup) {
       await existing.cleanup();
     }
 
@@ -30,7 +30,7 @@ export class PluginManager {
 
   /**
    * Unregisters a plugin
-   * 
+   *
    * @param name - Plugin name
    */
   async unregisterPlugin(name: string): Promise<void> {
@@ -48,7 +48,7 @@ export class PluginManager {
 
   /**
    * Gets a plugin by name
-   * 
+   *
    * @param name - Plugin name
    * @returns Plugin or undefined
    */
@@ -58,7 +58,7 @@ export class PluginManager {
 
   /**
    * Gets all registered plugins
-   * 
+   *
    * @returns Array of plugins
    */
   getAllPlugins(): ISerializationPlugin[] {
@@ -83,7 +83,7 @@ export class PluginManager {
 
   /**
    * Enables or disables plugins
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -92,7 +92,7 @@ export class PluginManager {
 
   /**
    * Checks if plugins are enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -101,7 +101,7 @@ export class PluginManager {
 
   /**
    * Executes beforeSerialize hooks for all plugins
-   * 
+   *
    * @param data - Data to process
    * @returns Processed data
    */
@@ -121,7 +121,7 @@ export class PluginManager {
 
   /**
    * Executes afterSerialize hooks for all plugins
-   * 
+   *
    * @param serialized - Serialized data to process
    * @returns Processed data
    */
@@ -141,7 +141,7 @@ export class PluginManager {
 
   /**
    * Executes beforeDeserialize hooks for all plugins
-   * 
+   *
    * @param data - Data to process
    * @returns Processed data
    */
@@ -161,7 +161,7 @@ export class PluginManager {
 
   /**
    * Executes afterDeserialize hooks for all plugins
-   * 
+   *
    * @param deserialized - Deserialized data to process
    * @returns Processed data
    */

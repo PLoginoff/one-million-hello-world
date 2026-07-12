@@ -1,22 +1,13 @@
 /**
  * Query Builder Implementation
- * 
+ *
  * Concrete implementation of IQueryBuilder.
  * Provides fluent API for building complex database queries.
  */
 
 import { IQueryBuilder } from '../interfaces/IQueryBuilder';
-import {
-  QueryFilter,
-  QuerySort,
-  QueryOptions,
-  FilterOperator,
-  SortDirection,
-} from '../types/repository-types';
-import {
-  QueryBuilderState,
-  QueryBuilderConfig,
-} from '../types/query-builder-types';
+import { QueryFilter, QuerySort, QueryOptions, FilterOperator, SortDirection } from '../types/repository-types';
+import { QueryBuilderState, QueryBuilderConfig } from '../types/query-builder-types';
 
 export class QueryBuilder implements IQueryBuilder {
   private _state: QueryBuilderState;
@@ -132,7 +123,7 @@ export class QueryBuilder implements IQueryBuilder {
 
   private _parseOperator(operator: string): FilterOperator {
     const upperOperator = operator.toUpperCase();
-    
+
     if (Object.values(FilterOperator).includes(upperOperator as FilterOperator)) {
       return upperOperator as FilterOperator;
     }
@@ -159,11 +150,11 @@ export class QueryBuilder implements IQueryBuilder {
 
   private _parseDirection(direction: string): SortDirection {
     const upperDirection = direction.toUpperCase();
-    
+
     if (upperDirection === 'DESC' || upperDirection === 'DESCENDING') {
       return SortDirection.DESC;
     }
-    
+
     return SortDirection.ASC;
   }
 }

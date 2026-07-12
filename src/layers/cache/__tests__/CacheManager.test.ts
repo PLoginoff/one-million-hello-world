@@ -60,14 +60,13 @@ describe('CacheManager', () => {
       expect(result.hit).toBe(false);
     });
 
-    it('should expire entry after TTL', () => {
+    it('should expire entry after TTL', async () => {
       cache.setConfig({ maxSize: 1000, defaultTTL: 100, invalidationStrategy: InvalidationStrategy.LRU, enableMultiLevel: false });
       cache.set('key1', 'value1');
 
-      setTimeout(() => {
-        const result = cache.get('key1');
-        expect(result.hit).toBe(false);
-      }, 150);
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      const result = cache.get('key1');
+      expect(result.hit).toBe(false);
     });
   });
 

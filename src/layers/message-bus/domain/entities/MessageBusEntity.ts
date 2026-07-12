@@ -16,10 +16,7 @@ export class MessageBusEntity {
   }
 
   static create(data: Record<string, unknown>): MessageBusEntity {
-    return new MessageBusEntity(
-      `message-bus-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new MessageBusEntity(`message-bus-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

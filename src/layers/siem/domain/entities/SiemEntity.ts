@@ -16,10 +16,7 @@ export class SiemEntity {
   }
 
   static create(data: Record<string, unknown>): SiemEntity {
-    return new SiemEntity(
-      `siem-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new SiemEntity(`siem-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

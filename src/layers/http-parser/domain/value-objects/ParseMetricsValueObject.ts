@@ -1,6 +1,6 @@
 /**
  * Parse Metrics Value Object
- * 
+ *
  * Represents parsing metrics with aggregation capabilities.
  */
 

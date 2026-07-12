@@ -1,6 +1,6 @@
 /**
  * Logger Implementation
- * 
+ *
  * Concrete implementation of ILogger.
  * Provides console-based logging with level filtering.
  */

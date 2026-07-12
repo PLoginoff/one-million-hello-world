@@ -1,6 +1,6 @@
 /**
  * Data Transformation Layer Types
- * 
+ *
  * This module defines all type definitions for the Data Transformation Layer,
  * including normalization, enrichment, and mapping.
  */

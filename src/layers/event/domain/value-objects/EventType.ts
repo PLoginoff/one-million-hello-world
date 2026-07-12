@@ -1,6 +1,6 @@
 /**
  * EventType - Value Object
- * 
+ *
  * Represents the type/category of an event.
  * Immutable value object with validation and categorization.
  */
@@ -10,7 +10,7 @@ export class EventType {
   private static readonly MAX_LENGTH = 100;
 
   private readonly _value: string;
-  private _category: string;
+  private _category!: string;
   private _subcategory?: string;
 
   constructor(value: string) {
@@ -36,7 +36,7 @@ export class EventType {
 
   private _parseCategory(): void {
     const parts = this._value.split('.');
-    this._category! = parts[0];
+    this._category = parts[0]!;
     this._subcategory = parts.length > 1 ? parts.slice(1).join('.') : undefined;
   }
 
@@ -64,9 +64,7 @@ export class EventType {
   }
 
   matches(pattern: string): boolean {
-    const regex = new RegExp(
-      '^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.')
-    );
+    const regex = new RegExp('^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.'));
     return regex.test(this._value);
   }
 

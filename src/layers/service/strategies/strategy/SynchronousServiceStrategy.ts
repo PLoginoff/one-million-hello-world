@@ -1,6 +1,6 @@
 /**
  * Synchronous Service Strategy
- * 
+ *
  * Executes service synchronously.
  */
 

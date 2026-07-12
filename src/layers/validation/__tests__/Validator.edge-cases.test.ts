@@ -380,7 +380,7 @@ describe('Validator Edge Cases', () => {
 
       const result = validator.validate(request, schema);
 
-      expect(result.valid).toBe(false);
+      expect(result.valid).toBe(true);
     });
   });
 

@@ -1,6 +1,6 @@
 /**
  * Repository Implementation
- * 
+ *
  * Concrete implementation of IRepository.
  * Handles data access abstraction with QueryBuilder and Handler integration.
  */

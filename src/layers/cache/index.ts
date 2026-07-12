@@ -28,9 +28,18 @@ export { CacheConfigBuilder } from './configuration/builders';
 
 // Strategies Layer
 export { IEvictionStrategy } from './strategies/eviction';
-export { LRUEvictionStrategy, LFUEvictionStrategy, FIFOEvictionStrategy, RandomEvictionStrategy } from './strategies/eviction';
+export {
+  LRUEvictionStrategy,
+  LFUEvictionStrategy,
+  FIFOEvictionStrategy,
+  RandomEvictionStrategy,
+} from './strategies/eviction';
 export { IInvalidationStrategy } from './strategies/invalidation';
-export { TimeBasedInvalidationStrategy, ManualInvalidationStrategy, SizeBasedInvalidationStrategy } from './strategies/invalidation';
+export {
+  TimeBasedInvalidationStrategy,
+  ManualInvalidationStrategy,
+  SizeBasedInvalidationStrategy,
+} from './strategies/invalidation';
 
 // Statistics Layer
 export { IStatisticsCollector } from './statistics/collectors';

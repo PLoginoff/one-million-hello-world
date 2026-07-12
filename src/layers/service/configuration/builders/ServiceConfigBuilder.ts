@@ -1,6 +1,6 @@
 /**
  * Service Configuration Builder
- * 
+ *
  * Fluent builder for creating service configurations.
  */
 

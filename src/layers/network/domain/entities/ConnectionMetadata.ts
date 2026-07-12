@@ -1,6 +1,6 @@
 /**
  * Connection Metadata Entity
- * 
+ *
  * Represents metadata for a network connection including
  * creation time, activity tracking, and statistics.
  */
@@ -18,11 +18,7 @@ export class ConnectionMetadata {
   userContext: Map<string, unknown>;
   tags: Set<string>;
 
-  private constructor(
-    connectionId: string,
-    createdAt: number,
-    createdBy: string,
-  ) {
+  private constructor(connectionId: string, createdAt: number, createdBy: string) {
     this.connectionId = connectionId;
     this.createdAt = createdAt;
     this.createdBy = createdBy;

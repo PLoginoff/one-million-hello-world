@@ -1,18 +1,12 @@
 /**
  * Service Implementation
- * 
+ *
  * Concrete implementation of IService.
  * Handles business logic, use cases, and domain operations.
  */
 
 import { IService } from '../interfaces/IService';
-import {
-  ServiceResult,
-  ServiceContext,
-  UseCase,
-  ServiceConfig,
-  ServiceError,
-} from '../types/service-types';
+import { ServiceResult, ServiceContext, UseCase, ServiceConfig, ServiceError } from '../types/service-types';
 
 export class Service implements IService {
   private _useCases: Map<string, UseCase<unknown, unknown>>;

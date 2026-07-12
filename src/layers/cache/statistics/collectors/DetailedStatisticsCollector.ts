@@ -1,6 +1,6 @@
 /**
  * Detailed Statistics Collector
- * 
+ *
  * Enhanced statistics collector with additional metrics.
  */
 
@@ -23,7 +23,7 @@ export class DetailedCacheStats extends CacheStats {
     lastMissTime: number = 0,
     lastEvictionTime: number = 0,
     averageAccessTime: number = 0,
-    peakSize: number = 0,
+    peakSize: number = 0
   ) {
     super(hits, misses, evictions, size);
     this.lastHitTime = lastHitTime;
@@ -104,7 +104,7 @@ export class DetailedStatisticsCollector implements IStatisticsCollector {
       this.lastMissTime,
       this.lastEvictionTime,
       this.calculateAverageAccessTime(),
-      this.peakSize,
+      this.peakSize
     );
   }
 

@@ -1,6 +1,6 @@
 /**
  * Proxy Layer Types
- * 
+ *
  * This module defines all type definitions for the Proxy Layer,
  * including access control, lazy loading, and caching proxy.
  */

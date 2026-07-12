@@ -1,6 +1,6 @@
 /**
  * EventPayload - Value Object
- * 
+ *
  * Represents the data payload of an event.
  * Immutable value object with type safety and validation.
  */
@@ -64,14 +64,14 @@ export class EventPayload<T = unknown> {
   getPath(path: string): unknown {
     const keys = path.split('.');
     let current: any = this._data;
-    
+
     for (const key of keys) {
       if (current === null || current === undefined) {
         return undefined;
       }
       current = current[key];
     }
-    
+
     return current;
   }
 

@@ -1,5 +1,8 @@
 import { PropertyTesting } from '../implementations/PropertyTesting';
-import { DefaultPropertyTestingStrategy, OptimizedPropertyTestingStrategy } from '../strategies/PropertyTestingStrategy';
+import {
+  DefaultPropertyTestingStrategy,
+  OptimizedPropertyTestingStrategy,
+} from '../strategies/PropertyTestingStrategy';
 
 export class PropertyTestingFactory {
   static createDefault(): PropertyTesting {

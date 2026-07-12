@@ -1,6 +1,6 @@
 /**
  * Resilience Module
- * 
+ *
  * Exports resilience pattern components.
  */
 

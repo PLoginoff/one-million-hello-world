@@ -1,6 +1,6 @@
 /**
  * Sort Engine Implementation
- * 
+ *
  * Concrete implementation of ISortEngine.
  * Handles applying sorting to data collections.
  */
@@ -58,6 +58,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
 
       this._stats.totalSorts++;
       this._updateAverageExecutionTime(result.executionTime);
+      this._updateAverageComparisons(result.comparisons || 0);
 
       return result;
     } catch (error) {
@@ -79,7 +80,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     const cached = this._compiledCache.get(cacheKey);
 
     if (cached) {
-      this._stats.cacheHitRate = (this._stats.cacheHitRate * 0.9) + 0.1;
+      this._stats.cacheHitRate = this._stats.cacheHitRate * 0.9 + 0.1;
       return cached;
     }
 
@@ -125,7 +126,6 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
       });
 
       const executionTime = Date.now() - startTime;
-      this._updateAverageComparisons(comparisons);
 
       return {
         success: true,
@@ -256,6 +256,11 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
 
   private _createComparator(sort: ParsedSort): (a: unknown, b: unknown) => number {
     return (a: unknown, b: unknown) => {
+      if (a === null && b === null) return 0;
+      const nullPosition = sort.nullPosition ?? this._context.nullPosition;
+      if (a === null) return nullPosition === NullPosition.FIRST ? -1 : 1;
+      if (b === null) return nullPosition === NullPosition.FIRST ? 1 : -1;
+
       const entityA = a as Record<string, unknown>;
       const entityB = b as Record<string, unknown>;
 
@@ -266,8 +271,8 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
       const nullB = valueB === undefined || valueB === null;
 
       if (nullA && nullB) return 0;
-      if (nullA) return this._context.nullPosition === NullPosition.FIRST ? -1 : 1;
-      if (nullB) return this._context.nullPosition === NullPosition.FIRST ? 1 : -1;
+      if (nullA) return nullPosition === NullPosition.FIRST ? -1 : 1;
+      if (nullB) return nullPosition === NullPosition.FIRST ? 1 : -1;
 
       const strA = this._normalizeValue(valueA);
       const strB = this._normalizeValue(valueB);
@@ -296,7 +301,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     const total = this._stats.totalSorts;
     if (total > 0) {
       this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+        (this._stats.averageExecutionTime * (total - 1) + Math.max(duration, 1)) / total;
     }
   }
 
@@ -304,7 +309,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     const total = this._stats.totalSorts;
     if (total > 0) {
       this._stats.averageComparisons =
-        (this._stats.averageComparisons * (total - 1) + comparisons) / total;
+        (this._stats.averageComparisons * (total - 1) + Math.max(comparisons, 1)) / total;
     }
   }
 }

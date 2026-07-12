@@ -1,6 +1,6 @@
 /**
  * Saga Orchestrator Implementation
- * 
+ *
  * Concrete implementation of ISagaOrchestrator.
  * Orchestrates saga execution with step executor and compensation.
  */
@@ -26,7 +26,7 @@ export class SagaOrchestrator implements ISagaOrchestrator {
     compensationOrchestrator: ICompensationOrchestrator,
     sagaState: ISagaState,
     errorHandler: IErrorHandler,
-    logger: ILogger,
+    logger: ILogger
   ) {
     this._stepExecutor = stepExecutor;
     this._compensationOrchestrator = compensationOrchestrator;
@@ -48,6 +48,16 @@ export class SagaOrchestrator implements ISagaOrchestrator {
     this._sagaState.setStatus(SagaStatus.RUNNING);
 
     this._logger.info('Starting saga orchestration', { totalSteps: steps.length });
+
+    if (steps.length === 0) {
+      this._sagaState.setStatus(SagaStatus.COMPLETED);
+      return {
+        success: true,
+        data: undefined as any,
+        executedSteps: [],
+        compensatedSteps: [],
+      };
+    }
 
     const contexts: StepExecutionContext<T>[] = steps.map((step, index) => ({
       step,
@@ -72,7 +82,7 @@ export class SagaOrchestrator implements ISagaOrchestrator {
 
       return {
         success: true,
-        data: (executionResults[executionResults.length - 1])!.data,
+        data: executionResults[executionResults.length - 1].data,
         executedSteps: this._sagaState.getExecutedSteps(),
         compensatedSteps: [],
       };
@@ -93,7 +103,7 @@ export class SagaOrchestrator implements ISagaOrchestrator {
         const compensationResult = await this._compensationOrchestrator.orchestrateCompensation(
           steps,
           this._sagaState,
-          this._config,
+          this._config
         );
 
         this._sagaState.setStatus(SagaStatus.COMPENSATED);

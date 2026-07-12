@@ -1,6 +1,6 @@
 /**
  * MemoryEventQueue - Infrastructure Implementation
- * 
+ *
  * In-memory event queue implementation.
  * Provides buffered event processing with queue semantics.
  */
@@ -93,7 +93,7 @@ export class MemoryEventQueue implements IEventQueue {
 
       if (event && this._processor) {
         const startTime = performance.now();
-        
+
         try {
           await this._processor(event);
           this._stats.processed++;
@@ -111,7 +111,7 @@ export class MemoryEventQueue implements IEventQueue {
 
   private _recordProcessingTime(time: number): void {
     this._processingTimes.push(time);
-    
+
     if (this._processingTimes.length > 100) {
       this._processingTimes.shift();
     }

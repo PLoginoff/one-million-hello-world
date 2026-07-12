@@ -1,6 +1,6 @@
 /**
  * Proxy Implementation
- * 
+ *
  * Concrete implementation of IProxy.
  * Handles access control, lazy loading, and caching proxy.
  */

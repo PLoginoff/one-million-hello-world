@@ -1,6 +1,6 @@
 /**
  * Step Executor Interface
- * 
+ *
  * Defines the contract for executing saga steps
  * in the Saga Layer.
  */
@@ -24,7 +24,7 @@ export interface StepExecutionResult<T> {
 export interface IStepExecutor {
   /**
    * Executes a single saga step
-   * 
+   *
    * @param context - Step execution context
    * @returns Step execution result
    */
@@ -32,7 +32,7 @@ export interface IStepExecutor {
 
   /**
    * Executes multiple saga steps sequentially
-   * 
+   *
    * @param contexts - Array of step execution contexts
    * @returns Array of step execution results
    */
@@ -40,7 +40,7 @@ export interface IStepExecutor {
 
   /**
    * Determines if execution should continue after an error
-   * 
+   *
    * @param error - Error that occurred
    * @param context - Step execution context
    * @returns Whether to continue execution
@@ -49,7 +49,7 @@ export interface IStepExecutor {
 
   /**
    * Gets the executor name
-   * 
+   *
    * @returns Executor name
    */
   getExecutorName(): string;

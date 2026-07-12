@@ -1,6 +1,6 @@
 /**
  * MemoryEventStore - Infrastructure Implementation
- * 
+ *
  * In-memory event store implementation.
  * Suitable for testing and single-instance deployments.
  */
@@ -26,7 +26,7 @@ export class MemoryEventStore implements IEventStore {
 
   async save(event: Event): Promise<void> {
     await this._ensureCapacity();
-    
+
     this._events.set(event.id.value, event);
     this._updateTypeIndex(event);
     this._updateCorrelationIndex(event);
@@ -77,8 +77,7 @@ export class MemoryEventStore implements IEventStore {
   }
 
   async getAll(limit?: number, offset?: number): Promise<Event[]> {
-    const events = Array.from(this._events.values())
-      .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
+    const events = Array.from(this._events.values()).sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 
     if (offset) {
       events.splice(0, offset);
@@ -112,9 +111,10 @@ export class MemoryEventStore implements IEventStore {
 
   private async _ensureCapacity(): Promise<void> {
     if (this._options.maxSize && this._events.size >= this._options.maxSize) {
-      const oldestEvent = Array.from(this._events.values())
-        .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime())[0];
-      
+      const oldestEvent = Array.from(this._events.values()).sort(
+        (a, b) => a.occurredAt.getTime() - b.occurredAt.getTime()
+      )[0];
+
       if (oldestEvent) {
         this._events.delete(oldestEvent.id.value);
         this._removeFromIndexes(oldestEvent);

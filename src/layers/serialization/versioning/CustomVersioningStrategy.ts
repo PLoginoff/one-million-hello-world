@@ -1,6 +1,6 @@
 /**
  * Custom Versioning Strategy
- * 
+ *
  * Allows custom versioning logic via callback functions.
  */
 

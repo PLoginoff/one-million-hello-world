@@ -1,17 +1,12 @@
 /**
  * Strategy Manager Implementation
- * 
+ *
  * Concrete implementation of IStrategyManager.
  * Handles execution strategies, A/B testing, and feature flags.
  */
 
 import { IStrategyManager } from '../interfaces/IStrategyManager';
-import {
-  StrategyType,
-  FeatureFlag,
-  StrategyResult,
-  StrategyConfig,
-} from '../types/strategy-types';
+import { StrategyType, FeatureFlag, StrategyResult, StrategyConfig } from '../types/strategy-types';
 
 export class StrategyManager implements IStrategyManager {
   private _config: StrategyConfig;

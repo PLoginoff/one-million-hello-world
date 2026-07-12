@@ -1,6 +1,6 @@
 /**
  * Handler Manager Implementation
- * 
+ *
  * Concrete implementation of IHandlerManager.
  * Handles business logic handlers and operation orchestration.
  */
@@ -52,7 +52,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.FIND, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.FIND, 'HANDLER_NOT_FOUND', 'No handler registered for FIND operation');
+        return this._createErrorResult(
+          HandlerOperation.FIND,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for FIND operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -62,7 +66,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.FIND_BY_ID, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND_BY_ID);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.FIND_BY_ID, 'HANDLER_NOT_FOUND', 'No handler registered for FIND_BY_ID operation');
+        return this._createErrorResult(
+          HandlerOperation.FIND_BY_ID,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for FIND_BY_ID operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -72,7 +80,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.FIND_ONE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND_ONE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.FIND_ONE, 'HANDLER_NOT_FOUND', 'No handler registered for FIND_ONE operation');
+        return this._createErrorResult(
+          HandlerOperation.FIND_ONE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for FIND_ONE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -82,7 +94,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.SAVE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.SAVE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.SAVE, 'HANDLER_NOT_FOUND', 'No handler registered for SAVE operation');
+        return this._createErrorResult(
+          HandlerOperation.SAVE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for SAVE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -92,7 +108,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.UPDATE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.UPDATE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.UPDATE, 'HANDLER_NOT_FOUND', 'No handler registered for UPDATE operation');
+        return this._createErrorResult(
+          HandlerOperation.UPDATE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for UPDATE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -102,7 +122,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.DELETE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.DELETE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.DELETE, 'HANDLER_NOT_FOUND', 'No handler registered for DELETE operation');
+        return this._createErrorResult(
+          HandlerOperation.DELETE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for DELETE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -112,7 +136,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.DELETE_MANY, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.DELETE_MANY);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.DELETE_MANY, 'HANDLER_NOT_FOUND', 'No handler registered for DELETE_MANY operation');
+        return this._createErrorResult(
+          HandlerOperation.DELETE_MANY,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for DELETE_MANY operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -122,7 +150,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.COUNT, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.COUNT);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.COUNT, 'HANDLER_NOT_FOUND', 'No handler registered for COUNT operation');
+        return this._createErrorResult(
+          HandlerOperation.COUNT,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for COUNT operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -132,7 +164,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.EXISTS, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.EXISTS);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.EXISTS, 'HANDLER_NOT_FOUND', 'No handler registered for EXISTS operation');
+        return this._createErrorResult(
+          HandlerOperation.EXISTS,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for EXISTS operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -142,7 +178,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.AGGREGATE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.AGGREGATE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.AGGREGATE, 'HANDLER_NOT_FOUND', 'No handler registered for AGGREGATE operation');
+        return this._createErrorResult(
+          HandlerOperation.AGGREGATE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for AGGREGATE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -152,7 +192,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.BULK_SAVE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.BULK_SAVE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.BULK_SAVE, 'HANDLER_NOT_FOUND', 'No handler registered for BULK_SAVE operation');
+        return this._createErrorResult(
+          HandlerOperation.BULK_SAVE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for BULK_SAVE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -162,7 +206,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     return this._executeWithRetry(HandlerOperation.BULK_DELETE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.BULK_DELETE);
       if (!handler) {
-        return this._createErrorResult(HandlerOperation.BULK_DELETE, 'HANDLER_NOT_FOUND', 'No handler registered for BULK_DELETE operation');
+        return this._createErrorResult(
+          HandlerOperation.BULK_DELETE,
+          'HANDLER_NOT_FOUND',
+          'No handler registered for BULK_DELETE operation'
+        );
       }
       return handler.handle(context, input);
     });
@@ -199,7 +247,11 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     };
   }
 
-  async executePipeline(pipeline: HandlerPipeline<T>, context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
+  async executePipeline(
+    pipeline: HandlerPipeline<T>,
+    context: HandlerContext,
+    input: unknown
+  ): Promise<HandlerResult<T>> {
     return this._executePipeline(context, input, pipeline.handlers, pipeline.preHandlers, pipeline.postHandlers);
   }
 
@@ -397,8 +449,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
   private _updateAverageExecutionTime(duration: number): void {
     const total = this._stats.totalOperations;
     if (total > 0) {
-      this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+      this._stats.averageExecutionTime = (this._stats.averageExecutionTime * (total - 1) + duration) / total;
     }
   }
 

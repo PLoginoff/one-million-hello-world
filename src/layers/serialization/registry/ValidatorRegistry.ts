@@ -1,6 +1,6 @@
 /**
  * Validator Registry
- * 
+ *
  * Central registry for validators with metadata.
  */
 
@@ -29,7 +29,7 @@ export class ValidatorRegistry {
 
   /**
    * Registers a validator with metadata
-   * 
+   *
    * @param key - Unique key for the validator
    * @param validator - Validator instance
    * @param metadata - Validator metadata
@@ -58,7 +58,7 @@ export class ValidatorRegistry {
 
   /**
    * Unregisters a validator
-   * 
+   *
    * @param key - Validator key
    */
   unregister(key: string): void {
@@ -87,7 +87,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets a validator by key
-   * 
+   *
    * @param key - Validator key
    * @returns Validator or undefined
    */
@@ -97,7 +97,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets validator metadata by key
-   * 
+   *
    * @param key - Validator key
    * @returns Metadata or undefined
    */
@@ -107,7 +107,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets all registered validators
-   * 
+   *
    * @returns Array of validators with metadata
    */
   getAll(): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
@@ -120,64 +120,64 @@ export class ValidatorRegistry {
 
   /**
    * Gets validators by category
-   * 
+   *
    * @param category - Category name
    * @returns Array of matching validators
    */
   getByCategory(category: string): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
     const keys = this._categoryMap.get(category) ?? [];
-    return keys.map(key => ({
+    return keys.map((key) => ({
       key,
-      validator: this.get(key),
-      metadata: this.getMetadata(key),
+      validator: this.get(key)!,
+      metadata: this.getMetadata(key)!,
     }));
   }
 
   /**
    * Gets validators by tag
-   * 
+   *
    * @param tag - Tag to filter by
    * @returns Array of matching validators
    */
   getByTag(tag: string): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
     const keys = this._tagMap.get(tag) ?? [];
-    return keys.map(key => ({
+    return keys.map((key) => ({
       key,
-      validator: this.get(key),
-      metadata: this.getMetadata(key),
+      validator: this.get(key)!,
+      metadata: this.getMetadata(key)!,
     }));
   }
 
   /**
    * Gets enabled validators
-   * 
+   *
    * @returns Array of enabled validators
    */
   getEnabled(): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.enabled !== false);
+    return this.getAll().filter((entry) => entry.metadata.enabled !== false);
   }
 
   /**
    * Gets disabled validators
-   * 
+   *
    * @returns Array of disabled validators
    */
   getDisabled(): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.enabled === false);
+    return this.getAll().filter((entry) => entry.metadata.enabled === false);
   }
 
   /**
    * Gets async validators
-   * 
+   *
    * @returns Array of async validators
    */
   getAsync(): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
-    return this.getAll().filter(entry => entry.metadata.async === true);
+    return this.getAll().filter((entry) => entry.metadata.async === true);
   }
 
   /**
    * Gets validators by priority (highest first)
-   * 
+   *
    * @returns Array of validators sorted by priority
    */
   getByPriority(): Array<{ key: string; validator: IValidator; metadata: ValidatorMetadata }> {
@@ -190,7 +190,7 @@ export class ValidatorRegistry {
 
   /**
    * Checks if a validator is registered
-   * 
+   *
    * @param key - Validator key
    * @returns True if registered
    */
@@ -200,7 +200,7 @@ export class ValidatorRegistry {
 
   /**
    * Enables a validator
-   * 
+   *
    * @param key - Validator key
    */
   enable(key: string): void {
@@ -215,7 +215,7 @@ export class ValidatorRegistry {
 
   /**
    * Disables a validator
-   * 
+   *
    * @param key - Validator key
    */
   disable(key: string): void {
@@ -230,7 +230,7 @@ export class ValidatorRegistry {
 
   /**
    * Validates data using all enabled validators
-   * 
+   *
    * @param data - Data to validate
    * @returns Combined validation result
    */
@@ -255,7 +255,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets all categories
-   * 
+   *
    * @returns Array of category names
    */
   getCategories(): string[] {
@@ -264,7 +264,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets all tags
-   * 
+   *
    * @returns Array of tag names
    */
   getTags(): string[] {
@@ -282,7 +282,7 @@ export class ValidatorRegistry {
 
   /**
    * Gets the number of registered validators
-   * 
+   *
    * @returns Number of validators
    */
   size(): number {

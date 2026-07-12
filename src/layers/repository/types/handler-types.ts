@@ -1,6 +1,6 @@
 /**
  * Handler Types
- * 
+ *
  * Type definitions for the Repository Handler layer
  * including operation types and middleware chains.
  */
@@ -20,10 +20,7 @@ export enum RepositoryOperation {
 /**
  * Handler middleware function
  */
-export type HandlerMiddleware = (
-  operation: RepositoryOperation,
-  next: () => Promise<void>
-) => Promise<void>;
+export type HandlerMiddleware = (operation: RepositoryOperation, next: () => Promise<void>) => Promise<void>;
 
 /**
  * Middleware chain

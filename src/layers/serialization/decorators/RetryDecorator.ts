@@ -1,6 +1,6 @@
 /**
  * Retry Decorator
- * 
+ *
  * Decorator that adds retry functionality to serialization strategies.
  */
 
@@ -30,7 +30,7 @@ export class RetryDecorator implements ISerializationStrategy {
       backoffMultiplier: 2,
       retryableErrors: (error: Error) => {
         const retryablePatterns = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'timeout'];
-        return retryablePatterns.some(pattern => error.message.includes(pattern));
+        return retryablePatterns.some((pattern) => error.message.includes(pattern));
       },
       ...policy,
     };
@@ -70,7 +70,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Enables or disables retry logic
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -79,7 +79,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Checks if retry logic is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -88,7 +88,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Gets the retry policy
-   * 
+   *
    * @returns Current retry policy
    */
   getPolicy(): RetryPolicy {
@@ -97,7 +97,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Sets the retry policy
-   * 
+   *
    * @param policy - New retry policy
    */
   setPolicy(policy: Partial<RetryPolicy>): void {
@@ -106,7 +106,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Gets the underlying strategy
-   * 
+   *
    * @returns Wrapped strategy
    */
   getStrategy(): ISerializationStrategy {
@@ -115,7 +115,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Executes a function with retry logic
-   * 
+   *
    * @param fn - Function to execute
    * @returns Function result
    */
@@ -128,7 +128,7 @@ export class RetryDecorator implements ISerializationStrategy {
         return fn();
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        
+
         if (attempt === this._policy.maxAttempts) {
           break;
         }
@@ -147,7 +147,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Checks if an error is retryable
-   * 
+   *
    * @param error - Error to check
    * @returns True if retryable
    */
@@ -160,7 +160,7 @@ export class RetryDecorator implements ISerializationStrategy {
 
   /**
    * Sleeps for a specified duration
-   * 
+   *
    * @param ms - Duration in milliseconds
    */
   private _sleep(ms: number): void {

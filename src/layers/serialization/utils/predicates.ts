@@ -1,6 +1,6 @@
 /**
  * Predicates
- * 
+ *
  * Predicate functions for data validation and filtering.
  */
 
@@ -91,11 +91,11 @@ export function isNoneOf<T>(...values: T[]): Predicate<T> {
 }
 
 export function and<T>(...predicates: Predicate<T>[]): Predicate<T> {
-  return (value) => predicates.every(p => p(value));
+  return (value) => predicates.every((p) => p(value));
 }
 
 export function or<T>(...predicates: Predicate<T>[]): Predicate<T> {
-  return (value) => predicates.some(p => p(value));
+  return (value) => predicates.some((p) => p(value));
 }
 
 export function not<T>(predicate: Predicate<T>): Predicate<T> {
@@ -119,14 +119,10 @@ export function ifElse<T>(
   thenPredicate: Predicate<T>,
   elsePredicate: Predicate<T>
 ): Predicate<T> {
-  return (value) => condition(value) ? thenPredicate(value) : elsePredicate(value);
+  return (value) => (condition(value) ? thenPredicate(value) : elsePredicate(value));
 }
 
-export function compose<V, T, U>(
-  p1: Predicate<U>,
-  p2: (value: T) => U,
-  p3: (value: V) => T
-): Predicate<V> {
+export function compose<V, T, U>(p1: Predicate<U>, p2: (value: T) => U, p3: (value: V) => T): Predicate<V> {
   return (value) => p1(p2(p3(value)));
 }
 
@@ -134,7 +130,7 @@ export function memoize<T>(predicate: Predicate<T>): Predicate<T> {
   const cache = new Map<T, boolean>();
   return (value) => {
     if (cache.has(value)) {
-      return cache.get(value);
+      return cache.get(value)!;
     }
     const result = predicate(value);
     cache.set(value, result);

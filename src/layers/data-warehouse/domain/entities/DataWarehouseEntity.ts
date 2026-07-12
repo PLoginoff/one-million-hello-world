@@ -16,10 +16,7 @@ export class DataWarehouseEntity {
   }
 
   static create(data: Record<string, unknown>): DataWarehouseEntity {
-    return new DataWarehouseEntity(
-      `data-warehouse-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new DataWarehouseEntity(`data-warehouse-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

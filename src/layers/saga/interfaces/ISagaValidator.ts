@@ -1,6 +1,6 @@
 /**
  * Saga Validator Interface
- * 
+ *
  * Defines the contract for validating saga steps
  * in the Saga Layer.
  */
@@ -23,7 +23,7 @@ export interface ValidationResult {
 export interface ISagaValidator {
   /**
    * Validates a single saga step
-   * 
+   *
    * @param step - Saga step to validate
    * @param stepIndex - Index of the step
    * @returns Validation result
@@ -32,7 +32,7 @@ export interface ISagaValidator {
 
   /**
    * Validates multiple saga steps
-   * 
+   *
    * @param steps - Saga steps to validate
    * @returns Validation result
    */
@@ -40,7 +40,7 @@ export interface ISagaValidator {
 
   /**
    * Validates step name uniqueness
-   * 
+   *
    * @param steps - Saga steps to validate
    * @returns Validation result
    */
@@ -48,7 +48,7 @@ export interface ISagaValidator {
 
   /**
    * Validates that step has required functions
-   * 
+   *
    * @param step - Saga step to validate
    * @returns Validation result
    */
@@ -56,7 +56,7 @@ export interface ISagaValidator {
 
   /**
    * Gets the validator name
-   * 
+   *
    * @returns Validator name
    */
   getValidatorName(): string;

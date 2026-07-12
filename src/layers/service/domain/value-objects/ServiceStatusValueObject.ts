@@ -1,6 +1,6 @@
 /**
  * Service Status Value Object
- * 
+ *
  * Represents service status.
  */
 

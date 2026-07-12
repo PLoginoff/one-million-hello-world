@@ -1,6 +1,6 @@
 /**
  * Sort Engine Layer Types
- * 
+ *
  * Type definitions for applying sorting to data collections.
  */
 

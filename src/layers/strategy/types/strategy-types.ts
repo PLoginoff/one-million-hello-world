@@ -1,6 +1,6 @@
 /**
  * Strategy Layer Types
- * 
+ *
  * This module defines all type definitions for the Strategy Layer,
  * including execution strategies, A/B testing, and feature flags.
  */

@@ -1,6 +1,6 @@
 /**
  * Object Utilities
- * 
+ *
  * Utility functions for object manipulation.
  */
 
@@ -16,7 +16,7 @@ export class ObjectUtils {
       return new Date(obj.getTime()) as T;
     }
     if (obj instanceof Array) {
-      return obj.map(item => this.deepClone(item)) as T;
+      return obj.map((item) => this.deepClone(item)) as T;
     }
     if (obj instanceof Object) {
       const clonedObj = {} as T;
@@ -47,7 +47,7 @@ export class ObjectUtils {
               sourceValue as Record<string, unknown>
             ) as T[Extract<keyof T, string>];
           } else {
-            (result[key])! = this.deepClone(sourceValue);
+            result[key] = this.deepClone(sourceValue) as T[Extract<keyof T, string>];
           }
         }
       }

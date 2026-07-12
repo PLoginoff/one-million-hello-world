@@ -1,6 +1,6 @@
 /**
  * Default Configurations
- * 
+ *
  * Exports default cache configurations.
  */
 

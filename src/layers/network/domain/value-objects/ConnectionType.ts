@@ -1,6 +1,6 @@
 /**
  * Connection Type Value Object
- * 
+ *
  * Represents the type of network connection protocol.
  */
 
@@ -17,12 +17,7 @@ export class ConnectionType {
   readonly isSecure: boolean;
   readonly defaultPort: number;
 
-  private constructor(
-    value: ConnectionTypeEnum,
-    isReliable: boolean,
-    isSecure: boolean,
-    defaultPort: number,
-  ) {
+  private constructor(value: ConnectionTypeEnum, isReliable: boolean, isSecure: boolean, defaultPort: number) {
     this.value = value;
     this.isReliable = isReliable;
     this.isSecure = isSecure;

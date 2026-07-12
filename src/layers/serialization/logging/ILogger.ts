@@ -1,6 +1,6 @@
 /**
  * Logger Interface
- * 
+ *
  * Defines the contract for logging operations.
  */
 

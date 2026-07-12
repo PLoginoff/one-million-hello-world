@@ -53,14 +53,14 @@ export class RetryConfigValidator {
           path: `retryPolicy.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...policyValidation.warnings.map((w: any) => ({
           path: `retryPolicy.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 
@@ -77,14 +77,14 @@ export class RetryConfigValidator {
           path: `retryCondition.${e.field}`,
           message: e.message,
           code: e.code,
-        })),
+        }))
       );
       warnings.push(
         ...conditionValidation.warnings.map((w: any) => ({
           path: `retryCondition.${w.field}`,
           message: w.message,
           code: w.code,
-        })),
+        }))
       );
     }
 

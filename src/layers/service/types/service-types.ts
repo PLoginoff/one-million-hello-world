@@ -1,6 +1,6 @@
 /**
  * Service Layer Types
- * 
+ *
  * This module defines all type definitions for the Service Layer,
  * including business logic, use cases, and domain operations.
  */

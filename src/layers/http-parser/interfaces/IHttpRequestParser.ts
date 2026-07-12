@@ -1,6 +1,6 @@
 /**
  * HTTP Request Parser Interface
- * 
+ *
  * Defines the contract for parsing raw HTTP request data
  * into structured HttpRequest objects.
  */
@@ -38,7 +38,7 @@ import {
 export interface IHttpRequestParser {
   /**
    * Parses raw HTTP request data
-   * 
+   *
    * @param raw - Raw buffer containing HTTP request data
    * @param config - Parser configuration options
    * @returns Parse result with success/failure information
@@ -47,7 +47,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses only the request line (first line of HTTP request)
-   * 
+   *
    * @param line - Request line string
    * @returns Parse result with request line components
    */
@@ -59,7 +59,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses HTTP headers
-   * 
+   *
    * @param headerLines - Array of header lines
    * @returns Parse result with headers map
    */
@@ -67,7 +67,7 @@ export interface IHttpRequestParser {
 
   /**
    * Validates HTTP request structure
-   * 
+   *
    * @param request - Request to validate
    * @returns True if valid, false otherwise
    */
@@ -75,21 +75,21 @@ export interface IHttpRequestParser {
 
   /**
    * Sets default parser configuration
-   * 
+   *
    * @param config - Default configuration
    */
   setDefaultConfig(config: Partial<ParserConfig>): void;
 
   /**
    * Gets current default configuration
-   * 
+   *
    * @returns Current default configuration
    */
   getDefaultConfig(): ParserConfig;
 
   /**
    * Parses with extended configuration and returns extended result
-   * 
+   *
    * @param raw - Raw buffer containing HTTP request data
    * @param config - Extended parser configuration options
    * @returns Extended parse result with warnings and metrics
@@ -98,7 +98,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses query string from URL
-   * 
+   *
    * @param queryString - Query string to parse
    * @returns Parsed query string
    */
@@ -106,7 +106,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses cookies from Cookie header
-   * 
+   *
    * @param cookieHeader - Cookie header value
    * @returns Parsed cookies
    */
@@ -114,7 +114,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses MIME type from Content-Type header
-   * 
+   *
    * @param contentType - Content-Type header value
    * @returns Parsed MIME type
    */
@@ -122,7 +122,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses Content-Disposition header
-   * 
+   *
    * @param contentDisposition - Content-Disposition header value
    * @returns Parsed content disposition
    */
@@ -130,7 +130,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses chunked encoding body
-   * 
+   *
    * @param body - Body buffer with chunked encoding
    * @returns Array of chunk information
    */
@@ -138,7 +138,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses multipart form data
-   * 
+   *
    * @param body - Body buffer with multipart form data
    * @param boundary - Multipart boundary
    * @returns Parsed multipart form data
@@ -147,7 +147,7 @@ export interface IHttpRequestParser {
 
   /**
    * Gets parsing statistics
-   * 
+   *
    * @returns Parsing statistics
    */
   getStats(): ParsingStats;
@@ -159,28 +159,28 @@ export interface IHttpRequestParser {
 
   /**
    * Gets current parser state
-   * 
+   *
    * @returns Current parser state
    */
   getState(): ParserState;
 
   /**
    * Sets validation rules
-   * 
+   *
    * @param rules - Validation rules to apply
    */
   setValidationRules(rules: Partial<ValidationRules>): void;
 
   /**
    * Gets current validation rules
-   * 
+   *
    * @returns Current validation rules
    */
   getValidationRules(): ValidationRules;
 
   /**
    * Validates HTTP response
-   * 
+   *
    * @param response - Response to validate
    * @returns True if valid, false otherwise
    */
@@ -188,7 +188,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses HTTP response
-   * 
+   *
    * @param raw - Raw buffer containing HTTP response data
    * @param config - Parser configuration options
    * @returns Parse result with success/failure information
@@ -197,7 +197,7 @@ export interface IHttpRequestParser {
 
   /**
    * Parses HTTP response with extended information
-   * 
+   *
    * @param raw - Raw buffer containing HTTP response data
    * @param config - Extended parser configuration options
    * @returns Extended parse result with warnings and metrics
@@ -206,63 +206,63 @@ export interface IHttpRequestParser {
 
   /**
    * Gets parser health status
-   * 
+   *
    * @returns Parser health status
    */
   getHealthStatus(): ParserHealthStatus;
 
   /**
    * Runs parser diagnostics
-   * 
+   *
    * @returns Parser diagnostics information
    */
   runDiagnostics(): ParserDiagnostics;
 
   /**
    * Sets security headers configuration
-   * 
+   *
    * @param config - Security headers configuration
    */
   setSecurityHeadersConfig(config: Partial<SecurityHeadersConfig>): void;
 
   /**
    * Gets security headers configuration
-   * 
+   *
    * @returns Security headers configuration
    */
   getSecurityHeadersConfig(): SecurityHeadersConfig;
 
   /**
    * Sets CORS configuration
-   * 
+   *
    * @param config - CORS configuration
    */
   setCorsConfig(config: Partial<CorsConfig>): void;
 
   /**
    * Gets CORS configuration
-   * 
+   *
    * @returns CORS configuration
    */
   getCorsConfig(): CorsConfig;
 
   /**
    * Sets rate limiting configuration
-   * 
+   *
    * @param config - Rate limiting configuration
    */
   setRateLimitConfig(config: Partial<RateLimitConfig>): void;
 
   /**
    * Gets rate limiting configuration
-   * 
+   *
    * @returns Rate limiting configuration
    */
   getRateLimitConfig(): RateLimitConfig;
 
   /**
    * Checks if method is allowed
-   * 
+   *
    * @param method - HTTP method to check
    * @returns True if allowed, false otherwise
    */
@@ -270,7 +270,7 @@ export interface IHttpRequestParser {
 
   /**
    * Checks if content type is allowed
-   * 
+   *
    * @param contentType - Content type to check
    * @returns True if allowed, false otherwise
    */
@@ -278,7 +278,7 @@ export interface IHttpRequestParser {
 
   /**
    * Checks if origin is allowed
-   * 
+   *
    * @param origin - Origin to check
    * @returns True if allowed, false otherwise
    */
@@ -286,7 +286,7 @@ export interface IHttpRequestParser {
 
   /**
    * Adds parse warning
-   * 
+   *
    * @param warning - Parse warning to add
    */
   addWarning(warning: ParseWarning): void;
@@ -298,7 +298,7 @@ export interface IHttpRequestParser {
 
   /**
    * Gets all warnings
-   * 
+   *
    * @returns Array of parse warnings
    */
   getWarnings(): ParseWarning[];
@@ -310,14 +310,14 @@ export interface IHttpRequestParser {
 
   /**
    * Gets extended default configuration
-   * 
+   *
    * @returns Extended default configuration
    */
   getExtendedDefaultConfig(): ExtendedParserConfig;
 
   /**
    * Sets extended default configuration
-   * 
+   *
    * @param config - Extended default configuration
    */
   setExtendedDefaultConfig(config: Partial<ExtendedParserConfig>): void;

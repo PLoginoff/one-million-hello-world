@@ -1,6 +1,6 @@
 /**
  * Default Security Configurations
- * 
+ *
  * Pre-configured settings for common security scenarios.
  */
 

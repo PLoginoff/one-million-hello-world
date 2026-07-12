@@ -1,6 +1,6 @@
 /**
  * Repository Type Value Object
- * 
+ *
  * Represents repository type.
  */
 

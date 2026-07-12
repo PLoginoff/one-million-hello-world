@@ -1,6 +1,6 @@
 /**
  * Saga State Implementation
- * 
+ *
  * Concrete implementation of ISagaState.
  * Manages saga execution state with snapshot support.
  */

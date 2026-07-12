@@ -1,6 +1,6 @@
 /**
  * HTTP Method Value Object
- * 
+ *
  * Represents HTTP method with validation and metadata.
  */
 

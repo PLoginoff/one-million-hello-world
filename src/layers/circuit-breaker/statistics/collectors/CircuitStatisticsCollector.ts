@@ -1,6 +1,6 @@
 /**
  * Circuit Statistics Collector
- * 
+ *
  * Collects and aggregates circuit breaker statistics.
  */
 
@@ -62,8 +62,7 @@ export class CircuitStatisticsCollector {
       failureRate: this._metrics.getFailureRate(),
       rejectionRate: this._metrics.getRejectionRate(),
       averageResponseTime: this._metrics.data.averageResponseTime,
-      minResponseTime:
-        this._metrics.data.minResponseTime === Infinity ? 0 : this._metrics.data.minResponseTime,
+      minResponseTime: this._metrics.data.minResponseTime === Infinity ? 0 : this._metrics.data.minResponseTime,
       maxResponseTime: this._metrics.data.maxResponseTime,
       stateTransitions: this._state.getTransitionCount(),
       currentState: this._state.currentState,

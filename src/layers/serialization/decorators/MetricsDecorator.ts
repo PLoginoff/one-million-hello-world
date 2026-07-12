@@ -1,6 +1,6 @@
 /**
  * Metrics Decorator
- * 
+ *
  * Decorator that adds metrics collection functionality to serialization strategies.
  */
 
@@ -76,11 +76,7 @@ export class MetricsDecorator implements ISerializationStrategy {
   private _enabled: boolean;
   private _prefix: string;
 
-  constructor(
-    strategy: ISerializationStrategy,
-    metrics?: IMetricsCollector,
-    prefix: string = 'serialization'
-  ) {
+  constructor(strategy: ISerializationStrategy, metrics?: IMetricsCollector, prefix: string = 'serialization') {
     this._strategy = strategy;
     this._metrics = metrics ?? new InMemoryMetricsCollector();
     this._enabled = true;
@@ -174,7 +170,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Enables or disables metrics collection
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -183,7 +179,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Checks if metrics collection is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -192,7 +188,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Gets the underlying strategy
-   * 
+   *
    * @returns Wrapped strategy
    */
   getStrategy(): ISerializationStrategy {
@@ -201,7 +197,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Gets the metrics collector
-   * 
+   *
    * @returns Metrics collector
    */
   getMetrics(): IMetricsCollector {
@@ -210,7 +206,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Sets the metrics prefix
-   * 
+   *
    * @param prefix - New prefix
    */
   setPrefix(prefix: string): void {
@@ -219,7 +215,7 @@ export class MetricsDecorator implements ISerializationStrategy {
 
   /**
    * Gets the metrics prefix
-   * 
+   *
    * @returns Current prefix
    */
   getPrefix(): string {

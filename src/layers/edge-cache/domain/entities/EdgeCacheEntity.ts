@@ -16,10 +16,7 @@ export class EdgeCacheEntity {
   }
 
   static create(data: Record<string, unknown>): EdgeCacheEntity {
-    return new EdgeCacheEntity(
-      `edge-cache-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new EdgeCacheEntity(`edge-cache-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

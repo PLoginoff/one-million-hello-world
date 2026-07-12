@@ -1,17 +1,12 @@
 /**
  * Event Bus Implementation
- * 
+ *
  * Concrete implementation of IEventBus.
  * Handles event bus, Pub/Sub, and domain event propagation.
  */
 
 import { IEventBus } from '../interfaces/IEventBus';
-import {
-  EventHandler,
-  EventSubscription,
-  EventConfig,
-  EventStats,
-} from '../types/event-types';
+import { EventHandler, EventSubscription, EventConfig, EventStats } from '../types/event-types';
 
 export class EventBus implements IEventBus {
   private _subscriptions: Map<string, EventSubscription[]>;

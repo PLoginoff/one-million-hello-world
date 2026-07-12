@@ -1,17 +1,12 @@
 /**
  * Circuit Breaker Implementation
- * 
+ *
  * Concrete implementation of ICircuitBreaker.
  * Handles fault tolerance and fallback strategies.
  */
 
 import { ICircuitBreaker, FallbackFunction } from '../interfaces/ICircuitBreaker';
-import {
-  CircuitState,
-  CircuitStats,
-  CircuitConfig,
-  CircuitResult,
-} from '../types/circuit-breaker-types';
+import { CircuitState, CircuitStats, CircuitConfig, CircuitResult } from '../types/circuit-breaker-types';
 
 export class CircuitBreaker implements ICircuitBreaker {
   private _state: CircuitState;

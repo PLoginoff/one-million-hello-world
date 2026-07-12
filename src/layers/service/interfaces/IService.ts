@@ -1,16 +1,11 @@
 /**
  * Service Interface
- * 
+ *
  * Defines the contract for service operations
  * including business logic, use cases, and domain operations.
  */
 
-import {
-  ServiceResult,
-  ServiceContext,
-  UseCase,
-  ServiceConfig,
-} from '../types/service-types';
+import { ServiceResult, ServiceContext, UseCase, ServiceConfig } from '../types/service-types';
 
 /**
  * Interface for service operations
@@ -18,7 +13,7 @@ import {
 export interface IService {
   /**
    * Executes a use case with given input and context
-   * 
+   *
    * @param useCaseName - Name of the use case to execute
    * @param input - Input data for the use case
    * @param context - Service context
@@ -32,14 +27,14 @@ export interface IService {
 
   /**
    * Registers a use case
-   * 
+   *
    * @param useCase - Use case to register
    */
   registerUseCase<TInput, TOutput>(useCase: UseCase<TInput, TOutput>): void;
 
   /**
    * Gets a registered use case
-   * 
+   *
    * @param useCaseName - Name of the use case
    * @returns Use case or undefined
    */
@@ -47,7 +42,7 @@ export interface IService {
 
   /**
    * Creates a service context
-   * 
+   *
    * @param userId - Optional user ID
    * @param correlationId - Correlation ID
    * @param requestId - Request ID
@@ -57,14 +52,14 @@ export interface IService {
 
   /**
    * Sets service configuration
-   * 
+   *
    * @param config - Service configuration
    */
   setConfig(config: ServiceConfig): void;
 
   /**
    * Gets current service configuration
-   * 
+   *
    * @returns Current service configuration
    */
   getConfig(): ServiceConfig;

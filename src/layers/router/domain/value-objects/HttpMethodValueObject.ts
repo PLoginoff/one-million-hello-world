@@ -1,6 +1,6 @@
 /**
  * HTTP Method Value Object
- * 
+ *
  * Represents HTTP method types.
  */
 
@@ -94,7 +94,9 @@ export class HttpMethodValueObject {
    * Check if method is idempotent (GET, HEAD, OPTIONS, PUT, DELETE)
    */
   isIdempotent(): boolean {
-    return [HttpMethod.GET, HttpMethod.HEAD, HttpMethod.OPTIONS, HttpMethod.PUT, HttpMethod.DELETE].includes(this.value);
+    return [HttpMethod.GET, HttpMethod.HEAD, HttpMethod.OPTIONS, HttpMethod.PUT, HttpMethod.DELETE].includes(
+      this.value
+    );
   }
 
   /**

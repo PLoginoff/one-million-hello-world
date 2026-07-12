@@ -1,6 +1,6 @@
 /**
  * Filter Engine Layer Types
- * 
+ *
  * Type definitions for applying filters to data collections.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Compression Metadata Value Object
- * 
+ *
  * Represents metadata for compression operations.
  * Immutable value object for tracking compression performance.
  */

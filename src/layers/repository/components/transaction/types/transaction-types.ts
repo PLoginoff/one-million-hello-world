@@ -1,6 +1,6 @@
 /**
  * Transaction Layer Types
- * 
+ *
  * Type definitions for transaction management with isolation levels and rollback support.
  */
 
@@ -43,6 +43,8 @@ export interface TransactionContext {
   startTime: Date;
   operations: TransactionOperation[];
   snapshot: TransactionSnapshot;
+  timeout?: number;
+  isolationLevel?: IsolationLevel;
 }
 
 /**

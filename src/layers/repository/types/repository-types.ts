@@ -1,6 +1,6 @@
 /**
  * Repository Layer Types
- * 
+ *
  * This module defines all type definitions for the Repository Layer,
  * including data access abstraction and query builders.
  */

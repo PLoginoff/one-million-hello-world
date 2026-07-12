@@ -1,6 +1,6 @@
 /**
  * Basic Authentication Strategy
- * 
+ *
  * Implements HTTP Basic Authentication.
  */
 

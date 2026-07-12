@@ -1,6 +1,6 @@
 /**
  * EventDispatcher - Application Service
- * 
+ *
  * Dispatches events to registered handlers with middleware support.
  * Coordinates event flow with policies and error handling.
  */
@@ -97,10 +97,7 @@ export class EventDispatcher implements IEventDispatcher {
     }
   }
 
-  private async _executeWithMiddleware(
-    event: Event,
-    finalHandler: () => Promise<void>
-  ): Promise<void> {
+  private async _executeWithMiddleware(event: Event, finalHandler: () => Promise<void>): Promise<void> {
     let index = 0;
 
     const next = async (): Promise<void> => {
@@ -175,6 +172,6 @@ export class EventDispatcher implements IEventDispatcher {
   }
 
   private _delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

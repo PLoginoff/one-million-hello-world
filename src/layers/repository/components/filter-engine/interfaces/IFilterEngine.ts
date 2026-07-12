@@ -1,6 +1,6 @@
 /**
  * Filter Engine Interface
- * 
+ *
  * Defines the contract for applying filters to data collections.
  */
 
@@ -20,7 +20,7 @@ import {
 export interface IFilterEngine<T = unknown> {
   /**
    * Applies filters to data
-   * 
+   *
    * @param data - Data to filter
    * @param filters - Array of parsed filters
    * @param context - Filter execution context
@@ -30,7 +30,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Compiles a filter for optimized execution
-   * 
+   *
    * @param filter - Parsed filter to compile
    * @returns Compiled filter
    */
@@ -38,7 +38,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Applies compiled filters to data
-   * 
+   *
    * @param data - Data to filter
    * @param filters - Array of compiled filters
    * @param context - Filter execution context
@@ -48,7 +48,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Estimates filter selectivity
-   * 
+   *
    * @param filter - Parsed filter
    * @param totalCount - Total number of items
    * @returns Estimated selectivity (0-1)
@@ -57,7 +57,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Gets optimization hints for filters
-   * 
+   *
    * @param filters - Array of parsed filters
    * @returns Array of optimization hints
    */
@@ -65,35 +65,35 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Sets filter context
-   * 
+   *
    * @param context - Filter execution context
    */
   setContext(context: Partial<FilterContext>): void;
 
   /**
    * Gets current filter context
-   * 
+   *
    * @returns Current filter context
    */
   getContext(): FilterContext;
 
   /**
    * Sets filter chain configuration
-   * 
+   *
    * @param config - Filter chain configuration
    */
   setChainConfig(config: Partial<FilterChainConfig>): void;
 
   /**
    * Gets current filter chain configuration
-   * 
+   *
    * @returns Current filter chain configuration
    */
   getChainConfig(): FilterChainConfig;
 
   /**
    * Gets filter statistics
-   * 
+   *
    * @returns Filter statistics
    */
   getStats(): FilterStats;
@@ -110,7 +110,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Validates a filter
-   * 
+   *
    * @param filter - Parsed filter to validate
    * @returns Boolean indicating if filter is valid
    */
@@ -118,7 +118,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Combines multiple filters with logical operators
-   * 
+   *
    * @param filters - Array of filters to combine
    * @param operator - Logical operator (AND/OR)
    * @returns Combined filter
@@ -127,7 +127,7 @@ export interface IFilterEngine<T = unknown> {
 
   /**
    * Negates a filter
-   * 
+   *
    * @param filter - Parsed filter to negate
    * @returns Negated filter
    */

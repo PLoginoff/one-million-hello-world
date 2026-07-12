@@ -1,6 +1,6 @@
 /**
  * JSON Serialization Strategy
- * 
+ *
  * Implements JSON serialization and deserialization.
  */
 

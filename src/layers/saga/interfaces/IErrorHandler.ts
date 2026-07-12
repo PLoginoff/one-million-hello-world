@@ -1,6 +1,6 @@
 /**
  * Error Handler Interface
- * 
+ *
  * Defines the contract for error handling
  * in the Saga Layer.
  */
@@ -31,7 +31,7 @@ export interface HandledError {
 export interface IErrorHandler {
   /**
    * Handles an error with context
-   * 
+   *
    * @param error - The error to handle
    * @param context - Error context
    * @returns Handled error information
@@ -40,7 +40,7 @@ export interface IErrorHandler {
 
   /**
    * Determines if compensation should be triggered for an error
-   * 
+   *
    * @param error - The error to evaluate
    * @param context - Error context
    * @returns Whether compensation should be triggered
@@ -49,7 +49,7 @@ export interface IErrorHandler {
 
   /**
    * Determines if execution should continue after an error
-   * 
+   *
    * @param error - The error to evaluate
    * @param context - Error context
    * @returns Whether execution should continue
@@ -58,7 +58,7 @@ export interface IErrorHandler {
 
   /**
    * Formats an error message for logging
-   * 
+   *
    * @param error - The error to format
    * @param context - Error context
    * @returns Formatted error message
@@ -67,7 +67,7 @@ export interface IErrorHandler {
 
   /**
    * Gets the error severity based on error and context
-   * 
+   *
    * @param error - The error to evaluate
    * @param context - Error context
    * @returns Error severity

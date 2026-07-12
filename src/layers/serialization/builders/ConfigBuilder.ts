@@ -1,6 +1,6 @@
 /**
  * Configuration Builder
- * 
+ *
  * Fluent builder for creating SerializationConfig objects.
  */
 
@@ -24,7 +24,7 @@ export class ConfigBuilder {
 
   /**
    * Sets the default serialization format
-   * 
+   *
    * @param format - Default format
    * @returns This builder for chaining
    */
@@ -35,7 +35,7 @@ export class ConfigBuilder {
 
   /**
    * Enables or disables versioning
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -46,7 +46,7 @@ export class ConfigBuilder {
 
   /**
    * Sets the current version
-   * 
+   *
    * @param version - Version string
    * @returns This builder for chaining
    */
@@ -57,7 +57,7 @@ export class ConfigBuilder {
 
   /**
    * Enables or disables validation
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -68,7 +68,7 @@ export class ConfigBuilder {
 
   /**
    * Enables or disables plugins
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -79,7 +79,7 @@ export class ConfigBuilder {
 
   /**
    * Enables or disables hooks
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -90,7 +90,7 @@ export class ConfigBuilder {
 
   /**
    * Enables or disables strict mode
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This builder for chaining
    */
@@ -101,7 +101,7 @@ export class ConfigBuilder {
 
   /**
    * Sets the maximum data size
-   * 
+   *
    * @param maxSize - Maximum size in bytes
    * @returns This builder for chaining
    */
@@ -112,7 +112,7 @@ export class ConfigBuilder {
 
   /**
    * Sets the timeout for operations
-   * 
+   *
    * @param timeout - Timeout in milliseconds
    * @returns This builder for chaining
    */
@@ -123,7 +123,7 @@ export class ConfigBuilder {
 
   /**
    * Merges additional configuration
-   * 
+   *
    * @param config - Additional configuration
    * @returns This builder for chaining
    */
@@ -134,12 +134,12 @@ export class ConfigBuilder {
 
   /**
    * Builds the configuration
-   * 
+   *
    * @returns Complete SerializationConfig
    * @throws Error if required fields are missing
    */
   build(): SerializationConfig {
-    if (!this._config.defaultFormat) {
+    if (this._config.defaultFormat == null) {
       throw new Error('defaultFormat is required');
     }
     if (this._config.currentVersion === undefined) {
@@ -150,7 +150,7 @@ export class ConfigBuilder {
 
   /**
    * Builds the configuration without validation
-   * 
+   *
    * @returns SerializationConfig or undefined
    */
   buildUnsafe(): SerializationConfig | undefined {
@@ -159,7 +159,7 @@ export class ConfigBuilder {
 
   /**
    * Resets the builder to default state
-   * 
+   *
    * @returns This builder for chaining
    */
   reset(): ConfigBuilder {
@@ -177,7 +177,7 @@ export class ConfigBuilder {
 
   /**
    * Gets the current configuration state
-   * 
+   *
    * @returns Current partial configuration
    */
   getCurrentState(): Partial<SerializationConfig> {

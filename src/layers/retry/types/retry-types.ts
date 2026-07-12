@@ -1,6 +1,6 @@
 /**
  * Retry Layer Types
- * 
+ *
  * This module defines all type definitions for the Retry Layer,
  * including exponential backoff, jitter, and idempotency.
  */

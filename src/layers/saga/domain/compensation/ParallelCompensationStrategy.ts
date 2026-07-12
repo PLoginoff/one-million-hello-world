@@ -12,15 +12,13 @@ export class ParallelCompensationStrategy {
    * Get compensation groups
    */
   getCompensationGroups(execution: SagaExecutionEntity): string[][] {
-    const completedSteps = execution.steps
-      .filter(s => s.status === 'completed')
-      .map(s => s.stepId);
+    const completedSteps = execution.steps.filter((s) => s.status === 'completed').map((s) => s.stepId);
 
     const compensatedSteps = execution.compensationSteps
-      .filter(s => s.status === 'completed')
-      .map(s => s.originalStepId);
+      .filter((s) => s.status === 'completed')
+      .map((s) => s.originalStepId);
 
-    const remainingSteps = completedSteps.filter(s => !compensatedSteps.includes(s));
+    const remainingSteps = completedSteps.filter((s) => !compensatedSteps.includes(s));
 
     return this._groupIndependentSteps(remainingSteps, execution);
   }
@@ -51,7 +49,7 @@ export class ParallelCompensationStrategy {
       return { valid: false, reason: 'No compensation steps defined' };
     }
 
-    const completedSteps = execution.steps.filter(s => s.status === 'completed');
+    const completedSteps = execution.steps.filter((s) => s.status === 'completed');
     if (completedSteps.length === 0) {
       return { valid: false, reason: 'No completed steps to compensate' };
     }

@@ -1,6 +1,6 @@
 /**
  * JSON Content Negotiator
- * 
+ *
  * Handles JSON content type negotiation.
  */
 

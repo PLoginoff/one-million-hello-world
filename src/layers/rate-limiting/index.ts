@@ -18,8 +18,17 @@ export * from './types/rate-limiting-types';
 // New Clean Architecture exports
 export { RateLimitRequestEntity } from './domain/entities/RateLimitRequest';
 export { RequestMetadata, RequestMetadataData } from './domain/value-objects/RequestMetadata';
-export { RateLimitConfig as DomainRateLimitConfig, RateLimitConfigData, WindowUnit, RateLimitAlgorithm } from './domain/value-objects/RateLimitConfig';
-export { RateLimitRule as DomainRateLimitRule, RateLimitRuleData, RuleCondition } from './domain/value-objects/RateLimitRule';
+export {
+  RateLimitConfig as DomainRateLimitConfig,
+  RateLimitConfigData,
+  WindowUnit,
+  RateLimitAlgorithm,
+} from './domain/value-objects/RateLimitConfig';
+export {
+  RateLimitRule as DomainRateLimitRule,
+  RateLimitRuleData,
+  RuleCondition,
+} from './domain/value-objects/RateLimitRule';
 export {
   RateLimitValidationService,
   ValidationResult,

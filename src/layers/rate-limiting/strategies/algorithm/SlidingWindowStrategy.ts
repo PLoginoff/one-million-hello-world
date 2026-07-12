@@ -1,6 +1,6 @@
 /**
  * Sliding Window Rate Limiting Strategy
- * 
+ *
  * Implements sliding window algorithm for rate limiting.
  */
 
@@ -23,7 +23,11 @@ export class SlidingWindowStrategy implements IRateLimitAlgorithm {
     return 'SLIDING_WINDOW';
   }
 
-  isAllowed(key: RateLimitKey, limit: number, window: number): {
+  isAllowed(
+    key: RateLimitKey,
+    limit: number,
+    window: number
+  ): {
     allowed: boolean;
     remaining: number;
     resetAt: number;

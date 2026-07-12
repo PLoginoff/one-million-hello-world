@@ -23,7 +23,7 @@ export class RateLimitRequestEntity {
     allowed: boolean,
     metadata?: RequestMetadata,
     parameters?: Record<string, unknown>,
-    reason?: string,
+    reason?: string
   ) {
     this.requestId = requestId;
     this.clientId = clientId;
@@ -73,14 +73,16 @@ export class RateLimitRequestEntity {
       allowed,
       this.metadata,
       this.parameters,
-      reason,
+      reason
     );
   }
 
   /**
    * Create a copy with updated metadata
    */
-  withMetadata(updates: Partial<import('./../value-objects/RequestMetadata').RequestMetadataData>): RateLimitRequestEntity {
+  withMetadata(
+    updates: Partial<import('./../value-objects/RequestMetadata').RequestMetadataData>
+  ): RateLimitRequestEntity {
     return new RateLimitRequestEntity(
       this.requestId,
       this.clientId,
@@ -88,7 +90,7 @@ export class RateLimitRequestEntity {
       this.allowed,
       this.metadata.update(updates),
       this.parameters,
-      this.reason,
+      this.reason
     );
   }
 
@@ -103,7 +105,7 @@ export class RateLimitRequestEntity {
       this.allowed,
       this.metadata.clone(),
       { ...this.parameters },
-      this.reason,
+      this.reason
     );
   }
 

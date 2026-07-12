@@ -1,6 +1,6 @@
 /**
  * Validation Configuration Builder
- * 
+ *
  * Fluent builder for creating validation configurations.
  */
 

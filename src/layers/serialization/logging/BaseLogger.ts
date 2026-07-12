@@ -1,6 +1,6 @@
 /**
  * Base Logger
- * 
+ *
  * Abstract base class for loggers.
  */
 
@@ -50,12 +50,7 @@ export abstract class BaseLogger implements ILogger {
   /**
    * Creates a log entry
    */
-  protected _createEntry(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-    error?: Error
-  ): LogEntry {
+  protected _createEntry(level: LogLevel, message: string, context?: Record<string, unknown>, error?: Error): LogEntry {
     return {
       level,
       message,
@@ -79,12 +74,7 @@ export abstract class BaseLogger implements ILogger {
   /**
    * Logs a message at the specified level
    */
-  protected _log(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-    error?: Error
-  ): void {
+  protected _log(level: LogLevel, message: string, context?: Record<string, unknown>, error?: Error): void {
     if (!this.isLevelEnabled(level)) {
       return;
     }

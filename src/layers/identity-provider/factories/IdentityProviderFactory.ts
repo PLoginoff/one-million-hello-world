@@ -1,5 +1,8 @@
 import { IdentityProvider } from '../implementations/IdentityProvider';
-import { DefaultIdentityProviderStrategy, OptimizedIdentityProviderStrategy } from '../strategies/IdentityProviderStrategy';
+import {
+  DefaultIdentityProviderStrategy,
+  OptimizedIdentityProviderStrategy,
+} from '../strategies/IdentityProviderStrategy';
 
 export class IdentityProviderFactory {
   static createDefault(): IdentityProvider {

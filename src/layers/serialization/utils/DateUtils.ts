@@ -1,6 +1,6 @@
 /**
  * Date Utilities
- * 
+ *
  * Utility functions for date manipulation.
  */
 
@@ -297,7 +297,7 @@ export class DateUtils {
       SSS: String(date.getMilliseconds()).padStart(3, '0'),
     };
 
-    return format.replace(/YYYY|MM|DD|HH|mm|ss|SSS/g, match => map[match]);
+    return format.replace(/YYYY|MM|DD|HH|mm|ss|SSS/g, (match) => map[match]);
   }
 
   /**

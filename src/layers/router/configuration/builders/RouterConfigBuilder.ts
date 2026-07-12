@@ -1,6 +1,6 @@
 /**
  * Router Configuration Builder
- * 
+ *
  * Fluent builder for creating router configurations.
  */
 

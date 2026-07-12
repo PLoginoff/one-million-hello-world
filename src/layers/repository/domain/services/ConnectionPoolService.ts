@@ -1,6 +1,6 @@
 /**
  * Connection Pool Service
- * 
+ *
  * Provides connection pool management for repositories.
  */
 
@@ -69,7 +69,7 @@ export class ConnectionPoolService {
    * Get active connection count
    */
   getActiveCount(): number {
-    return Array.from(this.connections.values()).filter(c => c.active).length;
+    return Array.from(this.connections.values()).filter((c) => c.active).length;
   }
 
   /**

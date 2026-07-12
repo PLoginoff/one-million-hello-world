@@ -1,6 +1,6 @@
 /**
  * Parser Configuration Builder
- * 
+ *
  * Fluent builder for creating parser configurations.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Router Error
- * 
+ *
  * Custom error class for router errors.
  */
 

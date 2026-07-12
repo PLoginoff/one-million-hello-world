@@ -1,6 +1,6 @@
 /**
  * Security Statistics
- * 
+ *
  * Tracks and aggregates security-related metrics.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Cache Service
- * 
+ *
  * Core service for cache operations using layered architecture.
  */
 
@@ -31,7 +31,7 @@ export class CacheService<T> {
     evictionStrategy: IEvictionStrategy<T>,
     invalidationStrategy: IInvalidationStrategy<T>,
     statsCollector: IStatisticsCollector,
-    config: CacheConfigOptions,
+    config: CacheConfigOptions
   ) {
     this.storage = storage;
     this.evictionStrategy = evictionStrategy;

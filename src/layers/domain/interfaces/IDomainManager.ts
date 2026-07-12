@@ -1,17 +1,11 @@
 /**
  * Domain Manager Interface
- * 
+ *
  * Defines the contract for domain operations
  * including entity management, value objects, and domain events.
  */
 
-import {
-  DomainEntity,
-  ValueObject,
-  DomainEvent,
-  AggregateRoot,
-  DomainResult,
-} from '../types/domain-types';
+import { DomainEntity, ValueObject, DomainEvent, AggregateRoot, DomainResult } from '../types/domain-types';
 
 /**
  * Interface for domain operations
@@ -19,7 +13,7 @@ import {
 export interface IDomainManager {
   /**
    * Creates a new domain entity
-   * 
+   *
    * @param entity - Entity to create
    * @returns Domain result with created entity
    */
@@ -27,7 +21,7 @@ export interface IDomainManager {
 
   /**
    * Updates an existing domain entity
-   * 
+   *
    * @param entity - Entity to update
    * @returns Domain result with updated entity
    */
@@ -35,7 +29,7 @@ export interface IDomainManager {
 
   /**
    * Deletes a domain entity
-   * 
+   *
    * @param entityId - ID of entity to delete
    * @returns Domain result
    */
@@ -43,7 +37,7 @@ export interface IDomainManager {
 
   /**
    * Gets an entity by ID
-   * 
+   *
    * @param entityId - ID of entity to get
    * @returns Domain result with entity
    */
@@ -51,14 +45,14 @@ export interface IDomainManager {
 
   /**
    * Publishes a domain event
-   * 
+   *
    * @param event - Domain event to publish
    */
   publishEvent(event: DomainEvent): void;
 
   /**
    * Gets all uncommitted events for an aggregate
-   * 
+   *
    * @param aggregateId - Aggregate ID
    * @returns Array of uncommitted events
    */
@@ -66,7 +60,7 @@ export interface IDomainManager {
 
   /**
    * Compares two value objects for equality
-   * 
+   *
    * @param vo1 - First value object
    * @param vo2 - Second value object
    * @returns True if equal, false otherwise
@@ -75,7 +69,7 @@ export interface IDomainManager {
 
   /**
    * Validates a domain entity
-   * 
+   *
    * @param entity - Entity to validate
    * @returns Domain result with validation status
    */

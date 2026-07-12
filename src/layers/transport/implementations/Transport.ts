@@ -1,6 +1,6 @@
 /**
  * Transport Implementation
- * 
+ *
  * Concrete implementation of ITransport.
  * Handles HTTP response, streaming, and chunked encoding.
  */

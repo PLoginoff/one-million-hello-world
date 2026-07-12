@@ -1,6 +1,6 @@
 /**
  * Strategy Domain Services
- * 
+ *
  * Exports all domain services for the Strategy domain layer.
  */
 

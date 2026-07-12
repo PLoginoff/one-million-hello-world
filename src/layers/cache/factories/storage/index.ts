@@ -1,6 +1,6 @@
 /**
  * Storage Factories
- * 
+ *
  * Exports storage factories.
  */
 

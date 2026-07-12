@@ -1,6 +1,6 @@
 /**
  * Plugin Factory Interface
- * 
+ *
  * Defines the contract for creating plugins.
  */
 
@@ -9,7 +9,7 @@ import { ISerializationPlugin } from '../plugins/ISerializationPlugin';
 export interface IPluginFactory {
   /**
    * Creates a plugin by name
-   * 
+   *
    * @param name - Plugin name
    * @param config - Optional configuration
    * @returns Plugin instance
@@ -19,7 +19,7 @@ export interface IPluginFactory {
 
   /**
    * Registers a plugin
-   * 
+   *
    * @param name - Plugin name
    * @param factory - Plugin factory function
    */
@@ -27,7 +27,7 @@ export interface IPluginFactory {
 
   /**
    * Checks if a plugin is registered
-   * 
+   *
    * @param name - Plugin name
    * @returns True if registered
    */
@@ -35,7 +35,7 @@ export interface IPluginFactory {
 
   /**
    * Gets all registered plugin names
-   * 
+   *
    * @returns Array of plugin names
    */
   getPluginNames(): string[];

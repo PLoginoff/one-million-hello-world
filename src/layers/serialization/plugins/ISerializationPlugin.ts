@@ -1,6 +1,6 @@
 /**
  * Serialization Plugin Interface
- * 
+ *
  * Defines the contract for serialization plugins.
  */
 
@@ -17,7 +17,7 @@ export interface ISerializationPlugin {
 
   /**
    * Called before serialization
-   * 
+   *
    * @param data - Data to serialize
    * @returns Modified data or original data
    */
@@ -25,7 +25,7 @@ export interface ISerializationPlugin {
 
   /**
    * Called after serialization
-   * 
+   *
    * @param serialized - Serialized data
    * @returns Modified serialized data or original data
    */
@@ -33,7 +33,7 @@ export interface ISerializationPlugin {
 
   /**
    * Called before deserialization
-   * 
+   *
    * @param data - Data to deserialize
    * @returns Modified data or original data
    */
@@ -41,7 +41,7 @@ export interface ISerializationPlugin {
 
   /**
    * Called after deserialization
-   * 
+   *
    * @param deserialized - Deserialized data
    * @returns Modified data or original data
    */

@@ -1,6 +1,6 @@
 /**
  * Plugin Factory
- * 
+ *
  * Factory for creating plugins.
  */
 
@@ -38,7 +38,7 @@ export class PluginFactory implements IPluginFactory {
 
   /**
    * Unregisters a plugin
-   * 
+   *
    * @param name - Plugin name
    */
   unregisterPlugin(name: string): void {
@@ -54,7 +54,7 @@ export class PluginFactory implements IPluginFactory {
 
   private _registerDefaultPlugins(): void {
     this._plugins.set('compression', (config?: Record<string, unknown>) => {
-      const enabled = config?.enabled as boolean ?? true;
+      const enabled = (config?.enabled as boolean) ?? true;
       return new CompressionPlugin(enabled);
     });
   }

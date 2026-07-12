@@ -1,6 +1,6 @@
 /**
  * Cache Implementation
- * 
+ *
  * Concrete implementation of ICache.
  * Handles caching operations with TTL and eviction policies.
  */
@@ -57,6 +57,7 @@ export class Cache<T = unknown> implements ICache<T> {
 
     if (this._isExpired(entry)) {
       this._cache.delete(key);
+      this._incrementEvictions();
       this._incrementMisses();
       return { success: false, hit: false };
     }
@@ -73,7 +74,7 @@ export class Cache<T = unknown> implements ICache<T> {
       return { success: false, hit: false };
     }
 
-    const entryTTL = ttl || this._config.defaultTTL;
+    const entryTTL = ttl ?? this._config.defaultTTL;
     const now = new Date();
 
     const entry: CacheEntry<T> = {
@@ -112,6 +113,7 @@ export class Cache<T = unknown> implements ICache<T> {
 
     if (this._isExpired(entry)) {
       this._cache.delete(key);
+      this._incrementEvictions();
       return { success: true, data: false, hit: false };
     }
 
@@ -154,7 +156,20 @@ export class Cache<T = unknown> implements ICache<T> {
   }
 
   async invalidate(pattern: CacheKeyPattern, strategy?: InvalidationStrategy): Promise<CacheResult<number>> {
-    const regex = new RegExp(pattern.pattern);
+    let regex: RegExp;
+    try {
+      regex = new RegExp(pattern.pattern);
+    } catch (error) {
+      return {
+        success: false,
+        data: 0,
+        hit: false,
+        error: {
+          code: 'INVALID_PATTERN',
+          message: error instanceof Error ? error.message : 'Invalid cache key pattern',
+        },
+      };
+    }
     let count = 0;
 
     for (const key of this._cache.keys()) {
@@ -170,6 +185,9 @@ export class Cache<T = unknown> implements ICache<T> {
   }
 
   getStats(): CacheStats {
+    if (this._config.evictionPolicy === EvictionPolicy.TTL) {
+      this._evictExpired();
+    }
     this._updateStats();
     return { ...this._stats };
   }
@@ -215,7 +233,7 @@ export class Cache<T = unknown> implements ICache<T> {
   }
 
   private _isExpired(entry: CacheEntry<T>): boolean {
-    return new Date() > entry.expiresAt;
+    return new Date() >= entry.expiresAt;
   }
 
   private _incrementHits(): void {
@@ -276,10 +294,16 @@ export class Cache<T = unknown> implements ICache<T> {
 
   private _evictLRU(count: number): void {
     const entries = Array.from(this._cache.entries());
-    entries.sort((a, b) => a[1].lastAccessed.getTime() - b[1].lastAccessed.getTime());
+    entries.sort((a, b) => {
+      const timeDiff = a[1].lastAccessed.getTime() - b[1].lastAccessed.getTime();
+      if (timeDiff !== 0) {
+        return timeDiff;
+      }
+      return a[1].accessCount - b[1].accessCount;
+    });
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete((entries[i])![0]);
+      this._cache.delete(entries[i][0]);
       this._incrementEvictions();
     }
   }
@@ -289,7 +313,7 @@ export class Cache<T = unknown> implements ICache<T> {
     entries.sort((a, b) => a[1].accessCount - b[1].accessCount);
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete!(entries[i][0]);
+      this._cache.delete(entries[i][0]);
       this._incrementEvictions();
     }
   }
@@ -299,7 +323,7 @@ export class Cache<T = unknown> implements ICache<T> {
     entries.sort((a, b) => a[1].createdAt.getTime() - b[1].createdAt.getTime());
 
     for (let i = 0; i < count && i < entries.length; i++) {
-      this._cache.delete!(entries[i][0]);
+      this._cache.delete(entries[i][0]);
       this._incrementEvictions();
     }
   }

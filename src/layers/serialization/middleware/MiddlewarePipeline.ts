@@ -1,6 +1,6 @@
 /**
  * Middleware Pipeline
- * 
+ *
  * Pipeline for processing data through multiple middleware.
  */
 
@@ -17,7 +17,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Adds a middleware to the pipeline
-   * 
+   *
    * @param middleware - Middleware to add
    * @returns This pipeline for chaining
    */
@@ -28,7 +28,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Adds multiple middlewares to the pipeline
-   * 
+   *
    * @param middlewares - Array of middlewares to add
    * @returns This pipeline for chaining
    */
@@ -39,7 +39,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Removes a middleware from the pipeline
-   * 
+   *
    * @param middleware - Middleware to remove
    * @returns This pipeline for chaining
    */
@@ -53,12 +53,12 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Removes a middleware by name
-   * 
+   *
    * @param name - Middleware name
    * @returns This pipeline for chaining
    */
   removeByName(name: string): MiddlewarePipeline<T> {
-    const index = this._middlewares.findIndex(m => m.getName() === name);
+    const index = this._middlewares.findIndex((m) => m.getName() === name);
     if (index > -1) {
       this._middlewares.splice(index, 1);
     }
@@ -67,7 +67,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Clears all middlewares
-   * 
+   *
    * @returns This pipeline for chaining
    */
   clear(): MiddlewarePipeline<T> {
@@ -77,7 +77,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Processes data through the pipeline
-   * 
+   *
    * @param context - Initial context
    * @returns Final processed context
    */
@@ -103,7 +103,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Processes data synchronously through the pipeline
-   * 
+   *
    * @param context - Initial context
    * @returns Final processed context
    */
@@ -123,7 +123,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Gets all middlewares
-   * 
+   *
    * @returns Array of middlewares
    */
   getMiddlewares(): IMiddleware<T>[] {
@@ -132,7 +132,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Gets the number of middlewares
-   * 
+   *
    * @returns Number of middlewares
    */
   getMiddlewareCount(): number {
@@ -141,7 +141,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Enables or disables the pipeline
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This pipeline for chaining
    */
@@ -152,7 +152,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Checks if the pipeline is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -161,7 +161,7 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Inserts a middleware at a specific position
-   * 
+   *
    * @param index - Position to insert at
    * @param middleware - Middleware to insert
    * @returns This pipeline for chaining
@@ -173,13 +173,13 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Inserts a middleware before another middleware
-   * 
+   *
    * @param beforeName - Name of middleware to insert before
    * @param middleware - Middleware to insert
    * @returns This pipeline for chaining
    */
   insertBefore(beforeName: string, middleware: IMiddleware<T>): MiddlewarePipeline<T> {
-    const index = this._middlewares.findIndex(m => m.getName() === beforeName);
+    const index = this._middlewares.findIndex((m) => m.getName() === beforeName);
     if (index > -1) {
       this._middlewares.splice(index, 0, middleware);
     } else {
@@ -190,13 +190,13 @@ export class MiddlewarePipeline<T = unknown> {
 
   /**
    * Inserts a middleware after another middleware
-   * 
+   *
    * @param afterName - Name of middleware to insert after
    * @param middleware - Middleware to insert
    * @returns This pipeline for chaining
    */
   insertAfter(afterName: string, middleware: IMiddleware<T>): MiddlewarePipeline<T> {
-    const index = this._middlewares.findIndex(m => m.getName() === afterName);
+    const index = this._middlewares.findIndex((m) => m.getName() === afterName);
     if (index > -1) {
       this._middlewares.splice(index + 1, 0, middleware);
     } else {

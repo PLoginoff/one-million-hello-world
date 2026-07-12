@@ -1,6 +1,6 @@
 /**
  * Service Descriptor
- * 
+ *
  * Describes how a service should be created in the DI container.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Strategies Layer
- * 
+ *
  * Exports all validation strategies.
  */
 

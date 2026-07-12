@@ -1,6 +1,6 @@
 /**
  * Error Handler Implementation
- * 
+ *
  * Concrete implementation of IErrorHandler.
  * Provides error handling with severity assessment.
  */

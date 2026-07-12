@@ -89,7 +89,7 @@ export class SagaTestBuilder {
       this._status,
       this._steps,
       this._compensationSteps,
-      this._metadata,
+      this._metadata
     );
   }
 
@@ -97,10 +97,7 @@ export class SagaTestBuilder {
    * Create completed execution
    */
   static createCompleted(): SagaExecutionEntity {
-    return new SagaTestBuilder()
-      .withStatus('completed')
-      .addStep({ stepId: 'step-1', status: 'completed' })
-      .build();
+    return new SagaTestBuilder().withStatus('completed').addStep({ stepId: 'step-1', status: 'completed' }).build();
   }
 
   /**

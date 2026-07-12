@@ -1,6 +1,6 @@
 /**
  * Compression Algorithm Value Object
- * 
+ *
  * Represents compression algorithm configuration.
  * Immutable value object for algorithm management.
  */

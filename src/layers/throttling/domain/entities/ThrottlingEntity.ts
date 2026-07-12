@@ -16,10 +16,7 @@ export class ThrottlingEntity {
   }
 
   static create(data: Record<string, unknown>): ThrottlingEntity {
-    return new ThrottlingEntity(
-      `throttling-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new ThrottlingEntity(`throttling-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

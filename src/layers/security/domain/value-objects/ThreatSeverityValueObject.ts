@@ -1,6 +1,6 @@
 /**
  * Threat Severity Value Object
- * 
+ *
  * Represents threat severity with comparison capabilities.
  */
 

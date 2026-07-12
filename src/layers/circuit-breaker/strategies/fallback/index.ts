@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Fallback Strategies
- * 
+ *
  * Exports all fallback strategy implementations.
  */
 

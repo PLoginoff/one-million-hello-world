@@ -1,5 +1,8 @@
 import { ServiceDiscovery } from '../implementations/ServiceDiscovery';
-import { DefaultServiceDiscoveryStrategy, OptimizedServiceDiscoveryStrategy } from '../strategies/ServiceDiscoveryStrategy';
+import {
+  DefaultServiceDiscoveryStrategy,
+  OptimizedServiceDiscoveryStrategy,
+} from '../strategies/ServiceDiscoveryStrategy';
 
 export class ServiceDiscoveryFactory {
   static createDefault(): ServiceDiscovery {

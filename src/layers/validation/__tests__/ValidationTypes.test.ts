@@ -139,7 +139,7 @@ describe('ValidationTypes', () => {
       expect(SanitizerType.ENCODE_URI).toBe('ENCODE_URI');
       expect(SanitizerType.DECODE_URI).toBe('DECODE_URI');
       expect(SanitizerType.STRIP_TAGS).toBe('STRIP_TAGS');
-      expect(SanitizerType.CUSTOM).toBe('CUSTOM');
+      expect(SanitizerType.CUSTOM).toBe('CUSTOM_SANITIZER');
     });
   });
 

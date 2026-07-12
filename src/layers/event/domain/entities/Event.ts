@@ -1,6 +1,6 @@
 /**
  * Event - Domain Entity
- * 
+ *
  * Core domain entity representing an event in the system.
  * Immutable entity composed of value objects.
  */
@@ -35,9 +35,7 @@ export class Event<T = unknown> implements IDomainEvent<T> {
     }
     this.id = options.id !== undefined ? options.id : new EventId();
     this.type = options.type instanceof EventType ? options.type : new EventType(options.type);
-    this.payload = options.payload instanceof EventPayload
-      ? options.payload
-      : new EventPayload(options.payload);
+    this.payload = options.payload instanceof EventPayload ? options.payload : new EventPayload(options.payload);
     this.metadata = options.metadata !== undefined ? options.metadata : EventMetadata.create('system');
     this.occurredAt = options.occurredAt || new Date();
     this._validate();

@@ -1,6 +1,6 @@
 /**
  * Security Configuration Validator
- * 
+ *
  * Validates security configuration options.
  */
 

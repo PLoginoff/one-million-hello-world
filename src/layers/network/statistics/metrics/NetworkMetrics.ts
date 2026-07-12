@@ -46,7 +46,7 @@ export class NetworkMetrics {
       this.metrics.set(name, []);
     }
 
-    const samples = this.metrics.get(name);
+    const samples = this.metrics.get(name)!;
     samples.push(data);
 
     if (samples.length > this.maxSamples) {
@@ -79,7 +79,7 @@ export class NetworkMetrics {
       max,
       average: sum / samples.length,
       sum,
-      lastValue: values[values.length - 1]!,
+      lastValue: values[values.length - 1] ?? 0,
     };
   }
 
@@ -88,7 +88,7 @@ export class NetworkMetrics {
    */
   getLatest(name: string): NetworkMetricData | null {
     const samples = this.getSamples(name);
-    return samples.length > 0 ? samples[samples.length - 1]! : null;
+    return samples.length > 0 ? samples[samples.length - 1] : null;
   }
 
   /**

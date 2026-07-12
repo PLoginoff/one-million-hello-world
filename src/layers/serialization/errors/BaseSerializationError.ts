@@ -1,6 +1,6 @@
 /**
  * Base Serialization Error
- * 
+ *
  * Base class for all serialization-related errors.
  */
 
@@ -10,12 +10,7 @@ export class BaseSerializationError extends Error {
   public readonly context?: Record<string, unknown>;
   public override readonly cause?: Error;
 
-  constructor(
-    code: string,
-    message: string,
-    context?: Record<string, unknown>,
-    cause?: Error
-  ) {
+  constructor(code: string, message: string, context?: Record<string, unknown>, cause?: Error) {
     super(message);
     this.name = this.constructor.name;
     this.code = code;
@@ -64,10 +59,12 @@ export class BaseSerializationError extends Error {
       message: this.message,
       timestamp: this.timestamp.toISOString(),
       context: this.context,
-      cause: this.cause ? {
-        name: this.cause.name,
-        message: this.cause.message,
-      } : undefined,
+      cause: this.cause
+        ? {
+            name: this.cause.name,
+            message: this.cause.message,
+          }
+        : undefined,
       stack: this.stack,
     };
   }

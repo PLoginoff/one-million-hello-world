@@ -1,6 +1,6 @@
 /**
  * Network Health Service
- * 
+ *
  * Domain service for monitoring and assessing network health.
  */
 
@@ -87,11 +87,7 @@ export class NetworkHealthService {
   /**
    * Check connection count health
    */
-  static checkConnectionCountHealth(
-    current: number,
-    max: number,
-    threshold: number = 0.9,
-  ): HealthCheck {
+  static checkConnectionCountHealth(current: number, max: number, threshold: number = 0.9): HealthCheck {
     const ratio = current / max;
     const status = ratio < threshold ? 'pass' : ratio < threshold * 1.1 ? 'warn' : 'fail';
     return {
@@ -106,11 +102,7 @@ export class NetworkHealthService {
   /**
    * Check throughput health
    */
-  static checkThroughputHealth(
-    throughput: number,
-    expected: number,
-    threshold: number = 0.5,
-  ): HealthCheck {
+  static checkThroughputHealth(throughput: number, expected: number, threshold: number = 0.5): HealthCheck {
     const ratio = expected > 0 ? throughput / expected : 1;
     const status = ratio >= threshold ? 'pass' : ratio >= threshold * 0.5 ? 'warn' : 'fail';
     return {

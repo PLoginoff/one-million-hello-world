@@ -1,6 +1,6 @@
 /**
  * Validator Interface
- * 
+ *
  * Defines the contract for data validators.
  */
 

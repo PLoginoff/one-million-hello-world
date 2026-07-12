@@ -1,6 +1,6 @@
 /**
  * Facade Layer Types
- * 
+ *
  * Type definitions for the repository facade that provides a unified interface.
  */
 

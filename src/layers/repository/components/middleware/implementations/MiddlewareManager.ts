@@ -1,6 +1,6 @@
 /**
  * Middleware Manager Implementation
- * 
+ *
  * Concrete implementation of IMiddlewareManager.
  * Handles middleware chains and cross-cutting concerns.
  */
@@ -268,13 +268,19 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
     };
   }
 
-  private async _executeChain(context: MiddlewareContext<T>, middlewares: Middleware<T>[]): Promise<MiddlewareResult<T>> {
+  private async _executeChain(
+    context: MiddlewareContext<T>,
+    middlewares: Middleware<T>[]
+  ): Promise<MiddlewareResult<T>> {
     const chain = this.createChain(middlewares);
     return this.executeChain(context, chain);
   }
 
-  private async _executeSequential(context: MiddlewareContext<T>, middlewares: Middleware<T>[]): Promise<MiddlewareResult<T>> {
-    let currentContext = { ...context };
+  private async _executeSequential(
+    context: MiddlewareContext<T>,
+    middlewares: Middleware<T>[]
+  ): Promise<MiddlewareResult<T>> {
+    const currentContext = { ...context };
 
     for (const middleware of middlewares) {
       const result = await this._executeSingle(currentContext, middleware);
@@ -293,7 +299,10 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
     };
   }
 
-  private async _executeParallel(context: MiddlewareContext<T>, middlewares: Middleware<T>[]): Promise<MiddlewareResult<T>> {
+  private async _executeParallel(
+    context: MiddlewareContext<T>,
+    middlewares: Middleware<T>[]
+  ): Promise<MiddlewareResult<T>> {
     const promises = middlewares.map((m) => this._executeSingle(context, m));
     const results = await Promise.all(promises);
 
@@ -344,8 +353,7 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
   private _updateAverageExecutionTime(duration: number): void {
     const total = this._stats.totalExecutions;
     if (total > 0) {
-      this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+      this._stats.averageExecutionTime = (this._stats.averageExecutionTime * (total - 1) + duration) / total;
     }
   }
 }

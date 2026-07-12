@@ -1,6 +1,6 @@
 /**
  * Schema Validation Service
- * 
+ *
  * Provides schema-based validation.
  */
 
@@ -24,7 +24,10 @@ export class SchemaValidationService {
   /**
    * Validate data against schema
    */
-  static validate(data: any, schema: ValidationSchema): {
+  static validate(
+    data: any,
+    schema: ValidationSchema
+  ): {
     valid: boolean;
     errors: Array<{ field: string; message: string }>;
   } {
@@ -127,7 +130,10 @@ export class SchemaValidationService {
   /**
    * Validate partial data against schema (ignore missing fields)
    */
-  static validatePartial(data: any, schema: ValidationSchema): {
+  static validatePartial(
+    data: any,
+    schema: ValidationSchema
+  ): {
     valid: boolean;
     errors: Array<{ field: string; message: string }>;
   } {

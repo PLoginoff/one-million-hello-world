@@ -1,6 +1,6 @@
 /**
  * Sequential Routing Strategy
- * 
+ *
  * Matches routes sequentially in order of priority.
  */
 
@@ -13,9 +13,7 @@ export class SequentialRoutingStrategy implements IRoutingStrategy {
   }
 
   findRoute(routes: RouteEntity[], path: string, method: string): RouteEntity | undefined {
-    const sortedRoutes = routes
-      .filter(route => route.isEnabled())
-      .sort((a, b) => a.data.priority - b.data.priority);
+    const sortedRoutes = routes.filter((route) => route.isEnabled()).sort((a, b) => a.data.priority - b.data.priority);
 
     for (const route of sortedRoutes) {
       if (route.matchesPath(path) && route.matchesMethod(method)) {

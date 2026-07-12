@@ -1,6 +1,6 @@
 /**
  * Metrics Collector Implementation
- * 
+ *
  * Concrete implementation of IMetricsCollector.
  * Handles performance metrics and monitoring.
  */
@@ -220,19 +220,21 @@ export class MetricsCollector implements IMetricsCollector {
   }
 
   getOperationMetrics(operation: string): OperationMetrics {
-    return this._operationMetrics.get(operation) || {
-      operation,
-      totalCount: 0,
-      successCount: 0,
-      failureCount: 0,
-      averageDuration: 0,
-      minDuration: 0,
-      maxDuration: 0,
-      p50Duration: 0,
-      p90Duration: 0,
-      p95Duration: 0,
-      p99Duration: 0,
-    };
+    return (
+      this._operationMetrics.get(operation) || {
+        operation,
+        totalCount: 0,
+        successCount: 0,
+        failureCount: 0,
+        averageDuration: 0,
+        minDuration: 0,
+        maxDuration: 0,
+        p50Duration: 0,
+        p90Duration: 0,
+        p95Duration: 0,
+        p99Duration: 0,
+      }
+    );
   }
 
   getAllOperationMetrics(): Map<string, OperationMetrics> {
@@ -322,7 +324,9 @@ export class MetricsCollector implements IMetricsCollector {
 
     for (const [name, metric] of this._metrics) {
       for (const value of metric.values) {
-        const labels = Object.entries(value.labels).map(([k, v]) => `${k}=${v}`).join(';');
+        const labels = Object.entries(value.labels)
+          .map(([k, v]) => `${k}=${v}`)
+          .join(';');
         lines.push(`${name},${metric.definition.type},${value.value},${value.timestamp.toISOString()},${labels}`);
       }
     }

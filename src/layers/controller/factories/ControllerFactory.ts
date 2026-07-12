@@ -1,6 +1,6 @@
 /**
  * Controller Factory
- * 
+ *
  * Factory for creating controller components and configurations.
  */
 

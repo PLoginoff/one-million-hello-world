@@ -1,6 +1,6 @@
 /**
  * Rate Limiting Layer Types
- * 
+ *
  * This module defines all type definitions for the Rate Limiting Layer,
  * including rate limit strategies, buckets, and configurations.
  */

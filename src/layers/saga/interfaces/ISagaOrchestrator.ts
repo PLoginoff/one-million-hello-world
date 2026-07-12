@@ -1,6 +1,6 @@
 /**
  * Saga Orchestrator Interface
- * 
+ *
  * Defines the contract for orchestrating saga execution
  * in the Saga Layer.
  */
@@ -16,7 +16,7 @@ export interface OrchestratorConfig {
 export interface ISagaOrchestrator {
   /**
    * Orchestrates the execution of a saga
-   * 
+   *
    * @param steps - Saga steps to execute
    * @param config - Orchestrator configuration
    * @returns Saga result
@@ -25,21 +25,21 @@ export interface ISagaOrchestrator {
 
   /**
    * Sets the orchestrator configuration
-   * 
+   *
    * @param config - New configuration
    */
   setConfig(config: Partial<OrchestratorConfig>): void;
 
   /**
    * Gets the current orchestrator configuration
-   * 
+   *
    * @returns Current configuration
    */
   getConfig(): OrchestratorConfig;
 
   /**
    * Gets the orchestrator name
-   * 
+   *
    * @returns Orchestrator name
    */
   getOrchestratorName(): string;

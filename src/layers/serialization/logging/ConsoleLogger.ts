@@ -1,6 +1,6 @@
 /**
  * Console Logger
- * 
+ *
  * Logger that writes to console.
  */
 

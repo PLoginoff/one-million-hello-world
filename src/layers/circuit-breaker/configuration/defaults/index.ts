@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Configuration Defaults
- * 
+ *
  * Exports default configuration presets.
  */
 

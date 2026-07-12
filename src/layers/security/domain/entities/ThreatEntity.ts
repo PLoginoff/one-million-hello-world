@@ -1,6 +1,6 @@
 /**
  * Threat Entity
- * 
+ *
  * Represents a detected security threat with metadata.
  */
 

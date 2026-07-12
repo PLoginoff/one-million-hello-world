@@ -1,6 +1,6 @@
 /**
  * Validation Service
- * 
+ *
  * Provides validation logic and rule management.
  */
 
@@ -75,7 +75,7 @@ export class ValidationService {
    * Get rules for specific field
    */
   private getRulesForField(field: string): ValidationRuleEntity[] {
-    return Array.from(this.rules.values()).filter(rule => rule.data.name === field);
+    return Array.from(this.rules.values()).filter((rule) => rule.data.name === field);
   }
 
   /**

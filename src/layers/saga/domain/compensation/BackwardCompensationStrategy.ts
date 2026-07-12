@@ -12,9 +12,7 @@ export class BackwardCompensationStrategy {
    * Get compensation order
    */
   getCompensationOrder(execution: SagaExecutionEntity): string[] {
-    const completedSteps = execution.steps
-      .filter(s => s.status === 'completed')
-      .map(s => s.stepId);
+    const completedSteps = execution.steps.filter((s) => s.status === 'completed').map((s) => s.stepId);
 
     return completedSteps.reverse();
   }
@@ -32,8 +30,8 @@ export class BackwardCompensationStrategy {
   getNextStepToCompensate(execution: SagaExecutionEntity): string | null {
     const compensationOrder = this.getCompensationOrder(execution);
     const compensatedSteps = execution.compensationSteps
-      .filter(s => s.status === 'completed')
-      .map(s => s.originalStepId);
+      .filter((s) => s.status === 'completed')
+      .map((s) => s.originalStepId);
 
     for (const stepId of compensationOrder) {
       if (!compensatedSteps.includes(stepId)) {
@@ -52,7 +50,7 @@ export class BackwardCompensationStrategy {
       return { valid: false, reason: 'No compensation steps defined' };
     }
 
-    const completedSteps = execution.steps.filter(s => s.status === 'completed');
+    const completedSteps = execution.steps.filter((s) => s.status === 'completed');
     if (completedSteps.length === 0) {
       return { valid: false, reason: 'No completed steps to compensate' };
     }

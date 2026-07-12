@@ -1,6 +1,6 @@
 /**
  * Cache Provider Interface
- * 
+ *
  * Defines the contract for cache providers.
  */
 

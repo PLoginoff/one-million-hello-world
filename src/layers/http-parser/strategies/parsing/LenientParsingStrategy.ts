@@ -1,6 +1,6 @@
 /**
  * Lenient Parsing Strategy
- * 
+ *
  * Tolerant parsing that handles malformed HTTP gracefully.
  */
 
@@ -13,7 +13,10 @@ export class LenientParsingStrategy implements IParsingStrategy {
     return 'LENIENT';
   }
 
-  parseRequest(raw: any, config: ParserConfigOptions): {
+  parseRequest(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;
@@ -40,7 +43,7 @@ export class LenientParsingStrategy implements IParsingStrategy {
       }
 
       const method = requestLineParts[0];
-      let path = requestLineParts[1];
+      const path = requestLineParts[1];
       const version = requestLineParts[2] || 'HTTP/1.1';
 
       if (!HttpValidationService.validateMethod(method)) {
@@ -89,7 +92,10 @@ export class LenientParsingStrategy implements IParsingStrategy {
     }
   }
 
-  parseResponse(raw: any, config: ParserConfigOptions): {
+  parseResponse(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;
@@ -157,6 +163,5 @@ export class LenientParsingStrategy implements IParsingStrategy {
     }
   }
 
-  reset(): void {
-  }
+  reset(): void {}
 }

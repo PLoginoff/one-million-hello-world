@@ -1,6 +1,6 @@
 /**
  * Validation Factory
- * 
+ *
  * Factory for creating validation components and configurations.
  */
 
@@ -117,12 +117,7 @@ export class ValidationFactory {
   /**
    * Create validation rule (pattern)
    */
-  static createPatternRule(
-    id: string,
-    name: string,
-    pattern: string,
-    required: boolean = false
-  ): ValidationRuleEntity {
+  static createPatternRule(id: string, name: string, pattern: string, required: boolean = false): ValidationRuleEntity {
     return ValidationRuleEntity.createPatternRule(id, name, pattern, required);
   }
 

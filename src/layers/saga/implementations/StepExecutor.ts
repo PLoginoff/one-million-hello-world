@@ -1,6 +1,6 @@
 /**
  * Step Executor Implementation
- * 
+ *
  * Concrete implementation of IStepExecutor.
  * Provides sequential step execution with error handling.
  */
@@ -24,7 +24,7 @@ export class StepExecutor implements IStepExecutor {
       this._logger.debug(`Executing step: ${step.name}`, { stepIndex, totalSteps });
       const data = await step.execute();
       this._logger.info(`Successfully executed step: ${step.name}`, { stepIndex });
-      
+
       return {
         stepName: step.name,
         success: true,
@@ -34,7 +34,7 @@ export class StepExecutor implements IStepExecutor {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown execution error';
       this._logger.error(`Failed to execute step: ${step.name}`, { error: errorMessage, stepIndex });
-      
+
       return {
         stepName: step.name,
         success: false,

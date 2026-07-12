@@ -1,6 +1,6 @@
 /**
  * Cache Statistics Value Object
- * 
+ *
  * Represents cache performance metrics.
  * Immutable value object with calculation methods.
  */
@@ -12,12 +12,7 @@ export class CacheStats {
   readonly size: number;
   readonly createdAt: number;
 
-  constructor(
-    hits: number = 0,
-    misses: number = 0,
-    evictions: number = 0,
-    size: number = 0,
-  ) {
+  constructor(hits: number = 0, misses: number = 0, evictions: number = 0, size: number = 0) {
     this.hits = hits;
     this.misses = misses;
     this.evictions = evictions;
@@ -53,48 +48,28 @@ export class CacheStats {
    * Create a copy with incremented hits
    */
   withHit(): CacheStats {
-    return new CacheStats(
-      this.hits + 1,
-      this.misses,
-      this.evictions,
-      this.size,
-    );
+    return new CacheStats(this.hits + 1, this.misses, this.evictions, this.size);
   }
 
   /**
    * Create a copy with incremented misses
    */
   withMiss(): CacheStats {
-    return new CacheStats(
-      this.hits,
-      this.misses + 1,
-      this.evictions,
-      this.size,
-    );
+    return new CacheStats(this.hits, this.misses + 1, this.evictions, this.size);
   }
 
   /**
    * Create a copy with incremented evictions
    */
   withEviction(): CacheStats {
-    return new CacheStats(
-      this.hits,
-      this.misses,
-      this.evictions + 1,
-      this.size,
-    );
+    return new CacheStats(this.hits, this.misses, this.evictions + 1, this.size);
   }
 
   /**
    * Create a copy with new size
    */
   withSize(size: number): CacheStats {
-    return new CacheStats(
-      this.hits,
-      this.misses,
-      this.evictions,
-      size,
-    );
+    return new CacheStats(this.hits, this.misses, this.evictions, size);
   }
 
   /**

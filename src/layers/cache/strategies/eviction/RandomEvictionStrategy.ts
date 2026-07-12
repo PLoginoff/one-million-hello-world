@@ -1,6 +1,6 @@
 /**
  * Random Eviction Strategy
- * 
+ *
  * Evicts a random cache entry.
  */
 

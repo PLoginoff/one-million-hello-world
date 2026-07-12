@@ -1,15 +1,11 @@
 /**
  * Compressor Interface
- * 
+ *
  * Defines the contract for compression operations
  * including Gzip, Brotli, and dynamic compression.
  */
 
-import {
-  CompressionAlgorithm,
-  CompressionResult,
-  CompressionConfig,
-} from '../types/compression-types';
+import { CompressionAlgorithm, CompressionResult, CompressionConfig } from '../types/compression-types';
 
 /**
  * Interface for compression operations
@@ -17,7 +13,7 @@ import {
 export interface ICompressor {
   /**
    * Compresses data using specified algorithm
-   * 
+   *
    * @param data - Data to compress
    * @param algorithm - Compression algorithm
    * @returns Compression result
@@ -26,7 +22,7 @@ export interface ICompressor {
 
   /**
    * Decompresses data using specified algorithm
-   * 
+   *
    * @param data - Data to decompress
    * @param algorithm - Compression algorithm
    * @returns Decompression result
@@ -35,7 +31,7 @@ export interface ICompressor {
 
   /**
    * Selects best compression algorithm based on data
-   * 
+   *
    * @param data - Data to analyze
    * @returns Recommended compression algorithm
    */
@@ -43,14 +39,14 @@ export interface ICompressor {
 
   /**
    * Sets compression configuration
-   * 
+   *
    * @param config - Compression configuration
    */
   setConfig(config: CompressionConfig): void;
 
   /**
    * Gets current compression configuration
-   * 
+   *
    * @returns Current compression configuration
    */
   getConfig(): CompressionConfig;

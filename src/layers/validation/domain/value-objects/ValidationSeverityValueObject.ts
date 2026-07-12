@@ -1,6 +1,6 @@
 /**
  * Validation Severity Value Object
- * 
+ *
  * Represents severity levels for validation issues.
  */
 

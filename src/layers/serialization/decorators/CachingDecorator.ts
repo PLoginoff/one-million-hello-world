@@ -1,6 +1,6 @@
 /**
  * Caching Decorator
- * 
+ *
  * Decorator that adds caching functionality to serialization strategies.
  */
 
@@ -31,7 +31,9 @@ export class InMemoryCacheProvider implements ICacheProvider {
   set(key: string, value: string): void {
     if (this._cache.size >= this._maxSize) {
       const firstKey = this._cache.keys().next().value;
-      this._cache.delete(firstKey);
+      if (firstKey !== undefined) {
+        this._cache.delete(firstKey);
+      }
     }
     this._cache.set(key, value);
   }
@@ -75,7 +77,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
     if (this._cache.has(cacheKey)) {
       this._hits++;
-      return this._cache.get(cacheKey);
+      return this._cache.get(cacheKey)!;
     }
 
     this._misses++;
@@ -94,7 +96,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
     if (this._cache.has(cacheKey)) {
       this._hits++;
-      return this._strategy.deserialize(this._cache.get(cacheKey));
+      return this._strategy.deserialize(this._cache.get(cacheKey)!);
     }
 
     this._misses++;
@@ -121,7 +123,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Enables or disables caching
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -130,7 +132,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Checks if caching is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -177,7 +179,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Gets the underlying strategy
-   * 
+   *
    * @returns Wrapped strategy
    */
   getStrategy(): ISerializationStrategy {
@@ -186,7 +188,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Gets the cache provider
-   * 
+   *
    * @returns Cache provider
    */
   getCache(): ICacheProvider {
@@ -195,7 +197,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Generates a cache key for data
-   * 
+   *
    * @param data - Data to generate key for
    * @returns Cache key
    */
@@ -206,7 +208,7 @@ export class CachingDecorator implements ISerializationStrategy {
 
   /**
    * Simple hash function for cache keys
-   * 
+   *
    * @param str - String to hash
    * @returns Hash value
    */
@@ -214,7 +216,7 @@ export class CachingDecorator implements ISerializationStrategy {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash);

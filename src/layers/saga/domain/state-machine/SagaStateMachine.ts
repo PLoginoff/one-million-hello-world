@@ -45,7 +45,7 @@ export class SagaStateMachine {
    */
   transition(newState: SagaState, context?: unknown): boolean {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    const transition = validTransitions.find(t => t.to === newState);
+    const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
@@ -67,7 +67,7 @@ export class SagaStateMachine {
    */
   canTransition(newState: SagaState, context?: unknown): boolean {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    const transition = validTransitions.find(t => t.to === newState);
+    const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
@@ -85,9 +85,7 @@ export class SagaStateMachine {
    */
   getValidNextStates(context?: unknown): SagaState[] {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    return validTransitions
-      .filter(t => !t.condition || t.condition(context || this._context))
-      .map(t => t.to);
+    return validTransitions.filter((t) => !t.condition || t.condition(context || this._context)).map((t) => t.to);
   }
 
   /**
@@ -104,7 +102,7 @@ export class SagaStateMachine {
    */
   removeTransition(from: SagaState, to: SagaState): void {
     const transitions = this._transitions.get(from) || [];
-    const filtered = transitions.filter(t => t.to !== to);
+    const filtered = transitions.filter((t) => t.to !== to);
     this._transitions.set(from, filtered);
   }
 
@@ -119,9 +117,7 @@ export class SagaStateMachine {
   }
 
   private _initializeTransitions(): void {
-    this._transitions.set('pending', [
-      { from: 'pending', to: 'running' },
-    ]);
+    this._transitions.set('pending', [{ from: 'pending', to: 'running' }]);
 
     this._transitions.set('running', [
       { from: 'running', to: 'completed' },
@@ -131,9 +127,7 @@ export class SagaStateMachine {
 
     this._transitions.set('completed', []);
 
-    this._transitions.set('failed', [
-      { from: 'failed', to: 'compensating' },
-    ]);
+    this._transitions.set('failed', [{ from: 'failed', to: 'compensating' }]);
 
     this._transitions.set('compensating', [
       { from: 'compensating', to: 'compensated' },

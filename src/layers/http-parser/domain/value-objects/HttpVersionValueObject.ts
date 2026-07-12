@@ -1,6 +1,6 @@
 /**
  * HTTP Version Value Object
- * 
+ *
  * Represents HTTP version with validation and comparison capabilities.
  */
 

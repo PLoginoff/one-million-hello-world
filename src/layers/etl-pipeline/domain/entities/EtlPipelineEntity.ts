@@ -16,10 +16,7 @@ export class EtlPipelineEntity {
   }
 
   static create(data: Record<string, unknown>): EtlPipelineEntity {
-    return new EtlPipelineEntity(
-      `etl-pipeline-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new EtlPipelineEntity(`etl-pipeline-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

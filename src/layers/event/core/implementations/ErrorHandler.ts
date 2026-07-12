@@ -1,6 +1,6 @@
 /**
  * ErrorHandler - Core Implementation
- * 
+ *
  * Handles errors in event processing with configurable strategies.
  * Provides error tracking, logging, and recovery mechanisms.
  */
@@ -51,25 +51,19 @@ export class ErrorHandler implements IErrorHandler {
   }
 
   getErrors(): ErrorContext[] {
-    return this._errors.map(error => ({ ...error }));
+    return this._errors.map((error) => ({ ...error }));
   }
 
   getErrorsByEventType(eventType: string): ErrorContext[] {
-    return this._errors
-      .filter(error => error.eventType === eventType)
-      .map(error => ({ ...error }));
+    return this._errors.filter((error) => error.eventType === eventType).map((error) => ({ ...error }));
   }
 
   getErrorsBySubscription(subscriptionId: string): ErrorContext[] {
-    return this._errors
-      .filter(error => error.subscriptionId === subscriptionId)
-      .map(error => ({ ...error }));
+    return this._errors.filter((error) => error.subscriptionId === subscriptionId).map((error) => ({ ...error }));
   }
 
   getRecentErrors(limit: number = 10): ErrorContext[] {
-    return this._errors
-      .slice(-limit)
-      .map(error => ({ ...error }));
+    return this._errors.slice(-limit).map((error) => ({ ...error }));
   }
 
   clearErrors(): void {

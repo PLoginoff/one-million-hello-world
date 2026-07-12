@@ -1,6 +1,6 @@
 /**
  * Storage Interface
- * 
+ *
  * Defines contract for cache storage backend.
  */
 

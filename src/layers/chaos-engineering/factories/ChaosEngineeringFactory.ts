@@ -1,5 +1,8 @@
 import { ChaosEngineering } from '../implementations/ChaosEngineering';
-import { DefaultChaosEngineeringStrategy, OptimizedChaosEngineeringStrategy } from '../strategies/ChaosEngineeringStrategy';
+import {
+  DefaultChaosEngineeringStrategy,
+  OptimizedChaosEngineeringStrategy,
+} from '../strategies/ChaosEngineeringStrategy';
 
 export class ChaosEngineeringFactory {
   static createDefault(): ChaosEngineering {

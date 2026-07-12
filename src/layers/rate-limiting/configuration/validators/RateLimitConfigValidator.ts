@@ -1,6 +1,6 @@
 /**
  * Rate Limit Configuration Validator
- * 
+ *
  * Validates rate limiting configuration options.
  */
 

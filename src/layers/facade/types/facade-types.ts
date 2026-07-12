@@ -1,6 +1,6 @@
 /**
  * Facade Layer Types
- * 
+ *
  * This module defines all type definitions for the Facade Layer,
  * including simplified interfaces, aggregation, and composition.
  */

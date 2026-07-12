@@ -59,14 +59,14 @@ export class SagaMetricsCollector {
    * Get metrics by saga ID
    */
   getMetricsBySagaId(sagaId: string): SagaMetricsData[] {
-    return this._metrics.filter(m => m.sagaId === sagaId);
+    return this._metrics.filter((m) => m.sagaId === sagaId);
   }
 
   /**
    * Get metrics by status
    */
   getMetricsByStatus(status: string): SagaMetricsData[] {
-    return this._metrics.filter(m => m.status === status);
+    return this._metrics.filter((m) => m.status === status);
   }
 
   /**
@@ -89,7 +89,7 @@ export class SagaMetricsCollector {
     if (metrics.length === 0) {
       return 0;
     }
-    const successful = metrics.filter(m => m.status === 'completed').length;
+    const successful = metrics.filter((m) => m.status === 'completed').length;
     return (successful / metrics.length) * 100;
   }
 
@@ -101,7 +101,7 @@ export class SagaMetricsCollector {
     if (metrics.length === 0) {
       return 0;
     }
-    const failed = metrics.filter(m => m.status === 'failed').length;
+    const failed = metrics.filter((m) => m.status === 'failed').length;
     return (failed / metrics.length) * 100;
   }
 

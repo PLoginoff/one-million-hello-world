@@ -1,6 +1,6 @@
 /**
  * Security Validation Service
- * 
+ *
  * Provides validation logic for security-related operations.
  */
 
@@ -97,7 +97,7 @@ export class SecurityValidationService {
       if (!rule.action) {
         errors.push(`Rule ${i}: action is required`);
       }
-      if (rule.effect !== 'allow' && rule.effect! !== 'deny') {
+      if (rule.effect !== 'allow' && rule.effect !== 'deny') {
         errors.push(`Rule ${i}: effect must be allow or deny`);
       }
     }
@@ -163,7 +163,7 @@ export class SecurityValidationService {
     if (parts.length < 2) {
       return false;
     }
-    return parts.every(part => /^[a-zA-Z0-9_-]+$/.test(part));
+    return parts.every((part) => /^[a-zA-Z0-9_-]+$/.test(part));
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * IEventQueue - Infrastructure Interface
- * 
+ *
  * Interface for event queue management.
  * Provides buffered event processing with queue semantics.
  */

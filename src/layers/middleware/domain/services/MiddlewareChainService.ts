@@ -1,6 +1,6 @@
 /**
  * Middleware Chain Service
- * 
+ *
  * Manages middleware execution chain.
  */
 
@@ -8,7 +8,9 @@ import { MiddlewareEntity } from '../entities/MiddlewareEntity';
 import { MiddlewareContextEntity } from '../entities/MiddlewareContextEntity';
 import { MiddlewareExecutionOrderValueObject } from '../value-objects/MiddlewareExecutionOrderValueObject';
 
-export type MiddlewareFunction = (context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity;
+export type MiddlewareFunction = (
+  context: MiddlewareContextEntity
+) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity;
 
 export class MiddlewareChainService {
   private middlewares: Map<string, MiddlewareEntity>;
@@ -66,7 +68,7 @@ export class MiddlewareChainService {
    */
   private getSortedMiddlewares(): MiddlewareEntity[] {
     return Array.from(this.middlewares.values())
-      .filter(m => m.isEnabled())
+      .filter((m) => m.isEnabled())
       .sort((a, b) => a.data.priority - b.data.priority);
   }
 

@@ -1,6 +1,6 @@
 /**
  * IEventBus - Core Interface
- * 
+ *
  * Main interface for event bus operations.
  * Defines the contract for publishing, subscribing, and managing events.
  */

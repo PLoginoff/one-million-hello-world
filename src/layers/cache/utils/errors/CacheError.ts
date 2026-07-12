@@ -1,6 +1,6 @@
 /**
  * Cache Error
- * 
+ *
  * Base error class for cache-related errors.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Utilities Module
- * 
+ *
  * Exports utility functions for type guards, predicates, and common operations.
  */
 

@@ -16,10 +16,7 @@ export class ReadModelEntity {
   }
 
   static create(data: Record<string, unknown>): ReadModelEntity {
-    return new ReadModelEntity(
-      `read-model-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new ReadModelEntity(`read-model-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -1,6 +1,6 @@
 /**
  * Compression Threshold Value Object
- * 
+ *
  * Represents compression threshold configuration.
  * Immutable value object for threshold management.
  */

@@ -1,6 +1,6 @@
 /**
  * Facade Implementation
- * 
+ *
  * Concrete implementation of IFacade.
  * Handles simplified interfaces, aggregation, and composition.
  */

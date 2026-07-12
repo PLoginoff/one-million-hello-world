@@ -1,6 +1,6 @@
 /**
  * Default Repository Configurations
- * 
+ *
  * Pre-configured settings for common repository scenarios.
  */
 

@@ -1,6 +1,6 @@
 /**
  * In-Memory Storage
- * 
+ *
  * Exports in-memory storage implementation.
  */
 

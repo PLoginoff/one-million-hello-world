@@ -1,6 +1,6 @@
 /**
  * Schema Validation Strategy
- * 
+ *
  * Implements schema-based validation strategy.
  */
 
@@ -21,7 +21,7 @@ export class SchemaValidationStrategy implements IValidationStrategy {
 
   validate(value: any): ValidationResultEntity {
     const result = SchemaValidationService.validate(value, this.schema);
-    
+
     if (result.valid) {
       return ValidationResultEntity.success();
     } else {

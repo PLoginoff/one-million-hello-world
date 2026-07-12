@@ -1,6 +1,6 @@
 /**
  * Sequential Execution Strategy
- * 
+ *
  * Executes middlewares sequentially.
  */
 
@@ -8,7 +8,9 @@ import { IMiddlewareStrategy } from './IMiddlewareStrategy';
 import { MiddlewareContextEntity } from '../../domain/entities/MiddlewareContextEntity';
 
 export class SequentialExecutionStrategy implements IMiddlewareStrategy {
-  private handlers: Array<(context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity>;
+  private handlers: Array<
+    (context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity
+  >;
 
   constructor() {
     this.handlers = [];
@@ -21,7 +23,9 @@ export class SequentialExecutionStrategy implements IMiddlewareStrategy {
   /**
    * Add handler to strategy
    */
-  addHandler(handler: (context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity): void {
+  addHandler(
+    handler: (context: MiddlewareContextEntity) => Promise<MiddlewareContextEntity> | MiddlewareContextEntity
+  ): void {
     this.handlers.push(handler);
   }
 

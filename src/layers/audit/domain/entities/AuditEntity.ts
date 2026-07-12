@@ -16,10 +16,7 @@ export class AuditEntity {
   }
 
   static create(data: Record<string, unknown>): AuditEntity {
-    return new AuditEntity(
-      `audit-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new AuditEntity(`audit-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

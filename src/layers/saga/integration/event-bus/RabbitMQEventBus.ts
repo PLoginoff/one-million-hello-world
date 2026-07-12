@@ -72,7 +72,9 @@ export class RabbitMQEventBus {
    * Bind queue to exchange
    */
   async bindQueue(): Promise<void> {
-    console.log(`Binding queue ${this._config.queue} to exchange ${this._config.exchange} with routing key ${this._config.routingKey}`);
+    console.log(
+      `Binding queue ${this._config.queue} to exchange ${this._config.exchange} with routing key ${this._config.routingKey}`
+    );
   }
 
   /**

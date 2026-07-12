@@ -1,6 +1,6 @@
 /**
  * Event Layer Types
- * 
+ *
  * This module defines all type definitions for the Event Layer,
  * including event bus, Pub/Sub, and domain event propagation.
  */

@@ -1,6 +1,6 @@
 /**
  * Middleware Layer Types
- * 
+ *
  * This module defines all type definitions for the Middleware Layer,
  * including logging, metrics, tracing, and correlation IDs.
  */

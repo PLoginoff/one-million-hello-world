@@ -1,6 +1,6 @@
 /**
  * Validation Middleware
- * 
+ *
  * Middleware that validates data in the pipeline.
  */
 
@@ -45,7 +45,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Validates data using all validators
-   * 
+   *
    * @param data - Data to validate
    * @returns Validation result
    */
@@ -72,7 +72,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Adds a validator
-   * 
+   *
    * @param validator - Validator to add
    * @returns This middleware for chaining
    */
@@ -83,7 +83,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Removes a validator
-   * 
+   *
    * @param validator - Validator to remove
    * @returns This middleware for chaining
    */
@@ -97,7 +97,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Clears all validators
-   * 
+   *
    * @returns This middleware for chaining
    */
   clearValidators(): ValidationMiddleware<T> {
@@ -107,7 +107,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Enables or disables the middleware
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This middleware for chaining
    */
@@ -118,7 +118,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Checks if the middleware is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -127,7 +127,7 @@ export class ValidationMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Sets whether to fail on validation error
-   * 
+   *
    * @param fail - Fail on error flag
    * @returns This middleware for chaining
    */

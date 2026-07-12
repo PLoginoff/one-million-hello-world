@@ -1,6 +1,6 @@
 /**
  * Facade Interface
- * 
+ *
  * Defines the contract for facade operations
  * including simplified interfaces, aggregation, and composition.
  */
@@ -13,7 +13,7 @@ import { FacadeResult, FacadeConfig } from '../types/facade-types';
 export interface IFacade {
   /**
    * Executes multiple operations in sequence
-   * 
+   *
    * @param operations - Operations to execute
    * @returns Facade result
    */
@@ -21,14 +21,14 @@ export interface IFacade {
 
   /**
    * Sets facade configuration
-   * 
+   *
    * @param config - Facade configuration
    */
   setConfig(config: FacadeConfig): void;
 
   /**
    * Gets current facade configuration
-   * 
+   *
    * @returns Current facade configuration
    */
   getConfig(): FacadeConfig;

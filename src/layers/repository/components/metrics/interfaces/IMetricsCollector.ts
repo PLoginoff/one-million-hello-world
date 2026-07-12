@@ -1,6 +1,6 @@
 /**
  * Metrics Collector Interface
- * 
+ *
  * Defines the contract for performance metrics and monitoring.
  */
 
@@ -22,7 +22,7 @@ import {
 export interface IMetricsCollector {
   /**
    * Records a metric value
-   * 
+   *
    * @param name - Metric name
    * @param value - Metric value
    * @param labels - Optional labels
@@ -31,7 +31,7 @@ export interface IMetricsCollector {
 
   /**
    * Increments a counter metric
-   * 
+   *
    * @param name - Metric name
    * @param value - Value to increment by
    * @param labels - Optional labels
@@ -40,7 +40,7 @@ export interface IMetricsCollector {
 
   /**
    * Decrements a counter metric
-   * 
+   *
    * @param name - Metric name
    * @param value - Value to decrement by
    * @param labels - Optional labels
@@ -49,7 +49,7 @@ export interface IMetricsCollector {
 
   /**
    * Sets a gauge metric
-   * 
+   *
    * @param name - Metric name
    * @param value - Value to set
    * @param labels - Optional labels
@@ -58,7 +58,7 @@ export interface IMetricsCollector {
 
   /**
    * Records a timing metric
-   * 
+   *
    * @param name - Metric name
    * @param duration - Duration in milliseconds
    * @param labels - Optional labels
@@ -67,7 +67,7 @@ export interface IMetricsCollector {
 
   /**
    * Records a histogram metric
-   * 
+   *
    * @param name - Metric name
    * @param value - Value to record
    * @param labels - Optional labels
@@ -76,21 +76,21 @@ export interface IMetricsCollector {
 
   /**
    * Registers a metric definition
-   * 
+   *
    * @param definition - Metric definition
    */
   registerMetric(definition: MetricDefinition): void;
 
   /**
    * Unregisters a metric
-   * 
+   *
    * @param name - Metric name
    */
   unregisterMetric(name: string): void;
 
   /**
    * Gets metric data
-   * 
+   *
    * @param name - Metric name
    * @returns Metric data or undefined
    */
@@ -98,14 +98,14 @@ export interface IMetricsCollector {
 
   /**
    * Gets all metrics
-   * 
+   *
    * @returns Map of metric name to metric data
    */
   getAllMetrics(): Map<string, MetricData>;
 
   /**
    * Gets metrics by type
-   * 
+   *
    * @param type - Metric type
    * @returns Array of metric data
    */
@@ -113,7 +113,7 @@ export interface IMetricsCollector {
 
   /**
    * Gets metrics with labels
-   * 
+   *
    * @param labels - Labels to match
    * @returns Array of metric data
    */
@@ -121,7 +121,7 @@ export interface IMetricsCollector {
 
   /**
    * Resets a metric
-   * 
+   *
    * @param name - Metric name
    */
   resetMetric(name: string): void;
@@ -133,21 +133,21 @@ export interface IMetricsCollector {
 
   /**
    * Sets metrics configuration
-   * 
+   *
    * @param config - Metrics configuration
    */
   setConfig(config: Partial<MetricsConfig>): void;
 
   /**
    * Gets current metrics configuration
-   * 
+   *
    * @returns Current metrics configuration
    */
   getConfig(): MetricsConfig;
 
   /**
    * Creates a timer
-   * 
+   *
    * @param name - Timer name
    * @param labels - Optional labels
    * @returns Timer instance
@@ -156,7 +156,7 @@ export interface IMetricsCollector {
 
   /**
    * Records performance metrics for an operation
-   * 
+   *
    * @param operation - Operation name
    * @param metrics - Performance metrics
    */
@@ -164,7 +164,7 @@ export interface IMetricsCollector {
 
   /**
    * Gets operation metrics
-   * 
+   *
    * @param operation - Operation name
    * @returns Operation metrics
    */
@@ -172,14 +172,14 @@ export interface IMetricsCollector {
 
   /**
    * Gets all operation metrics
-   * 
+   *
    * @returns Map of operation name to operation metrics
    */
   getAllOperationMetrics(): Map<string, OperationMetrics>;
 
   /**
    * Exports metrics in a specific format
-   * 
+   *
    * @param format - Export format (json, prometheus, etc.)
    * @returns Exported metrics string
    */
@@ -192,14 +192,14 @@ export interface IMetricsCollector {
 
   /**
    * Gets the number of registered metrics
-   * 
+   *
    * @returns Number of metrics
    */
   getMetricCount(): number;
 
   /**
    * Checks if a metric is registered
-   * 
+   *
    * @param name - Metric name
    * @returns Boolean indicating if metric is registered
    */

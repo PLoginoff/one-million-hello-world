@@ -1,6 +1,6 @@
 /**
  * Data Transformer Interface
- * 
+ *
  * Defines the contract for data transformation operations
  * including normalization, enrichment, and mapping.
  */
@@ -18,7 +18,7 @@ import {
 export interface IDataTransformer {
   /**
    * Normalizes data
-   * 
+   *
    * @param data - Data to normalize
    * @returns Transformation result
    */
@@ -26,7 +26,7 @@ export interface IDataTransformer {
 
   /**
    * Enriches data with additional information
-   * 
+   *
    * @param data - Data to enrich
    * @param enrichment - Enrichment data
    * @returns Transformation result
@@ -35,7 +35,7 @@ export interface IDataTransformer {
 
   /**
    * Maps data using transformation rules
-   * 
+   *
    * @param data - Data to map
    * @param rules - Transformation rules
    * @returns Transformation result
@@ -44,28 +44,24 @@ export interface IDataTransformer {
 
   /**
    * Applies all transformations (normalize, enrich, map)
-   * 
+   *
    * @param data - Data to transform
    * @param rules - Transformation rules
    * @param enrichment - Enrichment data
    * @returns Transformation result
    */
-  transform<T, U>(
-    data: T,
-    rules?: TransformationRule[],
-    enrichment?: EnrichmentData,
-  ): TransformationResult<U>;
+  transform<T, U>(data: T, rules?: TransformationRule[], enrichment?: EnrichmentData): TransformationResult<U>;
 
   /**
    * Sets transformation configuration
-   * 
+   *
    * @param config - Transformation configuration
    */
   setConfig(config: TransformationConfig): void;
 
   /**
    * Gets current transformation configuration
-   * 
+   *
    * @returns Current transformation configuration
    */
   getConfig(): TransformationConfig;

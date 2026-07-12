@@ -1,6 +1,6 @@
 /**
  * Router Layer Types
- * 
+ *
  * This module defines all type definitions for the Router Layer,
  * including routes, parameters, matching results, and advanced routing features.
  */

@@ -1,6 +1,6 @@
 /**
  * DI Container Implementation
- * 
+ *
  * Provides dependency injection capabilities for the serialization layer.
  */
 
@@ -15,12 +15,7 @@ export class DIContainer implements IDIContainer {
   private _parent?: IDIContainer;
   private _children: Set<IDIContainer> = new Set();
 
-  register<T>(
-    token: unknown,
-    lifetime: ServiceLifetime,
-    factory?: () => T,
-    dependencies?: unknown[]
-  ): void {
+  register<T>(token: unknown, lifetime: ServiceLifetime, factory?: () => T, dependencies?: unknown[]): void {
     if (this._services.has(token)) {
       throw new Error(`Service already registered: ${String(token)}`);
     }
@@ -31,12 +26,12 @@ export class DIContainer implements IDIContainer {
   }
 
   private _createConstructorInstance<T>(constructor: unknown, dependencies: unknown[]): T {
-    const deps = dependencies.map(dep => this.resolve(dep));
+    const deps = dependencies.map((dep) => this.resolve(dep));
     const Ctor = constructor as new (...args: unknown[]) => T;
     return new Ctor(...deps);
   }
 
-  resolve<T>(token: new (...args: unknown[]) => T): T;
+  resolve<T>(token: { prototype: T }): T;
   resolve<T>(token: unknown): T;
   resolve<T>(token: unknown): T {
     if (this._scoped.has(token)) {
@@ -110,7 +105,7 @@ export class DIContainer implements IDIContainer {
     this._services.clear();
     this._singletons.clear();
     this._scoped.clear();
-    this._children.forEach(child => child.clear());
+    this._children.forEach((child) => child.clear());
   }
 
   createScope(): IDIContainer {
@@ -140,7 +135,7 @@ export class DIContainer implements IDIContainer {
   dispose(): void {
     this._singletons.clear();
     this._scoped.clear();
-    this._children.forEach(child => {
+    this._children.forEach((child) => {
       if (child instanceof DIContainer) {
         child.dispose();
       }

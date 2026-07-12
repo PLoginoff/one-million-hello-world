@@ -1,6 +1,6 @@
 /**
  * IEventDispatcher - Application Interface
- * 
+ *
  * Interface for dispatching events to registered handlers.
  * Coordinates event flow with middleware and policies.
  */
@@ -22,7 +22,4 @@ export interface IEventDispatcher {
   removeMiddleware(middleware: DispatchMiddleware): void;
 }
 
-export type DispatchMiddleware = (
-  event: Event,
-  next: () => Promise<void>
-) => Promise<void>;
+export type DispatchMiddleware = (event: Event, next: () => Promise<void>) => Promise<void>;

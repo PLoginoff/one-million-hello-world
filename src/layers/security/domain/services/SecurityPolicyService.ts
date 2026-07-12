@@ -1,6 +1,6 @@
 /**
  * Security Policy Service
- * 
+ *
  * Provides policy evaluation and enforcement logic.
  */
 
@@ -21,7 +21,7 @@ export class SecurityPolicyService {
     matchedPolicy?: PolicyEntity;
     reason: string;
   } {
-    const enabledPolicies = policies.filter(p => p.isEnabled());
+    const enabledPolicies = policies.filter((p) => p.isEnabled());
     const sortedPolicies = enabledPolicies.sort((a, b) => b.data.priority - a.data.priority);
 
     for (const policy of sortedPolicies) {
@@ -55,10 +55,7 @@ export class SecurityPolicyService {
   /**
    * Check if context has required security level
    */
-  static checkSecurityLevel(
-    context: SecurityContextEntity,
-    requiredLevel: string
-  ): boolean {
+  static checkSecurityLevel(context: SecurityContextEntity, requiredLevel: string): boolean {
     const levels = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
     const contextLevelIndex = levels.indexOf(context.data.securityLevel);
     const requiredLevelIndex = levels.indexOf(requiredLevel);
@@ -68,38 +65,23 @@ export class SecurityPolicyService {
   /**
    * Get all policies applicable to resource
    */
-  static getApplicablePolicies(
-    policies: PolicyEntity[],
-    resource: string
-  ): PolicyEntity[] {
+  static getApplicablePolicies(policies: PolicyEntity[], resource: string): PolicyEntity[] {
     return policies.filter(
-      policy => policy.isEnabled() && policy.data.rules.some(rule => rule.resource === resource)
+      (policy) => policy.isEnabled() && policy.data.rules.some((rule) => rule.resource === resource)
     );
   }
 
   /**
    * Get all policies that deny access to resource
    */
-  static getDenyingPolicies(
-    policies: PolicyEntity[],
-    resource: string,
-    action: string
-  ): PolicyEntity[] {
-    return policies.filter(
-      policy => policy.isEnabled() && policy.isDenied(resource, action)
-    );
+  static getDenyingPolicies(policies: PolicyEntity[], resource: string, action: string): PolicyEntity[] {
+    return policies.filter((policy) => policy.isEnabled() && policy.isDenied(resource, action));
   }
 
   /**
    * Get all policies that allow access to resource
    */
-  static getAllowingPolicies(
-    policies: PolicyEntity[],
-    resource: string,
-    action: string
-  ): PolicyEntity[] {
-    return policies.filter(
-      policy => policy.isEnabled() && policy.isAllowed(resource, action)
-    );
+  static getAllowingPolicies(policies: PolicyEntity[], resource: string, action: string): PolicyEntity[] {
+    return policies.filter((policy) => policy.isEnabled() && policy.isAllowed(resource, action));
   }
 }

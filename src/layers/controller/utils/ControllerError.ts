@@ -1,6 +1,6 @@
 /**
  * Controller Error
- * 
+ *
  * Custom error class for controller errors.
  */
 
@@ -35,7 +35,10 @@ export class ControllerError extends Error {
   /**
    * Create controller instantiation error
    */
-  static instantiationFailed(message: string = 'Controller instantiation failed', controllerId?: string): ControllerError {
+  static instantiationFailed(
+    message: string = 'Controller instantiation failed',
+    controllerId?: string
+  ): ControllerError {
     return new ControllerError('CONTROLLER_INSTANTIATION_FAILED', message, controllerId);
   }
 

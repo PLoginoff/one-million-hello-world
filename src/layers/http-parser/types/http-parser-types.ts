@@ -1,6 +1,6 @@
 /**
  * HTTP Parser Types
- * 
+ *
  * This module defines all type definitions for the HTTP Parser Layer,
  * including HTTP methods, headers, request/response structures,
  * parsing states, validation rules, and advanced features.

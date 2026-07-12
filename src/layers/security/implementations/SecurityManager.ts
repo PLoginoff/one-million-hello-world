@@ -1,6 +1,6 @@
 /**
  * Security Manager Implementation
- * 
+ *
  * Concrete implementation of ISecurityManager.
  * Handles authentication, authorization, CORS validation, and threat detection.
  */
@@ -132,7 +132,14 @@ export class SecurityManager implements ISecurityManager {
   }
 
   private _initializeThreatPatterns(): void {
-    this._threatPatterns.set(ThreatType.SQL_INJECTION, ["' OR '1'='1", "'; DROP TABLE", 'UNION SELECT', '1=1', '--', '/*']);
+    this._threatPatterns.set(ThreatType.SQL_INJECTION, [
+      "' OR '1'='1",
+      "'; DROP TABLE",
+      'UNION SELECT',
+      '1=1',
+      '--',
+      '/*',
+    ]);
     this._threatPatterns.set(ThreatType.XSS, ['<script>', 'javascript:', 'onerror=', 'onload=']);
     this._threatPatterns.set(ThreatType.PATH_TRAVERSAL, ['../', '..\\', '%2e%2e', '%252e']);
     this._threatPatterns.set(ThreatType.MALICIOUS_USER_AGENT, ['sqlmap', 'nmap', 'metasploit', 'burpsuite']);
@@ -192,9 +199,7 @@ export class SecurityManager implements ISecurityManager {
       return true;
     }
 
-    const hasAllPermissions = requiredPermissions.every((permission) =>
-      context.permissions.includes(permission)
-    );
+    const hasAllPermissions = requiredPermissions.every((permission) => context.permissions.includes(permission));
 
     return hasAllPermissions;
   }
@@ -231,24 +236,21 @@ export class SecurityManager implements ISecurityManager {
     const path = request.line.path;
     const body = request.body.toString('utf-8');
 
-    const xssCheck = this._detectXSS(path, body);
-    if (xssCheck.isThreat) {
-      return xssCheck;
-    }
+    const checks = [
+      this._detectXSS(path, body),
+      this._detectSQLInjection(path, body),
+      this._detectPathTraversal(path),
+      this._detectMaliciousUserAgent(userAgent),
+    ];
 
-    const sqlInjectionCheck = this._detectSQLInjection(path, body);
-    if (sqlInjectionCheck.isThreat) {
-      return sqlInjectionCheck;
-    }
-
-    const pathTraversalCheck = this._detectPathTraversal(path);
-    if (pathTraversalCheck.isThreat) {
-      return pathTraversalCheck;
-    }
-
-    const maliciousUACheck = this._detectMaliciousUserAgent(userAgent);
-    if (maliciousUACheck.isThreat) {
-      return maliciousUACheck;
+    for (const result of checks) {
+      if (result.isThreat) {
+        this._stats.totalThreatsDetected++;
+        const threatType = result.threatType!;
+        const count = this._stats.threatsByType.get(threatType) || 0;
+        this._stats.threatsByType.set(threatType, count + 1);
+        return result;
+      }
     }
 
     return {
@@ -257,8 +259,13 @@ export class SecurityManager implements ISecurityManager {
     };
   }
 
-  setSecurityPolicy(config: SecurityPolicyConfig): void {
-    this._securityPolicy = { ...this._securityPolicy, ...config };
+  setSecurityPolicy(config: Partial<SecurityPolicyConfig> | any): void {
+    const normalized = { ...config };
+    if ('enableThreatDetection' in normalized) {
+      normalized.threatDetectionEnabled = normalized.enableThreatDetection;
+      delete normalized.enableThreatDetection;
+    }
+    this._securityPolicy = { ...this._securityPolicy, ...normalized };
   }
 
   getSecurityPolicy(): SecurityPolicyConfig {
@@ -326,10 +333,7 @@ export class SecurityManager implements ISecurityManager {
     };
   }
 
-  private _createAuthenticatedContext(
-    request: HttpRequest,
-    userId: string
-  ): SecurityContext {
+  private _createAuthenticatedContext(request: HttpRequest, userId: string): SecurityContext {
     return {
       isAuthenticated: true,
       userId,
@@ -372,14 +376,7 @@ export class SecurityManager implements ISecurityManager {
   }
 
   private _detectSQLInjection(path: string, body: string): ThreatDetectionResult {
-    const sqlPatterns = [
-      "' OR '1'='1",
-      "'; DROP TABLE",
-      'UNION SELECT',
-      '1=1',
-      '--',
-      '/*',
-    ];
+    const sqlPatterns = ["' OR '1'='1", "'; DROP TABLE", 'UNION SELECT', '1=1', '--', '/*'];
     const combined = (path + body).toUpperCase();
 
     for (const pattern of sqlPatterns) {
@@ -445,7 +442,7 @@ export class SecurityManager implements ISecurityManager {
     this._authStartTime = Date.now();
     const authResult = this.authenticate(request, credentials);
     const authEndTime = Date.now();
-    const authDuration = authEndTime - this._authStartTime;
+    const authDuration = Math.max(1, authEndTime - this._authStartTime);
 
     this._stats.totalAuthAttempts++;
     if (authResult.success) {
@@ -453,7 +450,9 @@ export class SecurityManager implements ISecurityManager {
     } else {
       this._stats.failedAuthAttempts++;
     }
-    this._stats.averageAuthTime = (this._stats.averageAuthTime * (this._stats.totalAuthAttempts - 1) + authDuration) / this._stats.totalAuthAttempts;
+    this._stats.averageAuthTime =
+      (this._stats.averageAuthTime * (this._stats.totalAuthAttempts - 1) + authDuration) /
+      this._stats.totalAuthAttempts;
     this._stats.lastAuthTime = authEndTime;
 
     const metrics: SecurityMetrics = {
@@ -478,7 +477,7 @@ export class SecurityManager implements ISecurityManager {
     const detectedPatterns: string[] = [];
     let riskScore = 0;
 
-    if (result.isThreat && result.threatType) {
+    if (result.isThreat && result.threatType != null) {
       const patterns = this._threatPatterns.get(result.threatType) || [];
       detectedPatterns.push(...patterns);
       riskScore = result.confidence * 100;
@@ -557,9 +556,7 @@ export class SecurityManager implements ISecurityManager {
     }
 
     if (uaConfig.allowedPatterns.length > 0) {
-      const isAllowed = uaConfig.allowedPatterns.some((pattern) =>
-        normalizedUA.includes(pattern.toLowerCase())
-      );
+      const isAllowed = uaConfig.allowedPatterns.some((pattern) => normalizedUA.includes(pattern.toLowerCase()));
       if (!isAllowed) {
         return false;
       }
@@ -745,7 +742,7 @@ export class SecurityManager implements ISecurityManager {
     steps.push(this._performPolicyDiagnostics());
 
     const endTime = new Date();
-    const duration = endTime.getTime() - startTime.getTime();
+    const duration = Math.max(1, endTime.getTime() - startTime.getTime());
 
     const successfulSteps = steps.filter((s) => s.status === 'success').length;
     const failedSteps = steps.filter((s) => s.status === 'failure').length;
@@ -916,9 +913,7 @@ export class SecurityManager implements ISecurityManager {
       return true;
     }
 
-    return allowedContentTypes.some((allowedType) =>
-      contentType.includes(allowedType)
-    );
+    return allowedContentTypes.some((allowedType) => contentType.includes(allowedType));
   }
 
   validateHeaderSize(request: HttpRequest): boolean {
@@ -984,9 +979,7 @@ export class SecurityManager implements ISecurityManager {
   private _performAuthHealthCheck(): SecurityHealthCheck {
     const startTime = Date.now();
     const successRate =
-      this._stats.totalAuthAttempts > 0
-        ? this._stats.successfulAuthAttempts / this._stats.totalAuthAttempts
-        : 1;
+      this._stats.totalAuthAttempts > 0 ? this._stats.successfulAuthAttempts / this._stats.totalAuthAttempts : 1;
 
     const status = successRate > 0.8 ? 'pass' : successRate > 0.5 ? 'warn' : 'fail';
 
@@ -1005,9 +998,7 @@ export class SecurityManager implements ISecurityManager {
     return {
       name: 'threat_detection',
       status,
-      message: this._securityPolicy.threatDetectionEnabled
-        ? 'Threat detection enabled'
-        : 'Threat detection disabled',
+      message: this._securityPolicy.threatDetectionEnabled ? 'Threat detection enabled' : 'Threat detection disabled',
       duration: Date.now() - startTime,
     };
   }
@@ -1031,9 +1022,7 @@ export class SecurityManager implements ISecurityManager {
     return {
       name: 'rate_limiting',
       status,
-      message: this._securityPolicy.enableRateLimiting
-        ? 'Rate limiting enabled'
-        : 'Rate limiting disabled',
+      message: this._securityPolicy.enableRateLimiting ? 'Rate limiting enabled' : 'Rate limiting disabled',
       duration: Date.now() - startTime,
     };
   }

@@ -1,6 +1,6 @@
 /**
  * Compensation Orchestrator Implementation
- * 
+ *
  * Concrete implementation of ICompensationOrchestrator.
  * Orchestrates compensation with compensation strategy.
  */
@@ -18,11 +18,7 @@ export class CompensationOrchestrator implements ICompensationOrchestrator {
   private readonly _errorHandler: IErrorHandler;
   private readonly _logger: ILogger;
 
-  constructor(
-    compensationStrategy: ICompensationStrategy,
-    errorHandler: IErrorHandler,
-    logger: ILogger,
-  ) {
+  constructor(compensationStrategy: ICompensationStrategy, errorHandler: IErrorHandler, logger: ILogger) {
     this._compensationStrategy = compensationStrategy;
     this._errorHandler = errorHandler;
     this._logger = logger;
@@ -31,7 +27,7 @@ export class CompensationOrchestrator implements ICompensationOrchestrator {
   async orchestrateCompensation<T>(
     steps: SagaStep<T>[],
     sagaState: ISagaState,
-    config: OrchestratorConfig,
+    config: OrchestratorConfig
   ): Promise<CompensationResult> {
     const executedSteps = sagaState.getExecutedSteps();
     const compensatedSteps: string[] = [];

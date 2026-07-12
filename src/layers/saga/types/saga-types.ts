@@ -1,6 +1,6 @@
 /**
  * Saga Layer Types
- * 
+ *
  * This module defines all type definitions for the Saga Layer,
  * including distributed transactions and compensation.
  */

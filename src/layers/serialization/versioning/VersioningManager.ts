@@ -1,6 +1,6 @@
 /**
  * Versioning Manager
- * 
+ *
  * Manages versioning strategies.
  */
 
@@ -13,10 +13,7 @@ export class VersioningManager {
   private _enabled: boolean;
   private _currentVersion: string;
 
-  constructor(
-    strategy: IVersioningStrategy = new WrapperVersioningStrategy(),
-    currentVersion: string = '1.0'
-  ) {
+  constructor(strategy: IVersioningStrategy = new WrapperVersioningStrategy(), currentVersion: string = '1.0') {
     this._strategy = strategy;
     this._enabled = true;
     this._currentVersion = currentVersion;
@@ -24,7 +21,7 @@ export class VersioningManager {
 
   /**
    * Applies versioning to data
-   * 
+   *
    * @param data - Data to version
    * @returns Versioned data
    */
@@ -37,7 +34,7 @@ export class VersioningManager {
 
   /**
    * Extracts version from data
-   * 
+   *
    * @param data - Versioned data
    * @returns Object with version and data, or null if not versioned
    */
@@ -50,7 +47,7 @@ export class VersioningManager {
 
   /**
    * Sets the versioning strategy
-   * 
+   *
    * @param strategy - New versioning strategy
    */
   setStrategy(strategy: IVersioningStrategy): void {
@@ -59,7 +56,7 @@ export class VersioningManager {
 
   /**
    * Gets the current strategy
-   * 
+   *
    * @returns Current versioning strategy
    */
   getStrategy(): IVersioningStrategy {
@@ -68,7 +65,7 @@ export class VersioningManager {
 
   /**
    * Enables or disables versioning
-   * 
+   *
    * @param enabled - Enable flag
    */
   setEnabled(enabled: boolean): void {
@@ -77,7 +74,7 @@ export class VersioningManager {
 
   /**
    * Checks if versioning is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -86,7 +83,7 @@ export class VersioningManager {
 
   /**
    * Sets the current version
-   * 
+   *
    * @param version - Version string
    */
   setCurrentVersion(version: string): void {
@@ -95,7 +92,7 @@ export class VersioningManager {
 
   /**
    * Gets the current version
-   * 
+   *
    * @returns Current version string
    */
   getCurrentVersion(): string {
@@ -104,7 +101,7 @@ export class VersioningManager {
 
   /**
    * Checks if data is versioned
-   * 
+   *
    * @param data - Data to check
    * @returns True if data is versioned
    */

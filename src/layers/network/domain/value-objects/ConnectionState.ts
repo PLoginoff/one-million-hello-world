@@ -1,6 +1,6 @@
 /**
  * Connection State Value Object
- * 
+ *
  * Represents the state of a network connection with state transitions.
  */
 
@@ -20,11 +20,7 @@ export class ConnectionState {
   readonly timestamp: number;
   readonly previousState: ConnectionStateEnum | null;
 
-  private constructor(
-    value: ConnectionStateEnum,
-    timestamp: number,
-    previousState: ConnectionStateEnum | null,
-  ) {
+  private constructor(value: ConnectionStateEnum, timestamp: number, previousState: ConnectionStateEnum | null) {
     this.value = value;
     this.timestamp = timestamp;
     this.previousState = previousState;
@@ -47,10 +43,7 @@ export class ConnectionState {
   /**
    * Create state with previous state
    */
-  static transition(
-    from: ConnectionState,
-    to: ConnectionStateEnum,
-  ): ConnectionState {
+  static transition(from: ConnectionState, to: ConnectionStateEnum): ConnectionState {
     return new ConnectionState(to, Date.now(), from.value);
   }
 
@@ -116,8 +109,14 @@ export class ConnectionState {
   canTransitionTo(target: ConnectionStateEnum): boolean {
     const validTransitions: Map<ConnectionStateEnum, ConnectionStateEnum[]> = new Map([
       [ConnectionStateEnum.DISCONNECTED, [ConnectionStateEnum.CONNECTING, ConnectionStateEnum.RECONNECTING]],
-      [ConnectionStateEnum.CONNECTING, [ConnectionStateEnum.CONNECTED, ConnectionStateEnum.ERROR, ConnectionStateEnum.TIMEOUT]],
-      [ConnectionStateEnum.CONNECTED, [ConnectionStateEnum.CLOSING, ConnectionStateEnum.PAUSED, ConnectionStateEnum.ERROR]],
+      [
+        ConnectionStateEnum.CONNECTING,
+        [ConnectionStateEnum.CONNECTED, ConnectionStateEnum.ERROR, ConnectionStateEnum.TIMEOUT],
+      ],
+      [
+        ConnectionStateEnum.CONNECTED,
+        [ConnectionStateEnum.CLOSING, ConnectionStateEnum.PAUSED, ConnectionStateEnum.ERROR],
+      ],
       [ConnectionStateEnum.CLOSING, [ConnectionStateEnum.DISCONNECTED]],
       [ConnectionStateEnum.ERROR, [ConnectionStateEnum.RECONNECTING, ConnectionStateEnum.DISCONNECTED]],
       [ConnectionStateEnum.RECONNECTING, [ConnectionStateEnum.CONNECTED, ConnectionStateEnum.ERROR]],
@@ -133,8 +132,7 @@ export class ConnectionState {
    * Check if is active (connected or connecting)
    */
   isActive(): boolean {
-    return this.value === ConnectionStateEnum.CONNECTED || 
-           this.value === ConnectionStateEnum.CONNECTING;
+    return this.value === ConnectionStateEnum.CONNECTED || this.value === ConnectionStateEnum.CONNECTING;
   }
 
   /**
@@ -155,8 +153,7 @@ export class ConnectionState {
    * Check if is terminal state
    */
   isTerminal(): boolean {
-    return this.value === ConnectionStateEnum.DISCONNECTED || 
-           this.value === ConnectionStateEnum.ERROR;
+    return this.value === ConnectionStateEnum.DISCONNECTED || this.value === ConnectionStateEnum.ERROR;
   }
 
   /**

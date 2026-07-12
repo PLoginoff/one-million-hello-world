@@ -1,6 +1,6 @@
 /**
  * Decorator Implementation
- * 
+ *
  * Concrete implementation of IDecorator.
  * Handles runtime decoration and cross-cutting concerns.
  */

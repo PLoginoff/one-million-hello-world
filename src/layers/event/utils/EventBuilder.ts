@@ -1,6 +1,6 @@
 /**
  * EventBuilder - Utility
- * 
+ *
  * Builder pattern for constructing events with fluent API.
  * Provides convenient event creation with validation.
  */

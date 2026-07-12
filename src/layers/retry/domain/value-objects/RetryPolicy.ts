@@ -88,7 +88,7 @@ export class RetryPolicy {
         delay = this.data.initialDelay * Math.pow(this.data.multiplier, attemptNumber - 1);
         break;
       case 'linear':
-        delay = this.data.initialDelay + (this.data.initialDelay * (attemptNumber - 1));
+        delay = this.data.initialDelay + this.data.initialDelay * (attemptNumber - 1);
         break;
       default:
         delay = this.data.initialDelay;

@@ -1,6 +1,6 @@
 /**
  * In-Memory Cache Provider
- * 
+ *
  * Cache provider that stores entries in memory.
  */
 

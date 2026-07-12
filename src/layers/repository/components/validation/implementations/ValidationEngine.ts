@@ -1,6 +1,6 @@
 /**
  * Validation Engine Implementation
- * 
+ *
  * Concrete implementation of IValidationEngine.
  * Handles data validation and business rules.
  */
@@ -51,7 +51,14 @@ export class ValidationEngine implements IValidationEngine {
       return { valid: true, errors: [], warnings: [] };
     }
 
-    const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
+    const errors: Array<{
+      code: string;
+      message: string;
+      field: string;
+      value: unknown;
+      rule: string;
+      severity: ValidationSeverity;
+    }> = [];
     const warnings: Array<{ code: string; message: string; field: string; value: unknown; rule: string }> = [];
 
     const record = entity as Record<string, unknown>;
@@ -88,7 +95,14 @@ export class ValidationEngine implements IValidationEngine {
   }
 
   validateField(value: unknown, rule: ValidationRule, context?: ValidationContext): ValidationResult {
-    const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
+    const errors: Array<{
+      code: string;
+      message: string;
+      field: string;
+      value: unknown;
+      rule: string;
+      severity: ValidationSeverity;
+    }> = [];
     const warnings: Array<{ code: string; message: string; field: string; value: unknown; rule: string }> = [];
 
     if (rule.severity === ValidationSeverity.WARNING && !this._config.enableWarnings) {
@@ -153,7 +167,10 @@ export class ValidationEngine implements IValidationEngine {
     this._config.customValidators.set(name, validator);
   }
 
-  registerValidatorFunction(name: string, validator: (value: unknown, context: ValidationContext) => ValidationResult): void {
+  registerValidatorFunction(
+    name: string,
+    validator: (value: unknown, context: ValidationContext) => ValidationResult
+  ): void {
     this._customValidators.set(name, (value: unknown) => {
       const result = validator(value, this.createContext(name, {}));
       return result.valid;
@@ -223,7 +240,14 @@ export class ValidationEngine implements IValidationEngine {
   }
 
   validateRequired(entity: unknown, requiredFields: string[]): ValidationResult {
-    const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
+    const errors: Array<{
+      code: string;
+      message: string;
+      field: string;
+      value: unknown;
+      rule: string;
+      severity: ValidationSeverity;
+    }> = [];
 
     const record = entity as Record<string, unknown>;
     for (const field of requiredFields) {
@@ -247,7 +271,14 @@ export class ValidationEngine implements IValidationEngine {
   }
 
   validateTypes(entity: unknown, fieldTypes: Map<string, string>): ValidationResult {
-    const errors: Array<{ code: string; message: string; field: string; value: unknown; rule: string; severity: ValidationSeverity }> = [];
+    const errors: Array<{
+      code: string;
+      message: string;
+      field: string;
+      value: unknown;
+      rule: string;
+      severity: ValidationSeverity;
+    }> = [];
 
     const record = entity as Record<string, unknown>;
     for (const [field, expectedType] of fieldTypes) {
@@ -305,8 +336,7 @@ export class ValidationEngine implements IValidationEngine {
   private _updateAverageExecutionTime(duration: number): void {
     const total = this._stats.totalValidations;
     if (total > 0) {
-      this._stats.averageExecutionTime =
-        (this._stats.averageExecutionTime * (total - 1) + duration) / total;
+      this._stats.averageExecutionTime = (this._stats.averageExecutionTime * (total - 1) + duration) / total;
     }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * HTTP Header Entity
- * 
+ *
  * Represents a single HTTP header with validation and parsing capabilities.
  */
 
@@ -84,7 +84,10 @@ export class HttpHeaderEntity {
    * Get header value as comma-separated list
    */
   asList(): string[] {
-    return this.value.split(',').map(item => item.trim()).filter(item => item.length > 0);
+    return this.value
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
   }
 
   /**
@@ -93,14 +96,14 @@ export class HttpHeaderEntity {
   asKeyValuePairs(): Map<string, string> {
     const pairs = new Map<string, string>();
     const parts = this.value.split(';');
-    
+
     for (const part of parts) {
-      const [key, value] = part.split('=').map(s => s.trim());
+      const [key, value] = part.split('=').map((s) => s.trim());
       if (key) {
         pairs.set(key, value || '');
       }
     }
-    
+
     return pairs;
   }
 

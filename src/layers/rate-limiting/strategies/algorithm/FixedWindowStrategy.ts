@@ -1,6 +1,6 @@
 /**
  * Fixed Window Rate Limiting Strategy
- * 
+ *
  * Implements fixed window algorithm for rate limiting.
  */
 
@@ -24,7 +24,11 @@ export class FixedWindowStrategy implements IRateLimitAlgorithm {
     return 'FIXED_WINDOW';
   }
 
-  isAllowed(key: RateLimitKey, limit: number, window: number): {
+  isAllowed(
+    key: RateLimitKey,
+    limit: number,
+    window: number
+  ): {
     allowed: boolean;
     remaining: number;
     resetAt: number;

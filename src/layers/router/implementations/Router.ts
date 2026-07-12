@@ -1,6 +1,6 @@
 /**
  * Router Implementation
- * 
+ *
  * Concrete implementation of IRouter.
  * Handles route matching, parameter extraction, wildcards,
  * route groups, caching, statistics, and advanced filtering.
@@ -123,7 +123,7 @@ export class Router implements IRouter {
     }
 
     const parameters = this._extractParameters(matchingRoute.path, path);
-    const wildcard = path.includes('*');
+    const wildcard = matchingRoute.path.includes('*');
     const matchTime = Date.now() - startTime;
 
     const result: RouteMatch = {
@@ -157,9 +157,7 @@ export class Router implements IRouter {
 
   removeRoute(method: HttpMethod, path: string): void {
     const key = this._generateRouteKey(method, path);
-    this._routes = this._routes.filter(
-      (route) => route.method !== method || route.path !== path
-    );
+    this._routes = this._routes.filter((route) => route.method !== method || route.path !== path);
     this._cache.delete(key);
     this._routeMetadata.delete(key);
     this._updateStatistics();
@@ -172,7 +170,7 @@ export class Router implements IRouter {
     this._statistics = this._initStatistics();
   }
 
-  setConfig(config: RouterConfig): void {
+  setConfig(config: Partial<RouterConfig>): void {
     this._config = { ...this._config, ...config };
   }
 
@@ -182,7 +180,7 @@ export class Router implements IRouter {
 
   registerRouteGroup(group: RouteGroup): void {
     this._routeGroups.push(group);
-    group.routes.forEach(route => {
+    group.routes.forEach((route) => {
       const routeWithGroup = {
         ...route,
         group: group.name,
@@ -193,8 +191,8 @@ export class Router implements IRouter {
   }
 
   removeRouteGroup(name: string): void {
-    this._routeGroups = this._routeGroups.filter(g => g.name !== name);
-    this._routes = this._routes.filter(r => r.group !== name);
+    this._routeGroups = this._routeGroups.filter((g) => g.name !== name);
+    this._routes = this._routes.filter((r) => r.group !== name);
     this._updateStatistics();
   }
 
@@ -205,42 +203,40 @@ export class Router implements IRouter {
   getFilteredRoutes(filter: RouteFilter): Route[] {
     let filtered = [...this._routes];
 
-    if (filter.method) {
-      filtered = filtered.filter(r => r.method === filter.method);
+    if (filter.method != null) {
+      filtered = filtered.filter((r) => r.method === filter.method);
     }
 
     if (filter.path) {
-      filtered = filtered.filter(r => r.path === filter.path);
+      filtered = filtered.filter((r) => r.path === filter.path);
     }
 
     if (filter.pathPattern) {
       const regex = new RegExp(filter.pathPattern);
-      filtered = filtered.filter(r => regex.test(r.path));
+      filtered = filtered.filter((r) => regex.test(r.path));
     }
 
-    if (filter.priority) {
-      filtered = filtered.filter(r => r.priority === filter.priority);
+    if (filter.priority != null) {
+      filtered = filtered.filter((r) => r.priority === filter.priority);
     }
 
-    if (filter.status) {
-      filtered = filtered.filter(r => r.status === filter.status);
+    if (filter.status != null) {
+      filtered = filtered.filter((r) => r.status === filter.status);
     }
 
     if (filter.tags && filter.tags.length > 0) {
-      filtered = filtered.filter(r =>
-        filter.tags!.some(tag => r.tags?.includes(tag))
-      );
+      filtered = filtered.filter((r) => filter.tags!.some((tag) => r.tags?.includes(tag)));
     }
 
     if (filter.group) {
-      filtered = filtered.filter(r => r.group === filter.group);
+      filtered = filtered.filter((r) => r.group === filter.group);
     }
 
     if (filter.version) {
-      filtered = filtered.filter(r => r.version === filter.version);
+      filtered = filtered.filter((r) => r.version === filter.version);
     }
 
-    if (filter.limit) {
+    if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
     }
 
@@ -248,13 +244,13 @@ export class Router implements IRouter {
   }
 
   getRoute(method: HttpMethod, path: string): Route | undefined {
-    return this._routes.find(r => r.method === method && r.path === path);
+    return this._routes.find((r) => r.method === method && r.path === path);
   }
 
   updateRoute(method: HttpMethod, path: string, updates: Partial<Route>): void {
-    const index = this._routes.findIndex(r => r.method === method && r.path === path);
+    const index = this._routes.findIndex((r) => r.method === method && r.path === path);
     if (index !== -1) {
-      this._routes![index] = { ...this._routes[index], ...updates };
+      this._routes[index] = { ...this._routes[index], ...updates } as Route;
       const updatedRoute = this._routes[index];
       if (updatedRoute && updatedRoute.method && updatedRoute.path) {
         this._updateRouteMetadata(updatedRoute);
@@ -285,7 +281,7 @@ export class Router implements IRouter {
   }
 
   removeMiddleware(name: string): void {
-    this._middleware = this._middleware.filter(m => m.name !== name);
+    this._middleware = this._middleware.filter((m) => m.name !== name);
   }
 
   getMiddleware(): MiddlewareDefinition[] {
@@ -293,14 +289,14 @@ export class Router implements IRouter {
   }
 
   enableMiddleware(name: string): void {
-    const middleware = this._middleware.find(m => m.name === name);
+    const middleware = this._middleware.find((m) => m.name === name);
     if (middleware) {
       middleware.enabled = true;
     }
   }
 
   disableMiddleware(name: string): void {
-    const middleware = this._middleware.find(m => m.name === name);
+    const middleware = this._middleware.find((m) => m.name === name);
     if (middleware) {
       middleware.enabled = false;
     }
@@ -337,7 +333,7 @@ export class Router implements IRouter {
     }
 
     if (route.parameters) {
-      route.parameters.forEach(param => {
+      route.parameters.forEach((param) => {
         if (!param.name || param.name === '') {
           errors.push({
             path: route.path,
@@ -366,7 +362,7 @@ export class Router implements IRouter {
   }
 
   validateAllRoutes(): ValidationResult[] {
-    return this._routes.map(route => this.validateRoute(route));
+    return this._routes.map((route) => this.validateRoute(route));
   }
 
   getRouteMetadata(method: HttpMethod, path: string): RouteMetadata | undefined {
@@ -387,39 +383,40 @@ export class Router implements IRouter {
   }
 
   getRoutesByTag(tag: string): Route[] {
-    return this._routes.filter(r => r.tags?.includes(tag));
+    return this._routes.filter((r) => r.tags?.includes(tag));
   }
 
   getRoutesByGroup(group: string): Route[] {
-    return this._routes.filter(r => r.group === group);
+    return this._routes.filter((r) => r.group === group);
   }
 
   getRoutesByMethod(method: HttpMethod): Route[] {
-    return this._routes.filter(r => r.method === method);
+    return this._routes.filter((r) => r.method === method);
   }
 
   getRoutesByStatus(status: RouteStatus): Route[] {
-    return this._routes.filter(r => r.status === status);
+    return this._routes.filter((r) => r.status === status);
   }
 
   getRoutesByPriority(priority: RoutePriority): Route[] {
-    return this._routes.filter(r => r.priority === priority);
+    return this._routes.filter((r) => r.priority === priority);
   }
 
   private _updateStatistics(): void {
     this._statistics.totalRoutes = this._routes.length;
-    this._statistics.activeRoutes = this._routes.filter(r => r.status === RouteStatus.ACTIVE).length;
-    this._statistics.disabledRoutes = this._routes.filter(r => r.status === RouteStatus.DISABLED).length;
-    this._statistics.deprecatedRoutes = this._routes.filter(r => r.status === RouteStatus.DEPRECATED).length;
+    this._statistics.activeRoutes = this._routes.filter((r) => r.status === RouteStatus.ACTIVE).length;
+    this._statistics.disabledRoutes = this._routes.filter((r) => r.status === RouteStatus.DISABLED).length;
+    this._statistics.deprecatedRoutes = this._routes.filter((r) => r.status === RouteStatus.DEPRECATED).length;
 
     this._statistics.routesByMethod = {} as Record<HttpMethod, number>;
-    this._routes.forEach(route => {
+    this._routes.forEach((route) => {
       this._statistics.routesByMethod[route.method] = (this._statistics.routesByMethod[route.method] || 0) + 1;
     });
 
     this._statistics.routesByPriority = {} as Record<RoutePriority, number>;
-    this._routes.forEach(route => {
-      this._statistics.routesByPriority[route.priority || RoutePriority.MEDIUM] = (this._statistics.routesByPriority[route.priority || RoutePriority.MEDIUM] || 0) + 1;
+    this._routes.forEach((route) => {
+      this._statistics.routesByPriority[route.priority ?? RoutePriority.MEDIUM] =
+        (this._statistics.routesByPriority[route.priority ?? RoutePriority.MEDIUM] || 0) + 1;
     });
   }
 
@@ -444,7 +441,7 @@ export class Router implements IRouter {
   private _updateAverageMatchTime(matchTime: number): void {
     const totalMatches = this._statistics.totalMatches + this._statistics.totalMisses;
     if (totalMatches > 0) {
-      this._statistics.averageMatchTime = 
+      this._statistics.averageMatchTime =
         (this._statistics.averageMatchTime * (totalMatches - 1) + matchTime) / totalMatches;
     }
   }
@@ -476,15 +473,15 @@ export class Router implements IRouter {
       const routeSegment = routeSegments[i];
       const requestSegment = requestSegments[i];
 
-      if (!routeSegment || !requestSegment) {
-        return false;
-      }
-
-      if (routeSegment.startsWith(':')) {
+      if (!routeSegment && !requestSegment) {
         continue;
       }
 
-      if (routeSegment !== requestSegment) {
+      if (routeSegment === '*' || routeSegment.startsWith(':')) {
+        continue;
+      }
+
+      if (!requestSegment || routeSegment !== requestSegment) {
         return false;
       }
     }

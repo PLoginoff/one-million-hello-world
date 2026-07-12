@@ -1,6 +1,6 @@
 /**
  * HTTP Parsing Service
- * 
+ *
  * Provides high-level parsing operations for HTTP requests and responses.
  */
 
@@ -26,7 +26,7 @@ export class HttpParsingService {
       };
     }
 
-    const [method, path, version] = parts;
+    const [method, path, version] = parts as [string, string, string];
 
     if (!HttpValidationService.validateMethod(method)) {
       return {
@@ -76,7 +76,7 @@ export class HttpParsingService {
       };
     }
 
-    const [version, statusCode, ...reasonParts] = parts;
+    const [version, statusCode, ...reasonParts] = parts as [string, string, ...string[]];
     const reasonPhrase = reasonParts.join(' ');
 
     if (!HttpValidationService.validateVersion(version)) {
@@ -162,7 +162,7 @@ export class HttpParsingService {
     parameters: Map<string, string>;
   } {
     const queryIndex = path.indexOf('?');
-    
+
     if (queryIndex === -1) {
       return {
         path,
@@ -250,12 +250,12 @@ export class HttpParsingService {
       const connection = headers.get('connection');
       return connection?.toLowerCase() === 'keep-alive';
     }
-    
+
     const connection = headers.get('connection');
     if (connection) {
       return connection.toLowerCase() !== 'close';
     }
-    
+
     return true;
   }
 
@@ -272,7 +272,7 @@ export class HttpParsingService {
    */
   static getCharset(contentType: string): string | null {
     const charsetMatch = contentType.match(/charset=([^;]+)/i);
-    return charsetMatch ? (charsetMatch[1])!.trim() : null;
+    return charsetMatch ? charsetMatch[1].trim() : null;
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * Default Value Fallback Strategy
- * 
+ *
  * Fallback strategy that returns a predefined default value.
  */
 

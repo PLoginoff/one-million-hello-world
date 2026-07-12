@@ -377,10 +377,10 @@ describe('Validator Advanced', () => {
       };
 
       validator.addCustomValidator('test', (value) => value === 'valid');
-      expect(validator._customValidators.has('test')).toBe(true);
+      expect((validator as any)._customValidators.has('test')).toBe(true);
 
       validator.removeCustomValidator('test');
-      expect(validator._customValidators.has('test')).toBe(false);
+      expect((validator as any)._customValidators.has('test')).toBe(false);
     });
   });
 

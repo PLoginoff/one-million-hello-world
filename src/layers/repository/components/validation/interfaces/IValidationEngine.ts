@@ -1,6 +1,6 @@
 /**
  * Validation Engine Interface
- * 
+ *
  * Defines the contract for data validation and business rules.
  */
 
@@ -20,7 +20,7 @@ import {
 export interface IValidationEngine {
   /**
    * Validates an entity against rules
-   * 
+   *
    * @param entity - Entity to validate
    * @param rules - Validation rules to apply
    * @returns Validation result
@@ -29,7 +29,7 @@ export interface IValidationEngine {
 
   /**
    * Validates a single field
-   * 
+   *
    * @param value - Value to validate
    * @param rule - Validation rule to apply
    * @param context - Validation context
@@ -39,7 +39,7 @@ export interface IValidationEngine {
 
   /**
    * Validates an entity against a schema
-   * 
+   *
    * @param entity - Entity to validate
    * @param schema - Schema definition
    * @returns Validation result
@@ -48,7 +48,7 @@ export interface IValidationEngine {
 
   /**
    * Registers a custom validator
-   * 
+   *
    * @param name - Validator name
    * @param validator - Validator function
    */
@@ -56,14 +56,14 @@ export interface IValidationEngine {
 
   /**
    * Unregisters a custom validator
-   * 
+   *
    * @param name - Validator name
    */
   unregisterValidator(name: string): void;
 
   /**
    * Gets a custom validator
-   * 
+   *
    * @param name - Validator name
    * @returns Validator function or undefined
    */
@@ -71,28 +71,28 @@ export interface IValidationEngine {
 
   /**
    * Adds a validation rule
-   * 
+   *
    * @param rule - Validation rule to add
    */
   addRule(rule: ValidationRule): void;
 
   /**
    * Removes a validation rule
-   * 
+   *
    * @param ruleName - Rule name to remove
    */
   removeRule(ruleName: string): void;
 
   /**
    * Gets all validation rules
-   * 
+   *
    * @returns Array of validation rules
    */
   getRules(): ValidationRule[];
 
   /**
    * Gets rules for a specific field
-   * 
+   *
    * @param field - Field name
    * @returns Array of validation rules for the field
    */
@@ -100,21 +100,21 @@ export interface IValidationEngine {
 
   /**
    * Sets validation configuration
-   * 
+   *
    * @param config - Validation configuration
    */
   setConfig(config: Partial<ValidationConfig>): void;
 
   /**
    * Gets current validation configuration
-   * 
+   *
    * @returns Current validation configuration
    */
   getConfig(): ValidationConfig;
 
   /**
    * Gets validation statistics
-   * 
+   *
    * @returns Validation statistics
    */
   getStats(): ValidationStats;
@@ -126,7 +126,7 @@ export interface IValidationEngine {
 
   /**
    * Creates a validation context
-   * 
+   *
    * @param fieldName - Field name
    * @param entity - Entity being validated
    * @param metadata - Optional metadata
@@ -136,7 +136,7 @@ export interface IValidationEngine {
 
   /**
    * Validates required fields
-   * 
+   *
    * @param entity - Entity to validate
    * @param requiredFields - Array of required field names
    * @returns Validation result
@@ -145,7 +145,7 @@ export interface IValidationEngine {
 
   /**
    * Validates field types
-   * 
+   *
    * @param entity - Entity to validate
    * @param fieldTypes - Map of field names to expected types
    * @returns Validation result

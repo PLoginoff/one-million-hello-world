@@ -1,10 +1,17 @@
 /**
  * In-Memory Metrics Collector
- * 
+ *
  * Stores metrics in memory.
  */
 
-import { IMetricsCollector, AnyMetric, CounterMetric, GaugeMetric, TimingMetric, HistogramMetric } from './IMetricsCollector';
+import {
+  IMetricsCollector,
+  AnyMetric,
+  CounterMetric,
+  GaugeMetric,
+  TimingMetric,
+  HistogramMetric,
+} from './IMetricsCollector';
 
 export class InMemoryMetricsCollector implements IMetricsCollector {
   private _metrics: Map<string, AnyMetric[]>;
@@ -119,7 +126,7 @@ export class InMemoryMetricsCollector implements IMetricsCollector {
    * Aggregates counter metrics
    */
   aggregateCounter(name: string): number {
-    const metrics = this.getMetricsByName(name).filter(m => m.type === 'counter');
+    const metrics = this.getMetricsByName(name).filter((m) => m.type === 'counter');
     return metrics.reduce((sum, m) => sum + m.value, 0);
   }
 
@@ -127,18 +134,18 @@ export class InMemoryMetricsCollector implements IMetricsCollector {
    * Gets the latest gauge value
    */
   getLatestGauge(name: string): number | undefined {
-    const metrics = this.getMetricsByName(name).filter(m => m.type === 'gauge');
+    const metrics = this.getMetricsByName(name).filter((m) => m.type === 'gauge');
     if (metrics.length === 0) {
       return undefined;
     }
-    return (metrics[metrics.length - 1])!.value;
+    return metrics[metrics.length - 1]?.value;
   }
 
   /**
    * Calculates average timing
    */
   averageTiming(name: string): number {
-    const metrics = this.getMetricsByName(name).filter(m => m.type === 'timing');
+    const metrics = this.getMetricsByName(name).filter((m) => m.type === 'timing');
     if (metrics.length === 0) {
       return 0;
     }
@@ -160,7 +167,7 @@ export class InMemoryMetricsCollector implements IMetricsCollector {
       return { count: 0, min: 0, max: 0, avg: 0, sum: 0 };
     }
 
-    const values = metrics.map(m => m.value);
+    const values = metrics.map((m) => m.value);
     const sum = values.reduce((a, b) => a + b, 0);
     const min = Math.min(...values);
     const max = Math.max(...values);

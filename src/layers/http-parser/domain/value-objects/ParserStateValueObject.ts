@@ -1,6 +1,6 @@
 /**
  * Parser State Value Object
- * 
+ *
  * Represents the current state of HTTP parser with state transitions.
  */
 

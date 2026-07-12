@@ -11,11 +11,8 @@ export class CompensateSagaUseCase {
   /**
    * Execute compensation for a specific step
    */
-  async compensateStep(
-    execution: SagaExecutionEntity,
-    stepId: string,
-  ): Promise<SagaExecutionEntity> {
-    const compensationStep = execution.compensationSteps.find(s => s.originalStepId === stepId);
+  async compensateStep(execution: SagaExecutionEntity, stepId: string): Promise<SagaExecutionEntity> {
+    const compensationStep = execution.compensationSteps.find((s) => s.originalStepId === stepId);
     if (!compensationStep) {
       throw new Error(`No compensation step for ${stepId}`);
     }
@@ -31,11 +28,13 @@ export class CompensateSagaUseCase {
   async completeCompensationStep(
     execution: SagaExecutionEntity,
     stepId: string,
-    result?: unknown,
+    result?: unknown
   ): Promise<SagaExecutionEntity> {
-    return execution.withMetadata({
-      lastAttemptTime: Date.now(),
-    }).withStatus('compensating');
+    return execution
+      .withMetadata({
+        lastAttemptTime: Date.now(),
+      })
+      .withStatus('compensating');
   }
 
   /**
@@ -44,7 +43,7 @@ export class CompensateSagaUseCase {
   async failCompensationStep(
     execution: SagaExecutionEntity,
     stepId: string,
-    error: Error,
+    error: Error
   ): Promise<SagaExecutionEntity> {
     return execution.withMetadata({
       errorMessage: `Compensation failed for ${stepId}: ${error.message}`,
@@ -54,9 +53,7 @@ export class CompensateSagaUseCase {
   /**
    * Skip compensation for a step
    */
-  async skipCompensationStep(
-    execution: SagaExecutionEntity,
-  ): Promise<SagaExecutionEntity> {
+  async skipCompensationStep(execution: SagaExecutionEntity): Promise<SagaExecutionEntity> {
     return execution.withMetadata({
       lastAttemptTime: Date.now(),
     });
@@ -66,20 +63,20 @@ export class CompensateSagaUseCase {
    * Check if compensation is complete
    */
   isCompensationComplete(execution: SagaExecutionEntity): boolean {
-    return execution.compensationSteps.every(s => s.status === 'completed' || s.status === 'skipped');
+    return execution.compensationSteps.every((s) => s.status === 'completed' || s.status === 'skipped');
   }
 
   /**
    * Get remaining compensation steps
    */
   getRemainingCompensationSteps(execution: SagaExecutionEntity): any[] {
-    return execution.compensationSteps.filter(s => s.status === 'pending');
+    return execution.compensationSteps.filter((s) => s.status === 'pending');
   }
 
   /**
    * Get failed compensation steps
    */
   getFailedCompensationSteps(execution: SagaExecutionEntity): any[] {
-    return execution.compensationSteps.filter(s => s.status === 'failed');
+    return execution.compensationSteps.filter((s) => s.status === 'failed');
   }
 }

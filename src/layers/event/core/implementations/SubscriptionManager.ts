@@ -18,7 +18,7 @@ export class SubscriptionManager implements ISubscriptionManager {
     this.counter = 0;
   }
 
-  add(eventType: string, handler: EventHandler, once: boolean): Subscription {
+  add<T>(eventType: string, handler: EventHandler<T>, once: boolean): Subscription {
     const id = `sub_${++this.counter}_${Date.now()}`;
     const subscription: Subscription = {
       id,
@@ -70,16 +70,16 @@ export class SubscriptionManager implements ISubscriptionManager {
     }
 
     return Array.from(ids)
-      .map(id => this.subscriptions.get(id))
+      .map((id) => this.subscriptions.get(id))
       .filter((sub): sub is Subscription => sub !== undefined)
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-      .map(sub => this.clone(sub));
+      .map((sub) => this.clone(sub));
   }
 
   getAll(): Subscription[] {
     return Array.from(this.subscriptions.values())
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-      .map(sub => this.clone(sub));
+      .map((sub) => this.clone(sub));
   }
 
   clear(): void {
@@ -114,9 +114,7 @@ export class SubscriptionManager implements ISubscriptionManager {
     return {
       ...subscription,
       createdAt: new Date(subscription.createdAt.getTime()),
-      lastExecutedAt: subscription.lastExecutedAt
-        ? new Date(subscription.lastExecutedAt.getTime())
-        : undefined,
+      lastExecutedAt: subscription.lastExecutedAt ? new Date(subscription.lastExecutedAt.getTime()) : undefined,
     };
   }
 }

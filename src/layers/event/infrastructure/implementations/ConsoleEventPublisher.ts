@@ -1,6 +1,6 @@
 /**
  * ConsoleEventPublisher - Infrastructure Implementation
- * 
+ *
  * Console-based event publisher for debugging and logging.
  * Outputs events to console for development purposes.
  */
@@ -44,7 +44,7 @@ export class ConsoleEventPublisher implements IEventPublisher {
 
   async publishBatch(events: Event[]): Promise<PublishResult[]> {
     const results: PublishResult[] = [];
-    
+
     for (const event of events) {
       const result = await this.publish(event);
       results.push(result);

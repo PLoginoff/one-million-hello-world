@@ -3,19 +3,16 @@ import { IService } from '../../service/interfaces/IService';
 
 export function createMetricsHandler(service: IService): HandlerFunction {
   return async (context) => {
-    const serviceContext = service.createContext(
-      context.userId,
-      context.correlationId,
-      context.requestId
-    );
+    const serviceContext = service.createContext(context.userId, context.correlationId, context.requestId);
 
-    const result = await service.execute<
-      { requestId: string; correlationId: string },
-      Record<string, unknown>
-    >('GetMetrics', {
-      requestId: context.requestId,
-      correlationId: context.correlationId,
-    }, serviceContext);
+    const result = await service.execute<{ requestId: string; correlationId: string }, Record<string, unknown>>(
+      'GetMetrics',
+      {
+        requestId: context.requestId,
+        correlationId: context.correlationId,
+      },
+      serviceContext
+    );
 
     if (!result.success || !result.data) {
       return {

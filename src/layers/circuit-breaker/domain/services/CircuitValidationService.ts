@@ -1,6 +1,6 @@
 /**
  * Circuit Validation Service
- * 
+ *
  * Domain service for validating circuit breaker operations and configurations.
  * Provides validation logic for circuit states, thresholds, and operations.
  */
@@ -79,11 +79,7 @@ export class CircuitValidationService {
   /**
    * Validate circuit state transition
    */
-  validateStateTransition(
-    currentState: string,
-    newState: string,
-    metrics: CircuitMetrics,
-  ): ValidationResult {
+  validateStateTransition(currentState: string, newState: string, metrics: CircuitMetrics): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 

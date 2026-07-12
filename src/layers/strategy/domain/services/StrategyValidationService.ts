@@ -1,6 +1,6 @@
 /**
  * Strategy Validation Service
- * 
+ *
  * Domain service for validating strategy operations and configurations.
  * Provides validation logic for strategies, feature flags, and executions.
  */
@@ -146,7 +146,11 @@ export class StrategyValidationService {
       });
     }
 
-    if (flag.getConditions().length === 0 && flag.getTargetAudience().length === 0 && flag.getRolloutPercentage() === 0) {
+    if (
+      flag.getConditions().length === 0 &&
+      flag.getTargetAudience().length === 0 &&
+      flag.getRolloutPercentage() === 0
+    ) {
       warnings.push({
         field: 'conditions',
         message: 'Flag has no conditions, audience, or rollout',

@@ -1,6 +1,6 @@
 /**
  * LFU (Least Frequently Used) Eviction Strategy
- * 
+ *
  * Evicts the least frequently used cache entry.
  */
 

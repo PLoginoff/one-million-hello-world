@@ -1,6 +1,6 @@
 /**
  * Compression Configuration Validators
- * 
+ *
  * Exports configuration validators.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Middleware Configuration Builder
- * 
+ *
  * Fluent builder for creating middleware configurations.
  */
 

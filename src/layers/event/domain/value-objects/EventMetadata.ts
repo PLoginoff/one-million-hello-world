@@ -1,6 +1,6 @@
 /**
  * EventMetadata - Value Object
- * 
+ *
  * Contains metadata about an event (timestamp, source, correlation ID, etc.).
  * Immutable value object for event context and tracing.
  */

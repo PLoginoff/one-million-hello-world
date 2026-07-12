@@ -16,10 +16,7 @@ export class UnitOfWorkEntity {
   }
 
   static create(data: Record<string, unknown>): UnitOfWorkEntity {
-    return new UnitOfWorkEntity(
-      `unit-of-work-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new UnitOfWorkEntity(`unit-of-work-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

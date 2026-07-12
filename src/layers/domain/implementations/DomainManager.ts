@@ -1,18 +1,12 @@
 /**
  * Domain Manager Implementation
- * 
+ *
  * Concrete implementation of IDomainManager.
  * Handles entity management, value objects, and domain events.
  */
 
 import { IDomainManager } from '../interfaces/IDomainManager';
-import {
-  DomainEntity,
-  ValueObject,
-  DomainEvent,
-  DomainResult,
-  DomainError,
-} from '../types/domain-types';
+import { DomainEntity, ValueObject, DomainEvent, DomainResult, DomainError } from '../types/domain-types';
 
 export class DomainManager implements IDomainManager {
   private _entities: Map<string, DomainEntity>;

@@ -1,6 +1,6 @@
 /**
  * Rate Limiter Implementation
- * 
+ *
  * Concrete implementation of IRateLimiter.
  * Supports multiple rate limiting strategies (token bucket, sliding window, etc.).
  */
@@ -65,7 +65,10 @@ export class RateLimiter implements IRateLimiter {
   private _quotas: Map<string, RateLimitQuota>;
   private _checkStartTime: number;
 
-  private _internalLayerBuckets: Map<string, TokenBucketState | SlidingWindowState | FixedWindowState | LeakyBucketState>;
+  private _internalLayerBuckets: Map<
+    string,
+    TokenBucketState | SlidingWindowState | FixedWindowState | LeakyBucketState
+  >;
   private _internalLayerConfigs: Map<InternalLayer, InternalLayerRateLimitConfig>;
   private _internalLayerStats: Map<InternalLayer, LayerRateLimitStats>;
   private _crossLayerConfigs: Map<string, CrossLayerRateLimitConfig>;
@@ -201,11 +204,7 @@ export class RateLimiter implements IRateLimiter {
     return `${sourceLayer}->${targetLayer}`;
   }
 
-  checkRateLimit(
-    request: HttpRequest,
-    context?: SecurityContext,
-    identifier?: RateLimitIdentifier
-  ): RateLimitResult {
+  checkRateLimit(request: HttpRequest, context?: SecurityContext, identifier?: RateLimitIdentifier): RateLimitResult {
     this._stats.totalRequests++;
 
     const id = identifier || this.extractIdentifier(request, context);
@@ -219,10 +218,20 @@ export class RateLimiter implements IRateLimiter {
       this._stats.deniedRequests++;
     }
 
+    const existingInfo = this._bucketInfo.get(bucketKey);
+    this._bucketInfo.set(bucketKey, {
+      identifier: id,
+      strategy: this._config.strategy,
+      state: this._buckets.get(bucketKey)!,
+      createdAt: existingInfo?.createdAt || new Date(),
+      lastAccessed: new Date(),
+      accessCount: (existingInfo?.accessCount || 0) + 1,
+    });
+
     return result;
   }
 
-  setRateLimitConfig(config: RateLimitConfig): void {
+  setRateLimitConfig(config: Partial<RateLimitConfig>): void {
     this._config = { ...this._config, ...config };
   }
 
@@ -261,10 +270,7 @@ export class RateLimiter implements IRateLimiter {
     this._buckets.clear();
   }
 
-  extractIdentifier(
-    request: HttpRequest,
-    context?: SecurityContext
-  ): RateLimitIdentifier {
+  extractIdentifier(request: HttpRequest, context?: SecurityContext): RateLimitIdentifier {
     if (context?.isAuthenticated && context.userId) {
       return {
         type: RateLimitIdentifierType.USER_ID,
@@ -292,7 +298,7 @@ export class RateLimiter implements IRateLimiter {
 
     if (!bucket) {
       bucket = {
-        tokens: this._config.burstSize,
+        tokens: this._config.requestsPerWindow,
         lastRefill: now,
       };
       this._buckets.set(bucketKey, bucket);
@@ -300,14 +306,9 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const timeSinceLastRefill = now.getTime() - bucket.lastRefill.getTime();
-    const refillAmount = Math.floor(
-      (timeSinceLastRefill / this._config.windowSizeMs) * this._config.requestsPerWindow
-    );
+    const refillAmount = Math.floor((timeSinceLastRefill / this._config.windowSizeMs) * this._config.requestsPerWindow);
 
-    bucket.tokens = Math.min(
-      bucket.tokens + refillAmount,
-      this._config.requestsPerWindow
-    );
+    bucket.tokens = Math.min(bucket.tokens + refillAmount, this._config.requestsPerWindow);
     bucket.lastRefill = now;
 
     if (bucket.tokens >= 1) {
@@ -366,15 +367,13 @@ export class RateLimiter implements IRateLimiter {
     const now = new Date();
     let window = this._buckets.get(bucketKey) as SlidingWindowState | undefined;
 
-    if (!window) {
+    if (!window || !('timestamps' in window)) {
       window = { timestamps: [] };
       this._buckets.set(bucketKey, window);
       this._stats.totalBucketsCreated++;
     }
 
-    window.timestamps = window.timestamps.filter(
-      (ts) => now.getTime() - ts.getTime() < this._config.windowSizeMs
-    );
+    window.timestamps = window.timestamps.filter((ts) => now.getTime() - ts.getTime() < this._config.windowSizeMs);
 
     if (window.timestamps.length < this._config.requestsPerWindow) {
       window.timestamps.push(now);
@@ -398,9 +397,7 @@ export class RateLimiter implements IRateLimiter {
         retryAfter: Math.ceil(this._config.windowSizeMs / 1000),
       };
     }
-    const retryAfter = Math.ceil(
-      (oldestTimestamp.getTime() + this._config.windowSizeMs - now.getTime()) / 1000
-    );
+    const retryAfter = Math.ceil((oldestTimestamp.getTime() + this._config.windowSizeMs - now.getTime()) / 1000);
 
     return {
       allowed: false,
@@ -437,9 +434,7 @@ export class RateLimiter implements IRateLimiter {
     }
 
     this._stats.deniedRequests++;
-    const retryAfter = Math.ceil(
-      (window.windowStart.getTime() + this._config.windowSizeMs - now.getTime()) / 1000
-    );
+    const retryAfter = Math.ceil((window.windowStart.getTime() + this._config.windowSizeMs - now.getTime()) / 1000);
 
     return {
       allowed: false,
@@ -466,14 +461,9 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const timeSinceLastLeak = now.getTime() - bucket.lastLeak.getTime();
-    const leakAmount = Math.floor(
-      (timeSinceLastLeak / this._config.windowSizeMs) * this._config.requestsPerWindow
-    );
+    const leakAmount = Math.floor((timeSinceLastLeak / this._config.windowSizeMs) * this._config.requestsPerWindow);
 
-    bucket.tokens = Math.min(
-      bucket.tokens + leakAmount,
-      this._config.requestsPerWindow
-    );
+    bucket.tokens = Math.min(bucket.tokens + leakAmount, this._config.requestsPerWindow);
     bucket.lastLeak = now;
 
     if (bucket.queueSize > 0 && bucket.tokens > 0) {
@@ -611,10 +601,20 @@ export class RateLimiter implements IRateLimiter {
     ];
 
     const failedChecks = checks.filter((c) => c.status === 'fail').length;
-    const score = Math.max(0, 100 - failedChecks * 25);
+    const warnChecks = checks.filter((c) => c.status === 'warn').length;
+    const score = Math.max(0, 100 - failedChecks * 25 - warnChecks * 15);
+
+    let status: 'healthy' | 'degraded' | 'unhealthy';
+    if (failedChecks === 0 && warnChecks === 0) {
+      status = 'healthy';
+    } else if (failedChecks === 0) {
+      status = 'degraded';
+    } else {
+      status = failedChecks < 3 ? 'degraded' : 'unhealthy';
+    }
 
     return {
-      status: failedChecks === 0 ? 'healthy' : failedChecks < 3 ? 'degraded' : 'unhealthy',
+      status,
       score,
       checks,
       lastCheck: new Date(),
@@ -688,12 +688,12 @@ export class RateLimiter implements IRateLimiter {
 
     for (const [key, bucket] of this._buckets.entries()) {
       if (bucket instanceof Object && 'lastRefill' in bucket) {
-        const tokenBucket = bucket as TokenBucketState;
+        const tokenBucket = bucket;
         if (now.getTime() - tokenBucket.lastRefill.getTime() > this._config.windowSizeMs * 2) {
           expiredKeys.push(key);
         }
       } else if (bucket instanceof Object && 'windowStart' in bucket) {
-        const fixedWindow = bucket as FixedWindowState;
+        const fixedWindow = bucket;
         if (now.getTime() - fixedWindow.windowStart.getTime() > this._config.windowSizeMs * 2) {
           expiredKeys.push(key);
         }
@@ -821,10 +821,7 @@ export class RateLimiter implements IRateLimiter {
     };
   }
 
-  private _checkTokenBucketForLayer(
-    bucketKey: string,
-    config: InternalLayerRateLimitConfig
-  ): RateLimitResult {
+  private _checkTokenBucketForLayer(bucketKey: string, config: InternalLayerRateLimitConfig): RateLimitResult {
     const now = new Date();
     let bucket = this._internalLayerBuckets.get(bucketKey) as TokenBucketState | undefined;
 
@@ -837,9 +834,7 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const timeSinceLastRefill = now.getTime() - bucket.lastRefill.getTime();
-    const refillAmount = Math.floor(
-      (timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow
-    );
+    const refillAmount = Math.floor((timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow);
 
     bucket.tokens = Math.min(bucket.tokens + refillAmount, config.requestsPerWindow);
     bucket.lastRefill = now;
@@ -910,10 +905,7 @@ export class RateLimiter implements IRateLimiter {
     return layers.map((layer) => this.getLayerRateLimitStats(layer));
   }
 
-  checkCrossLayerRateLimit(
-    sourceLayer: InternalLayer,
-    targetLayer: InternalLayer
-  ): CrossLayerRateLimitResult {
+  checkCrossLayerRateLimit(sourceLayer: InternalLayer, targetLayer: InternalLayer): CrossLayerRateLimitResult {
     const bucketKey = this._getCrossLayerBucketKey(sourceLayer, targetLayer);
     const config = this._crossLayerConfigs.get(bucketKey);
 
@@ -940,9 +932,7 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const timeSinceLastRefill = now.getTime() - bucket.lastRefill.getTime();
-    const refillAmount = Math.floor(
-      (timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow
-    );
+    const refillAmount = Math.floor((timeSinceLastRefill / config.windowSizeMs) * config.requestsPerWindow);
 
     bucket.tokens = Math.min(bucket.tokens + refillAmount, config.requestsPerWindow);
     bucket.lastRefill = now;
@@ -1021,9 +1011,7 @@ export class RateLimiter implements IRateLimiter {
   }
 
   addLayerDependency(source: InternalLayer, target: InternalLayer, weight: number): void {
-    const edgeIndex = this._layerDependencyGraph.edges.findIndex(
-      (e) => e.source === source && e.target === target
-    );
+    const edgeIndex = this._layerDependencyGraph.edges.findIndex((e) => e.source === source && e.target === target);
 
     if (edgeIndex >= 0) {
       const edge = this._layerDependencyGraph.edges[edgeIndex];
@@ -1050,9 +1038,7 @@ export class RateLimiter implements IRateLimiter {
   }
 
   removeLayerDependency(source: InternalLayer, target: InternalLayer): void {
-    const edgeIndex = this._layerDependencyGraph.edges.findIndex(
-      (e) => e.source === source && e.target === target
-    );
+    const edgeIndex = this._layerDependencyGraph.edges.findIndex((e) => e.source === source && e.target === target);
 
     if (edgeIndex >= 0) {
       this._layerDependencyGraph.edges.splice(edgeIndex, 1);
@@ -1098,7 +1084,8 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const score = Math.max(0, 100 - issues.length * 25);
-    const healthStatus: 'healthy' | 'degraded' | 'unhealthy' = issues.length === 0 ? 'healthy' : issues.length < 3 ? 'degraded' : 'unhealthy';
+    const healthStatus: 'healthy' | 'degraded' | 'unhealthy' =
+      issues.length === 0 ? 'healthy' : issues.length < 3 ? 'degraded' : 'unhealthy';
 
     const updatedStatus: LayerHealthStatus = {
       layer,
@@ -1134,10 +1121,7 @@ export class RateLimiter implements IRateLimiter {
     return { ...this._adaptiveConfig };
   }
 
-  predictRateLimitUsage(
-    identifier: RateLimitIdentifier,
-    timeWindow: Date
-  ): RateLimitPrediction {
+  predictRateLimitUsage(identifier: RateLimitIdentifier, timeWindow: Date): RateLimitPrediction {
     const bucketKey = this._getBucketKey(identifier);
     const bucket = this._buckets.get(bucketKey) as TokenBucketState | undefined;
 

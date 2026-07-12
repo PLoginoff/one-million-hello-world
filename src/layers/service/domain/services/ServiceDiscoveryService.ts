@@ -1,6 +1,6 @@
 /**
  * Service Discovery Service
- * 
+ *
  * Provides service discovery and health checking.
  */
 
@@ -77,9 +77,7 @@ export class ServiceDiscoveryService {
    * Get healthy services
    */
   getHealthyServices(): ServiceRegistration[] {
-    return Array.from(this.registrations.values()).filter(
-      r => r.status.isHealthy()
-    );
+    return Array.from(this.registrations.values()).filter((r) => r.status.isHealthy());
   }
 
   /**

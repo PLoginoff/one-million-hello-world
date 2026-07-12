@@ -1,6 +1,6 @@
 /**
  * Network Configuration Builder
- * 
+ *
  * Fluent builder for creating network configurations.
  */
 

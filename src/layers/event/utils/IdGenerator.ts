@@ -1,6 +1,6 @@
 /**
  * IdGenerator - Utility
- * 
+ *
  * Generates unique identifiers for events and subscriptions.
  * Supports multiple ID generation strategies.
  */
@@ -75,11 +75,11 @@ export class IdGenerator {
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     const length = this._options.length || 21;
     let id = '';
-    
+
     for (let i = 0; i < length; i++) {
       id += alphabet[Math.floor(Math.random() * alphabet.length)];
     }
-    
+
     return id;
   }
 
@@ -106,11 +106,11 @@ export class IdGenerator {
   private _generateRandomString(length: number): string {
     const chars = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
     let result = '';
-    
+
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    
+
     return result;
   }
 }

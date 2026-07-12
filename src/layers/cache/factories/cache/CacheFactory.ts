@@ -1,6 +1,6 @@
 /**
  * Cache Factory
- * 
+ *
  * Factory for creating fully configured cache instances.
  */
 
@@ -38,7 +38,7 @@ export class CacheFactory {
       evictionStrategy,
       invalidationStrategy,
       statsCollector,
-      cacheConfig,
+      cacheConfig
     );
 
     return new CacheManager<T>(cacheConfig);

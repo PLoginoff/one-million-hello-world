@@ -16,10 +16,7 @@ export class WriteModelEntity {
   }
 
   static create(data: Record<string, unknown>): WriteModelEntity {
-    return new WriteModelEntity(
-      `write-model-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new WriteModelEntity(`write-model-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

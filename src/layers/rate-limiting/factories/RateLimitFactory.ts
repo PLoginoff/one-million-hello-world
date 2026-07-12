@@ -1,6 +1,6 @@
 /**
  * Rate Limit Factory
- * 
+ *
  * Factory for creating rate limiting components and configurations.
  */
 
@@ -134,11 +134,7 @@ export class RateLimitFactory {
   /**
    * Create rate limit entity
    */
-  static createRateLimitEntity(
-    identifier: string,
-    limit: number,
-    window: number
-  ): RateLimitEntity {
+  static createRateLimitEntity(identifier: string, limit: number, window: number): RateLimitEntity {
     return RateLimitEntity.createNew(identifier, limit, window);
   }
 

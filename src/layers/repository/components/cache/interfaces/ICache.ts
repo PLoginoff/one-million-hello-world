@@ -1,6 +1,6 @@
 /**
  * Cache Interface
- * 
+ *
  * Defines the contract for caching operations with TTL and eviction policies.
  */
 
@@ -19,7 +19,7 @@ import {
 export interface ICache<T = unknown> {
   /**
    * Gets a value from cache
-   * 
+   *
    * @param key - Cache key
    * @returns Cache result with value
    */
@@ -27,7 +27,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Sets a value in cache
-   * 
+   *
    * @param key - Cache key
    * @param value - Value to cache
    * @param ttl - Optional TTL override
@@ -37,7 +37,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Deletes a value from cache
-   * 
+   *
    * @param key - Cache key
    * @returns Cache result
    */
@@ -45,7 +45,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Checks if a key exists in cache
-   * 
+   *
    * @param key - Cache key
    * @returns Cache result with boolean
    */
@@ -53,14 +53,14 @@ export interface ICache<T = unknown> {
 
   /**
    * Clears all values from cache
-   * 
+   *
    * @returns Cache result
    */
   clear(): Promise<CacheResult<void>>;
 
   /**
    * Gets multiple values from cache
-   * 
+   *
    * @param keys - Array of cache keys
    * @returns Cache result with map of values
    */
@@ -68,7 +68,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Sets multiple values in cache
-   * 
+   *
    * @param entries - Map of key-value pairs
    * @param ttl - Optional TTL override
    * @returns Cache result
@@ -77,7 +77,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Deletes multiple values from cache
-   * 
+   *
    * @param keys - Array of cache keys
    * @returns Cache result
    */
@@ -85,7 +85,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Invalidates cache entries matching a pattern
-   * 
+   *
    * @param pattern - Cache key pattern
    * @param strategy - Invalidation strategy
    * @returns Cache result
@@ -94,7 +94,7 @@ export interface ICache<T = unknown> {
 
   /**
    * Gets cache statistics
-   * 
+   *
    * @returns Cache statistics
    */
   getStats(): CacheStats;
@@ -106,35 +106,35 @@ export interface ICache<T = unknown> {
 
   /**
    * Sets cache configuration
-   * 
+   *
    * @param config - Cache configuration
    */
   setConfig(config: Partial<CacheConfig>): void;
 
   /**
    * Gets current cache configuration
-   * 
+   *
    * @returns Current cache configuration
    */
   getConfig(): CacheConfig;
 
   /**
    * Sets eviction policy
-   * 
+   *
    * @param policy - Eviction policy
    */
   setEvictionPolicy(policy: EvictionPolicy): void;
 
   /**
    * Gets current eviction policy
-   * 
+   *
    * @returns Current eviction policy
    */
   getEvictionPolicy(): EvictionPolicy;
 
   /**
    * Warms up cache with pre-defined data
-   * 
+   *
    * @param data - Map of key-value pairs
    * @param ttl - Optional TTL override
    * @returns Cache result
@@ -143,14 +143,14 @@ export interface ICache<T = unknown> {
 
   /**
    * Gets the size of cache in bytes
-   * 
+   *
    * @returns Cache size
    */
   getSize(): number;
 
   /**
    * Gets the number of entries in cache
-   * 
+   *
    * @returns Number of entries
    */
   getEntryCount(): number;

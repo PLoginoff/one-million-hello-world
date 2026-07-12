@@ -16,10 +16,7 @@ export class Oauth2Entity {
   }
 
   static create(data: Record<string, unknown>): Oauth2Entity {
-    return new Oauth2Entity(
-      `oauth2-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-      data
-    );
+    return new Oauth2Entity(`oauth2-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, data);
   }
 
   toJSON(): Record<string, unknown> {

@@ -1,6 +1,6 @@
 /**
  * Manual Invalidation Strategy
- * 
+ *
  * Only invalidates when explicitly requested.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Logging Middleware
- * 
+ *
  * Middleware that logs data processing in the pipeline.
  */
 
@@ -49,9 +49,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
     const startTime = Date.now();
 
-    this._logger.debug(
-      `Processing ${context.operation} with ${this._name} middleware`
-    );
+    this._logger.debug(`Processing ${context.operation} with ${this._name} middleware`);
 
     if (this._logData) {
       this._logger.debug(`Data: ${JSON.stringify(context.data).substring(0, 100)}...`);
@@ -61,9 +59,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
     const duration = Date.now() - startTime;
 
-    this._logger.log(
-      `Completed ${context.operation} in ${duration}ms with ${this._name} middleware`
-    );
+    this._logger.log(`Completed ${context.operation} in ${duration}ms with ${this._name} middleware`);
 
     return result;
   }
@@ -74,7 +70,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Enables or disables the middleware
-   * 
+   *
    * @param enabled - Enable flag
    * @returns This middleware for chaining
    */
@@ -85,7 +81,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Checks if the middleware is enabled
-   * 
+   *
    * @returns True if enabled
    */
   isEnabled(): boolean {
@@ -94,7 +90,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Sets whether to log data content
-   * 
+   *
    * @param logData - Log data flag
    * @returns This middleware for chaining
    */
@@ -105,7 +101,7 @@ export class LoggingMiddleware<T = unknown> implements IMiddleware<T> {
 
   /**
    * Sets the logger
-   * 
+   *
    * @param logger - New logger
    * @returns This middleware for chaining
    */

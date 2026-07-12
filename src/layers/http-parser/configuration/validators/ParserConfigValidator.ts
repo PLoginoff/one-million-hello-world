@@ -1,6 +1,6 @@
 /**
  * Parser Configuration Validator
- * 
+ *
  * Validates parser configuration options.
  */
 

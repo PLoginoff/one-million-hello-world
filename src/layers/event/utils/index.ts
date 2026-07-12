@@ -1,6 +1,6 @@
 /**
  * Utils Layer
- * 
+ *
  * Utility classes for event validation, serialization, ID generation, and building.
  */
 

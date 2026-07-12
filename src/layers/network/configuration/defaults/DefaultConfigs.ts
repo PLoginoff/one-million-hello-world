@@ -1,6 +1,6 @@
 /**
  * Default Network Configurations
- * 
+ *
  * Pre-configured settings for common network scenarios.
  */
 

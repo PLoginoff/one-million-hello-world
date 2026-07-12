@@ -1,6 +1,6 @@
 /**
  * Default Validation Configurations
- * 
+ *
  * Pre-configured settings for common validation scenarios.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Text Content Negotiator
- * 
+ *
  * Handles text content type negotiation.
  */
 

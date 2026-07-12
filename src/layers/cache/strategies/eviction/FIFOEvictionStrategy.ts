@@ -1,6 +1,6 @@
 /**
  * FIFO (First In First Out) Eviction Strategy
- * 
+ *
  * Evicts the oldest cache entry based on insertion order.
  */
 
@@ -49,7 +49,7 @@ export class FIFOEvictionStrategy<T> implements IEvictionStrategy<T> {
   }
 
   onRemove(key: string): void {
-    this.insertionOrder = this.insertionOrder.filter(k => k !== key);
+    this.insertionOrder = this.insertionOrder.filter((k) => k !== key);
   }
 
   reset(): void {

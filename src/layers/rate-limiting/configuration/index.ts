@@ -1,6 +1,6 @@
 /**
  * Configuration Layer
- * 
+ *
  * Exports all configuration-related components.
  */
 

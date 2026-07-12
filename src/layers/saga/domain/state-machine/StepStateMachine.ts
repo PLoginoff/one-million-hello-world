@@ -54,7 +54,7 @@ export class StepStateMachine {
    */
   transition(newState: StepState, context?: unknown): boolean {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    const transition = validTransitions.find(t => t.to === newState);
+    const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
@@ -76,7 +76,7 @@ export class StepStateMachine {
    */
   canTransition(newState: StepState, context?: unknown): boolean {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    const transition = validTransitions.find(t => t.to === newState);
+    const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
@@ -94,9 +94,7 @@ export class StepStateMachine {
    */
   getValidNextStates(context?: unknown): StepState[] {
     const validTransitions = this._transitions.get(this._currentState) || [];
-    return validTransitions
-      .filter(t => !t.condition || t.condition(context || this._context))
-      .map(t => t.to);
+    return validTransitions.filter((t) => !t.condition || t.condition(context || this._context)).map((t) => t.to);
   }
 
   /**
@@ -134,7 +132,7 @@ export class StepStateMachine {
    */
   removeTransition(from: StepState, to: StepState): void {
     const transitions = this._transitions.get(from) || [];
-    const filtered = transitions.filter(t => t.to !== to);
+    const filtered = transitions.filter((t) => t.to !== to);
     this._transitions.set(from, filtered);
   }
 

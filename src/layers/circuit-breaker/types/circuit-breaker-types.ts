@@ -1,6 +1,6 @@
 /**
  * Circuit Breaker Layer Types
- * 
+ *
  * This module defines all type definitions for the Circuit Breaker Layer,
  * including fault tolerance and fallback strategies.
  */

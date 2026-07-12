@@ -1,6 +1,6 @@
 /**
  * Storage Interfaces
- * 
+ *
  * Exports storage interfaces.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Repository Configuration Builder
- * 
+ *
  * Fluent builder for creating repository configurations.
  */
 

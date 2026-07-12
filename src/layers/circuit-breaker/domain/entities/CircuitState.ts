@@ -1,6 +1,6 @@
 /**
  * Circuit State Entity
- * 
+ *
  * Represents the current state of a circuit breaker with metadata.
  * Immutable entity that tracks state transitions and timing.
  */
@@ -19,7 +19,7 @@ export class CircuitStateEntity {
     previousState: string = 'CLOSED',
     transitions: StateTransition[] = [],
     metadata?: StateMetadata,
-    maxHistorySize: number = 100,
+    maxHistorySize: number = 100
   ) {
     this.currentState = currentState;
     this.previousState = previousState;
@@ -90,13 +90,7 @@ export class CircuitStateEntity {
       currentStateDuration: 0,
     };
 
-    return new CircuitStateEntity(
-      newState,
-      this.currentState,
-      newTransitions,
-      newMetadata,
-      this._maxHistorySize,
-    );
+    return new CircuitStateEntity(newState, this.currentState, newTransitions, newMetadata, this._maxHistorySize);
   }
 
   /**
@@ -108,7 +102,7 @@ export class CircuitStateEntity {
       this.previousState,
       [...this.transitions],
       { ...this.metadata },
-      this._maxHistorySize,
+      this._maxHistorySize
     );
   }
 
@@ -121,7 +115,7 @@ export class CircuitStateEntity {
       this.previousState,
       [...this.transitions],
       { ...this.metadata, ...updates },
-      this._maxHistorySize,
+      this._maxHistorySize
     );
   }
 

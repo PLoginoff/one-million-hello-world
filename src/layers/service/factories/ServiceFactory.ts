@@ -1,6 +1,6 @@
 /**
  * Service Factory
- * 
+ *
  * Factory for creating service components and configurations.
  */
 

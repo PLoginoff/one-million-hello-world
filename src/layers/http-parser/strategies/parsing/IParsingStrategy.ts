@@ -1,6 +1,6 @@
 /**
  * Parsing Strategy Interface
- * 
+ *
  * Defines contract for different HTTP parsing strategies.
  */
 
@@ -15,7 +15,10 @@ export interface IParsingStrategy {
   /**
    * Parse HTTP request with this strategy
    */
-  parseRequest(raw: any, config: ParserConfigOptions): {
+  parseRequest(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;
@@ -24,7 +27,10 @@ export interface IParsingStrategy {
   /**
    * Parse HTTP response with this strategy
    */
-  parseResponse(raw: any, config: ParserConfigOptions): {
+  parseResponse(
+    raw: any,
+    config: ParserConfigOptions
+  ): {
     success: boolean;
     data?: any;
     error?: string;

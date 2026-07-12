@@ -1,6 +1,6 @@
 /**
  * Compression Default Configurations
- * 
+ *
  * Provides default configuration presets for different use cases.
  */
 

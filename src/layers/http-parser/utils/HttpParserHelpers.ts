@@ -1,6 +1,6 @@
 /**
  * HTTP Parser Helpers
- * 
+ *
  * Utility functions for HTTP parsing operations.
  */
 
@@ -16,7 +16,7 @@ export class HttpParserHelpers {
    * Find empty line index (separates headers from body)
    */
   static findEmptyLine(lines: string[]): number {
-    return lines.findIndex(line => line.trim() === '');
+    return lines.findIndex((line) => line.trim() === '');
   }
 
   /**
@@ -36,7 +36,10 @@ export class HttpParserHelpers {
   /**
    * Parse key-value pair from string
    */
-  static parseKeyValue(line: string, separator: string = ':'): {
+  static parseKeyValue(
+    line: string,
+    separator: string = ':'
+  ): {
     key: string | null;
     value: string | null;
   } {
@@ -140,7 +143,7 @@ export class HttpParserHelpers {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   /**
@@ -175,8 +178,8 @@ export class HttpParserHelpers {
     if (obj instanceof Date) return new Date(obj.getTime()) as any;
     if (obj instanceof Map) return new Map(Array.from(obj.entries())) as any;
     if (obj instanceof Set) return new Set(Array.from(obj.values())) as any;
-    if (obj instanceof Array) return obj.map(item => this.deepClone(item)) as any;
-    
+    if (obj instanceof Array) return obj.map((item) => this.deepClone(item)) as any;
+
     const clonedObj = {} as T;
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {

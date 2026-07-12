@@ -1,6 +1,6 @@
 /**
  * Compression Configuration Builders
- * 
+ *
  * Exports configuration builders.
  */
 

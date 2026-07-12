@@ -44,6 +44,7 @@ export class NetworkManager implements INetworkManager {
   private _maxConnections: number;
   private _connectionQueue: ConnectionRequest[];
   private _startTime: Date;
+  private _lastTimestamp: number;
   private _connectionStats: Map<string, NetworkStats>;
 
   constructor() {
@@ -106,6 +107,7 @@ export class NetworkManager implements INetworkManager {
     this._maxConnections = 100;
     this._connectionQueue = [];
     this._startTime = new Date();
+    this._lastTimestamp = 0;
     this._connectionStats = new Map();
   }
 
@@ -263,7 +265,7 @@ export class NetworkManager implements INetworkManager {
     return { ...this._poolConfig };
   }
 
-  setPoolConfig(config: ConnectionPoolConfig): void {
+  setPoolConfig(config: Partial<ConnectionPoolConfig>): void {
     this._poolConfig = { ...this._poolConfig, ...config };
   }
 
@@ -271,7 +273,7 @@ export class NetworkManager implements INetworkManager {
     return { ...this._securityConfig };
   }
 
-  setSecurityConfig(config: SecurityConfig): void {
+  setSecurityConfig(config: Partial<SecurityConfig>): void {
     this._securityConfig = { ...this._securityConfig, ...config };
   }
 
@@ -279,7 +281,7 @@ export class NetworkManager implements INetworkManager {
     return { ...this._bandwidthConfig };
   }
 
-  setBandwidthConfig(config: BandwidthConfig): void {
+  setBandwidthConfig(config: Partial<BandwidthConfig>): void {
     this._bandwidthConfig = { ...this._bandwidthConfig, ...config };
   }
 
@@ -287,7 +289,7 @@ export class NetworkManager implements INetworkManager {
     return { ...this._monitoringConfig };
   }
 
-  setMonitoringConfig(config: MonitoringConfig): void {
+  setMonitoringConfig(config: Partial<MonitoringConfig>): void {
     this._monitoringConfig = { ...this._monitoringConfig, ...config };
   }
 
@@ -452,6 +454,15 @@ export class NetworkManager implements INetworkManager {
     return [...this._connectionHistory];
   }
 
+  private _generateTimestamp(): Date {
+    let now = Date.now();
+    if (now <= this._lastTimestamp) {
+      now = this._lastTimestamp + 1;
+    }
+    this._lastTimestamp = now;
+    return new Date(now);
+  }
+
   exportState(): NetworkState {
     const connectionStates = new Map<string, ConnectionState>();
     for (const [id, conn] of this._connections) {
@@ -465,7 +476,7 @@ export class NetworkManager implements INetworkManager {
       securityConfig: { ...this._securityConfig },
       bandwidthConfig: { ...this._bandwidthConfig },
       monitoringConfig: { ...this._monitoringConfig },
-      timestamp: new Date(),
+      timestamp: this._generateTimestamp(),
     };
   }
 

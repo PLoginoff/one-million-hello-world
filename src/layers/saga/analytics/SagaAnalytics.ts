@@ -39,7 +39,7 @@ export class SagaAnalytics {
    */
   generateReport(startTime: number, endTime: number): AnalyticsReport {
     const filtered = this._executions.filter(
-      e => e.metadata.getStartTime() >= startTime && e.metadata.getStartTime() <= endTime
+      (e) => e.metadata.getStartTime() >= startTime && e.metadata.getStartTime() <= endTime
     );
 
     return {
@@ -62,13 +62,14 @@ export class SagaAnalytics {
   getTrend(period: 'hour' | 'day' | 'week'): Array<{ timestamp: number; count: number }> {
     const trend: Array<{ timestamp: number; count: number }> = [];
     const now = Date.now();
-    const periodMs = period === 'hour' ? 60 * 60 * 1000 : period === 'day' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+    const periodMs =
+      period === 'hour' ? 60 * 60 * 1000 : period === 'day' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
 
     for (let i = 0; i < 24; i++) {
       const start = now - (i + 1) * periodMs;
       const end = now - i * periodMs;
       const count = this._executions.filter(
-        e => e.metadata.getStartTime() >= start && e.metadata.getStartTime() < end
+        (e) => e.metadata.getStartTime() >= start && e.metadata.getStartTime() < end
       ).length;
 
       trend.push({ timestamp: start, count });
@@ -80,12 +81,15 @@ export class SagaAnalytics {
   /**
    * Get saga performance comparison
    */
-  compareSagaPerformance(sagaId1: string, sagaId2: string): {
+  compareSagaPerformance(
+    sagaId1: string,
+    sagaId2: string
+  ): {
     saga1: { avgDuration: number; successRate: number };
     saga2: { avgDuration: number; successRate: number };
   } {
-    const exec1 = this._executions.filter(e => e.sagaId === sagaId1);
-    const exec2 = this._executions.filter(e => e.sagaId === sagaId2);
+    const exec1 = this._executions.filter((e) => e.sagaId === sagaId1);
+    const exec2 = this._executions.filter((e) => e.sagaId === sagaId2);
 
     return {
       saga1: {
@@ -108,13 +112,13 @@ export class SagaAnalytics {
 
   private _calculateSuccessRate(executions: SagaExecutionEntity[]): number {
     if (executions.length === 0) return 0;
-    const successful = executions.filter(e => e.status === 'completed').length;
+    const successful = executions.filter((e) => e.status === 'completed').length;
     return (successful / executions.length) * 100;
   }
 
   private _calculateFailureRate(executions: SagaExecutionEntity[]): number {
     if (executions.length === 0) return 0;
-    const failed = executions.filter(e => e.status === 'failed').length;
+    const failed = executions.filter((e) => e.status === 'failed').length;
     return (failed / executions.length) * 100;
   }
 
@@ -126,14 +130,14 @@ export class SagaAnalytics {
 
   private _calculatePercentile(executions: SagaExecutionEntity[], percentile: number): number {
     if (executions.length === 0) return 0;
-    const durations = executions.map(e => e.getDuration()).sort((a, b) => a - b);
+    const durations = executions.map((e) => e.getDuration()).sort((a, b) => a - b);
     const index = Math.ceil((percentile / 100) * durations.length) - 1;
     return durations[index] || 0;
   }
 
   private _getTopFailureReasons(executions: SagaExecutionEntity[]): Array<{ reason: string; count: number }> {
     const reasons: Record<string, number> = {};
-    const failed = executions.filter(e => e.status === 'failed');
+    const failed = executions.filter((e) => e.status === 'failed');
 
     for (const execution of failed) {
       const reason = execution.metadata.getErrorMessage() || 'Unknown';
@@ -148,7 +152,7 @@ export class SagaAnalytics {
 
   private _calculateCompensationRate(executions: SagaExecutionEntity[]): number {
     if (executions.length === 0) return 0;
-    const compensated = executions.filter(e => e.status === 'compensated').length;
+    const compensated = executions.filter((e) => e.status === 'compensated').length;
     return (compensated / executions.length) * 100;
   }
 }

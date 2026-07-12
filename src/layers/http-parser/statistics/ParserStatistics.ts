@@ -1,6 +1,6 @@
 /**
  * Parser Statistics
- * 
+ *
  * Tracks and aggregates HTTP parser performance metrics.
  */
 

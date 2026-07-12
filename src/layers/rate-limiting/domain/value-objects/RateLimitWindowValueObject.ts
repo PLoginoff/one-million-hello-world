@@ -1,6 +1,6 @@
 /**
  * Rate Limit Window Value Object
- * 
+ *
  * Represents a time window for rate limiting.
  */
 

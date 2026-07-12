@@ -1,6 +1,6 @@
 /**
  * Data Transformer Implementation
- * 
+ *
  * Concrete implementation of IDataTransformer.
  * Handles normalization, enrichment, and mapping.
  */
@@ -37,7 +37,7 @@ export class DataTransformer implements IDataTransformer {
 
     for (const key in normalized) {
       if (typeof normalized[key] === 'string') {
-        normalized[key] = (normalized[key] as string).trim().toLowerCase();
+        normalized[key] = normalized[key].trim().toLowerCase();
       }
     }
 
@@ -90,33 +90,29 @@ export class DataTransformer implements IDataTransformer {
     return { success: true, data: target as U };
   }
 
-  transform<T, U>(
-    data: T,
-    rules?: TransformationRule[],
-    enrichment?: EnrichmentData,
-  ): TransformationResult<U> {
+  transform<T, U>(data: T, rules?: TransformationRule[], enrichment?: EnrichmentData): TransformationResult<U> {
     let result: TransformationResult<T> = { success: true, data };
 
     if (this._config.enableNormalization) {
-      result = this.normalize(result.data as T);
+      result = this.normalize(result.data!);
       if (!result.success) {
         return { success: false, errors: result.errors } as any;
       }
     }
 
     if (this._config.enableEnrichment && enrichment) {
-      result = this.enrich(result.data as T, enrichment);
+      result = this.enrich(result.data!, enrichment);
       if (!result.success) {
         return { success: false, errors: result.errors } as any;
       }
     }
 
     if (this._config.enableMapping && rules) {
-      const mappedResult = this.map(result.data as T, rules);
+      const mappedResult = this.map(result.data!, rules);
       return mappedResult as TransformationResult<U>;
     }
 
-    return { success: true, data: result.data as unknown as U };
+    return { success: true, data: result.data! as unknown as U };
   }
 
   setConfig(config: TransformationConfig): void {

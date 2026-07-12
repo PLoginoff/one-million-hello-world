@@ -1,6 +1,6 @@
 /**
  * Asynchronous Service Strategy
- * 
+ *
  * Executes service asynchronously.
  */
 

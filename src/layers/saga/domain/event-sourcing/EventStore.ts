@@ -37,7 +37,7 @@ export class InMemoryEventStore implements EventStore {
 
   async getEventsFromVersion(executionId: string, version: number): Promise<SagaEvent[]> {
     const events = this._storage.get(executionId) || [];
-    return events.filter(e => e.getVersion() >= version);
+    return events.filter((e) => e.getVersion() >= version);
   }
 
   async getLastEvent(executionId: string): Promise<SagaEvent | null> {
@@ -50,7 +50,7 @@ export class InMemoryEventStore implements EventStore {
 
   async getEventsByType(executionId: string, eventType: string): Promise<SagaEvent[]> {
     const events = this._storage.get(executionId) || [];
-    return events.filter(e => e.getEventType() === eventType);
+    return events.filter((e) => e.getEventType() === eventType);
   }
 
   async deleteEvents(executionId: string): Promise<void> {

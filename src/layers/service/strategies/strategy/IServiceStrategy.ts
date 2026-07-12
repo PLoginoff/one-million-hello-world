@@ -1,6 +1,6 @@
 /**
  * Service Strategy Interface
- * 
+ *
  * Defines contract for different service strategies.
  */
 

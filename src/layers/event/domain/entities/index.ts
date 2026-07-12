@@ -1,6 +1,6 @@
 /**
  * Domain Entities
- * 
+ *
  * Exports all domain entities.
  */
 

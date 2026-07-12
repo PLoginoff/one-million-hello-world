@@ -1,12 +1,12 @@
 /**
  * Middleware Layer
- * 
+ *
  * This module exports all public interfaces, implementations, and types
  * for the Middleware Layer (Layer 6 of the 25-layer architecture).
- * 
+ *
  * The Middleware Layer provides logging, metrics, tracing,
  * and correlation ID management.
- * 
+ *
  * @module MiddlewareLayer
  */
 

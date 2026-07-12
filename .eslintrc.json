@@ -28,6 +28,7 @@
     "prefer-const": "error",
     "no-var": "error"
   },
+  "ignorePatterns": ["dist/**", "node_modules/**", "**/__tests__/**", "**/*.test.ts", "**/*.spec.ts"],
   "env": {
     "node": true,
     "es2022": true

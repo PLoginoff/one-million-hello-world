@@ -1,6 +1,6 @@
 /**
  * Router Interface
- * 
+ *
  * Defines the contract for routing operations
  * including route matching, parameter extraction, wildcards,
  * route groups, caching, statistics, and advanced filtering.
@@ -28,14 +28,14 @@ import {
 export interface IRouter {
   /**
    * Registers a new route
-   * 
+   *
    * @param route - Route definition to register
    */
   registerRoute(route: Route): void;
 
   /**
    * Matches a request to a registered route
-   * 
+   *
    * @param request - HTTP request to match
    * @returns Route match result
    */
@@ -43,14 +43,14 @@ export interface IRouter {
 
   /**
    * Gets all registered routes
-   * 
+   *
    * @returns Array of registered routes
    */
   getRoutes(): Route[];
 
   /**
    * Removes a route by path and method
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    */
@@ -63,42 +63,42 @@ export interface IRouter {
 
   /**
    * Sets router configuration
-   * 
+   *
    * @param config - Router configuration
    */
-  setConfig(config: RouterConfig): void;
+  setConfig(config: Partial<RouterConfig>): void;
 
   /**
    * Gets current router configuration
-   * 
+   *
    * @returns Current router configuration
    */
   getConfig(): RouterConfig;
 
   /**
    * Registers a route group
-   * 
+   *
    * @param group - Route group definition
    */
   registerRouteGroup(group: RouteGroup): void;
 
   /**
    * Removes a route group by name
-   * 
+   *
    * @param name - Route group name
    */
   removeRouteGroup(name: string): void;
 
   /**
    * Gets all registered route groups
-   * 
+   *
    * @returns Array of registered route groups
    */
   getRouteGroups(): RouteGroup[];
 
   /**
    * Gets routes filtered by criteria
-   * 
+   *
    * @param filter - Route filter criteria
    * @returns Array of filtered routes
    */
@@ -106,7 +106,7 @@ export interface IRouter {
 
   /**
    * Gets a route by path and method
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    * @returns Route or undefined
@@ -115,7 +115,7 @@ export interface IRouter {
 
   /**
    * Updates a route
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    * @param updates - Route updates
@@ -124,7 +124,7 @@ export interface IRouter {
 
   /**
    * Enables a route
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    */
@@ -132,7 +132,7 @@ export interface IRouter {
 
   /**
    * Disables a route
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    */
@@ -140,7 +140,7 @@ export interface IRouter {
 
   /**
    * Sets route status
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    * @param status - Route status
@@ -149,7 +149,7 @@ export interface IRouter {
 
   /**
    * Sets route priority
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    * @param priority - Route priority
@@ -158,42 +158,42 @@ export interface IRouter {
 
   /**
    * Registers middleware
-   * 
+   *
    * @param middleware - Middleware definition
    */
   registerMiddleware(middleware: MiddlewareDefinition): void;
 
   /**
    * Removes middleware by name
-   * 
+   *
    * @param name - Middleware name
    */
   removeMiddleware(name: string): void;
 
   /**
    * Gets all registered middleware
-   * 
+   *
    * @returns Array of middleware definitions
    */
   getMiddleware(): MiddlewareDefinition[];
 
   /**
    * Enables middleware
-   * 
+   *
    * @param name - Middleware name
    */
   enableMiddleware(name: string): void;
 
   /**
    * Disables middleware
-   * 
+   *
    * @param name - Middleware name
    */
   disableMiddleware(name: string): void;
 
   /**
    * Gets route statistics
-   * 
+   *
    * @returns Route statistics
    */
   getStatistics(): RouteStatistics;
@@ -205,7 +205,7 @@ export interface IRouter {
 
   /**
    * Validates a route
-   * 
+   *
    * @param route - Route to validate
    * @returns Validation result
    */
@@ -213,14 +213,14 @@ export interface IRouter {
 
   /**
    * Validates all registered routes
-   * 
+   *
    * @returns Array of validation results
    */
   validateAllRoutes(): ValidationResult[];
 
   /**
    * Gets route metadata
-   * 
+   *
    * @param method - HTTP method
    * @param path - Route path
    * @returns Route metadata
@@ -229,7 +229,7 @@ export interface IRouter {
 
   /**
    * Gets all route metadata
-   * 
+   *
    * @returns Array of route metadata
    */
   getAllRouteMetadata(): RouteMetadata[];
@@ -241,14 +241,14 @@ export interface IRouter {
 
   /**
    * Gets cache size
-   * 
+   *
    * @returns Cache size
    */
   getCacheSize(): number;
 
   /**
    * Gets routes by tag
-   * 
+   *
    * @param tag - Route tag
    * @returns Array of routes with the tag
    */
@@ -256,7 +256,7 @@ export interface IRouter {
 
   /**
    * Gets routes by group
-   * 
+   *
    * @param group - Route group name
    * @returns Array of routes in the group
    */
@@ -264,7 +264,7 @@ export interface IRouter {
 
   /**
    * Gets routes by method
-   * 
+   *
    * @param method - HTTP method
    * @returns Array of routes with the method
    */
@@ -272,7 +272,7 @@ export interface IRouter {
 
   /**
    * Gets routes by status
-   * 
+   *
    * @param status - Route status
    * @returns Array of routes with the status
    */
@@ -280,7 +280,7 @@ export interface IRouter {
 
   /**
    * Gets routes by priority
-   * 
+   *
    * @param priority - Route priority
    * @returns Array of routes with the priority
    */
