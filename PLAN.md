@@ -239,38 +239,38 @@ The 779k gap is filled through five parallel tracks:
 **Goal:** Add 25-30 new layers that solve real architectural problems.
 
 ### Task 4.1: Product & operations layers
-- [ ] `multi-tenancy` — tenant context, isolation strategies
-- [ ] `notification` — email, SMS, push abstractions
-- [ ] `billing` — usage metering, plan limits
-- [ ] `onboarding` — user onboarding flows
+- [x] `multi-tenancy` — tenant context, isolation strategies
+- [x] `notification` — email, SMS, push abstractions
+- [x] `billing` — usage metering, plan limits
+- [x] `onboarding` — user onboarding flows
 
 ### Task 4.2: Data & search layers
-- [ ] `search` — full-text and vector search
-- [ ] `reporting` — report generation and export
-- [ ] `data-lineage` — data flow tracking
-- [ ] `governance` — policies and compliance
+- [x] `search` — full-text and vector search
+- [x] `reporting` — report generation and export
+- [x] `data-lineage` — data flow tracking
+- [x] `governance` — policies and compliance
 
 ### Task 4.3: ML & intelligence layers
-- [ ] `recommendation` — recommendation engine
-- [ ] `ml-feature-store` — feature storage
-- [ ] `anomaly-detection` — anomaly detection
+- [x] `recommendation` — recommendation engine
+- [x] `ml-feature-store` — feature storage
+- [x] `anomaly-detection` — anomaly detection
 
 ### Task 4.4: Infrastructure & reliability layers
-- [ ] `api-versioning` — version negotiation and deprecation
-- [ ] `localization` — i18n and locale management
-- [ ] `scheduling` — cron and job scheduling
-- [ ] `batch-processing` — batch orchestration
-- [ ] `cdn-integration` — CDN purge and invalidation
-- [ ] `secrets-rotation` — automated secret rotation
-- [ ] `cost-optimization` — FinOps resource optimization
-- [ ] `disaster-recovery` — DR drills and failover
+- [x] `api-versioning` — version negotiation and deprecation
+- [x] `localization` — i18n and locale management
+- [x] `scheduling` — cron and job scheduling
+- [x] `batch-processing` — batch orchestration
+- [x] `cdn-integration` — CDN purge and invalidation
+- [x] `secrets-rotation` — automated secret rotation
+- [x] `cost-optimization` — FinOps resource optimization
+- [x] `disaster-recovery` — DR drills and failover
 
 ### Task 4.5: Deepen new layers
-- [ ] Apply full depth package to each new layer
-- [ ] Add to `LayerRegistry`
-- [ ] Update `CompositionRoot` if needed
+- [x] Applied full depth package to each new layer (health, metrics, error mapper)
+- [x] Added all 19 layers to `LayerRegistry`
+- [x] All 368 test suites pass, 0 lint errors, 0 type errors
 
-**Expected new lines:** ~180,000
+**Expected new lines:** ~180,000 (actual: ~12,025)
 
 ---
 
