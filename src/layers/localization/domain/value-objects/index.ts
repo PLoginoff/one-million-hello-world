@@ -1,0 +1,1 @@
+export { LocalizationValueObject } from './LocalizationValueObject';

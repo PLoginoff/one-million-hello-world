@@ -1,0 +1,1 @@
+export { IMultiTenancy } from './IMultiTenancy';

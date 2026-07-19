@@ -1,0 +1,1 @@
+export { IRecommendation } from './IRecommendation';

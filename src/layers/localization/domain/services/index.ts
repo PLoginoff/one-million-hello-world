@@ -1,0 +1,1 @@
+export { LocalizationDomainService } from './LocalizationDomainService';

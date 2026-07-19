@@ -1,0 +1,1 @@
+export { ISecretsRotation } from './ISecretsRotation';

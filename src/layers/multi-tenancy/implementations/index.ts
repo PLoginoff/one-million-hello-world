@@ -1,0 +1,1 @@
+export { MultiTenancy } from './MultiTenancy';

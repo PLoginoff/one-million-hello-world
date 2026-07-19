@@ -1,0 +1,1 @@
+export { GovernanceValueObject } from './GovernanceValueObject';

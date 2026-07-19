@@ -1,0 +1,1 @@
+export { IGovernance } from './IGovernance';

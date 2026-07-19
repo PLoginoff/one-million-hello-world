@@ -1,0 +1,1 @@
+export { SearchDomainService } from './SearchDomainService';

@@ -1,0 +1,1 @@
+export { AnomalyDetectionValueObject } from './AnomalyDetectionValueObject';

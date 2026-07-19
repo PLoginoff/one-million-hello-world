@@ -1,0 +1,1 @@
+export { GovernanceDomainService } from './GovernanceDomainService';

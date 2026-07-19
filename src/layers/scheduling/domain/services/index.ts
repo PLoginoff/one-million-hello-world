@@ -1,0 +1,1 @@
+export { SchedulingDomainService } from './SchedulingDomainService';

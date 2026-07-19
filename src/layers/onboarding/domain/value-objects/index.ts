@@ -1,0 +1,1 @@
+export { OnboardingValueObject } from './OnboardingValueObject';

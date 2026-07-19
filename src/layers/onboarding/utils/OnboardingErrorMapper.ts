@@ -1,0 +1,36 @@
+import { OnboardingError } from './OnboardingError';
+
+export interface MappedOnboardingError {
+  code: string;
+  message: string;
+  statusCode: number;
+  retryable: boolean;
+}
+
+export class OnboardingErrorMapper {
+  private static readonly _retryableCodes: Set<string> = new Set(['EXECUTION_FAILED', 'TIMEOUT']);
+
+  static map(error: Error | OnboardingError): MappedOnboardingError {
+    if (error instanceof OnboardingError) {
+      return {
+        code: error.code,
+        message: error.message,
+        statusCode: error.statusCode,
+        retryable: this._retryableCodes.has(error.code),
+      };
+    }
+    return {
+      code: 'INTERNAL_ERROR',
+      message: error.message || 'An unexpected onboarding error occurred',
+      statusCode: 500,
+      retryable: false,
+    };
+  }
+
+  static isRetryable(error: Error | OnboardingError): boolean {
+    return this.map(error).retryable;
+  }
+  static registerRetryableCode(code: string): void {
+    this._retryableCodes.add(code);
+  }
+}

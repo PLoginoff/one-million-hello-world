@@ -1,0 +1,1 @@
+export { MultiTenancyValueObject } from './MultiTenancyValueObject';

@@ -1,0 +1,28 @@
+import { CdnIntegration } from '../implementations/CdnIntegration';
+import { CdnIntegrationContext } from '../types/cdn-integration-types';
+
+function createContext(input: unknown): CdnIntegrationContext {
+  return { input, metadata: {}, timestamp: new Date() };
+}
+
+describe('CdnIntegration', () => {
+  let instance: CdnIntegration;
+
+  beforeEach(() => { instance = new CdnIntegration(); });
+
+  it('should execute successfully', async () => {
+    const result = await instance.execute(createContext('test'));
+    expect(result.success).toBe(true);
+  });
+
+  it('should configure', () => {
+    instance.configure({ key: 'value' });
+    const status = instance.getStatus();
+    expect(status.initialized).toBe(true);
+  });
+
+  it('should return status', () => {
+    const status = instance.getStatus();
+    expect(status.layer).toBe('cdn-integration');
+  });
+});

@@ -58,6 +58,25 @@ import { ChaosEngineering } from '../layers/chaos-engineering/implementations/Ch
 import { PerformanceTesting } from '../layers/performance-testing/implementations/PerformanceTesting';
 import { MutationTesting } from '../layers/mutation-testing/implementations/MutationTesting';
 import { PropertyTesting } from '../layers/property-testing/implementations/PropertyTesting';
+import { MultiTenancy } from '../layers/multi-tenancy/implementations/MultiTenancy';
+import { Notification } from '../layers/notification/implementations/Notification';
+import { Billing } from '../layers/billing/implementations/Billing';
+import { Onboarding } from '../layers/onboarding/implementations/Onboarding';
+import { Search } from '../layers/search/implementations/Search';
+import { Reporting } from '../layers/reporting/implementations/Reporting';
+import { DataLineage } from '../layers/data-lineage/implementations/DataLineage';
+import { Governance } from '../layers/governance/implementations/Governance';
+import { Recommendation } from '../layers/recommendation/implementations/Recommendation';
+import { MlFeatureStore } from '../layers/ml-feature-store/implementations/MlFeatureStore';
+import { AnomalyDetection } from '../layers/anomaly-detection/implementations/AnomalyDetection';
+import { ApiVersioning } from '../layers/api-versioning/implementations/ApiVersioning';
+import { Localization } from '../layers/localization/implementations/Localization';
+import { Scheduling } from '../layers/scheduling/implementations/Scheduling';
+import { BatchProcessing } from '../layers/batch-processing/implementations/BatchProcessing';
+import { CdnIntegration } from '../layers/cdn-integration/implementations/CdnIntegration';
+import { SecretsRotation } from '../layers/secrets-rotation/implementations/SecretsRotation';
+import { CostOptimization } from '../layers/cost-optimization/implementations/CostOptimization';
+import { DisasterRecovery } from '../layers/disaster-recovery/implementations/DisasterRecovery';
 
 export class LayerRegistry {
   readonly apiGateway = new ApiGateway();
@@ -120,6 +139,25 @@ export class LayerRegistry {
   readonly performanceTesting = new PerformanceTesting();
   readonly mutationTesting = new MutationTesting();
   readonly propertyTesting = new PropertyTesting();
+  readonly multiTenancy = new MultiTenancy();
+  readonly notification = new Notification();
+  readonly billing = new Billing();
+  readonly onboarding = new Onboarding();
+  readonly search = new Search();
+  readonly reporting = new Reporting();
+  readonly dataLineage = new DataLineage();
+  readonly governance = new Governance();
+  readonly recommendation = new Recommendation();
+  readonly mlFeatureStore = new MlFeatureStore();
+  readonly anomalyDetection = new AnomalyDetection();
+  readonly apiVersioning = new ApiVersioning();
+  readonly localization = new Localization();
+  readonly scheduling = new Scheduling();
+  readonly batchProcessing = new BatchProcessing();
+  readonly cdnIntegration = new CdnIntegration();
+  readonly secretsRotation = new SecretsRotation();
+  readonly costOptimization = new CostOptimization();
+  readonly disasterRecovery = new DisasterRecovery();
 
   getLayerCount(): number {
     return Object.keys(this).length + 25;

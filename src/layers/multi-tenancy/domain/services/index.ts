@@ -1,0 +1,1 @@
+export { MultiTenancyDomainService } from './MultiTenancyDomainService';

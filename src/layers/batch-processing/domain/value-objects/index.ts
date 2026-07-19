@@ -1,0 +1,1 @@
+export { BatchProcessingValueObject } from './BatchProcessingValueObject';
