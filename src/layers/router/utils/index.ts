@@ -6,3 +6,4 @@
 
 export { RouterError } from './RouterError';
 export { RouterHelpers } from './RouterHelpers';
+export { RouterErrorMapper, MappedRouterError } from './RouterErrorMapper';

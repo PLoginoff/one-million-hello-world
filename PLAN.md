@@ -136,13 +136,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~3,500
 
 ### Task 2.5: Router Layer
-- [ ] Add `IRouterStrategy` (exact, prefix, regex)
-- [ ] Add strategies
-- [ ] Add `RouterFactory`
-- [ ] Add `RouterConfigBuilder`, profiles, validator
-- [ ] Add `RouterHealthCheck`, `RouterMetricsCollector`
-- [ ] Add `RouterError` taxonomy
-- [ ] Write tests and integration test: Middleware → Router
+- [x] Add `IRouterStrategy` (exact, prefix, regex) (already existed: Sequential, Trie)
+- [x] Add strategies (`RegexRoutingStrategy`, `PrefixRoutingStrategy`)
+- [x] Add `RouterFactory` (already existed)
+- [x] Add `RouterConfigBuilder`, profiles, validator (already existed)
+- [x] Add `RouterHealthCheck`, `RouterMetricsCollector`
+- [x] Add `RouterError` taxonomy (already existed) + `RouterErrorMapper`
+- [x] Write tests (27 new tests)
 
 **Expected new lines:** ~2,700
 
