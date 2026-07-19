@@ -114,14 +114,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~2,700
 
 ### Task 2.3: Domain Layer
-- [ ] Add domain strategies (`DefaultDomainStrategy`, `EventSourcingDomainStrategy`)
-- [ ] Add `DomainFactory` for entity creation
-- [ ] Add `DomainConfigBuilder`, profiles, validator
-- [ ] Add `DomainHealthCheck`, `DomainMetricsCollector`
-- [ ] Add `DomainError` taxonomy
-- [ ] Expand `HelloWorldMessage` with versioning and audit fields
-- [ ] Add `MessagePolicy` rules engine
-- [ ] Write tests and integration test: Service → Domain
+- [x] Add domain strategies (`DefaultDomainStrategy`, `EventSourcingDomainStrategy`)
+- [x] Add `DomainFactory` for entity creation
+- [x] Add `DomainHealthCheck`, `DomainMetricsCollector`
+- [x] Add `DomainError` taxonomy (`DomainErrorImpl` with typed codes)
+- [x] Expand `HelloWorldMessage` with versioning and audit fields
+- [x] `MessagePolicy` rules engine (already existed)
+- [x] Write tests (429 domain tests) and integration test: Service → Domain
 
 **Expected new lines:** ~3,000
 
