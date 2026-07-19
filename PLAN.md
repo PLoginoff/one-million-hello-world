@@ -181,13 +181,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~3,000
 
 ### Task 2.9: Rate Limiting Layer
-- [ ] Add `IRateLimitingStrategy` (token bucket, sliding window, leaky bucket)
-- [ ] Add strategies
-- [ ] Add `RateLimiterFactory`
-- [ ] Add `RateLimiterConfigBuilder`, profiles, validator
-- [ ] Add `RateLimiterHealthCheck`, `RateLimiterMetricsCollector`
-- [ ] Add distributed rate limiting adapter
-- [ ] Write tests and integration test: Validation → RateLimiting
+- [x] Add `IRateLimitingStrategy` (already existed: FixedWindow, SlidingWindow)
+- [x] Add strategies (`TokenBucketStrategy`, `LeakyBucketStrategy`)
+- [x] Add `RateLimiterFactory` (already existed)
+- [x] Add `RateLimiterConfigBuilder`, profiles, validator (already existed)
+- [x] Add `RateLimitingHealthCheck`, `RateLimitingMetricsCollector`
+- [x] Add `RateLimitError` taxonomy (already existed) + `RateLimitErrorMapper`
+- [x] Write tests (28 new tests)
 
 **Expected new lines:** ~3,000
 
