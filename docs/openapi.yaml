@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: One Million Hello World API
+  description: |
+    Enterprise-grade Hello World service demonstrating 104 architectural layers.
+    
+    ## Features
+    - Core pipeline: Network → HTTP → Router → Controller → Service → Domain → Repository
+    - Cross-cutting: Security, Rate Limiting, Validation, Middleware, Cache
+    - Infrastructure: Secrets, Encryption, Configuration, Service Discovery
+    - Observability: Health checks, Prometheus metrics, Audit logging
+    - ML: Recommendation, Anomaly Detection, Feature Store
+  version: 1.0.0
+  contact:
+    name: Devin AI
+    url: https://devin.ai
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: https://api.example.com
+    description: Production
+
+tags:
+  - name: Hello World
+    description: Core hello world endpoints
+  - name: Health
+    description: Health check endpoints
+  - name: Metrics
+    description: Prometheus metrics endpoint
+  - name: Admin
+    description: Administrative endpoints
+
+paths:
+  /hello-world:
+    get:
+      tags: [Hello World]
+      summary: Get Hello World message
+      description: Returns a Hello World message through the full pipeline
+      operationId: getHelloWorld
+      parameters:
+        - name: X-Request-Id
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Optional request ID for tracing
+        - name: Accept-Language
+          in: header
+          required: false
+          schema:
+            type: string
+            default: en
+          description: Language for the response (en, es, fr, de, ja)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloWorldResponse'
+              examples:
+                default:
+                  value:
+                    message: "Hello, World!"
+                    language: "en"
+                    timestamp: "2024-01-01T00:00:00Z"
+                spanish:
+                  value:
+                    message: "¡Hola, Mundo!"
+                    language: "es"
+                    timestamp: "2024-01-01T00:00:00Z"
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /hello-world/{id}:
+    get:
+      tags: [Hello World]
+      summary: Get specific Hello World message by ID
+      operationId: getHelloWorldById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Message ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloWorldResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns the health status of all layers
+      operationId: getHealth
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              example:
+                status: healthy
+                layers:
+                  - name: router
+                    status: healthy
+                  - name: controller
+                    status: healthy
+        '503':
+          description: System is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /metrics:
+    get:
+      tags: [Metrics]
+      summary: Prometheus metrics
+      description: Returns metrics in Prometheus text format
+      operationId: getMetrics
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                # HELP http_requests_total Total HTTP requests
+                # TYPE http_requests_total counter
+                http_requests_total{method="GET",status="200"} 12345
+
+  /admin/layers:
+    get:
+      tags: [Admin]
+      summary: List all layers
+      description: Returns status of all 104 architectural layers
+      operationId: listLayers
+      responses:
+        '200':
+          description: Layer list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  layers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LayerStatus'
+                  count:
+                    type: integer
+                    example: 104
+
+components:
+  schemas:
+    HelloWorldResponse:
+      type: object
+      required: [message, language, timestamp]
+      properties:
+        message:
+          type: string
+          example: "Hello, World!"
+        language:
+          type: string
+          example: "en"
+        timestamp:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          properties:
+            requestId:
+              type: string
+            traceId:
+              type: string
+            layer:
+              type: string
+
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        layers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LayerHealth'
+        timestamp:
+          type: string
+          format: date-time
+
+    LayerHealth:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        checks:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              status:
+                type: string
+              message:
+                type: string
+
+    LayerStatus:
+      type: object
+      properties:
+        name:
+          type: string
+        initialized:
+          type: boolean
+        configKeys:
+          type: array
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            statusCode:
+              type: integer
+            retryable:
+              type: boolean
+
+  responses:
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: RATE_LIMIT_EXCEEDED
+              message: "Rate limit exceeded. Try again in 60 seconds."
+              statusCode: 429
+              retryable: true
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: NOT_FOUND
+              message: "Resource not found"
+              statusCode: 404
+              retryable: false
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: INTERNAL_ERROR
+              message: "An unexpected error occurred"
+              statusCode: 500
+              retryable: false
