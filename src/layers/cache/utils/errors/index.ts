@@ -5,3 +5,4 @@
  */
 
 export { CacheError, CacheKeyError, CacheConfigError, CacheStorageError, CacheEvictionError } from './CacheError';
+export { CacheErrorMapper, MappedCacheError } from './CacheErrorMapper';

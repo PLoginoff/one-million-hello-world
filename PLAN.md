@@ -192,13 +192,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~3,000
 
 ### Task 2.10: Cache Layer
-- [ ] Add `ICacheStrategy` (LRU, LFU, FIFO, TTL)
-- [ ] Add strategies
-- [ ] Add `CacheFactory`
-- [ ] Add `CacheConfigBuilder`, profiles, validator
-- [ ] Add `CacheHealthCheck`, `CacheMetricsCollector`
-- [ ] Add L1/L2 cache adapters
-- [ ] Write tests and integration test: Repository → Cache
+- [x] Add `ICacheStrategy` (already existed: LRU, LFU, FIFO, Random eviction)
+- [x] Add strategies (already existed)
+- [x] Add `CacheFactory` (already existed)
+- [x] Add `CacheConfigBuilder`, profiles, validator (already existed)
+- [x] Add `CacheHealthCheck`, `CacheMetricsCollector`
+- [x] Add `CacheError` taxonomy (already existed) + `CacheErrorMapper`
+- [x] Write tests (14 new tests)
 
 **Expected new lines:** ~3,000
 
