@@ -6,3 +6,5 @@
 
 export * from './collectors';
 export * from './metrics';
+export { CircuitBreakerMetricsCollector } from './CircuitBreakerMetricsCollector';
+export type { CircuitBreakerMetrics } from './CircuitBreakerMetricsCollector';

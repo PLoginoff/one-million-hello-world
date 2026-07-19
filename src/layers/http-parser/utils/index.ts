@@ -6,3 +6,4 @@
 
 export { HttpParserError } from './HttpParserError';
 export { HttpParserHelpers } from './HttpParserHelpers';
+export { HttpParserErrorMapper, MappedHttpParserError } from './HttpParserErrorMapper';

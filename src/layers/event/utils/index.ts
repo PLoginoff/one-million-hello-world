@@ -8,3 +8,5 @@ export { EventValidator, ValidationResult, ValidationRule } from './EventValidat
 export { EventSerializer, SerializedEvent, SerializationFormat } from './EventSerializer';
 export { IdGenerator, IdGeneratorOptions, IdGenerationStrategy } from './IdGenerator';
 export { EventBuilder } from './EventBuilder';
+export { EventError } from './EventError';
+export { EventErrorMapper, MappedEventError } from './EventErrorMapper';

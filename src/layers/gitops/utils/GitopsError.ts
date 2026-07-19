@@ -1,0 +1,36 @@
+export class GitopsError extends Error {
+  readonly code: string;
+  readonly statusCode: number;
+
+  constructor(code: string, message: string, statusCode: number = 500) {
+    super(message);
+    this.name = 'GitopsError';
+    this.code = code;
+    this.statusCode = statusCode;
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+
+  static executionFailed(message: string = 'Gitops execution failed'): GitopsError {
+    return new GitopsError('EXECUTION_FAILED', message, 500);
+  }
+
+  static configurationError(message: string = 'Invalid gitops configuration'): GitopsError {
+    return new GitopsError('CONFIGURATION_ERROR', message, 400);
+  }
+
+  static notFound(message: string = 'Gitops resource not found'): GitopsError {
+    return new GitopsError('NOT_FOUND', message, 404);
+  }
+
+  toJSON(): { name: string; code: string; message: string; statusCode: number; stack?: string } {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+      statusCode: this.statusCode,
+      stack: this.stack,
+    };
+  }
+}

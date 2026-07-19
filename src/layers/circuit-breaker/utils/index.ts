@@ -6,3 +6,5 @@
 
 export * from './errors';
 export * from './helpers';
+export { CircuitBreakerError } from './CircuitBreakerError';
+export { CircuitBreakerErrorMapper, MappedCircuitBreakerError } from './CircuitBreakerErrorMapper';

@@ -5,3 +5,5 @@
  */
 
 export { ParserStatistics, ParserStats } from './ParserStatistics';
+export { HttpParserMetricsCollector } from './HttpParserMetricsCollector';
+export type { HttpParserMetrics } from './HttpParserMetricsCollector';

@@ -1,80 +1,35 @@
-/**
- * HTTP Parser Error
- *
- * Custom error class for HTTP parser errors.
- */
-
-import { ParseErrorCode } from '../types/http-parser-types';
-
 export class HttpParserError extends Error {
-  readonly code: ParseErrorCode;
-  readonly position?: number;
+  readonly code: string;
+  readonly statusCode: number;
 
-  constructor(code: ParseErrorCode, message: string, position?: number) {
+  constructor(code: string, message: string, statusCode: number = 500) {
     super(message);
     this.name = 'HttpParserError';
     this.code = code;
-    this.position = position;
-    Error.captureStackTrace(this, this.constructor);
+    this.statusCode = statusCode;
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 
-  /**
-   * Create invalid method error
-   */
-  static invalidMethod(method: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.INVALID_METHOD, `Invalid HTTP method: ${method}`, position);
+  static executionFailed(message: string = 'HttpParser execution failed'): HttpParserError {
+    return new HttpParserError('EXECUTION_FAILED', message, 500);
   }
 
-  /**
-   * Create invalid version error
-   */
-  static invalidVersion(version: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.INVALID_VERSION, `Invalid HTTP version: ${version}`, position);
+  static configurationError(message: string = 'Invalid http-parser configuration'): HttpParserError {
+    return new HttpParserError('CONFIGURATION_ERROR', message, 400);
   }
 
-  /**
-   * Create invalid header error
-   */
-  static invalidHeader(header: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.INVALID_HEADER, `Invalid header: ${header}`, position);
+  static notFound(message: string = 'HttpParser resource not found'): HttpParserError {
+    return new HttpParserError('NOT_FOUND', message, 404);
   }
 
-  /**
-   * Create invalid body error
-   */
-  static invalidBody(message: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.INVALID_BODY, message, position);
-  }
-
-  /**
-   * Create malformed request error
-   */
-  static malformedRequest(message: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.MALFORMED_REQUEST, message, position);
-  }
-
-  /**
-   * Create incomplete data error
-   */
-  static incompleteData(message: string, position?: number): HttpParserError {
-    return new HttpParserError(ParseErrorCode.INCOMPLETE_DATA, message, position);
-  }
-
-  /**
-   * Convert to plain object
-   */
-  toJSON(): {
-    name: string;
-    code: ParseErrorCode;
-    message: string;
-    position?: number;
-    stack?: string;
-  } {
+  toJSON(): { name: string; code: string; message: string; statusCode: number; stack?: string } {
     return {
       name: this.name,
       code: this.code,
       message: this.message,
-      position: this.position,
+      statusCode: this.statusCode,
       stack: this.stack,
     };
   }

@@ -16,3 +16,8 @@ export {
 export { InMemoryMetricsCollector } from './InMemoryMetricsCollector';
 export { MetricsRegistry } from './MetricsRegistry';
 export { TimingDecorator } from './TimingDecorator';
+export { SerializationPrometheusMetricsCollector } from './SerializationPrometheusMetricsCollector';
+export type {
+  SerializationPrometheusMetrics,
+  SerializationMetricSample,
+} from './SerializationPrometheusMetricsCollector';
