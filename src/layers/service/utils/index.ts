@@ -6,3 +6,4 @@
 
 export { ServiceError } from './ServiceError';
 export { ServiceHelpers } from './ServiceHelpers';
+export { ServiceErrorMapper, MappedServiceError } from './ServiceErrorMapper';

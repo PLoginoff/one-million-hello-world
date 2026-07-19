@@ -103,13 +103,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~2,700
 
 ### Task 2.2: Service Layer
-- [ ] Add `IServiceStrategy` interface
-- [ ] Add `DefaultServiceStrategy`, `CachingServiceStrategy`, `RetryServiceStrategy`
-- [ ] Add `ServiceFactory` (default, cached, retried)
-- [ ] Add `ServiceConfigBuilder`, profiles, validator
-- [ ] Add `ServiceHealthCheck` and `ServiceMetricsCollector`
-- [ ] Add `ServiceError` taxonomy
-- [ ] Write tests and integration test: Controller → Service
+- [x] Add `IServiceStrategy` interface (already existed)
+- [x] Add `DefaultServiceStrategy`, `CachingServiceStrategy`, `RetryServiceStrategy`
+- [x] Add `ServiceFactory` (default, cached, retried) (already existed)
+- [x] Add `ServiceConfigBuilder`, profiles, validator (already existed)
+- [x] Add `ServiceHealthCheck` and `ServiceMetricsCollector`
+- [x] Add `ServiceError` taxonomy (already existed) + `ServiceErrorMapper`
+- [x] Write tests (44 tests) and integration test: Controller → Service
 
 **Expected new lines:** ~2,700
 
