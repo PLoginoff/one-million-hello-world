@@ -6,3 +6,4 @@
 
 export { RepositoryError } from './RepositoryError';
 export { RepositoryHelpers } from './RepositoryHelpers';
+export { RepositoryErrorMapper, MappedRepositoryError } from './RepositoryErrorMapper';

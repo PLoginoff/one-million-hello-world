@@ -125,13 +125,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~3,000
 
 ### Task 2.4: Repository Layer
-- [ ] Add `IRepositoryAdapter` (in-memory, Redis, Postgres)
-- [ ] Add adapters implementation
-- [ ] Add `RepositoryFactory`
-- [ ] Add `RepositoryConfigBuilder`, profiles, validator
-- [ ] Add `RepositoryHealthCheck`, `RepositoryMetricsCollector`
-- [ ] Add `RepositoryError` taxonomy
-- [ ] Write tests and integration test: Domain → Repository
+- [x] Add `IRepositoryAdapter` (in-memory, Redis, Postgres)
+- [x] Add adapters implementation (`InMemoryAdapter`, `RedisAdapter`, `PostgresAdapter`)
+- [x] Add `RepositoryFactory` (already existed)
+- [x] Add `RepositoryConfigBuilder`, profiles, validator (already existed)
+- [x] Add `RepositoryHealthCheck`, `RepositoryMetricsCollector`
+- [x] Add `RepositoryError` taxonomy (already existed) + `RepositoryErrorMapper`
+- [x] Write tests (54 new tests) and integration test: Domain → Repository
 
 **Expected new lines:** ~3,500
 
