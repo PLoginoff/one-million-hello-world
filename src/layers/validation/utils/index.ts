@@ -5,3 +5,5 @@
  */
 
 export { ValidationHelpers } from './ValidationHelpers';
+export { ValidationError } from './ValidationError';
+export { ValidationErrorMapper, MappedValidationError } from './ValidationErrorMapper';

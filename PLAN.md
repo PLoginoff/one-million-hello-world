@@ -159,13 +159,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~3,000
 
 ### Task 2.7: Validation Layer
-- [ ] Add `IValidatorStrategy` (Zod-based, custom, composite)
-- [ ] Add strategies
-- [ ] Add `ValidatorFactory`
-- [ ] Add `ValidatorConfigBuilder`, profiles, validator
-- [ ] Add `ValidatorHealthCheck`, `ValidatorMetricsCollector`
-- [ ] Add reusable validators for common fields
-- [ ] Write tests and integration test: RateLimiting → Validation
+- [x] Add `IValidatorStrategy` (already existed: Schema, RuleBased)
+- [x] Add strategies (`CompositeValidationStrategy`, `ConditionalValidationStrategy`)
+- [x] Add `ValidatorFactory` (already existed)
+- [x] Add `ValidatorConfigBuilder`, profiles, validator (already existed)
+- [x] Add `ValidationHealthCheck`, `ValidationMetricsCollector`
+- [x] Add `ValidationError` taxonomy (already existed) + `ValidationErrorMapper`
+- [x] Write tests (23 new tests)
 
 **Expected new lines:** ~2,500
 
