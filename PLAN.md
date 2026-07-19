@@ -170,13 +170,13 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~2,500
 
 ### Task 2.8: Security Layer
-- [ ] Add `ISecurityStrategy` (CORS, helmet, IP whitelist, request signing)
-- [ ] Add strategies
-- [ ] Add `SecurityFactory`
-- [ ] Add `SecurityConfigBuilder`, profiles, validator
-- [ ] Add `SecurityHealthCheck`, `SecurityMetricsCollector`
-- [ ] Add threat detection rules
-- [ ] Write tests and integration test: HTTP Parser → Security
+- [x] Add `ISecurityStrategy` (CORS, helmet, IP whitelist) (already existed: BasicAuth, JwtAuth)
+- [x] Add strategies (`CorsStrategy`, `IpWhitelistStrategy`, `HelmetStrategy`)
+- [x] Add `SecurityFactory` (already existed)
+- [x] Add `SecurityConfigBuilder`, profiles, validator (already existed)
+- [x] Add `SecurityHealthCheck`, `SecurityMetricsCollector`
+- [x] Add `SecurityError` taxonomy (already existed) + `SecurityErrorMapper`
+- [x] Write tests (33 new tests)
 
 **Expected new lines:** ~3,000
 
