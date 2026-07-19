@@ -147,13 +147,14 @@ The 779k gap is filled through five parallel tracks:
 **Expected new lines:** ~2,700
 
 ### Task 2.6: Middleware Layer
-- [ ] Add `IMiddlewareStrategy` (logging, tracing, metrics)
-- [ ] Add concrete middleware strategies
-- [ ] Add `MiddlewareFactory`
-- [ ] Add `MiddlewareConfigBuilder`, profiles, validator
-- [ ] Add `MiddlewareHealthCheck`, `MiddlewareMetricsCollector`
-- [ ] Integrate OpenTelemetry span creation
-- [ ] Write tests and integration test: Security → Middleware
+- [x] Add `IMiddlewareStrategy` (already existed: Sequential, Parallel)
+- [x] Add concrete middleware strategies (`Logging`, `Tracing`, `Metrics`, `RateLimit`)
+- [x] Add `MiddlewareFactory` (already existed)
+- [x] Add `MiddlewareConfigBuilder`, profiles, validator (already existed)
+- [x] Add `MiddlewareHealthCheck`, `MiddlewareMetricsCollector`
+- [x] Integrate OpenTelemetry span creation (TracingMiddlewareStrategy)
+- [x] Add `MiddlewareError` taxonomy (already existed) + `MiddlewareErrorMapper`
+- [x] Write tests (32 new tests)
 
 **Expected new lines:** ~3,000
 

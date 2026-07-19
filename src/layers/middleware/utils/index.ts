@@ -6,3 +6,4 @@
 
 export { MiddlewareError } from './MiddlewareError';
 export { MiddlewareHelpers } from './MiddlewareHelpers';
+export { MiddlewareErrorMapper, MappedMiddlewareError } from './MiddlewareErrorMapper';
