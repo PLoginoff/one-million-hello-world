@@ -65,7 +65,7 @@ export abstract class BaseSerializationStrategy implements ISerializationStrateg
    * @param data - Data to deserialize
    * @returns Deserialized data or null if failed
    */
-  safeDeserialize(data: string): unknown | null {
+  safeDeserialize(data: string): unknown {
     try {
       return this.deserialize(data);
     } catch {

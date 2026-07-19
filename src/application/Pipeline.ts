@@ -9,20 +9,13 @@ export class Pipeline {
     this._composition = composition;
   }
 
-  middleware() {
-    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      try {
-        await this._process(req, res);
-      } catch (error) {
-        next(error);
-      }
+  middleware(): (req: Request, res: Response, next: NextFunction) => void {
+    return (req: Request, res: Response, next: NextFunction): void => {
+      void this._process(req, res).catch(next);
     };
   }
 
   private async _process(req: Request, res: Response): Promise<void> {
-    const requestId = this._extractRequestId(req);
-    const correlationId = this._extractCorrelationId(req);
-
     const httpRequest = this._adaptRequest(req);
     const route = this._composition.router.getRoute(req.method as HttpMethod, req.path);
 
@@ -46,8 +39,9 @@ export class Pipeline {
 
     if (!controllerResult.success || !controllerResult.response) {
       const status = controllerResult.response?.statusCode ?? 500;
+      const errorMessage = controllerResult.error?.message;
       res.status(status).json({
-        error: controllerResult.error?.message || 'Internal Server Error',
+        error: errorMessage != null && errorMessage !== '' ? errorMessage : 'Internal Server Error',
       });
       return;
     }
@@ -70,7 +64,8 @@ export class Pipeline {
       }
     });
 
-    const body = req.body ? Buffer.from(JSON.stringify(req.body)) : Buffer.alloc(0);
+    const requestBody: unknown = req.body;
+    const body = requestBody != null ? Buffer.from(JSON.stringify(requestBody)) : Buffer.alloc(0);
 
     return {
       line: {

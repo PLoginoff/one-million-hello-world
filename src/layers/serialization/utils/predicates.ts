@@ -6,11 +6,11 @@
 
 export type Predicate<T = unknown> = (value: T) => boolean;
 
-export function always<T>(value: T): Predicate<T> {
+export function always<T>(_value: T): Predicate<T> {
   return () => true;
 }
 
-export function never<T>(value: T): Predicate<T> {
+export function never<T>(_value: T): Predicate<T> {
   return () => false;
 }
 
@@ -43,7 +43,7 @@ export function between<T extends number>(min: T, max: T): Predicate<T> {
 }
 
 export function inRange<T extends number>(min: T, max: T, inclusive: boolean = true): Predicate<T> {
-  return inclusive ? between(min, max) : (value) => value > min && value < max;
+  return inclusive ? between(min, max) : (value: T): boolean => value > min && value < max;
 }
 
 export function contains<T>(expected: T): Predicate<T[]> {

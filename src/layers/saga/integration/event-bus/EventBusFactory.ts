@@ -28,7 +28,7 @@ export class EventBusFactory {
   /**
    * Create event bus by type
    */
-  static createByType(type: EventBusType, config: KafkaConfig | RabbitMQConfig): any {
+  static createByType(type: EventBusType, config: KafkaConfig | RabbitMQConfig): KafkaEventBus | RabbitMQEventBus {
     switch (type) {
       case 'kafka':
         return this.createKafka(config as KafkaConfig);

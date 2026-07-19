@@ -27,7 +27,7 @@ export class EvictionStrategyFactory {
       case InvalidationStrategy.MANUAL:
         return new RandomEvictionStrategy<T>();
       default:
-        throw new Error(`Unsupported eviction strategy: ${strategy}`);
+        throw new Error(`Unsupported eviction strategy: ${String(strategy)}`);
     }
   }
 

@@ -17,13 +17,14 @@ import {
   HealthCheck,
 } from '../types/network-types';
 import { v4 as uuidv4 } from 'uuid';
+import { Socket } from 'net';
 
 export class NetworkConnection implements INetworkConnection {
   private _id: string;
   private _state: ConnectionState;
   private _config: SocketConfig | null;
   private _connectionConfig: ConnectionConfig | null;
-  private _socket: any;
+  private _socket: Socket | null;
   private _timeout: number;
   private _remoteAddress: string | null;
   private _remotePort: number | null;
@@ -106,7 +107,7 @@ export class NetworkConnection implements INetworkConnection {
 
     this._state = ConnectionState.CLOSING;
 
-    if (this._socket) {
+    if (this._socket !== null) {
       await this._closeSocket();
     }
 
@@ -115,17 +116,22 @@ export class NetworkConnection implements INetworkConnection {
     this._remotePort = null;
   }
 
-  async send(data: NetworkBuffer): Promise<void> {
+  send(data: NetworkBuffer): Promise<void> {
     if (this._state !== ConnectionState.CONNECTED) {
-      throw new Error(`Cannot send data in state: ${this._state}`);
+      return Promise.reject(new Error(`Cannot send data in state: ${this._state}`));
     }
 
     return new Promise((resolve, reject) => {
+      if (this._socket === null) {
+        reject(new Error('Socket not available'));
+        return;
+      }
+
       const timeout = setTimeout(() => {
         reject(new Error('Send operation timeout'));
       }, this._timeout);
 
-      this._socket.write(data, (error: Error | null) => {
+      this._socket.write(data, (error?: Error | null) => {
         clearTimeout(timeout);
         if (error) {
           reject(error);
@@ -136,12 +142,17 @@ export class NetworkConnection implements INetworkConnection {
     });
   }
 
-  async receive(): Promise<NetworkBuffer> {
+  receive(): Promise<NetworkBuffer> {
     if (this._state !== ConnectionState.CONNECTED) {
-      throw new Error(`Cannot receive data in state: ${this._state}`);
+      return Promise.reject(new Error(`Cannot receive data in state: ${this._state}`));
     }
 
     return new Promise((resolve, reject) => {
+      if (this._socket === null) {
+        reject(new Error('Socket not available'));
+        return;
+      }
+
       const timeout = setTimeout(() => {
         reject(new Error('Receive operation timeout'));
       }, this._timeout);
@@ -183,21 +194,23 @@ export class NetworkConnection implements INetworkConnection {
   }
 
   async pause(): Promise<void> {
+    await Promise.resolve();
     if (this._state !== ConnectionState.CONNECTED) {
       throw new Error(`Cannot pause in state: ${this._state}`);
     }
     this._state = ConnectionState.PAUSED;
-    if (this._socket) {
+    if (this._socket !== null) {
       this._socket.pause();
     }
   }
 
   async resume(): Promise<void> {
+    await Promise.resolve();
     if (this._state !== ConnectionState.PAUSED) {
       throw new Error(`Cannot resume in state: ${this._state}`);
     }
     this._state = ConnectionState.CONNECTED;
-    if (this._socket) {
+    if (this._socket !== null) {
       this._socket.resume();
     }
   }
@@ -206,22 +219,22 @@ export class NetworkConnection implements INetworkConnection {
     this._reconnectionAttempts++;
     this._state = ConnectionState.RECONNECTING;
     await this.disconnect();
-    await this.connect(config || this._config!);
+    await this.connect(config ?? this._config!);
   }
 
   async sendWithOptions(data: NetworkBuffer, options: DataTransmissionOptions): Promise<void> {
     let processedData = data;
 
-    if (options.compress && this._compressionEnabled) {
+    if (options.compress === true && this._compressionEnabled) {
       processedData = this._compressData(data);
     }
 
-    if (options.encrypt && this._encryptionEnabled) {
+    if (options.encrypt === true && this._encryptionEnabled) {
       processedData = this._encryptData(data);
     }
 
-    if (options.retryOnFailure) {
-      const maxRetries = options.maxRetries || 3;
+    if (options.retryOnFailure === true) {
+      const maxRetries = options.maxRetries ?? 3;
       for (let i = 0; i < maxRetries; i++) {
         try {
           await this.send(processedData);
@@ -346,21 +359,21 @@ export class NetworkConnection implements INetworkConnection {
   }
 
   isWritable(): boolean {
-    return this._state === ConnectionState.CONNECTED && this._socket?.writable;
+    return this._state === ConnectionState.CONNECTED && this._socket !== null && this._socket.writable;
   }
 
   isReadable(): boolean {
-    return this._state === ConnectionState.CONNECTED && this._socket?.readable;
+    return this._state === ConnectionState.CONNECTED && this._socket !== null && this._socket.readable;
   }
 
   destroySoon(): void {
-    if (this._socket) {
+    if (this._socket !== null) {
       this._socket.end();
     }
   }
 
   destroy(): void {
-    if (this._socket) {
+    if (this._socket !== null) {
       this._socket.destroy();
     }
     this._state = ConnectionState.DISCONNECTED;
@@ -368,16 +381,16 @@ export class NetworkConnection implements INetworkConnection {
 
   getConfig(): ConnectionConfig {
     return (
-      this._connectionConfig || {
-        socket: this._config || { host: '', port: 0 },
+      this._connectionConfig ?? {
+        socket: this._config ?? { host: '', port: 0 },
       }
     );
   }
 
   updateConfig(config: Partial<ConnectionConfig>): void {
-    if (!this._connectionConfig) {
+    if (this._connectionConfig === null) {
       this._connectionConfig = {
-        socket: this._config || { host: '', port: 0 },
+        socket: this._config ?? { host: '', port: 0 },
         priority: this._priority,
       };
     }
@@ -394,25 +407,25 @@ export class NetworkConnection implements INetworkConnection {
 
   setSendBufferSize(size: number): void {
     this._sendBufferSize = size;
-    if (this._socket) {
-      this._socket.setSendBufferSize(size);
+    if (this._socket !== null) {
+      (this._socket as unknown as { setSendBufferSize(bufferSize: number): void }).setSendBufferSize(size);
     }
   }
 
   setReceiveBufferSize(size: number): void {
     this._receiveBufferSize = size;
-    if (this._socket) {
-      this._socket.setReceiveBufferSize(size);
+    if (this._socket !== null) {
+      (this._socket as unknown as { setReceiveBufferSize(bufferSize: number): void }).setReceiveBufferSize(size);
     }
   }
 
   getBufferedAmount(): number {
-    return this._socket ? this._socket.bufferSize : 0;
+    return this._socket !== null ? this._socket.bufferSize : 0;
   }
 
-  async flush(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!this._socket) {
+  flush(): Promise<void> {
+    return new Promise((resolve, _reject) => {
+      if (this._socket === null) {
         resolve();
         return;
       }
@@ -421,29 +434,28 @@ export class NetworkConnection implements INetworkConnection {
         resolve();
       });
 
-      if (!this._socket.writable) {
+      if (this._socket.writable === false) {
         resolve();
       }
     });
   }
 
-  private async _createSocket(config: SocketConfig): Promise<void> {
-    const net = require('net');
-
+  private _createSocket(config: SocketConfig): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._socket = new net.Socket({
-        allowHalfOpen: config.allowHalfOpen || false,
+      this._socket = new Socket({
+        allowHalfOpen: config.allowHalfOpen ?? false,
       });
+      const socket = this._socket;
 
-      this._socket.setTimeout(config.timeout || this._timeout);
-      this._socket.setNoDelay(config.noDelay || true);
-      this._socket.setKeepAlive(config.keepAlive || false, config.keepAliveInitialDelay || 0);
+      socket.setTimeout(config.timeout ?? this._timeout);
+      socket.setNoDelay(config.noDelay ?? true);
+      socket.setKeepAlive(config.keepAlive ?? false, config.keepAliveInitialDelay ?? 0);
 
-      this._socket.on('connect', () => {
-        this._remoteAddress = this._socket.remoteAddress;
-        this._remotePort = this._socket.remotePort;
-        this._localAddress = this._socket.localAddress;
-        this._localPort = this._socket.localPort;
+      socket.on('connect', () => {
+        this._remoteAddress = socket.remoteAddress ?? null;
+        this._remotePort = socket.remotePort ?? null;
+        this._localAddress = socket.localAddress ?? null;
+        this._localPort = socket.localPort ?? null;
         this._connectionConfig = {
           socket: config,
           priority: this._priority,
@@ -451,26 +463,31 @@ export class NetworkConnection implements INetworkConnection {
         resolve();
       });
 
-      this._socket.on('data', (data: NetworkBuffer) => {
+      socket.on('data', (data: NetworkBuffer) => {
         this._bytesReceived += data.length;
         this._lastActiveAt = new Date();
       });
 
-      this._socket.on('error', (error: Error) => {
+      socket.on('error', (error: Error) => {
         this._lastError = error;
         this._errorCount++;
         this._metadata.errorCount++;
         reject(error);
       });
 
-      this._socket.connect(config.port, config.host);
+      socket.connect(config.port, config.host);
     });
   }
 
-  private async _closeSocket(): Promise<void> {
+  private _closeSocket(): Promise<void> {
     return new Promise((resolve) => {
-      this._socket.end(() => {
-        this._socket.destroy();
+      const socket = this._socket;
+      if (socket === null) {
+        resolve();
+        return;
+      }
+      socket.end(() => {
+        socket.destroy();
         resolve();
       });
     });

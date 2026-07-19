@@ -11,7 +11,6 @@ import {
   ValidationConfig,
   ValidationStats,
   SchemaDefinition,
-  FieldDefinition,
 } from '../types/validation-types';
 
 /**

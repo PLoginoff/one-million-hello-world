@@ -20,7 +20,7 @@ export class DIContainer implements IDIContainer {
       throw new Error(`Service already registered: ${String(token)}`);
     }
 
-    const resolvedFactory = factory ?? (() => this._createConstructorInstance<T>(token, dependencies ?? []));
+    const resolvedFactory = factory ?? ((): T => this._createConstructorInstance<T>(token, dependencies ?? []));
     const descriptor = createServiceDescriptor(token, resolvedFactory, lifetime, dependencies);
     this._services.set(token, descriptor);
   }
@@ -76,16 +76,21 @@ export class DIContainer implements IDIContainer {
   }
 
   private _resolveSingleton<T>(descriptor: ServiceDescriptor, token: unknown): T {
-    let root: DIContainer = this;
-    while (root._parent instanceof DIContainer) {
-      root = root._parent;
-    }
+    const root = this._getRootContainer();
     if (root._singletons.has(token)) {
       return root._singletons.get(token) as T;
     }
     const instance = this._createInstance(descriptor);
     root._singletons.set(token, instance);
     return instance as T;
+  }
+
+  private _getRootContainer(): DIContainer {
+    const parent = this._parent;
+    if (parent instanceof DIContainer) {
+      return parent._getRootContainer();
+    }
+    return this;
   }
 
   isRegistered(token: unknown): boolean {

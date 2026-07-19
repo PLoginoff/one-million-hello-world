@@ -4,8 +4,7 @@
  * Provides high-level parsing operations for HTTP requests and responses.
  */
 
-import { HttpRequest, HttpResponse, HttpRequestLine, HttpStatusLine, HttpHeaders } from '../../types/http-parser-types';
-import { HttpMethod, HttpVersion, ParseErrorCode } from '../../types/http-parser-types';
+import { HttpRequestLine, HttpStatusLine, HttpHeaders, HttpMethod, HttpVersion } from '../../types/http-parser-types';
 import { HttpValidationService } from './HttpValidationService';
 
 export class HttpParsingService {
@@ -229,7 +228,7 @@ export class HttpParsingService {
    * Get content type from headers
    */
   static getContentType(headers: HttpHeaders): string | null {
-    return headers.get('content-type') || null;
+    return headers.get('content-type') ?? null;
   }
 
   /**
@@ -237,7 +236,7 @@ export class HttpParsingService {
    */
   static getContentLength(headers: HttpHeaders): number | null {
     const contentLength = headers.get('content-length');
-    if (!contentLength) return null;
+    if (contentLength == null || contentLength.length === 0) return null;
     const parsed = parseInt(contentLength, 10);
     return isNaN(parsed) ? null : parsed;
   }
@@ -252,7 +251,7 @@ export class HttpParsingService {
     }
 
     const connection = headers.get('connection');
-    if (connection) {
+    if (connection != null && connection.length > 0) {
       return connection.toLowerCase() !== 'close';
     }
 
@@ -264,7 +263,7 @@ export class HttpParsingService {
    */
   static isChunkedEncoding(headers: HttpHeaders): boolean {
     const transferEncoding = headers.get('transfer-encoding');
-    return transferEncoding?.toLowerCase().includes('chunked') || false;
+    return transferEncoding?.toLowerCase().includes('chunked') ?? false;
   }
 
   /**

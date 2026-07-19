@@ -26,7 +26,7 @@ export class GetMetricsUseCase implements UseCase<GetMetricsInput, GetMetricsOut
     this._requestCount = 0;
   }
 
-  async execute(input: GetMetricsInput, context: ServiceContext): Promise<ServiceResult<GetMetricsOutput>> {
+  async execute(_input: GetMetricsInput, _context: ServiceContext): Promise<ServiceResult<GetMetricsOutput>> {
     try {
       this._requestCount++;
       const memoryUsage = process.memoryUsage();
@@ -44,13 +44,13 @@ export class GetMetricsUseCase implements UseCase<GetMetricsInput, GetMetricsOut
         },
         timestamp: new Date().toISOString(),
       };
-      return { success: true, data: result };
+      return Promise.resolve({ success: true, data: result });
     } catch (error) {
       const errorResult: ServiceError = {
         code: 'METRICS_ERROR',
         message: error instanceof Error ? error.message : 'Metrics collection failed',
       };
-      return { success: false, error: errorResult };
+      return Promise.resolve({ success: false, error: errorResult });
     }
   }
 }

@@ -44,19 +44,20 @@ export class SagaStateMachine {
    * Transition to new state
    */
   transition(newState: SagaState, context?: unknown): boolean {
-    const validTransitions = this._transitions.get(this._currentState) || [];
+    const validTransitions = this._transitions.get(this._currentState) ?? [];
     const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
     }
 
-    if (transition.condition && !transition.condition(context || this._context)) {
+    const ctx = context !== undefined ? context : this._context;
+    if (transition.condition != null && !transition.condition(ctx)) {
       return false;
     }
 
-    if (transition.action) {
-      transition.action(context || this._context);
+    if (transition.action != null) {
+      transition.action(ctx);
     }
 
     return true;
@@ -66,14 +67,15 @@ export class SagaStateMachine {
    * Check if transition is valid
    */
   canTransition(newState: SagaState, context?: unknown): boolean {
-    const validTransitions = this._transitions.get(this._currentState) || [];
+    const validTransitions = this._transitions.get(this._currentState) ?? [];
     const transition = validTransitions.find((t) => t.to === newState);
 
     if (!transition) {
       return false;
     }
 
-    if (transition.condition && !transition.condition(context || this._context)) {
+    const ctx = context !== undefined ? context : this._context;
+    if (transition.condition != null && !transition.condition(ctx)) {
       return false;
     }
 
@@ -84,15 +86,16 @@ export class SagaStateMachine {
    * Get valid next states
    */
   getValidNextStates(context?: unknown): SagaState[] {
-    const validTransitions = this._transitions.get(this._currentState) || [];
-    return validTransitions.filter((t) => !t.condition || t.condition(context || this._context)).map((t) => t.to);
+    const validTransitions = this._transitions.get(this._currentState) ?? [];
+    const ctx = context !== undefined ? context : this._context;
+    return validTransitions.filter((t) => t.condition == null || t.condition(ctx)).map((t) => t.to);
   }
 
   /**
    * Add custom transition
    */
   addTransition(transition: StateTransition): void {
-    const transitions = this._transitions.get(transition.from) || [];
+    const transitions = this._transitions.get(transition.from) ?? [];
     transitions.push(transition);
     this._transitions.set(transition.from, transitions);
   }
@@ -101,7 +104,7 @@ export class SagaStateMachine {
    * Remove transition
    */
   removeTransition(from: SagaState, to: SagaState): void {
-    const transitions = this._transitions.get(from) || [];
+    const transitions = this._transitions.get(from) ?? [];
     const filtered = transitions.filter((t) => t.to !== to);
     this._transitions.set(from, filtered);
   }
@@ -111,7 +114,7 @@ export class SagaStateMachine {
    */
   reset(context?: unknown): void {
     this._currentState = 'pending';
-    if (context) {
+    if (context !== undefined) {
       this._context = context;
     }
   }

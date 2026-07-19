@@ -45,7 +45,7 @@ export class ValidationResultEntity {
     this.errors = errors;
     this.warnings = warnings;
     this.data = data;
-    this.metadata = metadata || this._createDefaultMetadata();
+    this.metadata = metadata ?? this._createDefaultMetadata();
   }
 
   /**
@@ -98,8 +98,8 @@ export class ValidationResultEntity {
       this.validationId,
       this.ruleId,
       isValid,
-      errors || this.errors,
-      warnings || this.warnings,
+      errors ?? this.errors,
+      warnings ?? this.warnings,
       this.data,
       this.metadata
     );

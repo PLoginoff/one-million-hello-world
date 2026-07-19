@@ -13,9 +13,7 @@ import {
   ValidationConfig,
   ValidationStats,
   SchemaDefinition,
-  FieldDefinition,
   ValidationSeverity,
-  FieldType,
 } from '../types/validation-types';
 
 export class ValidationEngine implements IValidationEngine {
@@ -110,7 +108,7 @@ export class ValidationEngine implements IValidationEngine {
     }
 
     try {
-      const result = rule.validator(value, context || this.createContext(rule.field, {}));
+      const result = rule.validator(value, context ?? this.createContext(rule.field, {}));
 
       if (!result) {
         if (rule.severity === ValidationSeverity.ERROR) {
@@ -234,7 +232,7 @@ export class ValidationEngine implements IValidationEngine {
     return {
       fieldName,
       entity,
-      metadata: metadata || {},
+      metadata: metadata ?? {},
       rules: this._rules,
     };
   }
@@ -329,7 +327,7 @@ export class ValidationEngine implements IValidationEngine {
   }
 
   private _incrementRuleExecutionCount(ruleName: string): void {
-    const count = this._stats.ruleExecutionCounts.get(ruleName) || 0;
+    const count = this._stats.ruleExecutionCounts.get(ruleName) ?? 0;
     this._stats.ruleExecutionCounts.set(ruleName, count + 1);
   }
 

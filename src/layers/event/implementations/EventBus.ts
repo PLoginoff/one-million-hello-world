@@ -37,7 +37,7 @@ export class EventBus implements IEventBus {
       once: false,
     };
 
-    const eventSubs = this._subscriptions.get(event) || [];
+    const eventSubs = this._subscriptions.get(event) ?? [];
     eventSubs.push(subscription as EventSubscription);
     this._subscriptions.set(event, eventSubs);
 
@@ -54,7 +54,7 @@ export class EventBus implements IEventBus {
       once: true,
     };
 
-    const eventSubs = this._subscriptions.get(event) || [];
+    const eventSubs = this._subscriptions.get(event) ?? [];
     eventSubs.push(subscription as EventSubscription);
     this._subscriptions.set(event, eventSubs);
 
@@ -78,14 +78,15 @@ export class EventBus implements IEventBus {
 
   publish<T>(event: string, data: T): void {
     this._stats.publishedCount++;
-    const subs = this._subscriptions.get(event) || [];
+    const subs = this._subscriptions.get(event) ?? [];
 
     const toRemove: number[] = [];
     for (let i = 0; i < subs.length; i++) {
       const sub = subs[i];
-      if (!sub) continue;
       try {
-        sub.handler(data);
+        void Promise.resolve(sub.handler(data)).catch(() => {
+          this._stats.errorCount++;
+        });
         this._stats.handledCount++;
         if (sub.once) {
           toRemove.push(i);
@@ -108,14 +109,13 @@ export class EventBus implements IEventBus {
     }
 
     this._stats.publishedCount++;
-    const subs = this._subscriptions.get(event) || [];
+    const subs = this._subscriptions.get(event) ?? [];
 
     const toRemove: number[] = [];
     const promises = [];
 
     for (let i = 0; i < subs.length; i++) {
       const sub = subs[i];
-      if (!sub) continue;
       const promise = Promise.resolve().then(async () => {
         try {
           await sub.handler(data);

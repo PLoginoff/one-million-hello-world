@@ -27,7 +27,7 @@ export class CompensationOrchestrator implements ICompensationOrchestrator {
   async orchestrateCompensation<T>(
     steps: SagaStep<T>[],
     sagaState: ISagaState,
-    config: OrchestratorConfig
+    _config: OrchestratorConfig
   ): Promise<CompensationResult> {
     const executedSteps = sagaState.getExecutedSteps();
     const compensatedSteps: string[] = [];
@@ -70,7 +70,7 @@ export class CompensationOrchestrator implements ICompensationOrchestrator {
           operation: 'compensation',
         };
 
-        const error = new Error(result.error || 'Compensation failed');
+        const error = new Error(result.error ?? 'Compensation failed');
         this._errorHandler.handle(error, errorContext);
       }
     }

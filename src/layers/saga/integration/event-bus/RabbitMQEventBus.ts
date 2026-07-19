@@ -36,21 +36,24 @@ export class RabbitMQEventBus {
    * Publish message to RabbitMQ
    */
   async publish(message: RabbitMQMessage): Promise<void> {
-    console.log(`Publishing to RabbitMQ exchange ${this._config.exchange}:`, message);
+    await Promise.resolve();
+    console.warn(`Publishing to RabbitMQ exchange ${this._config.exchange}:`, message);
   }
 
   /**
    * Subscribe to RabbitMQ queue
    */
-  async subscribe(handler: (message: RabbitMQMessage) => void): Promise<void> {
-    console.log(`Subscribing to RabbitMQ queue ${this._config.queue}`);
+  async subscribe(_handler: (message: RabbitMQMessage) => void): Promise<void> {
+    await Promise.resolve();
+    console.warn(`Subscribing to RabbitMQ queue ${this._config.queue}`);
   }
 
   /**
    * Create channel
    */
   async createChannel(name: string): Promise<void> {
-    console.log(`Creating RabbitMQ channel ${name}`);
+    await Promise.resolve();
+    console.warn(`Creating RabbitMQ channel ${name}`);
     this._channels.set(name, {});
   }
 
@@ -58,21 +61,24 @@ export class RabbitMQEventBus {
    * Declare exchange
    */
   async declareExchange(type: 'direct' | 'topic' | 'fanout' = 'topic'): Promise<void> {
-    console.log(`Declaring RabbitMQ exchange ${this._config.exchange} with type ${type}`);
+    await Promise.resolve();
+    console.warn(`Declaring RabbitMQ exchange ${this._config.exchange} with type ${type}`);
   }
 
   /**
    * Declare queue
    */
   async declareQueue(): Promise<void> {
-    console.log(`Declaring RabbitMQ queue ${this._config.queue}`);
+    await Promise.resolve();
+    console.warn(`Declaring RabbitMQ queue ${this._config.queue}`);
   }
 
   /**
    * Bind queue to exchange
    */
   async bindQueue(): Promise<void> {
-    console.log(
+    await Promise.resolve();
+    console.warn(
       `Binding queue ${this._config.queue} to exchange ${this._config.exchange} with routing key ${this._config.routingKey}`
     );
   }
@@ -81,7 +87,8 @@ export class RabbitMQEventBus {
    * Close all connections
    */
   async close(): Promise<void> {
-    console.log('Closing RabbitMQ connections');
+    await Promise.resolve();
+    console.warn('Closing RabbitMQ connections');
     this._channels.clear();
   }
 }

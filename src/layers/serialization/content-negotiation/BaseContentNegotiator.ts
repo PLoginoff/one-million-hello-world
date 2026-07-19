@@ -29,7 +29,7 @@ export abstract class BaseContentNegotiator implements IContentNegotiator {
   negotiate(acceptHeader: string): ContentType {
     const parsedTypes = this._parseAcceptHeader(acceptHeader);
 
-    for (const { type, q } of parsedTypes) {
+    for (const { type } of parsedTypes) {
       if (this._canHandle(type)) {
         return this._mapToContentType(type);
       }
@@ -40,6 +40,18 @@ export abstract class BaseContentNegotiator implements IContentNegotiator {
     }
 
     return this._getDefaultContentType();
+  }
+
+  canHandle(type: string): boolean {
+    return this._canHandle(type);
+  }
+
+  mapToContentType(type: string): ContentType {
+    return this._mapToContentType(type);
+  }
+
+  getNext(): IContentNegotiator | null {
+    return this._next;
   }
 
   protected abstract _canHandle(type: string): boolean;

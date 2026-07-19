@@ -15,7 +15,7 @@ export class RouterError extends Error {
     this.code = code;
     this.path = path;
     this.method = method;
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }

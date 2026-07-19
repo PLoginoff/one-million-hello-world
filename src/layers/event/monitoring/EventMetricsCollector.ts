@@ -22,7 +22,7 @@ export class EventMetricsCollector implements IEventMetrics {
 
   recordEventPublished(eventType: string): void {
     this._metrics.totalEventsPublished++;
-    this._metrics.eventsByType[eventType] = (this._metrics.eventsByType[eventType] || 0) + 1;
+    this._metrics.eventsByType[eventType] = (this._metrics.eventsByType[eventType] ?? 0) + 1;
     this._recordTimeSeries('events_published', 1);
   }
 
@@ -34,9 +34,9 @@ export class EventMetricsCollector implements IEventMetrics {
     this._recordTimeSeries('processing_time', processingTime);
   }
 
-  recordError(eventType: string, error: Error): void {
+  recordError(eventType: string, _error: Error): void {
     this._metrics.totalErrors++;
-    this._metrics.errorsByType[eventType] = (this._metrics.errorsByType[eventType] || 0) + 1;
+    this._metrics.errorsByType[eventType] = (this._metrics.errorsByType[eventType] ?? 0) + 1;
     this._recordTimeSeries('errors', 1);
   }
 
@@ -55,9 +55,9 @@ export class EventMetricsCollector implements IEventMetrics {
   }
 
   getTimeSeries(metric: string, duration?: number): TimeSeriesDataPoint[] {
-    const data = this._timeSeries.get(metric) || [];
+    const data = this._timeSeries.get(metric) ?? [];
 
-    if (duration) {
+    if (duration != null && duration > 0) {
       const cutoff = new Date(Date.now() - duration);
       return data.filter((point) => point.timestamp >= cutoff);
     }
@@ -100,8 +100,8 @@ export class EventMetricsCollector implements IEventMetrics {
 
     const p95Index = Math.floor(sorted.length * 0.95);
     const p99Index = Math.floor(sorted.length * 0.99);
-    this._metrics.p95ProcessingTime = sorted[p95Index] || 0;
-    this._metrics.p99ProcessingTime = sorted[p99Index] || 0;
+    this._metrics.p95ProcessingTime = sorted[p95Index] ?? 0;
+    this._metrics.p99ProcessingTime = sorted[p99Index] ?? 0;
 
     if (this._processingTimes.length > 1000) {
       this._processingTimes = this._processingTimes.slice(-1000);

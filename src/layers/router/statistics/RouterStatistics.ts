@@ -65,13 +65,13 @@ export class RouterStatistics {
   }
 
   private _recordPath(path: string): void {
-    const currentCount = this._pathCounts.get(path) || 0;
+    const currentCount = this._pathCounts.get(path) ?? 0;
     this._pathCounts.set(path, currentCount + 1);
     this._updateMostRequestedPaths();
   }
 
   private _recordMethod(method: string): void {
-    const currentCount = this._methodCounts.get(method) || 0;
+    const currentCount = this._methodCounts.get(method) ?? 0;
     this._methodCounts.set(method, currentCount + 1);
     this._updateMostRequestedMethods();
   }

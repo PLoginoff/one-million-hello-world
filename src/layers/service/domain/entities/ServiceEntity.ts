@@ -59,7 +59,7 @@ export class ServiceEntity {
    * Add dependency
    */
   addDependency(dependency: string): ServiceEntity {
-    const dependencies = this.data.dependencies || [];
+    const dependencies = this.data.dependencies ?? [];
     return new ServiceEntity({
       ...this.data,
       dependencies: [...dependencies, dependency],
@@ -77,7 +77,7 @@ export class ServiceEntity {
    * Check if service has dependency
    */
   hasDependency(dependency: string): boolean {
-    return this.data.dependencies?.includes(dependency) || false;
+    return this.data.dependencies?.includes(dependency) ?? false;
   }
 
   /**

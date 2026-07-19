@@ -6,7 +6,7 @@
  */
 
 import { SagaExecutionEntity, SagaStep } from '../../domain/entities/SagaExecution';
-import { SagaConfig } from '../../domain/value-objects/SagaConfig';
+import { SagaConfig, RetryPolicy } from '../../domain/value-objects/SagaConfig';
 
 export class RetrySagaUseCase {
   /**
@@ -82,7 +82,7 @@ export class RetrySagaUseCase {
     return retryPolicy.maxAttempts - execution.metadata.getAttemptCount();
   }
 
-  private _calculateDelay(retryPolicy: any, attempt: number): number {
+  private _calculateDelay(retryPolicy: RetryPolicy, attempt: number): number {
     let delay: number;
 
     switch (retryPolicy.backoffStrategy) {

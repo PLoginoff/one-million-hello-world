@@ -204,7 +204,7 @@ export class NetworkHealthService {
       idle_time: 5,
       connection_age: 5,
     };
-    return weights[name] || 10;
+    return weights[name] ?? 10;
   }
 
   /**

@@ -89,7 +89,7 @@ describe('EventBus Integration', () => {
     });
 
     it('should integrate with event publisher', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = EventBuilder.create()
         .withType('test.event')
         .withPayload({ data: 'test' })

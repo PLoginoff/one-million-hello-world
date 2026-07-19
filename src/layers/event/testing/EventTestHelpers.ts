@@ -6,8 +6,6 @@
  */
 
 import { Event } from '../domain/entities/Event';
-import { EventId } from '../domain/value-objects/EventId';
-import { EventType } from '../domain/value-objects/EventType';
 
 export class EventTestHelpers {
   static assertEventEquals(event1: Event, event2: Event): void {
@@ -52,7 +50,7 @@ export class EventTestHelpers {
 
       setTimeout(() => {
         clearTimeout(timer);
-        resolve(null as any);
+        resolve(null as unknown as Event);
       }, 100);
     });
   }
@@ -133,7 +131,7 @@ export class EventTestHelpers {
     const counts = new Map<string, number>();
     for (const event of events) {
       const type = event.type.value;
-      counts.set(type, (counts.get(type) || 0) + 1);
+      counts.set(type, (counts.get(type) ?? 0) + 1);
     }
     return counts;
   }

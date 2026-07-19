@@ -35,7 +35,6 @@ export class JwtAuthStrategy implements IAuthenticationStrategy {
       };
     }
 
-    const token = this.generateToken(userId, roles);
     return {
       success: true,
       context: SecurityContextEntity.createAuthenticated(userId, roles, [], '', '', SecurityLevel.HIGH),

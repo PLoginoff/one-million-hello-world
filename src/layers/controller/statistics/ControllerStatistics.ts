@@ -60,7 +60,7 @@ export class ControllerStatistics {
   }
 
   private _recordController(controllerId: string): void {
-    const currentCount = this._controllerCounts.get(controllerId) || 0;
+    const currentCount = this._controllerCounts.get(controllerId) ?? 0;
     this._controllerCounts.set(controllerId, currentCount + 1);
     this._updateMostInvokedControllers();
   }

@@ -1,5 +1,4 @@
 import { UseCase, ServiceResult, ServiceContext, ServiceError } from '../types/service-types';
-import { HelloWorldMessage } from '../../domain/entities/HelloWorldMessage';
 import { HelloWorldRequested } from '../../domain/events/HelloWorldRequested';
 import { DomainManager } from '../../domain/implementations/DomainManager';
 import { HelloWorldFactory } from '../../domain/services/HelloWorldFactory';
@@ -36,23 +35,30 @@ export class GetHelloWorldUseCase implements UseCase<GetHelloWorldInput, GetHell
     this._dailyCount = 0;
   }
 
-  async execute(input: GetHelloWorldInput, context: ServiceContext): Promise<ServiceResult<GetHelloWorldOutput>> {
+  async execute(input: GetHelloWorldInput, _context: ServiceContext): Promise<ServiceResult<GetHelloWorldOutput>> {
     try {
-      const language = input.language || 'en';
-      const format = input.format || 'json';
+      const language =
+        input.language !== undefined && input.language !== null && input.language !== '' ? input.language : 'en';
+      const format = input.format !== undefined && input.format !== null && input.format !== '' ? input.format : 'json';
 
       if (!this._policy.isFormatAllowed(format)) {
-        return this._error(`Format ${format} is not supported`);
+        return Promise.resolve(this._error(`Format ${format} is not supported`));
       }
 
       if (!this._factory.supportsLanguage(language)) {
-        return this._error(`Language ${language} is not supported`);
+        return Promise.resolve(this._error(`Language ${language} is not supported`));
       }
 
       const message = this._factory.create({ language, format, suffix: input.suffix });
       const policyCheck = this._policy.canServe(message, this._dailyCount);
       if (!policyCheck.allowed) {
-        return this._error(policyCheck.reason || 'Message policy rejected request');
+        return Promise.resolve(
+          this._error(
+            policyCheck.reason !== undefined && policyCheck.reason !== null && policyCheck.reason !== ''
+              ? policyCheck.reason
+              : 'Message policy rejected request'
+          )
+        );
       }
 
       this._dailyCount++;
@@ -69,9 +75,11 @@ export class GetHelloWorldUseCase implements UseCase<GetHelloWorldInput, GetHell
         supportedLanguages: this._factory.getSupportedLanguages(),
       };
 
-      return { success: true, data: result };
+      return Promise.resolve({ success: true, data: result });
     } catch (error) {
-      return this._error(error instanceof Error ? error.message : 'Unknown error during Hello World execution');
+      return Promise.resolve(
+        this._error(error instanceof Error ? error.message : 'Unknown error during Hello World execution')
+      );
     }
   }
 

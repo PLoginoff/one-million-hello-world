@@ -97,7 +97,7 @@ export class RetryCondition {
    * Check if within time limit
    */
   isWithinTimeLimit(startTime: number): boolean {
-    if (!this.data.timeLimit) {
+    if (this.data.timeLimit === undefined || this.data.timeLimit === null) {
       return true;
     }
 

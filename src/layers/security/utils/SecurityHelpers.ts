@@ -139,15 +139,54 @@ export class SecurityHelpers {
   /**
    * Get IP address from request
    */
-  static getIpAddress(request: any): string {
-    return request.ip || request.connection?.remoteAddress || request.socket?.remoteAddress || '0.0.0.0';
+  static getIpAddress(request: unknown): string {
+    if (typeof request !== 'object' || request === null) {
+      return '0.0.0.0';
+    }
+
+    const req = request as Record<string, unknown>;
+    const ip = typeof req.ip === 'string' ? req.ip : undefined;
+
+    const connection =
+      typeof req.connection === 'object' && req.connection !== null
+        ? (req.connection as Record<string, unknown>)
+        : undefined;
+    const socket =
+      typeof req.socket === 'object' && req.socket !== null ? (req.socket as Record<string, unknown>) : undefined;
+
+    const remoteAddress =
+      typeof connection?.remoteAddress === 'string'
+        ? connection.remoteAddress
+        : typeof socket?.remoteAddress === 'string'
+          ? socket.remoteAddress
+          : undefined;
+
+    return ip ?? remoteAddress ?? '0.0.0.0';
   }
 
   /**
    * Get user agent from request
    */
-  static getUserAgent(request: any): string {
-    return request.headers?.['user-agent'] || request.headers?.['User-Agent'] || 'Unknown';
+  static getUserAgent(request: unknown): string {
+    if (typeof request !== 'object' || request === null) {
+      return 'Unknown';
+    }
+
+    const req = request as Record<string, unknown>;
+    const headers =
+      typeof req.headers === 'object' && req.headers !== null ? (req.headers as Record<string, unknown>) : undefined;
+
+    const userAgent = headers?.['user-agent'];
+    if (typeof userAgent === 'string' && userAgent.length > 0) {
+      return userAgent;
+    }
+
+    const userAgentAlt = headers?.['User-Agent'];
+    if (typeof userAgentAlt === 'string' && userAgentAlt.length > 0) {
+      return userAgentAlt;
+    }
+
+    return 'Unknown';
   }
 
   /**

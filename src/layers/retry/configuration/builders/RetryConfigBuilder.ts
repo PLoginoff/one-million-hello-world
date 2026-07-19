@@ -44,7 +44,7 @@ export class RetryConfigBuilder {
    * Set max attempts
    */
   withMaxAttempts(maxAttempts: number): RetryConfigBuilder {
-    const currentPolicy = this._config.retryPolicy || DomainRetryPolicy.createDefault();
+    const currentPolicy = this._config.retryPolicy ?? DomainRetryPolicy.createDefault();
     this._config.retryPolicy = currentPolicy.withUpdates({ maxAttempts });
     return this;
   }
@@ -53,7 +53,7 @@ export class RetryConfigBuilder {
    * Set backoff strategy
    */
   withBackoffStrategy(strategy: BackoffStrategy): RetryConfigBuilder {
-    const currentPolicy = this._config.retryPolicy || DomainRetryPolicy.createDefault();
+    const currentPolicy = this._config.retryPolicy ?? DomainRetryPolicy.createDefault();
     this._config.retryPolicy = currentPolicy.withUpdates({ backoffStrategy: strategy });
     return this;
   }
@@ -62,7 +62,7 @@ export class RetryConfigBuilder {
    * Set initial delay
    */
   withInitialDelay(delay: number): RetryConfigBuilder {
-    const currentPolicy = this._config.retryPolicy || DomainRetryPolicy.createDefault();
+    const currentPolicy = this._config.retryPolicy ?? DomainRetryPolicy.createDefault();
     this._config.retryPolicy = currentPolicy.withUpdates({ initialDelay: delay });
     return this;
   }
@@ -71,7 +71,7 @@ export class RetryConfigBuilder {
    * Set max delay
    */
   withMaxDelay(delay: number): RetryConfigBuilder {
-    const currentPolicy = this._config.retryPolicy || DomainRetryPolicy.createDefault();
+    const currentPolicy = this._config.retryPolicy ?? DomainRetryPolicy.createDefault();
     this._config.retryPolicy = currentPolicy.withUpdates({ maxDelay: delay });
     return this;
   }
@@ -112,8 +112,8 @@ export class RetryConfigBuilder {
    * Build the configuration
    */
   build(): RetryBuilderConfig {
-    const retryPolicy = this._config.retryPolicy || DomainRetryPolicy.createDefault();
-    const retryCondition = this._config.retryCondition || DomainRetryCondition.createDefault();
+    const retryPolicy = this._config.retryPolicy ?? DomainRetryPolicy.createDefault();
+    const retryCondition = this._config.retryCondition ?? DomainRetryCondition.createDefault();
 
     return {
       retryPolicy,

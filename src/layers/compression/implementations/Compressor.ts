@@ -148,7 +148,7 @@ export class Compressor implements ICompressor {
   private _simulateGzipDecompress(data: string): string {
     if (data.startsWith('[GZIP:')) {
       const end = data.indexOf(']');
-      const length = parseInt(data.substring(6, end), 10);
+      parseInt(data.substring(6, end), 10);
       return data.substring(end + 1);
     }
     return data;
@@ -161,7 +161,7 @@ export class Compressor implements ICompressor {
   private _simulateBrotliDecompress(data: string): string {
     if (data.startsWith('[BROTLI:')) {
       const end = data.indexOf(']');
-      const length = parseInt(data.substring(8, end), 10);
+      parseInt(data.substring(8, end), 10);
       return data.substring(end + 1);
     }
     return data;

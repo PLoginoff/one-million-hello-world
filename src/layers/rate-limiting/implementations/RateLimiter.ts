@@ -30,11 +30,9 @@ import {
   RateLimitUsage,
   RateLimitRule,
   RateLimitException,
-  RateLimitErrorCode,
   RateLimitScope,
   RateLimitAction,
   DiagnosticStep,
-  DiagnosticSummary,
   RateLimitHealthCheck,
   InternalLayer,
   InternalLayerIdentifier,
@@ -45,8 +43,6 @@ import {
   CrossLayerRateLimitConfig,
   CrossLayerRateLimitResult,
   LayerDependencyGraph,
-  LayerNode,
-  LayerEdge,
   LayerHealthStatus,
   RateLimitCascadeConfig,
   AdaptiveRateLimitConfig,
@@ -197,7 +193,7 @@ export class RateLimiter implements IRateLimiter {
   }
 
   private _getInternalLayerBucketKey(layerIdentifier: InternalLayerIdentifier): string {
-    return `${layerIdentifier.layer}:${layerIdentifier.operation || 'default'}:${layerIdentifier.component || 'default'}`;
+    return `${layerIdentifier.layer}:${layerIdentifier.operation ?? 'default'}:${layerIdentifier.component ?? 'default'}`;
   }
 
   private _getCrossLayerBucketKey(sourceLayer: InternalLayer, targetLayer: InternalLayer): string {
@@ -207,7 +203,7 @@ export class RateLimiter implements IRateLimiter {
   checkRateLimit(request: HttpRequest, context?: SecurityContext, identifier?: RateLimitIdentifier): RateLimitResult {
     this._stats.totalRequests++;
 
-    const id = identifier || this.extractIdentifier(request, context);
+    const id = identifier ?? this.extractIdentifier(request, context);
     const bucketKey = this._getBucketKey(id);
 
     const result = this._checkTokenBucket(bucketKey);
@@ -223,9 +219,9 @@ export class RateLimiter implements IRateLimiter {
       identifier: id,
       strategy: this._config.strategy,
       state: this._buckets.get(bucketKey)!,
-      createdAt: existingInfo?.createdAt || new Date(),
+      createdAt: existingInfo?.createdAt ?? new Date(),
       lastAccessed: new Date(),
-      accessCount: (existingInfo?.accessCount || 0) + 1,
+      accessCount: (existingInfo?.accessCount ?? 0) + 1,
     });
 
     return result;
@@ -271,7 +267,7 @@ export class RateLimiter implements IRateLimiter {
   }
 
   extractIdentifier(request: HttpRequest, context?: SecurityContext): RateLimitIdentifier {
-    if (context?.isAuthenticated && context.userId) {
+    if (context?.isAuthenticated === true && context.userId !== undefined) {
       return {
         type: RateLimitIdentifierType.USER_ID,
         value: context.userId,
@@ -279,7 +275,7 @@ export class RateLimiter implements IRateLimiter {
     }
 
     const apiKey = request.headers.get('x-api-key');
-    if (apiKey) {
+    if (apiKey !== undefined && apiKey !== '') {
       return {
         type: RateLimitIdentifierType.API_KEY,
         value: apiKey,
@@ -388,7 +384,7 @@ export class RateLimiter implements IRateLimiter {
 
     this._stats.deniedRequests++;
     const oldestTimestamp = window.timestamps[0];
-    if (!oldestTimestamp) {
+    if (oldestTimestamp === undefined) {
       return {
         allowed: false,
         limit: this._config.requestsPerWindow,
@@ -507,9 +503,9 @@ export class RateLimiter implements IRateLimiter {
       identifier,
       strategy: this._config.strategy,
       state,
-      createdAt: info?.createdAt || new Date(),
-      lastAccessed: info?.lastAccessed || new Date(),
-      accessCount: info?.accessCount || 0,
+      createdAt: info?.createdAt ?? new Date(),
+      lastAccessed: info?.lastAccessed ?? new Date(),
+      accessCount: info?.accessCount ?? 0,
       quota: info?.quota,
     };
   }
@@ -564,7 +560,7 @@ export class RateLimiter implements IRateLimiter {
 
   getRateLimitTier(identifier: RateLimitIdentifier): RateLimitTier | null {
     const bucketKey = this._getBucketKey(identifier);
-    return this._tiers.get(bucketKey) || null;
+    return this._tiers.get(bucketKey) ?? null;
   }
 
   getMetrics(): RateLimitMetrics {
@@ -734,7 +730,7 @@ export class RateLimiter implements IRateLimiter {
 
   getQuota(identifier: RateLimitIdentifier): RateLimitQuota | null {
     const bucketKey = this._getBucketKey(identifier);
-    return this._quotas.get(bucketKey) || null;
+    return this._quotas.get(bucketKey) ?? null;
   }
 
   resetQuota(identifier: RateLimitIdentifier): void {
@@ -787,9 +783,9 @@ export class RateLimiter implements IRateLimiter {
       return {
         layer: layerIdentifier.layer,
         allowed: true,
-        limit: config?.requestsPerWindow || 1000,
-        remaining: config?.requestsPerWindow || 1000,
-        resetTime: new Date(Date.now() + (config?.windowSizeMs || 60000)),
+        limit: config?.requestsPerWindow ?? 1000,
+        remaining: config?.requestsPerWindow ?? 1000,
+        resetTime: new Date(Date.now() + (config?.windowSizeMs ?? 60000)),
         operation: layerIdentifier.operation,
       };
     }
@@ -869,7 +865,7 @@ export class RateLimiter implements IRateLimiter {
   }
 
   getInternalLayerRateLimitConfig(layer: InternalLayer): InternalLayerRateLimitConfig | null {
-    return this._internalLayerConfigs.get(layer) || null;
+    return this._internalLayerConfigs.get(layer) ?? null;
   }
 
   getLayerRateLimitStats(layer: InternalLayer): LayerRateLimitStats {
@@ -914,9 +910,9 @@ export class RateLimiter implements IRateLimiter {
         sourceLayer,
         targetLayer,
         allowed: true,
-        limit: config?.requestsPerWindow || 500,
-        remaining: config?.requestsPerWindow || 500,
-        resetTime: new Date(Date.now() + (config?.windowSizeMs || 60000)),
+        limit: config?.requestsPerWindow ?? 500,
+        remaining: config?.requestsPerWindow ?? 500,
+        resetTime: new Date(Date.now() + (config?.windowSizeMs ?? 60000)),
       };
     }
 
@@ -972,7 +968,7 @@ export class RateLimiter implements IRateLimiter {
 
     if (edgeIndex >= 0) {
       const edge = this._layerDependencyGraph.edges[edgeIndex];
-      if (edge) {
+      if (edge !== undefined) {
         edge.rateLimitConfig = config;
       }
     } else {
@@ -1000,7 +996,7 @@ export class RateLimiter implements IRateLimiter {
     targetLayer: InternalLayer
   ): CrossLayerRateLimitConfig | null {
     const bucketKey = this._getCrossLayerBucketKey(sourceLayer, targetLayer);
-    return this._crossLayerConfigs.get(bucketKey) || null;
+    return this._crossLayerConfigs.get(bucketKey) ?? null;
   }
 
   getLayerDependencyGraph(): LayerDependencyGraph {
@@ -1015,7 +1011,7 @@ export class RateLimiter implements IRateLimiter {
 
     if (edgeIndex >= 0) {
       const edge = this._layerDependencyGraph.edges[edgeIndex];
-      if (edge) {
+      if (edge !== undefined) {
         edge.weight = weight;
       }
     } else {

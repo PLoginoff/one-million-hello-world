@@ -36,23 +36,23 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
     this._queryBuilder = new QueryBuilder();
   }
 
-  async findById(id: string): Promise<RepositoryResult<T>> {
+  findById(id: string): Promise<RepositoryResult<T>> {
     const entity = this._data.get(id);
 
     if (!entity) {
-      return {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'ENTITY_NOT_FOUND',
           message: `Entity with ID ${id} not found`,
         },
-      };
+      });
     }
 
-    return { success: true, data: entity };
+    return Promise.resolve({ success: true, data: entity });
   }
 
-  async find(options?: QueryOptions): Promise<RepositoryResult<T[]>> {
+  find(options?: QueryOptions): Promise<RepositoryResult<T[]>> {
     let results = Array.from(this._data.values());
 
     if (options?.filters) {
@@ -71,28 +71,28 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
       results = results.slice(0, options.limit);
     }
 
-    return { success: true, data: results };
+    return Promise.resolve({ success: true, data: results });
   }
 
-  async save(entity: T): Promise<RepositoryResult<T>> {
+  save(entity: T): Promise<RepositoryResult<T>> {
     entity.updatedAt = new Date();
     this._data.set(entity.id, entity);
-    return { success: true, data: entity };
+    return Promise.resolve({ success: true, data: entity });
   }
 
-  async delete(id: string): Promise<RepositoryResult<void>> {
+  delete(id: string): Promise<RepositoryResult<void>> {
     if (!this._data.has(id)) {
-      return {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'ENTITY_NOT_FOUND',
           message: `Entity with ID ${id} not found`,
         },
-      };
+      });
     }
 
     this._data.delete(id);
-    return { success: true };
+    return Promise.resolve({ success: true });
   }
 
   async count(options?: QueryOptions): Promise<RepositoryResult<number>> {
@@ -101,12 +101,12 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
       return { success: false, error: result.error };
     }
 
-    return { success: true, data: result.data?.length || 0 };
+    return { success: true, data: result.data?.length ?? 0 };
   }
 
-  async exists(id: string): Promise<RepositoryResult<boolean>> {
+  exists(id: string): Promise<RepositoryResult<boolean>> {
     const exists = this._data.has(id);
-    return { success: true, data: exists };
+    return Promise.resolve({ success: true, data: exists });
   }
 
   setConfig(config: RepositoryConfig): void {
@@ -166,8 +166,8 @@ export class Repository<T extends DomainEntity> implements IRepository<T> {
   private _applySorts(entities: T[], sorts: QuerySort[]): T[] {
     return [...entities].sort((a, b) => {
       for (const sort of sorts) {
-        const aValue = String((a as Record<string, unknown>)[sort.field] || '');
-        const bValue = String((b as Record<string, unknown>)[sort.field] || '');
+        const aValue = String((a as Record<string, unknown>)[sort.field] ?? '');
+        const bValue = String((b as Record<string, unknown>)[sort.field] ?? '');
 
         if (aValue < bValue) {
           return sort.direction === SortDirection.ASC ? -1 : 1;

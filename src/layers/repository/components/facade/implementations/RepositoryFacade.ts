@@ -49,22 +49,22 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
     this._initializeLayerStates();
   }
 
-  async find(options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T[]>> {
+  find(_options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T[]>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
     try {
       const layersExecuted: string[] = [];
 
-      if (this._config.enableCaching && this._layerStates.get('cache')) {
+      if (this._config.enableCaching && this._layerStates.get('cache') === true) {
         layersExecuted.push('cache');
       }
 
-      if (this._config.enableValidation && this._layerStates.get('validation')) {
+      if (this._config.enableValidation && this._layerStates.get('validation') === true) {
         layersExecuted.push('validation');
       }
 
-      if (this._config.enableMiddleware && this._layerStates.get('middleware')) {
+      if (this._config.enableMiddleware && this._layerStates.get('middleware') === true) {
         layersExecuted.push('middleware');
       }
 
@@ -79,23 +79,23 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: [],
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('FIND_ERROR', error instanceof Error ? error.message : 'Unknown find error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async findById(id: string, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
+  findById(_id: string, _options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -112,26 +112,26 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
-        data: null as any,
+        data: null as unknown as T,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           'FIND_BY_ID_ERROR',
           error instanceof Error ? error.message : 'Unknown find by id error'
         ),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async findOne(options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T | null>> {
+  findOne(_options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T | null>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -143,23 +143,23 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: null,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('FIND_ONE_ERROR', error instanceof Error ? error.message : 'Unknown find one error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async save(entity: T, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
+  save(entity: T, _options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -183,23 +183,23 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: entity,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('SAVE_ERROR', error instanceof Error ? error.message : 'Unknown save error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async update(id: string, updates: Partial<T>, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
+  update(_id: string, _updates: Partial<T>, _options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<T>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -211,23 +211,23 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
-        data: null as any,
+        data: null as unknown as T,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('UPDATE_ERROR', error instanceof Error ? error.message : 'Unknown update error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async delete(id: string, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<void>> {
+  delete(_id: string, _options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<void>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -239,22 +239,22 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('DELETE_ERROR', error instanceof Error ? error.message : 'Unknown delete error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async deleteMany(ids: string[], options?: BulkOperationOptions): Promise<RepositoryFacadeResult<number>> {
+  deleteMany(ids: string[], _options?: BulkOperationOptions): Promise<RepositoryFacadeResult<number>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -266,26 +266,26 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: ids.length,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           'DELETE_MANY_ERROR',
           error instanceof Error ? error.message : 'Unknown delete many error'
         ),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async count(options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<number>> {
+  count(_options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<number>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -297,23 +297,23 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: 0,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('COUNT_ERROR', error instanceof Error ? error.message : 'Unknown count error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async exists(id: string, options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<boolean>> {
+  exists(_id: string, _options?: FacadeQueryOptions): Promise<RepositoryFacadeResult<boolean>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
 
@@ -325,25 +325,25 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: false,
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('EXISTS_ERROR', error instanceof Error ? error.message : 'Unknown exists error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async aggregate(
-    aggregation: Record<string, unknown>,
-    options?: FacadeQueryOptions
+  aggregate(
+    _aggregation: Record<string, unknown>,
+    _options?: FacadeQueryOptions
   ): Promise<RepositoryFacadeResult<Record<string, unknown>>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
@@ -356,25 +356,25 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: {},
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('AGGREGATE_ERROR', error instanceof Error ? error.message : 'Unknown aggregate error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
-  async bulkSave(
+  bulkSave(
     entities: T[],
-    options?: BulkOperationOptions
+    _options?: BulkOperationOptions
   ): Promise<RepositoryFacadeResult<{ successful: T[]; failed: Array<{ item: T; error: string }> }>> {
     const startTime = Date.now();
     this._stats.totalOperations++;
@@ -387,19 +387,19 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
       this._stats.successfulOperations++;
       this._updateAverageExecutionTime(executionTime);
 
-      return {
+      return Promise.resolve({
         success: true,
         data: { successful: entities, failed: [] },
         metadata: this._createMetadata(executionTime, layersExecuted),
-      };
+      });
     } catch (error) {
       this._stats.failedOperations++;
 
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError('BULK_SAVE_ERROR', error instanceof Error ? error.message : 'Unknown bulk save error'),
         metadata: this._createMetadata(Date.now() - startTime, []),
-      };
+      });
     }
   }
 
@@ -435,7 +435,7 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
     };
   }
 
-  async healthCheck(): Promise<HealthCheckResult> {
+  healthCheck(): Promise<HealthCheckResult> {
     const layers = new Map<string, LayerHealth>();
 
     for (const [layerName, enabled] of this._layerStates) {
@@ -449,33 +449,33 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
 
     const allHealthy = Array.from(layers.values()).every((l) => l.status === HealthStatus.HEALTHY);
 
-    return {
+    return Promise.resolve({
       healthy: allHealthy,
       layers,
       overallStatus: allHealthy ? HealthStatus.HEALTHY : HealthStatus.DEGRADED,
-    };
+    });
   }
 
-  async clearCache(): Promise<RepositoryFacadeResult<void>> {
-    return {
+  clearCache(): Promise<RepositoryFacadeResult<void>> {
+    return Promise.resolve({
       success: true,
       metadata: this._createMetadata(0, ['cache']),
-    };
+    });
   }
 
-  async clearData(): Promise<RepositoryFacadeResult<void>> {
-    return {
+  clearData(): Promise<RepositoryFacadeResult<void>> {
+    return Promise.resolve({
       success: true,
       metadata: this._createMetadata(0, ['data-access']),
-    };
+    });
   }
 
-  async getTotalCount(): Promise<RepositoryFacadeResult<number>> {
-    return {
+  getTotalCount(): Promise<RepositoryFacadeResult<number>> {
+    return Promise.resolve({
       success: true,
       data: 0,
       metadata: this._createMetadata(0, ['data-access']),
-    };
+    });
   }
 
   getLayerInfo(): Map<string, Record<string, unknown>> {
@@ -484,27 +484,27 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
     for (const [layerName, enabled] of this._layerStates) {
       info.set(layerName, {
         enabled,
-        executionCount: this._stats.layerExecutionCounts.get(layerName) || 0,
+        executionCount: this._stats.layerExecutionCounts.get(layerName) ?? 0,
       });
     }
 
     return info;
   }
 
-  async enableLayer(layer: string): Promise<RepositoryFacadeResult<void>> {
+  enableLayer(layer: string): Promise<RepositoryFacadeResult<void>> {
     this._layerStates.set(layer, true);
-    return {
+    return Promise.resolve({
       success: true,
       metadata: this._createMetadata(0, []),
-    };
+    });
   }
 
-  async disableLayer(layer: string): Promise<RepositoryFacadeResult<void>> {
+  disableLayer(layer: string): Promise<RepositoryFacadeResult<void>> {
     this._layerStates.set(layer, false);
-    return {
+    return Promise.resolve({
       success: true,
       metadata: this._createMetadata(0, []),
-    };
+    });
   }
 
   reset(): void {
@@ -564,7 +564,7 @@ export class RepositoryFacade<T extends DomainEntity> implements IRepositoryFaca
 
   private _updateLayerExecutionCounts(layers: string[]): void {
     for (const layer of layers) {
-      const count = this._stats.layerExecutionCounts.get(layer) || 0;
+      const count = this._stats.layerExecutionCounts.get(layer) ?? 0;
       this._stats.layerExecutionCounts.set(layer, count + 1);
     }
   }

@@ -26,9 +26,9 @@ export class EventBus implements IEventBus {
   private _executor: IEventExecutor;
 
   constructor(options: EventBusOptions = {}) {
-    this._subscriptionManager = options.subscriptionManager || new SubscriptionManager();
-    this._errorHandler = options.errorHandler || new ErrorHandler();
-    this._executor = options.executor || new EventExecutor(this._errorHandler);
+    this._subscriptionManager = options.subscriptionManager ?? new SubscriptionManager();
+    this._errorHandler = options.errorHandler ?? new ErrorHandler();
+    this._executor = options.executor ?? new EventExecutor(this._errorHandler);
   }
 
   subscribe<T>(eventType: string, handler: EventHandler<T>): string {

@@ -15,5 +15,5 @@ export interface IRepositoryStrategy {
   /**
    * Execute query
    */
-  query(repository: RepositoryEntity, query: any): Promise<any>;
+  query(repository: RepositoryEntity, query: unknown): Promise<unknown>;
 }

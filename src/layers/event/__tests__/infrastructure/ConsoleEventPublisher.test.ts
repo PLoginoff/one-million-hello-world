@@ -33,7 +33,7 @@ describe('ConsoleEventPublisher', () => {
 
   describe('publish', () => {
     it('should publish event successfully', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = Event.create('test.event', { data: 'test' });
 
       const result = await publisher.publish(event);
@@ -47,7 +47,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should log event details', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = Event.create('test.event', { userId: '123' });
 
       await publisher.publish(event);
@@ -60,7 +60,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should include metadata in log', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = Event.create('test.event', {});
 
       await publisher.publish(event);
@@ -73,7 +73,7 @@ describe('ConsoleEventPublisher', () => {
 
     it('should use custom prefix', async () => {
       const customPub = new ConsoleEventPublisher('[Custom]');
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = Event.create('test.event', {});
 
       await customPub.publish(event);
@@ -94,7 +94,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle events with complex payloads', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const complexPayload = {
         nested: { deep: { value: 42 } },
         array: [1, 2, 3],
@@ -111,7 +111,7 @@ describe('ConsoleEventPublisher', () => {
 
   describe('publishBatch', () => {
     it('should publish multiple events', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const events = [
         Event.create('event1', {}),
         Event.create('event2', {}),
@@ -215,7 +215,7 @@ describe('ConsoleEventPublisher', () => {
 
   describe('edge cases', () => {
     it('should handle publishing many events', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const events = Array.from({ length: 100 }, (_, i) => 
         Event.create(`event${i}`, {})
       );
@@ -228,7 +228,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle event with very long payload', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const longPayload = { data: 'a'.repeat(10000) };
       const event = Event.create('test.event', longPayload);
 
@@ -239,7 +239,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle event with special characters', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const specialPayload = { data: 'test\n\t\r' };
       const event = Event.create('test.event', specialPayload);
 
@@ -250,7 +250,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle event with unicode characters', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const unicodePayload = { data: 'тест' };
       const event = Event.create('test.event', unicodePayload);
 
@@ -261,7 +261,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle event with null payload', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const event = Event.create('test.event', null);
 
       const result = await publisher.publish(event);
@@ -271,7 +271,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle event with array payload', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       const arrayPayload = [1, 2, 3, 4, 5];
       const event = Event.create('test.event', arrayPayload);
 

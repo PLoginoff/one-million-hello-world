@@ -5,7 +5,7 @@
  * Provides append-only storage with versioning.
  */
 
-import { SagaEvent, SagaEventData } from './SagaEvent';
+import { SagaEvent } from './SagaEvent';
 
 export interface EventStore {
   append(event: SagaEvent): Promise<void>;
@@ -24,42 +24,44 @@ export class InMemoryEventStore implements EventStore {
     this._storage = new Map();
   }
 
-  async append(event: SagaEvent): Promise<void> {
-    const events = this._storage.get(event.getExecutionId()) || [];
+  append(event: SagaEvent): Promise<void> {
+    const events = this._storage.get(event.getExecutionId()) ?? [];
     events.push(event);
     this._storage.set(event.getExecutionId(), events);
+    return Promise.resolve();
   }
 
-  async getEvents(executionId: string): Promise<SagaEvent[]> {
-    const events = this._storage.get(executionId) || [];
-    return [...events];
+  getEvents(executionId: string): Promise<SagaEvent[]> {
+    const events = this._storage.get(executionId) ?? [];
+    return Promise.resolve([...events]);
   }
 
-  async getEventsFromVersion(executionId: string, version: number): Promise<SagaEvent[]> {
-    const events = this._storage.get(executionId) || [];
-    return events.filter((e) => e.getVersion() >= version);
+  getEventsFromVersion(executionId: string, version: number): Promise<SagaEvent[]> {
+    const events = this._storage.get(executionId) ?? [];
+    return Promise.resolve(events.filter((e) => e.getVersion() >= version));
   }
 
-  async getLastEvent(executionId: string): Promise<SagaEvent | null> {
-    const events = this._storage.get(executionId) || [];
+  getLastEvent(executionId: string): Promise<SagaEvent | null> {
+    const events = this._storage.get(executionId) ?? [];
     if (events.length === 0) {
-      return null;
+      return Promise.resolve(null);
     }
-    return events[events.length - 1] || null;
+    return Promise.resolve(events[events.length - 1] ?? null);
   }
 
-  async getEventsByType(executionId: string, eventType: string): Promise<SagaEvent[]> {
-    const events = this._storage.get(executionId) || [];
-    return events.filter((e) => e.getEventType() === eventType);
+  getEventsByType(executionId: string, eventType: string): Promise<SagaEvent[]> {
+    const events = this._storage.get(executionId) ?? [];
+    return Promise.resolve(events.filter((e) => e.getEventType() === eventType));
   }
 
-  async deleteEvents(executionId: string): Promise<void> {
+  deleteEvents(executionId: string): Promise<void> {
     this._storage.delete(executionId);
+    return Promise.resolve();
   }
 
-  async count(executionId: string): Promise<number> {
-    const events = this._storage.get(executionId) || [];
-    return events.length;
+  count(executionId: string): Promise<number> {
+    const events = this._storage.get(executionId) ?? [];
+    return Promise.resolve(events.length);
   }
 
   clear(): void {

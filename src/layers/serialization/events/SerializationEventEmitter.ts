@@ -109,7 +109,7 @@ export class SerializationEventEmitter {
    * @param event - Event name
    */
   removeAllListeners(event?: string): void {
-    if (event) {
+    if (event !== undefined && event.length > 0) {
       this._listeners.delete(event);
     } else {
       this._listeners.clear();
@@ -144,7 +144,10 @@ export class SerializationEventEmitter {
 
     for (const listener of listeners) {
       try {
-        listener.handler(data);
+        const result = listener.handler(data);
+        if (result instanceof Promise) {
+          result.catch((error) => console.error(`Error in event handler for ${event}:`, error));
+        }
         if (listener.once) {
           toRemove.push(listener.id);
         }

@@ -28,9 +28,9 @@ export class EventBuilder<T = unknown> {
     return this;
   }
 
-  withPayload(payload: any): EventBuilder<any> {
-    this._options.payload = payload instanceof EventPayload ? payload.data : payload;
-    return this;
+  withPayload<U>(payload: U): EventBuilder<U> {
+    (this._options as EventOptions<unknown>).payload = payload instanceof EventPayload ? payload.data : payload;
+    return this as unknown as EventBuilder<U>;
   }
 
   withMetadata(metadata: EventMetadata): EventBuilder<T> {
@@ -39,7 +39,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withSource(source: string): EventBuilder<T> {
-    const existingMetadata = this._options.metadata || EventMetadata.create('system');
+    const existingMetadata = this._options.metadata ?? EventMetadata.create('system');
     this._options.metadata = EventMetadata.fromJSON({
       ...existingMetadata.toJSON(),
       source,
@@ -48,7 +48,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withCorrelationId(correlationId: string): EventBuilder<T> {
-    const existingMetadata = this._options.metadata || EventMetadata.create('system');
+    const existingMetadata = this._options.metadata ?? EventMetadata.create('system');
     this._options.metadata = EventMetadata.fromJSON({
       ...existingMetadata.toJSON(),
       correlationId,
@@ -57,7 +57,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withUserId(userId: string): EventBuilder<T> {
-    const existingMetadata = this._options.metadata || EventMetadata.create('system');
+    const existingMetadata = this._options.metadata ?? EventMetadata.create('system');
     this._options.metadata = EventMetadata.fromJSON({
       ...existingMetadata.toJSON(),
       userId,
@@ -66,7 +66,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withTag(key: string, value: string): EventBuilder<T> {
-    const existingMetadata = this._options.metadata || EventMetadata.create('system');
+    const existingMetadata = this._options.metadata ?? EventMetadata.create('system');
     this._options.metadata = existingMetadata.withTag(key, value);
     return this;
   }
@@ -77,7 +77,7 @@ export class EventBuilder<T = unknown> {
   }
 
   withCausationId(causationId: string): EventBuilder<T> {
-    const existingMetadata = this._options.metadata || EventMetadata.create('system');
+    const existingMetadata = this._options.metadata ?? EventMetadata.create('system');
     this._options.metadata = existingMetadata.withCausationId(causationId);
     return this;
   }

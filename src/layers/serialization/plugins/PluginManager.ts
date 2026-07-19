@@ -18,11 +18,11 @@ export class PluginManager {
   async registerPlugin(plugin: ISerializationPlugin): Promise<void> {
     const existing = this._plugins.get(plugin.name);
     if (existing?.cleanup) {
-      await existing.cleanup();
+      await Promise.resolve(existing.cleanup());
     }
 
     if (plugin.initialize) {
-      await plugin.initialize();
+      await Promise.resolve(plugin.initialize());
     }
 
     this._plugins.set(plugin.name, plugin);
@@ -40,7 +40,7 @@ export class PluginManager {
     }
 
     if (plugin.cleanup) {
-      await plugin.cleanup();
+      await Promise.resolve(plugin.cleanup());
     }
 
     this._plugins.delete(name);
@@ -113,7 +113,7 @@ export class PluginManager {
     let processed = data;
     for (const plugin of this._plugins.values()) {
       if (plugin.beforeSerialize) {
-        processed = await plugin.beforeSerialize(processed);
+        processed = await Promise.resolve(plugin.beforeSerialize(processed));
       }
     }
     return processed;
@@ -133,7 +133,7 @@ export class PluginManager {
     let processed = serialized;
     for (const plugin of this._plugins.values()) {
       if (plugin.afterSerialize) {
-        processed = await plugin.afterSerialize(processed);
+        processed = await Promise.resolve(plugin.afterSerialize(processed));
       }
     }
     return processed;
@@ -153,7 +153,7 @@ export class PluginManager {
     let processed = data;
     for (const plugin of this._plugins.values()) {
       if (plugin.beforeDeserialize) {
-        processed = await plugin.beforeDeserialize(processed);
+        processed = await Promise.resolve(plugin.beforeDeserialize(processed));
       }
     }
     return processed;
@@ -173,7 +173,7 @@ export class PluginManager {
     let processed = deserialized;
     for (const plugin of this._plugins.values()) {
       if (plugin.afterDeserialize) {
-        processed = await plugin.afterDeserialize(processed);
+        processed = await Promise.resolve(plugin.afterDeserialize(processed));
       }
     }
     return processed;
@@ -185,7 +185,7 @@ export class PluginManager {
   async clear(): Promise<void> {
     for (const plugin of this._plugins.values()) {
       if (plugin.cleanup) {
-        await plugin.cleanup();
+        await Promise.resolve(plugin.cleanup());
       }
     }
     this._plugins.clear();

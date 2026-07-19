@@ -10,7 +10,7 @@ import { EventHandler } from './IEventBus';
 export interface Subscription {
   id: string;
   eventType: string;
-  handler: EventHandler<any>;
+  handler: EventHandler<unknown>;
   once: boolean;
   createdAt: Date;
   lastExecutedAt?: Date;

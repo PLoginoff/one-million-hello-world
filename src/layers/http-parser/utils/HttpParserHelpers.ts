@@ -120,7 +120,7 @@ export class HttpParserHelpers {
         fragment: urlObj.hash.substring(1),
       };
     } catch {
-      const parts = url.match(/^([^:]+):\/\/([^\/:]+)(?::(\d+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/);
+      const parts = url.match(/^([^:]+):\/\/([^/:]+)(?::(\d+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/);
       if (!parts) {
         return {};
       }
@@ -175,17 +175,18 @@ export class HttpParserHelpers {
    */
   static deepClone<T>(obj: T): T {
     if (obj === null || typeof obj !== 'object') return obj;
-    if (obj instanceof Date) return new Date(obj.getTime()) as any;
-    if (obj instanceof Map) return new Map(Array.from(obj.entries())) as any;
-    if (obj instanceof Set) return new Set(Array.from(obj.values())) as any;
-    if (obj instanceof Array) return obj.map((item) => this.deepClone(item)) as any;
+    if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
+    if (obj instanceof Map) return new Map(Array.from(obj.entries())) as unknown as T;
+    if (obj instanceof Set) return new Set(Array.from(obj.values())) as unknown as T;
+    if (obj instanceof Array) return obj.map((item: unknown) => this.deepClone(item)) as unknown as T;
 
-    const clonedObj = {} as T;
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        clonedObj[key] = this.deepClone(obj[key]);
+    const clonedObj = {} as Record<string, unknown>;
+    const sourceObj = obj as Record<string, unknown>;
+    for (const key in sourceObj) {
+      if (Object.prototype.hasOwnProperty.call(sourceObj, key)) {
+        clonedObj[key] = this.deepClone(sourceObj[key]);
       }
     }
-    return clonedObj;
+    return clonedObj as T;
   }
 }

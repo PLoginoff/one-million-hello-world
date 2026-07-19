@@ -48,9 +48,10 @@ export class DefaultStateTransitionStrategy implements IStateTransitionStrategy 
     switch (context.currentState) {
       case 'CLOSED':
         return context.failureCount >= context.threshold.failureThreshold;
-      case 'OPEN':
+      case 'OPEN': {
         const timeSinceFailure = context.currentTime - context.lastFailureTime;
         return timeSinceFailure >= context.threshold.resetTimeout;
+      }
       case 'HALF_OPEN':
         return context.successCount >= context.threshold.successThreshold || context.failureCount > 0;
       default:

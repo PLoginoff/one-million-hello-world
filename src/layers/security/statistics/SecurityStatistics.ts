@@ -69,7 +69,7 @@ export class SecurityStatistics {
   recordThreat(threatType: ThreatType): void {
     this._stats.totalThreatsDetected++;
     this._stats.lastThreatTime = Date.now();
-    const currentCount = this._stats.threatsByType.get(threatType) || 0;
+    const currentCount = this._stats.threatsByType.get(threatType) ?? 0;
     this._stats.threatsByType.set(threatType, currentCount + 1);
   }
 
@@ -167,7 +167,7 @@ export class SecurityStatistics {
    * Get threat count by type
    */
   getThreatCountByType(threatType: ThreatType): number {
-    return this._stats.threatsByType.get(threatType) || 0;
+    return this._stats.threatsByType.get(threatType) ?? 0;
   }
 
   /**

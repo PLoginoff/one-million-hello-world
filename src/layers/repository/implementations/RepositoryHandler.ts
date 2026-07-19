@@ -238,7 +238,7 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
   }
 
   addMiddleware(operation: RepositoryOperation, middleware: HandlerMiddleware): void {
-    const middlewares = this._middlewares.get(operation) || [];
+    const middlewares = this._middlewares.get(operation) ?? [];
     middlewares.push(middleware);
     this._middlewares.set(operation, middlewares);
   }
@@ -257,7 +257,7 @@ export class RepositoryHandler<T extends DomainEntity> implements IRepositoryHan
     operation: RepositoryOperation,
     fn: () => Promise<RepositoryResult<U>>
   ): Promise<RepositoryResult<U>> {
-    const middlewares = this._middlewares.get(operation) || [];
+    const middlewares = this._middlewares.get(operation) ?? [];
 
     for (const middleware of middlewares) {
       await middleware(operation, async () => {});

@@ -4,7 +4,7 @@
  * Pre-configured settings for common use cases.
  */
 
-import { HttpMethod, HttpVersion, ContentType } from '../../types/http-parser-types';
+// No type imports needed for default configurations
 
 export interface ParserConfigOptions {
   maxHeaderSize: number;

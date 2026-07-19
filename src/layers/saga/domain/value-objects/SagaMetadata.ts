@@ -32,7 +32,7 @@ export class SagaMetadata {
    * Get end time
    */
   getEndTime(): number {
-    return this.data.endTime || 0;
+    return this.data.endTime ?? 0;
   }
 
   /**
@@ -67,7 +67,7 @@ export class SagaMetadata {
    * Check if has error
    */
   hasError(): boolean {
-    return !!this.data.errorMessage;
+    return this.data.errorMessage != null && this.data.errorMessage !== '';
   }
 
   /**

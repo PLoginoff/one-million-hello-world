@@ -36,7 +36,7 @@ export class EventLogger {
     this._level = options.level ?? LogLevel.INFO;
     this._enableConsole = options.enableConsole !== false;
     this._entries = [];
-    this._maxEntries = options.maxEntries || 10000;
+    this._maxEntries = options.maxEntries ?? 10000;
   }
 
   debug(message: string, context?: Record<string, unknown> | null): void {
@@ -62,7 +62,7 @@ export class EventLogger {
       entries = entries.filter((entry) => entry.level === level);
     }
 
-    if (limit) {
+    if (limit != null && limit > 0) {
       entries = entries.slice(-limit);
     }
 
@@ -119,16 +119,18 @@ export class EventLogger {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        console.debug(prefix, entry.message, entry.context || '');
+        // eslint-disable-next-line no-console
+        console.debug(prefix, entry.message, entry.context ?? '');
         break;
       case LogLevel.INFO:
-        console.info(prefix, entry.message, entry.context || '');
+        // eslint-disable-next-line no-console
+        console.info(prefix, entry.message, entry.context ?? '');
         break;
       case LogLevel.WARN:
-        console.warn(prefix, entry.message, entry.context || '');
+        console.warn(prefix, entry.message, entry.context ?? '');
         break;
       case LogLevel.ERROR:
-        console.error(prefix, entry.message, entry.context || '');
+        console.error(prefix, entry.message, entry.context ?? '');
         break;
     }
   }

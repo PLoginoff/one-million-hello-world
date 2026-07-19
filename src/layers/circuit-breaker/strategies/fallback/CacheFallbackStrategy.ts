@@ -19,11 +19,11 @@ export class CacheFallbackStrategy<T> implements IFallbackStrategy<T> {
   constructor(options: CacheFallbackOptions) {
     this.name = 'CacheFallbackStrategy';
     this._cache = options.cache;
-    this._ttl = options.ttl || 60000;
+    this._ttl = options.ttl ?? 60000;
   }
 
   async execute(context: FallbackContext<T>): Promise<FallbackResult<T>> {
-    const cacheKey = this._generateCacheKey(context);
+    const cacheKey = await Promise.resolve(this._generateCacheKey(context));
     const cached = this._cache.get(cacheKey);
 
     if (cached === undefined) {

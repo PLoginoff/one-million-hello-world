@@ -21,14 +21,14 @@ export class CircuitMetrics {
 
   constructor(data?: Partial<CircuitMetricsData>) {
     this.data = {
-      totalRequests: data?.totalRequests || 0,
-      successfulRequests: data?.successfulRequests || 0,
-      failedRequests: data?.failedRequests || 0,
-      rejectedRequests: data?.rejectedRequests || 0,
-      averageResponseTime: data?.averageResponseTime || 0,
-      minResponseTime: data?.minResponseTime || Infinity,
-      maxResponseTime: data?.maxResponseTime || 0,
-      lastResetAt: data?.lastResetAt || Date.now(),
+      totalRequests: data?.totalRequests ?? 0,
+      successfulRequests: data?.successfulRequests ?? 0,
+      failedRequests: data?.failedRequests ?? 0,
+      rejectedRequests: data?.rejectedRequests ?? 0,
+      averageResponseTime: data?.averageResponseTime ?? 0,
+      minResponseTime: data?.minResponseTime ?? Infinity,
+      maxResponseTime: data?.maxResponseTime ?? 0,
+      lastResetAt: data?.lastResetAt ?? Date.now(),
     };
   }
 

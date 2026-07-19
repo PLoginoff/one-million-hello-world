@@ -6,7 +6,6 @@
 
 import { IVersioningStrategy } from './IVersioningStrategy';
 import { WrapperVersioningStrategy } from './WrapperVersioningStrategy';
-import { HeaderVersioningStrategy } from './HeaderVersioningStrategy';
 
 export class VersioningManager {
   private _strategy: IVersioningStrategy;

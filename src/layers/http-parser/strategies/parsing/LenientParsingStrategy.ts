@@ -14,11 +14,11 @@ export class LenientParsingStrategy implements IParsingStrategy {
   }
 
   parseRequest(
-    raw: any,
-    config: ParserConfigOptions
+    raw: Buffer,
+    _config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   } {
     try {
@@ -44,7 +44,7 @@ export class LenientParsingStrategy implements IParsingStrategy {
 
       const method = requestLineParts[0];
       const path = requestLineParts[1];
-      const version = requestLineParts[2] || 'HTTP/1.1';
+      const version = requestLineParts[2] ?? 'HTTP/1.1';
 
       if (!HttpValidationService.validateMethod(method)) {
         return {
@@ -55,10 +55,10 @@ export class LenientParsingStrategy implements IParsingStrategy {
 
       const emptyLineIndex = lines.indexOf('');
       const headerLines = emptyLineIndex === -1 ? lines.slice(1) : lines.slice(1, emptyLineIndex);
-      const headers = new Map();
+      const headers = new Map<string, string>();
 
       for (const line of headerLines) {
-        if (!line.trim()) continue;
+        if (line.trim().length === 0) continue;
 
         const colonIndex = line.indexOf(':');
         if (colonIndex === -1) {
@@ -93,11 +93,11 @@ export class LenientParsingStrategy implements IParsingStrategy {
   }
 
   parseResponse(
-    raw: any,
-    config: ParserConfigOptions
+    raw: Buffer,
+    _config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   } {
     try {
@@ -123,14 +123,14 @@ export class LenientParsingStrategy implements IParsingStrategy {
 
       const version = statusLineParts[0];
       const statusCode = statusLineParts[1];
-      const reasonPhrase = statusLineParts.slice(2).join(' ') || 'OK';
+      const reasonPhrase = statusLineParts.slice(2).join(' ') ?? 'OK';
 
       const emptyLineIndex = lines.indexOf('');
       const headerLines = emptyLineIndex === -1 ? lines.slice(1) : lines.slice(1, emptyLineIndex);
-      const headers = new Map();
+      const headers = new Map<string, string>();
 
       for (const line of headerLines) {
-        if (!line.trim()) continue;
+        if (line.trim().length === 0) continue;
 
         const colonIndex = line.indexOf(':');
         if (colonIndex === -1) {

@@ -13,6 +13,10 @@ import {
   SortDirection,
   NullPosition,
   AggregationFunction,
+  ParsedSort,
+  ParsedGroup,
+  ParsedAggregation,
+  ParsedFilter,
 } from '../types/query-parser-types';
 
 describe('QueryParser', () => {
@@ -210,11 +214,11 @@ describe('QueryParser', () => {
     it('should validate a valid query successfully', () => {
       const query = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
       const result = queryParser.validate(query);
 
@@ -228,11 +232,11 @@ describe('QueryParser', () => {
       queryParser.addForbiddenField('password');
       const query = {
         filters: [{ field: 'password', operator: FilterOperator.EQUALS, value: 'secret', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
       const result = queryParser.validate(query);
 
@@ -247,11 +251,11 @@ describe('QueryParser', () => {
       queryParser.addAllowedField('age');
       const query = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
       const result = queryParser.validate(query);
 
@@ -266,11 +270,11 @@ describe('QueryParser', () => {
     it('should serialize parsed query to string', () => {
       const query = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
       const serialized = queryParser.serialize(query);
 
@@ -880,9 +884,9 @@ describe('QueryParser', () => {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
         sorts: [{ field: 'age', direction: SortDirection.ASC, nullPosition: NullPosition.LAST }],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const result = queryParser.validate(parsedQuery);
@@ -896,11 +900,11 @@ describe('QueryParser', () => {
       queryParser.setConfig({ allowedFields: [] });
       const parsedQuery = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const result = queryParser.validate(parsedQuery);
@@ -914,11 +918,11 @@ describe('QueryParser', () => {
       queryParser.setConfig({ forbiddenFields: [] });
       const parsedQuery = {
         filters: [{ field: 'password', operator: FilterOperator.EQUALS, value: 'secret', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const result = queryParser.validate(parsedQuery);
@@ -932,11 +936,11 @@ describe('QueryParser', () => {
       queryParser.setConfig({ allowedFields: ['name', 'age'], forbiddenFields: ['password'] });
       const parsedQuery = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const result = queryParser.validate(parsedQuery);
@@ -950,12 +954,12 @@ describe('QueryParser', () => {
      */
     it('should serialize empty query', () => {
       const query = {
-        filters: [] as any[],
-        sorts: [] as unknown[],
+        filters: [] as ParsedFilter[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 0, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const serialized = queryParser.serialize(query);
@@ -969,11 +973,11 @@ describe('QueryParser', () => {
     it('should serialize query with only filters', () => {
       const query = {
         filters: [{ field: 'name', operator: FilterOperator.EQUALS, value: 'John', negated: false, logicalOperator: LogicalOperator.AND }],
-        sorts: [] as unknown[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 0, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const serialized = queryParser.serialize(query);
@@ -985,12 +989,12 @@ describe('QueryParser', () => {
      */
     it('should serialize query with only sorts', () => {
       const query = {
-        filters: [] as any[],
+        filters: [] as ParsedFilter[],
         sorts: [{ field: 'name', direction: SortDirection.ASC, nullPosition: NullPosition.LAST }],
         pagination: { limit: 0, offset: 0 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const serialized = queryParser.serialize(query);
@@ -1002,12 +1006,12 @@ describe('QueryParser', () => {
      */
     it('should serialize query with only pagination', () => {
       const query = {
-        filters: [] as any[],
-        sorts: [] as unknown[],
+        filters: [] as ParsedFilter[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 20 },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const serialized = queryParser.serialize(query);
@@ -1543,12 +1547,12 @@ describe('QueryParser', () => {
      */
     it('should handle pagination with cursor', () => {
       const query = {
-        filters: [] as any[],
-        sorts: [] as unknown[],
+        filters: [] as ParsedFilter[],
+        sorts: [] as ParsedSort[],
         pagination: { limit: 10, offset: 0, cursor: 'abc123' },
-        projections: [] as unknown[],
-        groups: [] as unknown[],
-        aggregations: [] as unknown[],
+        projections: [] as string[],
+        groups: [] as ParsedGroup[],
+        aggregations: [] as ParsedAggregation[],
       };
 
       const serialized = queryParser.serialize(query);

@@ -159,7 +159,7 @@ export class ServiceComposition {
       services,
       executionOrder: 'parallel',
       parallelismEnabled: true,
-      maxConcurrentServices: maxConcurrent || services.length,
+      maxConcurrentServices: maxConcurrent ?? services.length,
       timeoutStrategy: 'fail-fast',
     });
   }

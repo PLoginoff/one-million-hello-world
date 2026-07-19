@@ -43,14 +43,21 @@ export class StateTransitionBuilder {
   }
 
   build(): StateTransition {
-    if (!this._transition.from || !this._transition.to || !this._transition.reason) {
+    if (
+      this._transition.from == null ||
+      this._transition.from === '' ||
+      this._transition.to == null ||
+      this._transition.to === '' ||
+      this._transition.reason == null ||
+      this._transition.reason === ''
+    ) {
       throw new Error('State transition requires from, to, and reason');
     }
 
     return {
       from: this._transition.from,
       to: this._transition.to,
-      timestamp: this._transition.timestamp || Date.now(),
+      timestamp: this._transition.timestamp ?? Date.now(),
       reason: this._transition.reason,
     };
   }

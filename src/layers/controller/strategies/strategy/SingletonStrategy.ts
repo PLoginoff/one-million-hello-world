@@ -9,7 +9,7 @@ import { ControllerEntity } from '../../domain/entities/ControllerEntity';
 import { ControllerScopeValueObject } from '../../domain/value-objects/ControllerScopeValueObject';
 
 export class SingletonStrategy implements IControllerStrategy {
-  private instances: Map<string, any>;
+  private instances: Map<string, unknown>;
 
   constructor() {
     this.instances = new Map();
@@ -19,13 +19,13 @@ export class SingletonStrategy implements IControllerStrategy {
     return 'SINGLETON';
   }
 
-  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): any {
+  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): unknown {
     if (!scope.isSingleton()) {
       throw new Error('Singleton strategy requires singleton scope');
     }
 
     const existingInstance = this.instances.get(controller.data.id);
-    if (existingInstance) {
+    if (existingInstance !== undefined) {
       return existingInstance;
     }
 
@@ -34,7 +34,7 @@ export class SingletonStrategy implements IControllerStrategy {
     return instance;
   }
 
-  private createInstance(controller: ControllerEntity): any {
+  private createInstance(_controller: ControllerEntity): unknown {
     return {};
   }
 

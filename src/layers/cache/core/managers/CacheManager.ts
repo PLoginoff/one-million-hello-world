@@ -7,6 +7,7 @@
 
 import { CacheService } from '../services/CacheService';
 import { InMemoryStorage } from '../../storage/implementations/in-memory/InMemoryStorage';
+import { IEvictionStrategy } from '../../strategies/eviction/IEvictionStrategy';
 import { LRUEvictionStrategy } from '../../strategies/eviction/LRUEvictionStrategy';
 import { LFUEvictionStrategy } from '../../strategies/eviction/LFUEvictionStrategy';
 import { TimeBasedInvalidationStrategy } from '../../strategies/invalidation/TimeBasedInvalidationStrategy';
@@ -106,7 +107,7 @@ export class CacheManager<T = unknown> {
   /**
    * Create eviction strategy based on configuration
    */
-  private createEvictionStrategy(strategy: InvalidationStrategy): any {
+  private createEvictionStrategy(strategy: InvalidationStrategy): IEvictionStrategy<T> {
     switch (strategy) {
       case InvalidationStrategy.LRU:
         return new LRUEvictionStrategy<T>();

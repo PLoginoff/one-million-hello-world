@@ -105,8 +105,8 @@ export class CompressionConfigBuilder {
    * Build the configuration
    */
   build(): CompressionConfig {
-    const algorithm = this._config.algorithm || CompressionAlgorithm.createGzip();
-    const threshold = this._config.threshold || CompressionThreshold.createDefault();
+    const algorithm = this._config.algorithm ?? CompressionAlgorithm.createGzip();
+    const threshold = this._config.threshold ?? CompressionThreshold.createDefault();
 
     return {
       algorithm,

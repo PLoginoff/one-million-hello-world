@@ -50,15 +50,14 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
 
   apply(data: T[], sorts: ParsedSort[], context?: SortContext): SortResult<T> {
     const startTime = Date.now();
-    const effectiveContext = context ? { ...this._context, ...context } : this._context;
 
     try {
       const compiled = sorts.map((sort) => this.compile(sort));
-      const result = this.applyCompiled(data, compiled, effectiveContext);
+      const result = this.applyCompiled(data, compiled, context);
 
       this._stats.totalSorts++;
       this._updateAverageExecutionTime(result.executionTime);
-      this._updateAverageComparisons(result.comparisons || 0);
+      this._updateAverageComparisons(result.comparisons ?? 0);
 
       return result;
     } catch (error) {
@@ -97,9 +96,8 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     return compiled;
   }
 
-  applyCompiled(data: T[], sorts: CompiledSort[], context?: SortContext): SortResult<T> {
+  applyCompiled(data: T[], sorts: CompiledSort[], _context?: SortContext): SortResult<T> {
     const startTime = Date.now();
-    const effectiveContext = context ? { ...this._context, ...context } : this._context;
 
     try {
       let comparisons = 0;
@@ -147,9 +145,8 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     }
   }
 
-  applyMultiLevel(data: T[], multiLevelSort: MultiLevelSort, context?: SortContext): SortResult<T> {
+  applyMultiLevel(data: T[], multiLevelSort: MultiLevelSort, _context?: SortContext): SortResult<T> {
     const startTime = Date.now();
-    const effectiveContext = context ? { ...this._context, ...context } : this._context;
 
     try {
       let comparisons = 0;
@@ -239,7 +236,14 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
   }
 
   validate(sort: ParsedSort): boolean {
-    return !!sort.field && !!sort.direction;
+    return (
+      sort.field !== undefined &&
+      sort.field !== null &&
+      sort.field !== '' &&
+      sort.direction !== undefined &&
+      sort.direction !== null &&
+      (sort.direction as string) !== ''
+    );
   }
 
   estimateCost(sorts: ParsedSort[], dataLength: number): number {
@@ -257,7 +261,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
   private _createComparator(sort: ParsedSort): (a: unknown, b: unknown) => number {
     return (a: unknown, b: unknown) => {
       if (a === null && b === null) return 0;
-      const nullPosition = sort.nullPosition ?? this._context.nullPosition;
+      const nullPosition: NullPosition = (sort.nullPosition ?? this._context.nullPosition) as NullPosition;
       if (a === null) return nullPosition === NullPosition.FIRST ? -1 : 1;
       if (b === null) return nullPosition === NullPosition.FIRST ? 1 : -1;
 
@@ -282,7 +286,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
         sensitivity: this._context.caseSensitive ? 'base' : 'accent',
       });
 
-      return sort.direction === 'ASC' ? comparison : -comparison;
+      return sort.direction === SortDirection.ASC ? comparison : -comparison;
     };
   }
 
@@ -293,7 +297,7 @@ export class SortEngine<T = unknown> implements ISortEngine<T> {
     return String(value);
   }
 
-  private _estimateSortCost(sort: ParsedSort): number {
+  private _estimateSortCost(_sort: ParsedSort): number {
     return 10;
   }
 

@@ -34,11 +34,11 @@ export class ConfigValidator {
     for (const rule of this._rules) {
       const result = rule.validate(config);
       if (!result) {
-        const severity = rule.severity || 'error';
+        const severity = rule.severity ?? 'error';
         const entry = {
           field: rule.field ?? rule.name ?? 'unknown',
           message: rule.defaultMessage,
-          value: rule.field ? (config as any)[rule.field] : undefined,
+          value: rule.field !== undefined ? (config as Record<string, unknown>)[rule.field] : undefined,
         };
         if (severity === 'error') {
           errors.push(entry);
@@ -73,8 +73,8 @@ export class ConfigValidator {
       field: 'maxQueueSize',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).maxQueueSize;
-        return value > 0 && value <= 100000;
+        const value = config.maxQueueSize;
+        return typeof value === 'number' && value > 0 && value <= 100000;
       },
       defaultMessage: 'maxQueueSize must be between 1 and 100000',
     });
@@ -83,8 +83,8 @@ export class ConfigValidator {
       field: 'maxSubscriptions',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).maxSubscriptions;
-        return value > 0 && value <= 1000000;
+        const value = config.maxSubscriptions;
+        return typeof value === 'number' && value > 0 && value <= 1000000;
       },
       defaultMessage: 'maxSubscriptions must be between 1 and 1000000',
     });
@@ -93,8 +93,8 @@ export class ConfigValidator {
       field: 'timeout',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).timeout;
-        return value > 0 && value <= 60000;
+        const value = config.timeout;
+        return typeof value === 'number' && value > 0 && value <= 60000;
       },
       defaultMessage: 'timeout must be between 1 and 60000ms',
     });
@@ -103,8 +103,8 @@ export class ConfigValidator {
       field: 'maxRetries',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).maxRetries;
-        return value >= 0 && value <= 10;
+        const value = config.maxRetries;
+        return typeof value === 'number' && value >= 0 && value <= 10;
       },
       defaultMessage: 'maxRetries must be between 0 and 10',
     });
@@ -113,9 +113,9 @@ export class ConfigValidator {
       field: 'logLevel',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).logLevel;
+        const value = config.logLevel;
         const validLevels = ['debug', 'info', 'warn', 'error'];
-        return validLevels.includes(value);
+        return typeof value === 'string' && validLevels.includes(value);
       },
       defaultMessage: 'logLevel must be one of: debug, info, warn, error',
     });
@@ -124,9 +124,9 @@ export class ConfigValidator {
       field: 'serializationFormat',
       severity: 'error',
       validate: (config) => {
-        const value = (config as any).serializationFormat;
+        const value = config.serializationFormat;
         const validFormats = ['json', 'protobuf', 'msgpack'];
-        return validFormats.includes(value);
+        return typeof value === 'string' && validFormats.includes(value);
       },
       defaultMessage: 'serializationFormat must be one of: json, protobuf, msgpack',
     });
@@ -139,9 +139,4 @@ interface ValidationRule {
   severity?: 'error' | 'warning';
   validate: (config: EventBusConfig | EventBusConfigOptions) => boolean;
   defaultMessage: string;
-}
-
-interface RuleResult {
-  valid: boolean;
-  message?: string;
 }

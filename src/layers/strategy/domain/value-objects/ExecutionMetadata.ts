@@ -33,7 +33,7 @@ export class ExecutionMetadata {
    * Get end time
    */
   getEndTime(): number {
-    return this.data.endTime || 0;
+    return this.data.endTime ?? 0;
   }
 
   /**
@@ -75,7 +75,7 @@ export class ExecutionMetadata {
    * Check if execution has error
    */
   hasError(): boolean {
-    return !!this.data.errorMessage;
+    return this.data.errorMessage !== undefined && this.data.errorMessage !== null && this.data.errorMessage !== '';
   }
 
   /**

@@ -14,7 +14,6 @@ import {
   InvalidationStrategy,
   CacheKeyPattern,
   CacheEntry,
-  CacheError,
 } from '../types/cache-types';
 
 export class Cache<T = unknown> implements ICache<T> {
@@ -43,35 +42,35 @@ export class Cache<T = unknown> implements ICache<T> {
     };
   }
 
-  async get(key: string): Promise<CacheResult<T>> {
+  get(key: string): Promise<CacheResult<T>> {
     if (!this._config.enabled) {
-      return { success: false, hit: false };
+      return Promise.resolve({ success: false, hit: false });
     }
 
     const entry = this._cache.get(key);
 
     if (!entry) {
       this._incrementMisses();
-      return { success: false, hit: false };
+      return Promise.resolve({ success: false, hit: false });
     }
 
     if (this._isExpired(entry)) {
       this._cache.delete(key);
       this._incrementEvictions();
       this._incrementMisses();
-      return { success: false, hit: false };
+      return Promise.resolve({ success: false, hit: false });
     }
 
     entry.accessCount++;
     entry.lastAccessed = new Date();
     this._incrementHits();
 
-    return { success: true, data: entry.data, hit: true };
+    return Promise.resolve({ success: true, data: entry.data, hit: true });
   }
 
-  async set(key: string, value: T, ttl?: number): Promise<CacheResult<void>> {
+  set(key: string, value: T, ttl?: number): Promise<CacheResult<void>> {
     if (!this._config.enabled) {
-      return { success: false, hit: false };
+      return Promise.resolve({ success: false, hit: false });
     }
 
     const entryTTL = ttl ?? this._config.defaultTTL;
@@ -88,42 +87,42 @@ export class Cache<T = unknown> implements ICache<T> {
     this._cache.set(key, entry);
     this._enforceMaxSize();
 
-    return { success: true, hit: false };
+    return Promise.resolve({ success: true, hit: false });
   }
 
-  async delete(key: string): Promise<CacheResult<void>> {
+  delete(key: string): Promise<CacheResult<void>> {
     if (!this._config.enabled) {
-      return { success: false, hit: false };
+      return Promise.resolve({ success: false, hit: false });
     }
 
     this._cache.delete(key);
-    return { success: true, hit: false };
+    return Promise.resolve({ success: true, hit: false });
   }
 
-  async has(key: string): Promise<CacheResult<boolean>> {
+  has(key: string): Promise<CacheResult<boolean>> {
     if (!this._config.enabled) {
-      return { success: false, data: false, hit: false };
+      return Promise.resolve({ success: false, data: false, hit: false });
     }
 
     const entry = this._cache.get(key);
 
     if (!entry) {
-      return { success: true, data: false, hit: false };
+      return Promise.resolve({ success: true, data: false, hit: false });
     }
 
     if (this._isExpired(entry)) {
       this._cache.delete(key);
       this._incrementEvictions();
-      return { success: true, data: false, hit: false };
+      return Promise.resolve({ success: true, data: false, hit: false });
     }
 
-    return { success: true, data: true, hit: true };
+    return Promise.resolve({ success: true, data: true, hit: true });
   }
 
-  async clear(): Promise<CacheResult<void>> {
+  clear(): Promise<CacheResult<void>> {
     this._cache.clear();
     this._resetStats();
-    return { success: true, hit: false };
+    return Promise.resolve({ success: true, hit: false });
   }
 
   async getMany(keys: string[]): Promise<CacheResult<Map<string, T>>> {
@@ -155,12 +154,12 @@ export class Cache<T = unknown> implements ICache<T> {
     return { success: true, hit: false };
   }
 
-  async invalidate(pattern: CacheKeyPattern, strategy?: InvalidationStrategy): Promise<CacheResult<number>> {
+  invalidate(pattern: CacheKeyPattern, strategy?: InvalidationStrategy): Promise<CacheResult<number>> {
     let regex: RegExp;
     try {
       regex = new RegExp(pattern.pattern);
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         data: 0,
         hit: false,
@@ -168,7 +167,7 @@ export class Cache<T = unknown> implements ICache<T> {
           code: 'INVALID_PATTERN',
           message: error instanceof Error ? error.message : 'Invalid cache key pattern',
         },
-      };
+      });
     }
     let count = 0;
 
@@ -181,7 +180,7 @@ export class Cache<T = unknown> implements ICache<T> {
       }
     }
 
-    return { success: true, data: count, hit: false };
+    return Promise.resolve({ success: true, data: count, hit: false });
   }
 
   getStats(): CacheStats {

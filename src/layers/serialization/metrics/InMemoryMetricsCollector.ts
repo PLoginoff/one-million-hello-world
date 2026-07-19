@@ -4,14 +4,7 @@
  * Stores metrics in memory.
  */
 
-import {
-  IMetricsCollector,
-  AnyMetric,
-  CounterMetric,
-  GaugeMetric,
-  TimingMetric,
-  HistogramMetric,
-} from './IMetricsCollector';
+import { IMetricsCollector, AnyMetric } from './IMetricsCollector';
 
 export class InMemoryMetricsCollector implements IMetricsCollector {
   private _metrics: Map<string, AnyMetric[]>;

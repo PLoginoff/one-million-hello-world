@@ -12,7 +12,7 @@ export class SynchronousServiceStrategy implements IServiceStrategy {
     return 'SYNCHRONOUS';
   }
 
-  async execute(service: ServiceEntity, input: any): Promise<any> {
-    return input;
+  async execute(service: ServiceEntity, input: unknown): Promise<unknown> {
+    return Promise.resolve(input);
   }
 }

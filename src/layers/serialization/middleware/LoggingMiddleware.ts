@@ -14,11 +14,11 @@ export interface ILogger {
 
 export class ConsoleLogger implements ILogger {
   log(message: string): void {
-    console.log(`[Middleware] ${message}`);
+    console.warn(`[Middleware] ${message}`);
   }
 
   debug(message: string): void {
-    console.debug(`[Middleware Debug] ${message}`);
+    console.warn(`[Middleware Debug] ${message}`);
   }
 
   error(message: string): void {

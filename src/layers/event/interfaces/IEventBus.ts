@@ -5,7 +5,7 @@
  * including event bus, Pub/Sub, and domain event propagation.
  */
 
-import { EventHandler, EventSubscription, EventConfig, EventStats } from '../types/event-types';
+import { EventHandler, EventConfig, EventStats } from '../types/event-types';
 
 /**
  * Interface for event bus operations

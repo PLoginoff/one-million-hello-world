@@ -4,7 +4,7 @@
  * Central manager for cache providers with namespacing.
  */
 
-import { ICacheProvider, CacheEntry } from './ICacheProvider';
+import { ICacheProvider } from './ICacheProvider';
 import { InMemoryCacheProvider } from './InMemoryCacheProvider';
 import { LRUCacheProvider } from './LRUCacheProvider';
 

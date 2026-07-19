@@ -40,53 +40,37 @@ export class CompressionConfigValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
 
-    if (!config.algorithm) {
-      errors.push({
-        path: 'algorithm',
-        message: 'Algorithm is required',
-        code: 'ALGORITHM_REQUIRED',
-      });
-    } else {
-      const algorithmValidation = this._validationService.validateAlgorithm(config.algorithm);
-      errors.push(
-        ...algorithmValidation.errors.map((e) => ({
-          path: `algorithm.${e.field}`,
-          message: e.message,
-          code: e.code,
-        }))
-      );
-      warnings.push(
-        ...algorithmValidation.warnings.map((w) => ({
-          path: `algorithm.${w.field}`,
-          message: w.message,
-          code: w.code,
-        }))
-      );
-    }
+    const algorithmValidation = this._validationService.validateAlgorithm(config.algorithm);
+    errors.push(
+      ...algorithmValidation.errors.map((e) => ({
+        path: `algorithm.${e.field}`,
+        message: e.message,
+        code: e.code,
+      }))
+    );
+    warnings.push(
+      ...algorithmValidation.warnings.map((w) => ({
+        path: `algorithm.${w.field}`,
+        message: w.message,
+        code: w.code,
+      }))
+    );
 
-    if (!config.threshold) {
-      errors.push({
-        path: 'threshold',
-        message: 'Threshold is required',
-        code: 'THRESHOLD_REQUIRED',
-      });
-    } else {
-      const thresholdValidation = this._validationService.validateThreshold(config.threshold);
-      errors.push(
-        ...thresholdValidation.errors.map((e) => ({
-          path: `threshold.${e.field}`,
-          message: e.message,
-          code: e.code,
-        }))
-      );
-      warnings.push(
-        ...thresholdValidation.warnings.map((w) => ({
-          path: `threshold.${w.field}`,
-          message: w.message,
-          code: w.code,
-        }))
-      );
-    }
+    const thresholdValidation = this._validationService.validateThreshold(config.threshold);
+    errors.push(
+      ...thresholdValidation.errors.map((e) => ({
+        path: `threshold.${e.field}`,
+        message: e.message,
+        code: e.code,
+      }))
+    );
+    warnings.push(
+      ...thresholdValidation.warnings.map((w) => ({
+        path: `threshold.${w.field}`,
+        message: w.message,
+        code: w.code,
+      }))
+    );
 
     if (config.defaultLevel === undefined) {
       warnings.push({
@@ -103,7 +87,7 @@ export class CompressionConfigValidator {
         });
       }
 
-      if (config.algorithm && !config.algorithm.isValidLevel(config.defaultLevel)) {
+      if (!config.algorithm.isValidLevel(config.defaultLevel)) {
         errors.push({
           path: 'defaultLevel',
           message: 'Default level is not valid for the selected algorithm',
@@ -128,7 +112,7 @@ export class CompressionConfigValidator {
       });
     }
 
-    if (config.name && config.name.length > 100) {
+    if (config.name != null && config.name !== '' && config.name.length > 100) {
       warnings.push({
         path: 'name',
         message: 'Configuration name is very long',
@@ -136,7 +120,7 @@ export class CompressionConfigValidator {
       });
     }
 
-    if (config.tags && config.tags.length > 20) {
+    if (config.tags != null && config.tags.length > 20) {
       warnings.push({
         path: 'tags',
         message: 'Too many tags, consider reducing',
@@ -175,7 +159,7 @@ export class CompressionConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name == null || config.name === '') {
       warnings.push({
         path: 'name',
         message: 'Configuration name should be set in production for better observability',
@@ -183,7 +167,7 @@ export class CompressionConfigValidator {
       });
     }
 
-    if (config.threshold && config.threshold.getMaxCompressionTime() > 1000) {
+    if (config.threshold.getMaxCompressionTime() > 1000) {
       warnings.push({
         path: 'threshold.maxCompressionTime',
         message: 'Compression time threshold is high for production',

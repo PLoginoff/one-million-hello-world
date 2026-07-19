@@ -17,7 +17,7 @@ export class SerializationError extends Error {
   public readonly innerError?: Error;
 
   constructor(code: SerializationErrorCode, message?: string, context: ErrorContext = {}, innerError?: Error) {
-    const errorMessage = message || getErrorMessage(code);
+    const errorMessage = message ?? getErrorMessage(code);
     super(errorMessage);
 
     this.name = 'SerializationError';

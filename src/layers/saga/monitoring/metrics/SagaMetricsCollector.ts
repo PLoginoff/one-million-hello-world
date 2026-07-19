@@ -73,7 +73,8 @@ export class SagaMetricsCollector {
    * Get average duration
    */
   getAverageDuration(sagaId?: string): number {
-    const metrics = sagaId ? this.getMetricsBySagaId(sagaId) : this._metrics;
+    const metrics =
+      sagaId !== undefined && sagaId !== null && sagaId.length > 0 ? this.getMetricsBySagaId(sagaId) : this._metrics;
     if (metrics.length === 0) {
       return 0;
     }
@@ -85,7 +86,8 @@ export class SagaMetricsCollector {
    * Get success rate
    */
   getSuccessRate(sagaId?: string): number {
-    const metrics = sagaId ? this.getMetricsBySagaId(sagaId) : this._metrics;
+    const metrics =
+      sagaId !== undefined && sagaId !== null && sagaId.length > 0 ? this.getMetricsBySagaId(sagaId) : this._metrics;
     if (metrics.length === 0) {
       return 0;
     }
@@ -97,7 +99,8 @@ export class SagaMetricsCollector {
    * Get failure rate
    */
   getFailureRate(sagaId?: string): number {
-    const metrics = sagaId ? this.getMetricsBySagaId(sagaId) : this._metrics;
+    const metrics =
+      sagaId !== undefined && sagaId !== null && sagaId.length > 0 ? this.getMetricsBySagaId(sagaId) : this._metrics;
     if (metrics.length === 0) {
       return 0;
     }
@@ -109,14 +112,15 @@ export class SagaMetricsCollector {
    * Get percentiles
    */
   getPercentiles(percentile: number, sagaId?: string): number {
-    const metrics = sagaId ? this.getMetricsBySagaId(sagaId) : this._metrics;
+    const metrics =
+      sagaId !== undefined && sagaId !== null && sagaId.length > 0 ? this.getMetricsBySagaId(sagaId) : this._metrics;
     if (metrics.length === 0) {
       return 0;
     }
 
     const sorted = [...metrics].sort((a, b) => a.duration - b.duration);
     const index = Math.ceil((percentile / 100) * sorted.length) - 1;
-    return sorted[index]?.duration || 0;
+    return sorted[index]?.duration ?? 0;
   }
 
   clear(): void {

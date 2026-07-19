@@ -15,7 +15,7 @@ export interface IAuthenticationStrategy {
   /**
    * Authenticate credentials
    */
-  authenticate(credentials: any): {
+  authenticate(credentials: Record<string, unknown>): {
     success: boolean;
     context?: SecurityContextEntity;
     error?: string;

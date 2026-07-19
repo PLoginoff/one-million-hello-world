@@ -9,14 +9,22 @@ export class StringUtils {
    * Converts string to camelCase
    */
   static toCamelCase(str: string): string {
-    return str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^(.)/, (c) => c.toLowerCase());
+    return str
+      .replace(/[-_\s]+(.)?/g, (_match: string, group: string | undefined) =>
+        group !== undefined ? group.toUpperCase() : ''
+      )
+      .replace(/^(.)/, (match: string) => match.toLowerCase());
   }
 
   /**
    * Converts string to PascalCase
    */
   static toPascalCase(str: string): string {
-    return str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : '')).replace(/^(.)/, (c) => c.toUpperCase());
+    return str
+      .replace(/[-_\s]+(.)?/g, (_match: string, group: string | undefined) =>
+        group !== undefined ? group.toUpperCase() : ''
+      )
+      .replace(/^(.)/, (match: string) => match.toUpperCase());
   }
 
   /**

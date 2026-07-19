@@ -6,7 +6,8 @@
  */
 
 import { SagaBuilderConfig } from '../builders/SagaConfigBuilder';
-import { SagaValidationService } from '../../domain/services/SagaValidationService';
+import { SagaConfig as DomainSagaConfig } from '../../domain/value-objects/SagaConfig';
+import { SagaValidationService, ValidationError, ValidationWarning } from '../../domain/services/SagaValidationService';
 
 export interface ConfigValidationResult {
   isValid: boolean;
@@ -39,24 +40,25 @@ export class SagaConfigValidator {
   validate(config: SagaBuilderConfig): ConfigValidationResult {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
+    const sagaConfig = config.sagaConfig as DomainSagaConfig | undefined;
 
-    if (!config.sagaConfig) {
+    if (sagaConfig == null) {
       errors.push({
         path: 'sagaConfig',
         message: 'Saga configuration is required',
         code: 'SAGA_CONFIG_REQUIRED',
       });
     } else {
-      const configValidation = this._validationService.validateSagaConfig(config.sagaConfig);
+      const configValidation = this._validationService.validateSagaConfig(sagaConfig);
       errors.push(
-        ...configValidation.errors.map((e: any) => ({
+        ...configValidation.errors.map((e: ValidationError) => ({
           path: `sagaConfig.${e.field}`,
           message: e.message,
           code: e.code,
         }))
       );
       warnings.push(
-        ...configValidation.warnings.map((w: any) => ({
+        ...configValidation.warnings.map((w: ValidationWarning) => ({
           path: `sagaConfig.${w.field}`,
           message: w.message,
           code: w.code,
@@ -88,7 +90,7 @@ export class SagaConfigValidator {
       });
     }
 
-    if (config.name && config.name.length > 100) {
+    if (config.name != null && config.name.length > 100) {
       warnings.push({
         path: 'name',
         message: 'Configuration name is very long',
@@ -96,7 +98,7 @@ export class SagaConfigValidator {
       });
     }
 
-    if (config.tags && config.tags.length > 20) {
+    if (config.tags != null && config.tags.length > 20) {
       warnings.push({
         path: 'tags',
         message: 'Too many tags, consider reducing',
@@ -118,6 +120,7 @@ export class SagaConfigValidator {
     const baseValidation = this.validate(config);
     const errors: ConfigValidationError[] = [...baseValidation.errors];
     const warnings: ConfigValidationWarning[] = [...baseValidation.warnings];
+    const sagaConfig = config.sagaConfig as DomainSagaConfig | undefined;
 
     if (!config.enableMetrics) {
       errors.push({
@@ -143,7 +146,7 @@ export class SagaConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name == null || config.name === '') {
       warnings.push({
         path: 'name',
         message: 'Configuration name should be set in production for better observability',
@@ -151,7 +154,7 @@ export class SagaConfigValidator {
       });
     }
 
-    if (config.sagaConfig && config.sagaConfig.data.compensationStrategy === 'manual') {
+    if (sagaConfig != null && sagaConfig.data.compensationStrategy === 'manual') {
       warnings.push({
         path: 'sagaConfig.compensationStrategy',
         message: 'Manual compensation in production may be risky',

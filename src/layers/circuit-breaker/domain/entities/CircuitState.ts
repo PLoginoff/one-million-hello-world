@@ -24,7 +24,7 @@ export class CircuitStateEntity {
     this.currentState = currentState;
     this.previousState = previousState;
     this.transitions = transitions.slice(-maxHistorySize);
-    this.metadata = metadata || this._createDefaultMetadata();
+    this.metadata = metadata ?? this._createDefaultMetadata();
     this._maxHistorySize = maxHistorySize;
   }
 
@@ -78,7 +78,7 @@ export class CircuitStateEntity {
       from: this.currentState,
       to: newState,
       timestamp: Date.now(),
-      reason: reason || `Transition from ${this.currentState} to ${newState}`,
+      reason: reason ?? `Transition from ${this.currentState} to ${newState}`,
     };
 
     const newTransitions = [...this.transitions, transition].slice(-this._maxHistorySize);

@@ -2057,7 +2057,7 @@ describe('TransactionManager', () => {
       context?.snapshot.data.set('key1', 'value1');
       context?.snapshot.data.set('key2', 'value2');
 
-      const entries = Array.from(context?.snapshot.data.entries() || []);
+      const entries = Array.from(context?.snapshot.data.entries() ?? []);
       expect(entries.length).toBe(2);
     });
   });
@@ -2114,7 +2114,7 @@ describe('TransactionManager', () => {
       context?.snapshot.metadata.set('meta1', 'value1');
       context?.snapshot.metadata.set('meta2', 'value2');
 
-      const entries = Array.from(context?.snapshot.metadata.entries() || []);
+      const entries = Array.from(context?.snapshot.metadata.entries() ?? []);
       expect(entries.length).toBe(2);
     });
   });

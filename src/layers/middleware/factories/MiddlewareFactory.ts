@@ -9,8 +9,8 @@ import { DefaultConfigs, MiddlewareConfigOptions } from '../configuration/defaul
 import { MiddlewareEntity } from '../domain/entities/MiddlewareEntity';
 import { MiddlewareContextEntity } from '../domain/entities/MiddlewareContextEntity';
 import { MiddlewareExecutionOrderValueObject } from '../domain/value-objects/MiddlewareExecutionOrderValueObject';
-import { MiddlewareChainService, MiddlewareFunction } from '../domain/services/MiddlewareChainService';
-import { MiddlewarePipelineService, PipelineHandler } from '../domain/services/MiddlewarePipelineService';
+import { MiddlewareChainService } from '../domain/services/MiddlewareChainService';
+import { MiddlewarePipelineService } from '../domain/services/MiddlewarePipelineService';
 import { MiddlewareStatistics } from '../statistics/MiddlewareStatistics';
 import { SequentialExecutionStrategy } from '../strategies/strategy/SequentialExecutionStrategy';
 import { ParallelExecutionStrategy } from '../strategies/strategy/ParallelExecutionStrategy';
@@ -126,7 +126,7 @@ export class MiddlewareFactory {
   /**
    * Create middleware context
    */
-  static createMiddlewareContext(request: any, response: any): MiddlewareContextEntity {
+  static createMiddlewareContext(request: unknown, response: unknown): MiddlewareContextEntity {
     return MiddlewareContextEntity.create(request, response);
   }
 

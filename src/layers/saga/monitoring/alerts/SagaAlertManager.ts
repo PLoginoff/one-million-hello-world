@@ -5,10 +5,12 @@
  * Provides configurable alert rules and notification channels.
  */
 
+import { SagaMetricsData } from '../metrics/SagaMetricsCollector';
+
 export interface AlertRule {
   ruleId: string;
   name: string;
-  condition: (metrics: any) => boolean;
+  condition: (metrics: SagaMetricsData) => boolean;
   severity: 'info' | 'warning' | 'error' | 'critical';
   enabled: boolean;
 }
@@ -51,7 +53,7 @@ export class SagaAlertManager {
   /**
    * Evaluate rules against metrics
    */
-  evaluateRules(metrics: any): Alert[] {
+  evaluateRules(metrics: SagaMetricsData): Alert[] {
     const triggeredAlerts: Alert[] = [];
 
     for (const rule of this._rules.values()) {
@@ -63,7 +65,7 @@ export class SagaAlertManager {
         const alert: Alert = {
           alertId: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           ruleId: rule.ruleId,
-          executionId: metrics.executionId || 'unknown',
+          executionId: metrics.executionId ?? 'unknown',
           message: `Alert triggered: ${rule.name}`,
           severity: rule.severity,
           timestamp: Date.now(),
@@ -98,7 +100,7 @@ export class SagaAlertManager {
    * Get alerts
    */
   getAlerts(limit?: number): Alert[] {
-    if (limit) {
+    if (limit !== undefined && limit > 0) {
       return this._alerts.slice(-limit);
     }
     return [...this._alerts];

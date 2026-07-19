@@ -25,13 +25,13 @@ export class EventMetadata {
   private readonly _tags: Record<string, string>;
 
   constructor(options: EventMetadataOptions = {}) {
-    this._timestamp = options.timestamp || new Date();
-    this._source = options.source !== undefined ? options.source : 'unknown';
-    this._correlationId = options.correlationId !== undefined ? options.correlationId : this._generateCorrelationId();
+    this._timestamp = options.timestamp ?? new Date();
+    this._source = options.source ?? 'unknown';
+    this._correlationId = options.correlationId ?? this._generateCorrelationId();
     this._causationId = options.causationId;
     this._userId = options.userId;
-    this._version = options.version !== undefined ? options.version : 1;
-    this._tags = options.tags || {};
+    this._version = options.version ?? 1;
+    this._tags = options.tags ?? {};
     this._validate();
   }
 
@@ -142,15 +142,22 @@ export class EventMetadata {
     };
   }
 
-  static fromJSON(json: any): EventMetadata {
+  static fromJSON(json: unknown): EventMetadata {
+    if (typeof json !== 'object' || json === null) {
+      throw new Error('EventMetadata: fromJSON requires an object');
+    }
+    const data = json as Record<string, unknown>;
     return new EventMetadata({
-      timestamp: json.timestamp ? new Date(json.timestamp) : undefined,
-      source: json.source,
-      correlationId: json.correlationId,
-      causationId: json.causationId,
-      userId: json.userId,
-      version: json.version,
-      tags: json.tags,
+      timestamp:
+        data.timestamp !== undefined && data.timestamp !== null
+          ? new Date(data.timestamp as string | number | Date)
+          : undefined,
+      source: data.source as string | undefined,
+      correlationId: data.correlationId as string | undefined,
+      causationId: data.causationId as string | undefined,
+      userId: data.userId as string | undefined,
+      version: data.version as number | undefined,
+      tags: data.tags as Record<string, string> | undefined,
     });
   }
 

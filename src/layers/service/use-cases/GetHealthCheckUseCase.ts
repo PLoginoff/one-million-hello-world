@@ -27,7 +27,7 @@ export class GetHealthCheckUseCase implements UseCase<GetHealthCheckInput, GetHe
     this._layerCount = layerCount;
   }
 
-  async execute(input: GetHealthCheckInput, context: ServiceContext): Promise<ServiceResult<GetHealthCheckOutput>> {
+  async execute(_input: GetHealthCheckInput, _context: ServiceContext): Promise<ServiceResult<GetHealthCheckOutput>> {
     try {
       const health = HealthCheck.healthy(this._version);
       const result: GetHealthCheckOutput = {
@@ -40,13 +40,13 @@ export class GetHealthCheckUseCase implements UseCase<GetHealthCheckInput, GetHe
         })),
         timestamp: new Date().toISOString(),
       };
-      return { success: true, data: result };
+      return Promise.resolve({ success: true, data: result });
     } catch (error) {
       const errorResult: ServiceError = {
         code: 'HEALTH_CHECK_ERROR',
         message: error instanceof Error ? error.message : 'Health check failed',
       };
-      return { success: false, error: errorResult };
+      return Promise.resolve({ success: false, error: errorResult });
     }
   }
 }

@@ -155,7 +155,7 @@ export class DefaultConfigs {
     return {
       ...DefaultConfigs.DEFAULT,
       ...options,
-      threatThresholds: options.threatThresholds || new Map(DefaultConfigs.DEFAULT.threatThresholds),
+      threatThresholds: options.threatThresholds ?? new Map(DefaultConfigs.DEFAULT.threatThresholds),
     } as SecurityConfigOptions;
   }
 }

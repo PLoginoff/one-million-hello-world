@@ -24,8 +24,8 @@ export class IdGenerator {
   }
 
   generate(): string {
-    const prefix = this._options.prefix || '';
-    const suffix = this._options.suffix || '';
+    const prefix = this._options.prefix ?? '';
+    const suffix = this._options.suffix ?? '';
     const id = this._generateByStrategy();
 
     return `${prefix}${id}${suffix}`;
@@ -48,7 +48,7 @@ export class IdGenerator {
   }
 
   private _generateByStrategy(): string {
-    const strategy = this._options.strategy || 'uuid';
+    const strategy = this._options.strategy ?? 'uuid';
     switch (strategy) {
       case 'uuid':
         return this._generateUUID();
@@ -73,7 +73,7 @@ export class IdGenerator {
 
   private _generateNanoId(): string {
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    const length = this._options.length || 21;
+    const length = this._options.length != null && this._options.length > 0 ? this._options.length : 21;
     let id = '';
 
     for (let i = 0; i < length; i++) {

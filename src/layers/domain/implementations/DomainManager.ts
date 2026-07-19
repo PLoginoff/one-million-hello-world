@@ -6,7 +6,7 @@
  */
 
 import { IDomainManager } from '../interfaces/IDomainManager';
-import { DomainEntity, ValueObject, DomainEvent, DomainResult, DomainError } from '../types/domain-types';
+import { DomainEntity, ValueObject, DomainEvent, DomainResult } from '../types/domain-types';
 
 export class DomainManager implements IDomainManager {
   private _entities: Map<string, DomainEntity>;
@@ -17,77 +17,77 @@ export class DomainManager implements IDomainManager {
     this._events = new Map();
   }
 
-  async createEntity<T extends DomainEntity>(entity: T): Promise<DomainResult<T>> {
+  createEntity<T extends DomainEntity>(entity: T): Promise<DomainResult<T>> {
     const validation = this.validateEntity(entity);
     if (!validation.success) {
-      return validation;
+      return Promise.resolve(validation);
     }
 
     this._entities.set(entity.id, entity);
-    return { success: true, value: entity };
+    return Promise.resolve({ success: true, value: entity });
   }
 
-  async updateEntity<T extends DomainEntity>(entity: T): Promise<DomainResult<T>> {
+  updateEntity<T extends DomainEntity>(entity: T): Promise<DomainResult<T>> {
     const validation = this.validateEntity(entity);
     if (!validation.success) {
-      return validation;
+      return Promise.resolve(validation);
     }
 
     if (!this._entities.has(entity.id)) {
-      return {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'ENTITY_NOT_FOUND',
           message: `Entity with ID ${entity.id} not found`,
         },
-      };
+      });
     }
 
     entity.updatedAt = new Date();
     this._entities.set(entity.id, entity);
-    return { success: true, value: entity };
+    return Promise.resolve({ success: true, value: entity });
   }
 
-  async deleteEntity(entityId: string): Promise<DomainResult<void>> {
+  deleteEntity(entityId: string): Promise<DomainResult<void>> {
     if (!this._entities.has(entityId)) {
-      return {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'ENTITY_NOT_FOUND',
           message: `Entity with ID ${entityId} not found`,
         },
-      };
+      });
     }
 
     this._entities.delete(entityId);
     this._events.delete(entityId);
-    return { success: true };
+    return Promise.resolve({ success: true });
   }
 
-  async getEntity<T extends DomainEntity>(entityId: string): Promise<DomainResult<T>> {
+  getEntity<T extends DomainEntity>(entityId: string): Promise<DomainResult<T>> {
     const entity = this._entities.get(entityId) as T | undefined;
 
-    if (!entity) {
-      return {
+    if (entity === undefined) {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'ENTITY_NOT_FOUND',
           message: `Entity with ID ${entityId} not found`,
         },
-      };
+      });
     }
 
-    return { success: true, value: entity };
+    return Promise.resolve({ success: true, value: entity });
   }
 
   publishEvent(event: DomainEvent): void {
-    const events = this._events.get(event.aggregateId) || [];
+    const events = this._events.get(event.aggregateId) ?? [];
     events.push(event);
     this._events.set(event.aggregateId, events);
   }
 
   getUncommittedEvents(aggregateId: string): DomainEvent[] {
-    return this._events.get(aggregateId) || [];
+    return this._events.get(aggregateId) ?? [];
   }
 
   equals(vo1: ValueObject, vo2: ValueObject): boolean {

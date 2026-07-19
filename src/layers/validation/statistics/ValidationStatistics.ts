@@ -68,7 +68,7 @@ export class ValidationStatistics {
    * Record field validation
    */
   recordFieldValidation(field: string): void {
-    const currentCount = this._fieldCounts.get(field) || 0;
+    const currentCount = this._fieldCounts.get(field) ?? 0;
     this._fieldCounts.set(field, currentCount + 1);
     this._updateMostValidatedFields();
   }

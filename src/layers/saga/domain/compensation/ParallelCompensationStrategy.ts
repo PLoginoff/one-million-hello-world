@@ -5,7 +5,7 @@
  * Used for performance optimization when steps are independent.
  */
 
-import { SagaExecutionEntity } from '../entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep } from '../entities/SagaExecution';
 
 export class ParallelCompensationStrategy {
   /**
@@ -26,7 +26,7 @@ export class ParallelCompensationStrategy {
   /**
    * Check if step should be compensated
    */
-  shouldCompensate(step: any): boolean {
+  shouldCompensate(step: SagaStep): boolean {
     return step.status === 'completed';
   }
 
@@ -86,7 +86,7 @@ export class ParallelCompensationStrategy {
     return groups;
   }
 
-  private _areIndependent(step1: string, step2: string, execution: SagaExecutionEntity): boolean {
+  private _areIndependent(_step1: string, _step2: string, _execution: SagaExecutionEntity): boolean {
     return true;
   }
 }

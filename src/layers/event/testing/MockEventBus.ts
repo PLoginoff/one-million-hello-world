@@ -40,7 +40,7 @@ export class MockEventBus implements IEventBus {
 
   once<T>(eventType: string, handler: EventHandler<T>): string {
     const wrappedHandler: EventHandler = (event: Event) => {
-      handler(event as Event<T>);
+      void handler(event as Event<T>);
       this.unsubscribe(`mock-sub-${eventType}`);
     };
     return this.subscribe(eventType, wrappedHandler);
@@ -61,7 +61,7 @@ export class MockEventBus implements IEventBus {
       throw this._throwError;
     }
 
-    const handlers = this._subscriptions.get(event.type.value) || [];
+    const handlers = this._subscriptions.get(event.type.value) ?? [];
     for (const handler of handlers) {
       this._calls.push({
         eventType: event.type.value,
@@ -69,12 +69,12 @@ export class MockEventBus implements IEventBus {
         handler,
         timestamp: new Date(),
       });
-      handler(event);
+      void handler(event);
     }
   }
 
-  async publishAsync<T>(event: Event<T>): Promise<void> {
-    this.publish(event);
+  publishAsync<T>(event: Event<T>): Promise<void> {
+    return Promise.resolve(this.publish(event));
   }
 
   clear(): void {

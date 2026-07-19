@@ -23,7 +23,7 @@ export class SubscriptionManager implements ISubscriptionManager {
     const subscription: Subscription = {
       id,
       eventType,
-      handler,
+      handler: handler as EventHandler<unknown>,
       once,
       createdAt: new Date(),
       executionCount: 0,

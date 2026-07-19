@@ -128,7 +128,7 @@ export class StrategyRegistry {
    */
   getByFormat(format: string): ISerializationStrategy | undefined {
     const key = this._formatMap.get(format);
-    return key ? this.get(key) : undefined;
+    return key !== undefined ? this.get(key) : undefined;
   }
 
   /**
@@ -139,7 +139,7 @@ export class StrategyRegistry {
    */
   getByContentType(contentType: ContentType): ISerializationStrategy | undefined {
     const key = this._contentTypeMap.get(contentType);
-    return key ? this.get(key) : undefined;
+    return key !== undefined ? this.get(key) : undefined;
   }
 
   /**

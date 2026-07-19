@@ -12,14 +12,10 @@ import {
   QueryBuildResult,
   FilterClause,
   SortClause,
-  PaginationClause,
-  ProjectionClause,
-  GroupClause,
-  AggregationClause,
-  HavingClause,
   JoinClause,
   JoinType,
 } from '../types/query-builder-types';
+import { ParsedQuery } from '../../query-parser/types/query-parser-types';
 
 export class QueryBuilder implements IQueryBuilder {
   private _state: QueryBuilderState;
@@ -87,7 +83,7 @@ export class QueryBuilder implements IQueryBuilder {
     this._state.sorts.push({
       field,
       direction,
-      nullPosition: nullPosition || 'LAST',
+      nullPosition: nullPosition ?? 'LAST',
     });
     return this;
   }
@@ -213,16 +209,16 @@ export class QueryBuilder implements IQueryBuilder {
 
   clone(): IQueryBuilder {
     const cloned = new QueryBuilder(this._config);
-    cloned._state = JSON.parse(JSON.stringify(this._state));
+    cloned._state = JSON.parse(JSON.stringify(this._state)) as QueryBuilderState;
     return cloned;
   }
 
   getState(): QueryBuilderState {
-    return JSON.parse(JSON.stringify(this._state));
+    return JSON.parse(JSON.stringify(this._state)) as QueryBuilderState;
   }
 
   setState(state: Partial<QueryBuilderState>): void {
-    this._state = { ...this._state, ...JSON.parse(JSON.stringify(state)) };
+    this._state = { ...this._state, ...(JSON.parse(JSON.stringify(state)) as Partial<QueryBuilderState>) };
   }
 
   setConfig(config: Partial<QueryBuilderConfig>): void {
@@ -290,7 +286,7 @@ export class QueryBuilder implements IQueryBuilder {
     };
   }
 
-  private _convertToParsedQuery(): any {
+  private _convertToParsedQuery(): ParsedQuery {
     return {
       filters: this._state.filters.map((f) => ({
         field: f.field,
@@ -305,15 +301,24 @@ export class QueryBuilder implements IQueryBuilder {
         nullPosition: s.nullPosition,
       })),
       pagination: {
-        limit: this._state.pagination.limit || this._config.defaultLimit,
-        offset: this._state.pagination.offset || 0,
+        limit: this._state.pagination.limit ?? this._config.defaultLimit,
+        offset: this._state.pagination.offset ?? 0,
         cursor: this._state.pagination.cursor,
       },
-      projections: this._state.projections,
-      groups: this._state.groups,
-      aggregations: this._state.aggregations,
-      having: this._state.having,
-      joins: this._state.joins,
-    };
+      projections: this._state.projections.map((p) => p.field),
+      groups: this._state.groups.map((g) => ({
+        field: g.field,
+        aggregations: g.aggregations.map((a) => ({
+          function: a.function,
+          field: a.field,
+          alias: a.alias,
+        })),
+      })),
+      aggregations: this._state.aggregations.map((a) => ({
+        function: a.function,
+        field: a.field,
+        alias: a.alias,
+      })),
+    } as ParsedQuery;
   }
 }

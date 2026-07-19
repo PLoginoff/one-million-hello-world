@@ -105,7 +105,7 @@ export class CircuitFactory {
 
     const builder = new CircuitConfigBuilder(defaults);
 
-    if (options?.name) {
+    if (options?.name != null && options.name !== '') {
       builder.withName(options.name);
     }
 

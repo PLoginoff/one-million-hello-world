@@ -9,7 +9,7 @@ import { SecurityLevel } from '../../types/security-types';
 export interface PolicyRule {
   resource: string;
   action: string;
-  conditions?: Record<string, any>;
+  conditions?: Record<string, unknown>;
   effect: 'allow' | 'deny';
 }
 

@@ -103,7 +103,7 @@ export class HttpRequestEntity {
    */
   getContentLength(): number {
     const contentLength = this.getHeader('content-length');
-    return contentLength ? parseInt(contentLength, 10) : this.body.length;
+    return contentLength != null && contentLength.length > 0 ? parseInt(contentLength, 10) : this.body.length;
   }
 
   /**
@@ -166,7 +166,7 @@ export class HttpRequestEntity {
   }
 
   private validateRequestLine(line: HttpRequestLine): void {
-    if (!line.method || !line.path || !line.version) {
+    if (line.method.length === 0 || line.path.length === 0 || line.version.length === 0) {
       throw new Error('Invalid request line: missing required fields');
     }
 

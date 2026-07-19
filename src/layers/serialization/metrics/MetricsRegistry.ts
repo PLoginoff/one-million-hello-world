@@ -8,7 +8,7 @@ import { IMetricsCollector } from './IMetricsCollector';
 import { InMemoryMetricsCollector } from './InMemoryMetricsCollector';
 
 export class MetricsRegistry {
-  private static _instance: MetricsRegistry;
+  private static _instance?: MetricsRegistry;
   private _collectors: Map<string, IMetricsCollector>;
 
   private constructor() {
@@ -19,7 +19,7 @@ export class MetricsRegistry {
    * Gets the singleton instance
    */
   static getInstance(): MetricsRegistry {
-    if (!MetricsRegistry._instance) {
+    if (MetricsRegistry._instance === undefined) {
       MetricsRegistry._instance = new MetricsRegistry();
     }
     return MetricsRegistry._instance;

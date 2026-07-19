@@ -5,6 +5,22 @@
  * Immutable value object for managing validation schemas.
  */
 
+export interface ValidationConstraint {
+  type: string;
+  value?: unknown;
+  message?: string;
+}
+
+export interface ValidationRuleData {
+  ruleId: string;
+  name: string;
+  description: string;
+  fieldType: 'string' | 'number' | 'boolean' | 'date' | 'email' | 'url' | 'uuid' | 'custom';
+  constraints: ValidationConstraint[];
+  severity: 'error' | 'warning' | 'info';
+  enabled: boolean;
+}
+
 export interface ValidationSchemaData {
   schemaId: string;
   name: string;
@@ -14,14 +30,18 @@ export interface ValidationSchemaData {
   stopOnFirstError: boolean;
 }
 
-export interface ValidationRuleData {
-  ruleId: string;
-  name: string;
-  description: string;
-  fieldType: 'string' | 'number' | 'boolean' | 'date' | 'email' | 'url' | 'uuid' | 'custom';
-  constraints: any[];
+interface SchemaValidationError {
+  field: string;
+  message: string;
+  code: string;
   severity: 'error' | 'warning' | 'info';
-  enabled: boolean;
+}
+
+interface SchemaValidationWarning {
+  field: string;
+  message: string;
+  code: string;
+  severity: 'error' | 'warning' | 'info';
 }
 
 export class ValidationSchema {
@@ -91,9 +111,13 @@ export class ValidationSchema {
   /**
    * Validate data against schema
    */
-  validate(data: Record<string, unknown>): { isValid: boolean; errors: any[]; warnings: any[] } {
-    const errors: any[] = [];
-    const warnings: any[] = [];
+  validate(data: Record<string, unknown>): {
+    isValid: boolean;
+    errors: SchemaValidationError[];
+    warnings: SchemaValidationWarning[];
+  } {
+    const errors: SchemaValidationError[] = [];
+    const warnings: SchemaValidationWarning[] = [];
 
     for (const rule of this.data.rules) {
       if (!rule.enabled) {
@@ -185,16 +209,16 @@ export class ValidationSchema {
   private _validateRule(
     rule: ValidationRuleData,
     value: unknown
-  ): { isValid: boolean; errors: any[]; warnings: any[] } {
-    const errors: any[] = [];
-    const warnings: any[] = [];
+  ): { isValid: boolean; errors: SchemaValidationError[]; warnings: SchemaValidationWarning[] } {
+    const errors: SchemaValidationError[] = [];
+    const warnings: SchemaValidationWarning[] = [];
 
     for (const constraint of rule.constraints) {
       const result = this._validateConstraint(constraint, value);
       if (!result.isValid) {
         errors.push({
           field: rule.name,
-          message: result.message || `Validation failed for ${constraint.type}`,
+          message: this._coalesceMessage(result.message, `Validation failed for ${constraint.type}`),
           code: `${constraint.type.toUpperCase()}_VALIDATION_FAILED`,
           severity: rule.severity,
         });
@@ -204,21 +228,30 @@ export class ValidationSchema {
     return { isValid: errors.length === 0, errors, warnings };
   }
 
-  private _validateConstraint(constraint: any, value: unknown): { isValid: boolean; message?: string } {
+  private _validateConstraint(
+    constraint: ValidationConstraint,
+    value: unknown
+  ): { isValid: boolean; message?: string } {
     switch (constraint.type) {
       case 'required':
         if (value === null || value === undefined || value === '') {
-          return { isValid: false, message: constraint.message || 'Field is required' };
+          return { isValid: false, message: this._coalesceMessage(constraint.message, 'Field is required') };
         }
         break;
       case 'min':
         if (typeof value === 'number' && typeof constraint.value === 'number' && value < constraint.value) {
-          return { isValid: false, message: constraint.message || `Value must be at least ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Value must be at least ${constraint.value}`),
+          };
         }
         break;
       case 'max':
         if (typeof value === 'number' && typeof constraint.value === 'number' && value > constraint.value) {
-          return { isValid: false, message: constraint.message || `Value must be at most ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Value must be at most ${constraint.value}`),
+          };
         }
         break;
       default:
@@ -242,5 +275,9 @@ export class ValidationSchema {
     if (uniqueIds.size !== ruleIds.length) {
       throw new Error('Rule IDs must be unique');
     }
+  }
+
+  private _coalesceMessage(message: string | undefined | null, fallback: string): string {
+    return message !== undefined && message !== null && message !== '' ? message : fallback;
   }
 }

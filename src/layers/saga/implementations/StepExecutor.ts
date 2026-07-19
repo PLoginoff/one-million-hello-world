@@ -65,7 +65,7 @@ export class StepExecutor implements IStepExecutor {
     return results;
   }
 
-  shouldContinueOnError<T>(error: Error, context: StepExecutionContext<T>): boolean {
+  shouldContinueOnError<T>(_error: Error, _context: StepExecutionContext<T>): boolean {
     return this._continueOnError;
   }
 

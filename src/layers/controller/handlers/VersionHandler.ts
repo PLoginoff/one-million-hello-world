@@ -20,7 +20,7 @@ export function createVersionHandler(service: IService): HandlerFunction {
         response: {
           statusCode: 500,
           headers: new Map([['content-type', 'application/json']]),
-          body: Buffer.from(JSON.stringify({ error: result.error?.message || 'Internal Server Error' })),
+          body: Buffer.from(JSON.stringify({ error: result.error?.message ?? 'Internal Server Error' })),
         },
       };
     }

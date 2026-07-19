@@ -25,7 +25,7 @@ export class Facade implements IFacade {
     try {
       for (let i = 0; i < operations.length; i++) {
         const operation = operations[i];
-        if (operation) {
+        if (operation !== undefined) {
           const result = await operation();
           results.push(result);
           executedOperations.push(`operation_${i}`);

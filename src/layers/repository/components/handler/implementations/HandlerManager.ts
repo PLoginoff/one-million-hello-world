@@ -48,171 +48,171 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     };
   }
 
-  async handleFind(context: HandlerContext, input: unknown): Promise<HandlerResult<T[]>> {
-    return this._executeWithRetry(HandlerOperation.FIND, context, input, async () => {
+  handleFind(context: HandlerContext, input: unknown): Promise<HandlerResult<T[]>> {
+    return this._executeWithRetry<T[]>(HandlerOperation.FIND, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<T[]>(
           HandlerOperation.FIND,
           'HANDLER_NOT_FOUND',
           'No handler registered for FIND operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<T[]>>;
     });
   }
 
-  async handleFindById(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
-    return this._executeWithRetry(HandlerOperation.FIND_BY_ID, context, input, async () => {
+  handleFindById(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
+    return this._executeWithRetry<T>(HandlerOperation.FIND_BY_ID, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND_BY_ID);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<T>(
           HandlerOperation.FIND_BY_ID,
           'HANDLER_NOT_FOUND',
           'No handler registered for FIND_BY_ID operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<T>>;
     });
   }
 
-  async handleFindOne(context: HandlerContext, input: unknown): Promise<HandlerResult<T | null>> {
-    return this._executeWithRetry(HandlerOperation.FIND_ONE, context, input, async () => {
+  handleFindOne(context: HandlerContext, input: unknown): Promise<HandlerResult<T | null>> {
+    return this._executeWithRetry<T | null>(HandlerOperation.FIND_ONE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.FIND_ONE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<T | null>(
           HandlerOperation.FIND_ONE,
           'HANDLER_NOT_FOUND',
           'No handler registered for FIND_ONE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<T | null>>;
     });
   }
 
-  async handleSave(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
-    return this._executeWithRetry(HandlerOperation.SAVE, context, input, async () => {
+  handleSave(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
+    return this._executeWithRetry<T>(HandlerOperation.SAVE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.SAVE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<T>(
           HandlerOperation.SAVE,
           'HANDLER_NOT_FOUND',
           'No handler registered for SAVE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<T>>;
     });
   }
 
-  async handleUpdate(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
-    return this._executeWithRetry(HandlerOperation.UPDATE, context, input, async () => {
+  handleUpdate(context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
+    return this._executeWithRetry<T>(HandlerOperation.UPDATE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.UPDATE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<T>(
           HandlerOperation.UPDATE,
           'HANDLER_NOT_FOUND',
           'No handler registered for UPDATE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<T>>;
     });
   }
 
-  async handleDelete(context: HandlerContext, input: unknown): Promise<HandlerResult<void>> {
-    return this._executeWithRetry(HandlerOperation.DELETE, context, input, async () => {
+  handleDelete(context: HandlerContext, input: unknown): Promise<HandlerResult<void>> {
+    return this._executeWithRetry<void>(HandlerOperation.DELETE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.DELETE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<void>(
           HandlerOperation.DELETE,
           'HANDLER_NOT_FOUND',
           'No handler registered for DELETE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<void>>;
     });
   }
 
-  async handleDeleteMany(context: HandlerContext, input: unknown): Promise<HandlerResult<number>> {
-    return this._executeWithRetry(HandlerOperation.DELETE_MANY, context, input, async () => {
+  handleDeleteMany(context: HandlerContext, input: unknown): Promise<HandlerResult<number>> {
+    return this._executeWithRetry<number>(HandlerOperation.DELETE_MANY, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.DELETE_MANY);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<number>(
           HandlerOperation.DELETE_MANY,
           'HANDLER_NOT_FOUND',
           'No handler registered for DELETE_MANY operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<number>>;
     });
   }
 
-  async handleCount(context: HandlerContext, input: unknown): Promise<HandlerResult<number>> {
-    return this._executeWithRetry(HandlerOperation.COUNT, context, input, async () => {
+  handleCount(context: HandlerContext, input: unknown): Promise<HandlerResult<number>> {
+    return this._executeWithRetry<number>(HandlerOperation.COUNT, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.COUNT);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<number>(
           HandlerOperation.COUNT,
           'HANDLER_NOT_FOUND',
           'No handler registered for COUNT operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<number>>;
     });
   }
 
-  async handleExists(context: HandlerContext, input: unknown): Promise<HandlerResult<boolean>> {
-    return this._executeWithRetry(HandlerOperation.EXISTS, context, input, async () => {
+  handleExists(context: HandlerContext, input: unknown): Promise<HandlerResult<boolean>> {
+    return this._executeWithRetry<boolean>(HandlerOperation.EXISTS, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.EXISTS);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<boolean>(
           HandlerOperation.EXISTS,
           'HANDLER_NOT_FOUND',
           'No handler registered for EXISTS operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<boolean>>;
     });
   }
 
-  async handleAggregate(context: HandlerContext, input: unknown): Promise<HandlerResult<Record<string, unknown>>> {
-    return this._executeWithRetry(HandlerOperation.AGGREGATE, context, input, async () => {
+  handleAggregate(context: HandlerContext, input: unknown): Promise<HandlerResult<Record<string, unknown>>> {
+    return this._executeWithRetry<Record<string, unknown>>(HandlerOperation.AGGREGATE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.AGGREGATE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<Record<string, unknown>>(
           HandlerOperation.AGGREGATE,
           'HANDLER_NOT_FOUND',
           'No handler registered for AGGREGATE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<Record<string, unknown>>>;
     });
   }
 
-  async handleBulkSave(context: HandlerContext, input: unknown): Promise<HandlerResult<BulkOperationResult<T>>> {
-    return this._executeWithRetry(HandlerOperation.BULK_SAVE, context, input, async () => {
+  handleBulkSave(context: HandlerContext, input: unknown): Promise<HandlerResult<BulkOperationResult<T>>> {
+    return this._executeWithRetry<BulkOperationResult<T>>(HandlerOperation.BULK_SAVE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.BULK_SAVE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<BulkOperationResult<T>>(
           HandlerOperation.BULK_SAVE,
           'HANDLER_NOT_FOUND',
           'No handler registered for BULK_SAVE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<BulkOperationResult<T>>>;
     });
   }
 
-  async handleBulkDelete(context: HandlerContext, input: unknown): Promise<HandlerResult<BulkOperationResult<T>>> {
-    return this._executeWithRetry(HandlerOperation.BULK_DELETE, context, input, async () => {
+  handleBulkDelete(context: HandlerContext, input: unknown): Promise<HandlerResult<BulkOperationResult<T>>> {
+    return this._executeWithRetry<BulkOperationResult<T>>(HandlerOperation.BULK_DELETE, context, input, async () => {
       const handler = this._handlers.get(HandlerOperation.BULK_DELETE);
       if (!handler) {
-        return this._createErrorResult(
+        return this._createErrorResult<BulkOperationResult<T>>(
           HandlerOperation.BULK_DELETE,
           'HANDLER_NOT_FOUND',
           'No handler registered for BULK_DELETE operation'
         );
       }
-      return handler.handle(context, input);
+      return handler.handle(context, input) as unknown as Promise<HandlerResult<BulkOperationResult<T>>>;
     });
   }
 
@@ -239,20 +239,18 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
   ): HandlerPipeline<T> {
     return {
       handlers,
-      preHandlers: preHandlers || [],
-      postHandlers: postHandlers || [],
-      execute: async (context: HandlerContext, input: unknown): Promise<HandlerResult<T>> => {
-        return this._executePipeline(context, input, handlers, preHandlers, postHandlers);
+      preHandlers: preHandlers ?? [],
+      postHandlers: postHandlers ?? [],
+      execute: (context: HandlerContext, input: unknown): Promise<HandlerResult<T>> => {
+        return Promise.resolve(this._executePipeline(context, input, handlers, preHandlers, postHandlers));
       },
     };
   }
 
-  async executePipeline(
-    pipeline: HandlerPipeline<T>,
-    context: HandlerContext,
-    input: unknown
-  ): Promise<HandlerResult<T>> {
-    return this._executePipeline(context, input, pipeline.handlers, pipeline.preHandlers, pipeline.postHandlers);
+  executePipeline(pipeline: HandlerPipeline<T>, context: HandlerContext, input: unknown): Promise<HandlerResult<T>> {
+    return Promise.resolve(
+      this._executePipeline(context, input, pipeline.handlers, pipeline.preHandlers, pipeline.postHandlers)
+    );
   }
 
   setConfig(config: Partial<HandlerConfig>): void {
@@ -290,7 +288,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
       operation,
       timestamp: new Date(),
       requestId,
-      metadata: metadata || {},
+      metadata: metadata ?? {},
       state: new Map(),
     };
   }
@@ -338,7 +336,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
           return result;
         } else {
           lastError = result.error;
-          if (!lastError?.retryable || attempt === this._config.maxRetries) {
+          if (lastError?.retryable !== true || attempt === this._config.maxRetries) {
             this._stats.failedOperations++;
             this._updateAverageExecutionTime(executionTime);
             return result;
@@ -364,12 +362,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     this._stats.failedOperations++;
     this._updateAverageExecutionTime(Date.now() - startTime);
 
-    return {
-      success: false,
-      error: lastError,
-      metrics: this._createMetrics(startTime),
-      metadata: {},
-    };
+    return this._createErrorResult<U>(operation, 'HANDLER_ERROR', lastError?.message ?? 'Unknown handler error');
   }
 
   private async _executePipeline(
@@ -381,7 +374,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
   ): Promise<HandlerResult<T>> {
     const startTime = Date.now();
 
-    for (const handler of preHandlers || []) {
+    for (const handler of preHandlers ?? []) {
       const result = await handler.handle(context, input);
       if (!result.success) {
         return result;
@@ -395,7 +388,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
       }
     }
 
-    for (const handler of postHandlers || []) {
+    for (const handler of postHandlers ?? []) {
       const result = await handler.handle(context, input);
       if (!result.success) {
         return result;
@@ -409,7 +402,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
     };
   }
 
-  private _createErrorResult(operation: HandlerOperation, code: string, message: string): HandlerResult<any> {
+  private _createErrorResult<U>(operation: HandlerOperation, code: string, message: string): HandlerResult<U> {
     return {
       success: false,
       error: {
@@ -442,7 +435,7 @@ export class HandlerManager<T extends DomainEntity> implements IHandlerManager<T
   }
 
   private _incrementOperationCount(operation: HandlerOperation): void {
-    const count = this._stats.operationCounts.get(operation) || 0;
+    const count = this._stats.operationCounts.get(operation) ?? 0;
     this._stats.operationCounts.set(operation, count + 1);
   }
 

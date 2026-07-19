@@ -28,6 +28,7 @@ import {
   DiagnosticStep,
   DiagnosticSummary,
   HealthCheck,
+  EventFilter,
 } from '../types/network-types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -124,7 +125,7 @@ export class NetworkManager implements INetworkManager {
   }
 
   getConnection(connectionId: string): INetworkConnection | null {
-    return this._connections.get(connectionId) || null;
+    return this._connections.get(connectionId) ?? null;
   }
 
   async closeConnection(connectionId: string): Promise<void> {
@@ -242,7 +243,7 @@ export class NetworkManager implements INetworkManager {
   }
 
   getConnectionsByState(state: string): INetworkConnection[] {
-    return Array.from(this._connections.values()).filter((conn) => conn.getState() === state);
+    return Array.from(this._connections.values()).filter((conn) => conn.getState() === (state as ConnectionState));
   }
 
   async pauseAllConnections(): Promise<void> {
@@ -328,31 +329,31 @@ export class NetworkManager implements INetworkManager {
     };
   }
 
-  async runDiagnostics(): Promise<NetworkDiagnostics> {
+  runDiagnostics(): Promise<NetworkDiagnostics> {
     const traceId = uuidv4();
     const startTime = new Date();
     const steps: DiagnosticStep[] = [];
 
-    const connectionCheck = await this._performConnectionDiagnostics();
+    const connectionCheck = this._performConnectionDiagnostics();
     steps.push(connectionCheck);
 
-    const securityCheck = await this._performSecurityDiagnostics();
+    const securityCheck = this._performSecurityDiagnostics();
     steps.push(securityCheck);
 
-    const performanceCheck = await this._performPerformanceDiagnostics();
+    const performanceCheck = this._performPerformanceDiagnostics();
     steps.push(performanceCheck);
 
     const endTime = new Date();
     const summary = this._calculateDiagnosticSummary(steps);
 
-    return {
+    return Promise.resolve({
       traceId,
       startTime,
       endTime,
       duration: endTime.getTime() - startTime.getTime(),
       steps,
       summary,
-    };
+    });
   }
 
   subscribeToEvents(subscription: EventSubscription): string {
@@ -386,7 +387,7 @@ export class NetworkManager implements INetworkManager {
   }
 
   getConnectionStats(connectionId: string): NetworkStats | null {
-    return this._connectionStats.get(connectionId) || null;
+    return this._connectionStats.get(connectionId) ?? null;
   }
 
   getAllConnectionStats(): Map<string, NetworkStats> {
@@ -405,7 +406,7 @@ export class NetworkManager implements INetworkManager {
     return this._connectionQueue.length;
   }
 
-  async acquireConnection(config: ConnectionConfig, timeout?: number): Promise<INetworkConnection | null> {
+  async acquireConnection(config: ConnectionConfig, _timeout?: number): Promise<INetworkConnection | null> {
     if (this._connections.size >= this._maxConnections) {
       this._connectionQueue.push({ config });
       this._stats.queuedConnections = this._connectionQueue.length;
@@ -413,7 +414,7 @@ export class NetworkManager implements INetworkManager {
     }
 
     const response = await this.createConnectionAdvanced({ config });
-    if (response.success && response.connectionId) {
+    if (response.success === true && response.connectionId !== undefined) {
       return this.getConnection(response.connectionId);
     }
     return null;
@@ -423,7 +424,12 @@ export class NetworkManager implements INetworkManager {
     this._connectionStats.delete(connectionId);
   }
 
-  getPoolStats() {
+  getPoolStats(): {
+    totalConnections: number;
+    activeConnections: number;
+    idleConnections: number;
+    queuedRequests: number;
+  } {
     return {
       totalConnections: this._connections.size,
       activeConnections: this._connections.size,
@@ -448,7 +454,7 @@ export class NetworkManager implements INetworkManager {
   }
 
   getConnectionHistory(limit?: number): ConnectionHistoryEntry[] {
-    if (limit) {
+    if (limit !== undefined) {
       return this._connectionHistory.slice(-limit);
     }
     return [...this._connectionHistory];
@@ -515,11 +521,11 @@ export class NetworkManager implements INetworkManager {
     }
   }
 
-  private _shouldHandleEvent(event: AnyNetworkEvent, filter?: any): boolean {
-    if (!filter) return true;
-    if (filter.eventType && event.type !== filter.eventType) return false;
-    if (filter.connectionId && event.connectionId !== filter.connectionId) return false;
-    if (filter.customFilter && !filter.customFilter(event)) return false;
+  private _shouldHandleEvent(event: AnyNetworkEvent, filter?: EventFilter): boolean {
+    if (filter === undefined) return true;
+    if (filter.eventType !== undefined && event.type !== filter.eventType) return false;
+    if (filter.connectionId !== undefined && event.connectionId !== filter.connectionId) return false;
+    if (filter.customFilter !== undefined && filter.customFilter(event) === false) return false;
     return true;
   }
 
@@ -574,7 +580,7 @@ export class NetworkManager implements INetworkManager {
     return 'unhealthy';
   }
 
-  private async _performConnectionDiagnostics(): Promise<DiagnosticStep> {
+  private _performConnectionDiagnostics(): DiagnosticStep {
     const startTime = new Date();
     try {
       const connectionCount = this._connections.size;
@@ -600,7 +606,7 @@ export class NetworkManager implements INetworkManager {
     }
   }
 
-  private async _performSecurityDiagnostics(): Promise<DiagnosticStep> {
+  private _performSecurityDiagnostics(): DiagnosticStep {
     const startTime = new Date();
     const endTime = new Date();
     return {
@@ -617,7 +623,7 @@ export class NetworkManager implements INetworkManager {
     };
   }
 
-  private async _performPerformanceDiagnostics(): Promise<DiagnosticStep> {
+  private _performPerformanceDiagnostics(): DiagnosticStep {
     const startTime = new Date();
     const metrics = this.getPerformanceMetrics();
     const endTime = new Date();

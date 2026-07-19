@@ -26,8 +26,8 @@ export interface CircuitStatistics {
 }
 
 export class CircuitStatisticsCollector {
-  private readonly _metrics: CircuitMetrics;
-  private readonly _state: CircuitStateEntity;
+  private _metrics: CircuitMetrics;
+  private _state: CircuitStateEntity;
   private readonly _startTime: number;
   private _lastStateChangeTime: number;
   private _totalDowntime: number;
@@ -90,7 +90,7 @@ export class CircuitStatisticsCollector {
    * Update metrics
    */
   updateMetrics(metrics: CircuitMetrics): void {
-    (this._metrics as any) = metrics;
+    this._metrics = metrics;
   }
 
   /**
@@ -101,7 +101,7 @@ export class CircuitStatisticsCollector {
     if (this._state.isOpen()) {
       this._totalDowntime += currentTime - this._lastStateChangeTime;
     }
-    (this._state as any) = state;
+    this._state = state;
     this._lastStateChangeTime = currentTime;
   }
 

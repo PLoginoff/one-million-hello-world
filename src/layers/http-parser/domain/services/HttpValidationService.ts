@@ -20,12 +20,7 @@ export class HttpValidationService {
   } {
     const errors: string[] = [];
 
-    if (!request.line) {
-      errors.push('Request line is missing');
-      return { valid: false, errors };
-    }
-
-    if (!request.line.method || !request.line.path || !request.line.version) {
+    if (request.line.method.length === 0 || request.line.path.length === 0 || request.line.version.length === 0) {
       errors.push('Request line is incomplete');
     }
 
@@ -39,10 +34,6 @@ export class HttpValidationService {
 
     if (request.line.path.length > 2048) {
       errors.push('Path length exceeds maximum of 2048 characters');
-    }
-
-    if (!request.headers) {
-      errors.push('Headers are missing');
     }
 
     if (request.headers.size > 100) {
@@ -82,12 +73,7 @@ export class HttpValidationService {
   } {
     const errors: string[] = [];
 
-    if (!response.line) {
-      errors.push('Status line is missing');
-      return { valid: false, errors };
-    }
-
-    if (!response.line.version || !response.line.statusCode) {
+    if (response.line.version.length === 0 || response.line.statusCode === 0) {
       errors.push('Status line is incomplete');
     }
 
@@ -97,10 +83,6 @@ export class HttpValidationService {
 
     if (response.line.statusCode < 100 || response.line.statusCode > 599) {
       errors.push(`Invalid status code: ${response.line.statusCode}`);
-    }
-
-    if (!response.headers) {
-      errors.push('Headers are missing');
     }
 
     if (response.headers.size > 100) {
@@ -150,8 +132,14 @@ export class HttpValidationService {
     if (name.length > 128) {
       return false;
     }
-    const invalidChars = /[\x00-\x1F\x7F()<>@,;:\\"[\]{}]/;
-    return !invalidChars.test(name);
+    const forbidden = '()<>@,;:\\"[]{}';
+    for (let i = 0; i < name.length; i++) {
+      const code = name.charCodeAt(i);
+      if (code <= 0x1f || code === 0x7f || forbidden.includes(name[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -161,15 +149,23 @@ export class HttpValidationService {
     if (value.length > 8192) {
       return false;
     }
-    const invalidChars = /[\x00-\x08\x0A-\x1F\x7F]/;
-    return !invalidChars.test(value);
+    for (let i = 0; i < value.length; i++) {
+      const code = value.charCodeAt(i);
+      if (code === 0x09) {
+        continue;
+      }
+      if (code <= 0x1f || code === 0x7f) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
    * Validate content type
    */
   static validateContentType(contentType: string): boolean {
-    const contentTypeRegex = /^[a-zA-Z0-9][a-zA-Z0-9!#$&\-\^_+.]*\/[a-zA-Z0-9][a-zA-Z0-9!#$&\-\^_+.]*$/;
+    const contentTypeRegex = /^[a-zA-Z0-9][a-zA-Z0-9!#$&\-^_+.]*\/[a-zA-Z0-9][a-zA-Z0-9!#$&\-^_+.]*$/;
     return contentTypeRegex.test(contentType);
   }
 
@@ -253,7 +249,7 @@ export class HttpValidationService {
 
     if (rules.validateContentType) {
       const contentType = request.headers.get('content-type');
-      if (!contentType) {
+      if (contentType == null || contentType.length === 0) {
         errors.push('Content-Type header is required');
       } else if (!this.validateContentType(contentType)) {
         errors.push('Invalid Content-Type header');
@@ -262,7 +258,7 @@ export class HttpValidationService {
 
     if (rules.validateContentLength) {
       const contentLength = request.headers.get('content-length');
-      if (!contentLength) {
+      if (contentLength == null || contentLength.length === 0) {
         errors.push('Content-Length header is required');
       } else {
         const length = parseInt(contentLength, 10);
@@ -274,14 +270,14 @@ export class HttpValidationService {
 
     if (rules.validateHost) {
       const host = request.headers.get('host');
-      if (!host) {
+      if (host == null || host.length === 0) {
         errors.push('Host header is required');
       }
     }
 
     if (rules.validateUserAgent) {
       const userAgent = request.headers.get('user-agent');
-      if (!userAgent) {
+      if (userAgent == null || userAgent.length === 0) {
         errors.push('User-Agent header is required');
       }
     }

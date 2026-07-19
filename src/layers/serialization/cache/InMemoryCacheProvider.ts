@@ -114,7 +114,7 @@ export class InMemoryCacheProvider<T = unknown> implements ICacheProvider<T> {
       }
     }
 
-    if (oldestKey) {
+    if (oldestKey !== undefined) {
       this._cache.delete(oldestKey);
     }
   }

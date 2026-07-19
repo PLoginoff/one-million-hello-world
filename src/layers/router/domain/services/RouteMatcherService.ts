@@ -61,6 +61,6 @@ export class RouteMatcherService {
    * Build path with parameters
    */
   static buildPath(pattern: string, params: Record<string, string>): string {
-    return pattern.replace(/:(\w+)/g, (match, key) => params[key] || match);
+    return pattern.replace(/:(\w+)/g, (match: string, key: string) => params[key] ?? match);
   }
 }

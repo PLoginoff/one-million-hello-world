@@ -219,7 +219,7 @@ export interface DiagnosticStep {
   endTime: Date;
   duration: number;
   status: 'success' | 'failure' | 'skipped';
-  details: any;
+  details: Record<string, unknown>;
 }
 
 /**

@@ -100,7 +100,7 @@ export class HttpHeaderEntity {
     for (const part of parts) {
       const [key, value] = part.split('=').map((s) => s.trim());
       if (key) {
-        pairs.set(key, value || '');
+        pairs.set(key, value ?? '');
       }
     }
 
@@ -144,10 +144,12 @@ export class HttpHeaderEntity {
       throw new Error('Header name cannot exceed 128 characters');
     }
 
-    // Check for invalid characters
-    const invalidChars = /[\x00-\x1F\x7F()<>@,;:\\"[\]{}]/;
-    if (invalidChars.test(name)) {
-      throw new Error(`Header name contains invalid characters: ${name}`);
+    const forbidden = '()<>@,;:\\"[]{}';
+    for (let i = 0; i < name.length; i++) {
+      const code = name.charCodeAt(i);
+      if (code <= 0x1f || code === 0x7f || forbidden.includes(name[i])) {
+        throw new Error(`Header name contains invalid characters: ${name}`);
+      }
     }
   }
 
@@ -156,10 +158,14 @@ export class HttpHeaderEntity {
       throw new Error('Header value cannot exceed 8192 characters');
     }
 
-    // Check for invalid control characters (except tab)
-    const invalidChars = /[\x00-\x08\x0A-\x1F\x7F]/;
-    if (invalidChars.test(value)) {
-      throw new Error('Header value contains invalid control characters');
+    for (let i = 0; i < value.length; i++) {
+      const code = value.charCodeAt(i);
+      if (code === 0x09) {
+        continue;
+      }
+      if (code <= 0x1f || code === 0x7f) {
+        throw new Error('Header value contains invalid control characters');
+      }
     }
   }
 }

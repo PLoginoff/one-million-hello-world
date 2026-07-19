@@ -26,10 +26,10 @@ export class HelloWorldFactory {
   }
 
   create(options: HelloWorldOptions = {}): HelloWorldMessage {
-    const language = options.language || 'en';
-    const format = options.format || 'json';
+    const language = options.language ?? 'en';
+    const format = options.format ?? 'json';
     const baseText = this._translations.get(language) ?? this._translations.get('en') ?? 'Hello World';
-    const text = options.suffix ? `${baseText}${options.suffix}` : baseText;
+    const text = options.suffix !== undefined && options.suffix !== '' ? `${baseText}${options.suffix}` : baseText;
 
     const content = MessageContent.create(text);
     return HelloWorldMessage.create(content.value).withLanguage(language).withFormat(format);

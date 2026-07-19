@@ -5,16 +5,15 @@
  * Provides convenient methods for building test scenarios.
  */
 
-import { SagaExecutionEntity } from '../domain/entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep, CompensationStep } from '../domain/entities/SagaExecution';
 import { SagaMetadata } from '../domain/value-objects/SagaMetadata';
-import { SagaConfig } from '../domain/value-objects/SagaConfig';
 
 export class SagaTestBuilder {
   private _executionId: string;
   private _sagaId: string;
   private _status: 'pending' | 'running' | 'completed' | 'failed' | 'compensating' | 'compensated';
-  private _steps: any[];
-  private _compensationSteps: any[];
+  private _steps: SagaStep[];
+  private _compensationSteps: CompensationStep[];
   private _metadata: SagaMetadata;
 
   constructor() {
@@ -58,7 +57,7 @@ export class SagaTestBuilder {
   /**
    * Add step
    */
-  addStep(step: any): SagaTestBuilder {
+  addStep(step: SagaStep): SagaTestBuilder {
     this._steps.push(step);
     return this;
   }
@@ -66,7 +65,7 @@ export class SagaTestBuilder {
   /**
    * Add compensation step
    */
-  addCompensationStep(step: any): SagaTestBuilder {
+  addCompensationStep(step: CompensationStep): SagaTestBuilder {
     this._compensationSteps.push(step);
     return this;
   }
@@ -97,7 +96,10 @@ export class SagaTestBuilder {
    * Create completed execution
    */
   static createCompleted(): SagaExecutionEntity {
-    return new SagaTestBuilder().withStatus('completed').addStep({ stepId: 'step-1', status: 'completed' }).build();
+    return new SagaTestBuilder()
+      .withStatus('completed')
+      .addStep({ stepId: 'step-1', name: 'step-1', status: 'completed' })
+      .build();
   }
 
   /**
@@ -106,8 +108,8 @@ export class SagaTestBuilder {
   static createFailed(): SagaExecutionEntity {
     return new SagaTestBuilder()
       .withStatus('failed')
-      .addStep({ stepId: 'step-1', status: 'completed' })
-      .addStep({ stepId: 'step-2', status: 'failed' })
+      .addStep({ stepId: 'step-1', name: 'step-1', status: 'completed' })
+      .addStep({ stepId: 'step-2', name: 'step-2', status: 'failed' })
       .build();
   }
 
@@ -117,9 +119,9 @@ export class SagaTestBuilder {
   static createCompensating(): SagaExecutionEntity {
     return new SagaTestBuilder()
       .withStatus('compensating')
-      .addStep({ stepId: 'step-1', status: 'completed' })
-      .addStep({ stepId: 'step-2', status: 'failed' })
-      .addCompensationStep({ originalStepId: 'step-1', status: 'pending' })
+      .addStep({ stepId: 'step-1', name: 'step-1', status: 'completed' })
+      .addStep({ stepId: 'step-2', name: 'step-2', status: 'failed' })
+      .addCompensationStep({ stepId: 'comp-1', originalStepId: 'step-1', name: 'comp-1', status: 'pending' })
       .build();
   }
 }

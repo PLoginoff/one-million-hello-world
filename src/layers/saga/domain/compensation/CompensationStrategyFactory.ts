@@ -36,7 +36,9 @@ export class CompensationStrategyFactory {
   /**
    * Create strategy by type
    */
-  static createByType(type: CompensationStrategyType): any {
+  static createByType(
+    type: CompensationStrategyType
+  ): BackwardCompensationStrategy | ForwardCompensationStrategy | ParallelCompensationStrategy {
     switch (type) {
       case 'backward':
         return this.createBackward();
@@ -45,7 +47,7 @@ export class CompensationStrategyFactory {
       case 'parallel':
         return this.createParallel();
       default:
-        throw new Error(`Unknown compensation strategy type: ${type}`);
+        throw new Error(`Unknown compensation strategy type: ${String(type)}`);
     }
   }
 }

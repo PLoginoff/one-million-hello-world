@@ -67,7 +67,7 @@ export abstract class BaseLogger implements ILogger {
     const levelName = LogLevel[entry.level];
     const timestamp = entry.timestamp.toISOString();
     const contextStr = entry.context ? ` ${JSON.stringify(entry.context)}` : '';
-    const errorStr = entry.error ? ` ${entry.error.stack || entry.error.message}` : '';
+    const errorStr = entry.error ? ` ${entry.error.stack ?? entry.error.message}` : '';
     return `[${timestamp}] [${levelName}] [${this._name}] ${entry.message}${contextStr}${errorStr}`;
   }
 

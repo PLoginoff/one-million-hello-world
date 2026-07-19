@@ -53,7 +53,7 @@ export class SagaOrchestrator implements ISagaOrchestrator {
       this._sagaState.setStatus(SagaStatus.COMPLETED);
       return {
         success: true,
-        data: undefined as any,
+        data: undefined,
         executedSteps: [],
         compensatedSteps: [],
       };

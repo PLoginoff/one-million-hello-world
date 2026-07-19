@@ -7,9 +7,7 @@
 
 import { Event } from '../domain/entities/Event';
 import { EventId } from '../domain/value-objects/EventId';
-import { EventType } from '../domain/value-objects/EventType';
 import { EventMetadata } from '../domain/value-objects/EventMetadata';
-import { EventPayload } from '../domain/value-objects/EventPayload';
 
 export class TestEventFactory {
   static createTestEvent<T>(type: string, payload: T): Event<T> {
@@ -91,7 +89,7 @@ export class TestEventFactory {
   static createEventWithCausation<T>(type: string, payload: T, causationId: string, correlationId?: string): Event<T> {
     const metadata = new EventMetadata({
       source: 'test',
-      correlationId: correlationId || `test-correlation-${Date.now()}`,
+      correlationId: correlationId ?? `test-correlation-${Date.now()}`,
       causationId,
     });
     return new Event({

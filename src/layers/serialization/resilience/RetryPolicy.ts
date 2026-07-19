@@ -21,7 +21,7 @@ export class RetryPolicy {
       initialDelay: config.initialDelay ?? 100,
       maxDelay: config.maxDelay ?? 1000,
       backoffMultiplier: config.backoffMultiplier ?? 2,
-      retryableErrors: config.retryableErrors ?? (() => true),
+      retryableErrors: config.retryableErrors ?? ((): boolean => true),
     };
   }
 
@@ -95,7 +95,9 @@ export class RetryPolicy {
    */
   private _sleepSync(ms: number): void {
     const start = Date.now();
-    while (Date.now() - start < ms) {}
+    while (Date.now() - start < ms) {
+      // Busy wait for synchronous implementation
+    }
   }
 
   /**

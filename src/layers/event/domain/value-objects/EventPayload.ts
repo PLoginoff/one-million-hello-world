@@ -13,7 +13,7 @@ export class EventPayload<T = unknown> {
   constructor(data: T | EventPayload<T>, options: { schema?: object; contentType?: string } = {}) {
     this._data = data instanceof EventPayload ? data.data : data;
     this._schema = options.schema;
-    this._contentType = options.contentType || 'application/json';
+    this._contentType = options.contentType ?? 'application/json';
     this._validate();
   }
 
@@ -63,13 +63,16 @@ export class EventPayload<T = unknown> {
 
   getPath(path: string): unknown {
     const keys = path.split('.');
-    let current: any = this._data;
+    let current: unknown = this._data;
 
     for (const key of keys) {
       if (current === null || current === undefined) {
         return undefined;
       }
-      current = current[key];
+      if (typeof current !== 'object' || current === null) {
+        return undefined;
+      }
+      current = (current as Record<string, unknown>)[key];
     }
 
     return current;
@@ -100,7 +103,7 @@ export class EventPayload<T = unknown> {
 
   static fromString(jsonString: string): EventPayload {
     try {
-      const data = JSON.parse(jsonString);
+      const data = JSON.parse(jsonString) as unknown;
       return new EventPayload(data);
     } catch (error) {
       throw new Error('EventPayload: invalid JSON string');

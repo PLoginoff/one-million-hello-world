@@ -125,7 +125,7 @@ describe('IdGenerator', () => {
     it('should respect custom length for nanoid', () => {
       generator.setOptions({ strategy: 'nanoid', length: 10 });
       const id = generator.generate();
-      expect(id.length).toBe(10 + (generator.getOptions().prefix?.length || 0) + (generator.getOptions().suffix?.length || 0));
+      expect(id.length).toBe(10 + (generator.getOptions().prefix?.length ?? 0) + (generator.getOptions().suffix?.length ?? 0));
     });
   });
 

@@ -43,7 +43,7 @@ export class FacadeConfigBuilder {
    * Set facade name
    */
   withName(name: string): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ name });
     return this;
   }
@@ -52,7 +52,7 @@ export class FacadeConfigBuilder {
    * Set description
    */
   withDescription(description: string): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ description });
     return this;
   }
@@ -61,7 +61,7 @@ export class FacadeConfigBuilder {
    * Set enabled
    */
   withEnabled(enabled: boolean): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ enabled });
     return this;
   }
@@ -70,7 +70,7 @@ export class FacadeConfigBuilder {
    * Set timeout
    */
   withTimeout(timeout: number): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ timeout });
     return this;
   }
@@ -79,7 +79,7 @@ export class FacadeConfigBuilder {
    * Set retry policy
    */
   withRetryPolicy(retryPolicy: RetryPolicy): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ retryPolicy });
     return this;
   }
@@ -88,7 +88,7 @@ export class FacadeConfigBuilder {
    * Set fallback enabled
    */
   withFallbackEnabled(fallbackEnabled: boolean): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ fallbackEnabled });
     return this;
   }
@@ -97,7 +97,7 @@ export class FacadeConfigBuilder {
    * Add tag
    */
   withTag(tag: string): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     const currentTags = currentConfig.getTags();
     this._config.facadeConfig = currentConfig.withUpdates({ tags: [...currentTags, tag] });
     return this;
@@ -107,7 +107,7 @@ export class FacadeConfigBuilder {
    * Set tags
    */
   withTags(tags: string[]): FacadeConfigBuilder {
-    const currentConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const currentConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
     this._config.facadeConfig = currentConfig.withUpdates({ tags });
     return this;
   }
@@ -148,7 +148,7 @@ export class FacadeConfigBuilder {
    * Build the configuration
    */
   build(): FacadeBuilderConfig {
-    const facadeConfig = this._config.facadeConfig || DomainFacadeConfig.createDefault('default');
+    const facadeConfig = this._config.facadeConfig ?? DomainFacadeConfig.createDefault('default');
 
     return {
       facadeConfig,

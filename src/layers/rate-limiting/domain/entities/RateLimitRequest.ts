@@ -29,8 +29,8 @@ export class RateLimitRequestEntity {
     this.clientId = clientId;
     this.resource = resource;
     this.allowed = allowed;
-    this.metadata = metadata || this._createDefaultMetadata();
-    this.parameters = parameters || {};
+    this.metadata = metadata ?? this._createDefaultMetadata();
+    this.parameters = parameters ?? {};
     this.reason = reason;
   }
 

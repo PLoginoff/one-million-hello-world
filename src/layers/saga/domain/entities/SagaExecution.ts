@@ -32,7 +32,7 @@ export class SagaExecutionEntity {
     this.status = status;
     this.steps = steps;
     this.compensationSteps = compensationSteps;
-    this.metadata = metadata || this._createDefaultMetadata();
+    this.metadata = metadata ?? this._createDefaultMetadata();
     this.result = result;
     this.error = error;
   }

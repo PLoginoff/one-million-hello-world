@@ -13,7 +13,6 @@ import {
   SanitizationResult,
   ValidationError,
   FieldValidation,
-  FieldType,
   ValidationErrorCode,
   ExtendedValidationResult,
   ValidationContext,
@@ -88,7 +87,7 @@ export class Validator implements IValidator {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    const schemaToUse = schema || this._defaultSchema;
+    const schemaToUse = schema ?? this._defaultSchema;
 
     let fieldsChecked = 0;
     let fieldsPassed = 0;
@@ -96,7 +95,9 @@ export class Validator implements IValidator {
 
     for (const [fieldName, rules] of Object.entries(schemaToUse.fields)) {
       fieldsChecked++;
-      const value = request.headers.get(fieldName) || this._extractFromBody(request, fieldName);
+      const headerValue = request.headers.get(fieldName);
+      const value =
+        headerValue !== null && headerValue !== '' ? headerValue : this._extractFromBody(request, fieldName);
 
       if (rules.required && (value === undefined || value === null || value === '')) {
         errors.push({
@@ -170,13 +171,13 @@ export class Validator implements IValidator {
     const sanitizationResult = this.sanitize(request);
     const validationEndTime = Date.now();
 
-    const validationContext = context || this.createValidationContext(request);
+    const validationContext = context ?? this.createValidationContext(request);
 
     return {
       ...result,
       sanitizedData: sanitizationResult.sanitized,
       validationTime: validationEndTime - validationStartTime,
-      schemaVersion: schema.version || '1.0.0',
+      schemaVersion: schema.version ?? '1.0.0',
       validationContext,
     };
   }
@@ -358,7 +359,7 @@ export class Validator implements IValidator {
     for (const rule of rules) {
       if (!rule.enabled) continue;
 
-      const isValid = rule.validator(data, context || this._createDefaultContext());
+      const isValid = rule.validator(data, context ?? this._createDefaultContext());
       if (!isValid) {
         errors.push({
           field: rule.fields.join(','),
@@ -397,7 +398,7 @@ export class Validator implements IValidator {
     for (const rule of rules) {
       if (!rule.enabled) continue;
 
-      const conditionMet = rule.condition(data, context || this._createDefaultContext());
+      const conditionMet = rule.condition(data, context ?? this._createDefaultContext());
       const schemaToUse = conditionMet ? rule.then : rule.otherwise;
 
       if (schemaToUse) {
@@ -575,7 +576,7 @@ export class Validator implements IValidator {
 
   isValidPhone(value: unknown): boolean {
     if (typeof value !== 'string') return false;
-    const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/;
+    const phoneRegex = /^\+?[\d\s-()]{10,}$/;
     return phoneRegex.test(value);
   }
 
@@ -682,13 +683,24 @@ export class Validator implements IValidator {
   }
 
   createValidationContext(request: HttpRequest): ValidationContext {
+    const userId = request.headers.get('user-id');
+    const sessionId = request.headers.get('session-id');
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    const userAgent = request.headers.get('user-agent');
+
     return {
       requestId: `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date(),
-      userId: request.headers.get('user-id') || undefined,
-      sessionId: request.headers.get('session-id') || undefined,
-      ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
-      userAgent: request.headers.get('user-agent') || undefined,
+      userId: userId !== null && userId !== '' ? userId : undefined,
+      sessionId: sessionId !== null && sessionId !== '' ? sessionId : undefined,
+      ipAddress:
+        forwardedFor !== null && forwardedFor !== ''
+          ? forwardedFor
+          : realIp !== null && realIp !== ''
+            ? realIp
+            : undefined,
+      userAgent: userAgent !== null && userAgent !== '' ? userAgent : undefined,
     };
   }
 
@@ -743,7 +755,7 @@ export class Validator implements IValidator {
     }
 
     if (typeof value === 'string') {
-      if (rules.minLength && value.length < rules.minLength) {
+      if (rules.minLength !== undefined && value.length < rules.minLength) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_LENGTH,
@@ -753,7 +765,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.maxLength && value.length > rules.maxLength) {
+      if (rules.maxLength !== undefined && value.length > rules.maxLength) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_LENGTH,
@@ -763,7 +775,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.pattern && !rules.pattern.test(value)) {
+      if (rules.pattern !== undefined && !rules.pattern.test(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_PATTERN,
@@ -773,7 +785,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.email && !this._isValidEmail(value)) {
+      if (rules.email === true && !this._isValidEmail(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_EMAIL,
@@ -783,7 +795,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.url && !this._isValidUrl(value)) {
+      if (rules.url === true && !this._isValidUrl(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_URL,
@@ -793,7 +805,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.uuid && !this.isValidUUID(value)) {
+      if (rules.uuid === true && !this.isValidUUID(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_UUID,
@@ -803,7 +815,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.phone && !this.isValidPhone(value)) {
+      if (rules.phone === true && !this.isValidPhone(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_PHONE,
@@ -813,7 +825,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.creditCard && !this.isValidCreditCard(value)) {
+      if (rules.creditCard === true && !this.isValidCreditCard(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_CREDIT_CARD,
@@ -823,7 +835,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.ipAddress && !this.isValidIPAddress(value)) {
+      if (rules.ipAddress === true && !this.isValidIPAddress(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_IP_ADDRESS,
@@ -833,7 +845,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.hexColor && !this.isValidHexColor(value)) {
+      if (rules.hexColor === true && !this.isValidHexColor(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_HEX_COLOR,
@@ -843,7 +855,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.base64 && !this.isValidBase64(value)) {
+      if (rules.base64 === true && !this.isValidBase64(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_BASE64,
@@ -853,7 +865,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.json && !this.isValidJSON(value)) {
+      if (rules.json === true && !this.isValidJSON(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_JSON,
@@ -863,7 +875,7 @@ export class Validator implements IValidator {
         });
       }
 
-      if (rules.xml && !this.isValidXML(value)) {
+      if (rules.xml === true && !this.isValidXML(value)) {
         errors.push({
           field,
           code: ValidationErrorCode.INVALID_XML,
@@ -907,7 +919,7 @@ export class Validator implements IValidator {
       });
     }
 
-    if (rules.customValidator && !rules.customValidator(value, context || this._createDefaultContext())) {
+    if (rules.customValidator !== undefined && !rules.customValidator(value, context ?? this._createDefaultContext())) {
       errors.push({
         field,
         code: ValidationErrorCode.CUSTOM,
@@ -929,7 +941,7 @@ export class Validator implements IValidator {
       }
     }
 
-    if (rules.objectRequiredKeys || rules.objectAllowedKeys) {
+    if (rules.objectRequiredKeys !== undefined || rules.objectAllowedKeys !== undefined) {
       if (!this.validateObjectKeys(value, rules.objectRequiredKeys, rules.objectAllowedKeys)) {
         errors.push({
           field,
@@ -947,8 +959,8 @@ export class Validator implements IValidator {
   private _extractFromBody(request: HttpRequest, fieldName: string): unknown {
     try {
       const bodyStr = request.body.toString('utf-8');
-      if (bodyStr) {
-        const parsed = JSON.parse(bodyStr);
+      if (bodyStr !== '') {
+        const parsed: Record<string, unknown> = JSON.parse(bodyStr) as Record<string, unknown>;
         return parsed[fieldName];
       }
     } catch {

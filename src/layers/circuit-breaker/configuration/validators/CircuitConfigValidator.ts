@@ -40,29 +40,21 @@ export class CircuitConfigValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
 
-    if (!config.threshold) {
-      errors.push({
-        path: 'threshold',
-        message: 'Threshold is required',
-        code: 'THRESHOLD_REQUIRED',
-      });
-    } else {
-      const thresholdValidation = this._validationService.validateThreshold(config.threshold);
-      errors.push(
-        ...thresholdValidation.errors.map((e) => ({
-          path: `threshold.${e.field}`,
-          message: e.message,
-          code: e.code,
-        }))
-      );
-      warnings.push(
-        ...thresholdValidation.warnings.map((w) => ({
-          path: `threshold.${w.field}`,
-          message: w.message,
-          code: w.code,
-        }))
-      );
-    }
+    const thresholdValidation = this._validationService.validateThreshold(config.threshold);
+    errors.push(
+      ...thresholdValidation.errors.map((e) => ({
+        path: `threshold.${e.field}`,
+        message: e.message,
+        code: e.code,
+      }))
+    );
+    warnings.push(
+      ...thresholdValidation.warnings.map((w) => ({
+        path: `threshold.${w.field}`,
+        message: w.message,
+        code: w.code,
+      }))
+    );
 
     if (config.enableMetrics === undefined) {
       warnings.push({
@@ -108,17 +100,15 @@ export class CircuitConfigValidator {
       });
     }
 
-    if (config.slidingWindowSize && config.threshold) {
-      if (config.slidingWindowSize < config.threshold.getMinimumRequests()) {
-        warnings.push({
-          path: 'slidingWindowSize',
-          message: 'Sliding window size is smaller than minimum requests threshold',
-          code: 'SLIDING_WINDOW_TOO_SMALL',
-        });
-      }
+    if (config.slidingWindowSize > 0 && config.slidingWindowSize < config.threshold.getMinimumRequests()) {
+      warnings.push({
+        path: 'slidingWindowSize',
+        message: 'Sliding window size is smaller than minimum requests threshold',
+        code: 'SLIDING_WINDOW_TOO_SMALL',
+      });
     }
 
-    if (config.name && config.name.length > 100) {
+    if (config.name != null && config.name !== '' && config.name.length > 100) {
       warnings.push({
         path: 'name',
         message: 'Circuit name is very long',
@@ -126,7 +116,7 @@ export class CircuitConfigValidator {
       });
     }
 
-    if (config.tags && config.tags.length > 20) {
+    if (config.tags != null && config.tags.length > 20) {
       warnings.push({
         path: 'tags',
         message: 'Too many tags, consider reducing',
@@ -134,7 +124,7 @@ export class CircuitConfigValidator {
       });
     }
 
-    if (config.tags) {
+    if (config.tags != null && config.tags.length > 0) {
       const duplicateTags = this._findDuplicateTags(config.tags);
       if (duplicateTags.length > 0) {
         warnings.push({
@@ -176,7 +166,7 @@ export class CircuitConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name == null || config.name === '') {
       warnings.push({
         path: 'name',
         message: 'Circuit name should be set in production for better observability',
@@ -184,7 +174,7 @@ export class CircuitConfigValidator {
       });
     }
 
-    if (config.threshold && config.threshold.getFailureThreshold() < 5) {
+    if (config.threshold.getFailureThreshold() < 5) {
       warnings.push({
         path: 'threshold.failureThreshold',
         message: 'Failure threshold is low for production, may cause frequent tripping',

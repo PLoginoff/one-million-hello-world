@@ -40,7 +40,7 @@ export class FacadeConfigValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
 
-    if (!config.facadeConfig) {
+    if (config.facadeConfig === undefined) {
       errors.push({
         path: 'facadeConfig',
         message: 'Facade configuration is required',
@@ -49,14 +49,14 @@ export class FacadeConfigValidator {
     } else {
       const configValidation = this._validationService.validateFacadeConfig(config.facadeConfig);
       errors.push(
-        ...configValidation.errors.map((e: any) => ({
+        ...configValidation.errors.map((e) => ({
           path: `facadeConfig.${e.field}`,
           message: e.message,
           code: e.code,
         }))
       );
       warnings.push(
-        ...configValidation.warnings.map((w: any) => ({
+        ...configValidation.warnings.map((w) => ({
           path: `facadeConfig.${w.field}`,
           message: w.message,
           code: w.code,
@@ -88,7 +88,7 @@ export class FacadeConfigValidator {
       });
     }
 
-    if (config.name && config.name.length > 100) {
+    if (config.name !== undefined && config.name.length > 100) {
       warnings.push({
         path: 'name',
         message: 'Configuration name is very long',
@@ -143,7 +143,7 @@ export class FacadeConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name === undefined || config.name.length === 0) {
       warnings.push({
         path: 'name',
         message: 'Configuration name should be set in production for better observability',

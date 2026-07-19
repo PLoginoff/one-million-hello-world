@@ -41,7 +41,7 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
     try {
       const effectiveTotal = total ?? data.length;
       const effectiveLimit = Math.min(pagination.limit, this._config.maxLimit);
-      const effectiveOffset = pagination.offset || 0;
+      const effectiveOffset = pagination.offset ?? 0;
 
       const paginatedData = data.slice(effectiveOffset, effectiveOffset + effectiveLimit);
       const metadata = this.getMetadata(effectiveTotal, effectiveLimit, effectiveOffset);
@@ -101,12 +101,12 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
       const effectiveLimit = Math.min(limit, this._config.maxLimit);
       let startIndex = 0;
 
-      if (cursor) {
+      if (cursor !== undefined && cursor !== '') {
         const cursorInfo = this.parseCursor(cursor);
         startIndex = this._findCursorIndex(data, cursorInfo);
       }
 
-      if (direction === 'BACKWARD' && cursor) {
+      if (direction === 'BACKWARD' && cursor !== undefined && cursor !== '') {
         startIndex = Math.max(0, startIndex - effectiveLimit);
       }
 
@@ -164,10 +164,10 @@ export class PaginationEngine<T = unknown> implements IPaginationEngine<T> {
   parseCursor(cursor: string): CursorInfo {
     try {
       const decoded = atob(cursor);
-      const parsed = JSON.parse(decoded);
+      const parsed = JSON.parse(decoded) as Record<string, unknown>;
       return {
-        value: parsed.value,
-        field: parsed.field,
+        value: String(parsed.value ?? ''),
+        field: String(parsed.field ?? ''),
         direction: 'FORWARD',
       };
     } catch (error) {

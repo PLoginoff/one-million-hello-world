@@ -46,7 +46,7 @@ export class CacheMetrics {
     return Math.max(0, Math.min(1, hitRate - evictionRate * 0.5));
   }
 
-  toJSON() {
+  toJSON(): Record<string, number> {
     return {
       hits: this.hits,
       misses: this.misses,

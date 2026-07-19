@@ -20,7 +20,7 @@ export class ValidationError extends Error {
     this.code = code;
     this.field = field;
     this.severity = severity;
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }
@@ -57,7 +57,7 @@ export class ValidationError extends Error {
   /**
    * Create pattern mismatch error
    */
-  static patternMismatch(field: string, pattern: string): ValidationError {
+  static patternMismatch(field: string, _pattern: string): ValidationError {
     return new ValidationError('PATTERN_MISMATCH', `${field} does not match required pattern`, field, 'error');
   }
 

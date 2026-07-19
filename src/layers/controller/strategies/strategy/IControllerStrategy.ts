@@ -16,5 +16,5 @@ export interface IControllerStrategy {
   /**
    * Resolve controller instance
    */
-  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): any;
+  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): unknown;
 }

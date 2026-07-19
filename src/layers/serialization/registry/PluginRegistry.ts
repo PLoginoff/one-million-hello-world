@@ -39,7 +39,7 @@ export class PluginRegistry {
     this._plugins.set(key, { plugin, metadata });
     this._nameMap.set(metadata.name, key);
 
-    if (metadata.category) {
+    if (metadata.category !== undefined && metadata.category.length > 0) {
       const categoryPlugins = this._categoryMap.get(metadata.category) ?? [];
       if (!categoryPlugins.includes(key)) {
         categoryPlugins.push(key);
@@ -58,7 +58,7 @@ export class PluginRegistry {
     if (entry) {
       this._nameMap.delete(entry.metadata.name);
 
-      if (entry.metadata.category) {
+      if (entry.metadata.category !== undefined && entry.metadata.category.length > 0) {
         const categoryPlugins = this._categoryMap.get(entry.metadata.category) ?? [];
         const index = categoryPlugins.indexOf(key);
         if (index > -1) {
@@ -87,7 +87,7 @@ export class PluginRegistry {
    */
   getByName(name: string): ISerializationPlugin | undefined {
     const key = this._nameMap.get(name);
-    return key ? this.get(key) : undefined;
+    return key !== undefined ? this.get(key) : undefined;
   }
 
   /**

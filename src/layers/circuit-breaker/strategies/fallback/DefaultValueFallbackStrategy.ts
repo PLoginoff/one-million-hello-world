@@ -15,13 +15,13 @@ export class DefaultValueFallbackStrategy<T> implements IFallbackStrategy<T> {
     this._defaultValue = defaultValue;
   }
 
-  async execute(_context: FallbackContext<T>): Promise<FallbackResult<T>> {
-    return {
+  execute(_context: FallbackContext<T>): Promise<FallbackResult<T>> {
+    return Promise.resolve({
       success: true,
       data: this._defaultValue,
       fromFallback: true,
       strategyName: this.name,
-    };
+    });
   }
 
   isAvailable(): boolean {

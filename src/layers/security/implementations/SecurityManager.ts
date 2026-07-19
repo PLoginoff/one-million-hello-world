@@ -13,7 +13,6 @@ import {
   AuthResult,
   SecurityPolicyConfig,
   ThreatDetectionResult,
-  SecurityError,
   SecurityErrorCode,
   ThreatType,
   ExtendedSecurityContext,
@@ -153,10 +152,10 @@ export class SecurityManager implements ISecurityManager {
   }
 
   authenticate(request: HttpRequest, credentials?: AuthCredentials): AuthResult {
-    const token = request.headers.get('authorization') || credentials?.token;
-    const apiKey = request.headers.get('x-api-key') || credentials?.apiKey;
+    const token = request.headers.get('authorization') ?? credentials?.token ?? '';
+    const apiKey = request.headers.get('x-api-key') ?? credentials?.apiKey ?? '';
 
-    if (!token && !apiKey) {
+    if (token.length === 0 && apiKey.length === 0) {
       if (this._securityPolicy.requireAuth) {
         return {
           success: false,
@@ -173,11 +172,11 @@ export class SecurityManager implements ISecurityManager {
       };
     }
 
-    if (token) {
+    if (token.length > 0) {
       return this._validateToken(token, request);
     }
 
-    if (apiKey) {
+    if (apiKey.length > 0) {
       return this._validateApiKey(apiKey, request);
     }
 
@@ -211,7 +210,7 @@ export class SecurityManager implements ISecurityManager {
 
     const origin = request.headers.get('origin');
 
-    if (!origin) {
+    if (origin === undefined || origin.length === 0) {
       return true;
     }
 
@@ -232,7 +231,7 @@ export class SecurityManager implements ISecurityManager {
       };
     }
 
-    const userAgent = request.headers.get('user-agent') || '';
+    const userAgent = request.headers.get('user-agent') ?? '';
     const path = request.line.path;
     const body = request.body.toString('utf-8');
 
@@ -246,9 +245,11 @@ export class SecurityManager implements ISecurityManager {
     for (const result of checks) {
       if (result.isThreat) {
         this._stats.totalThreatsDetected++;
-        const threatType = result.threatType!;
-        const count = this._stats.threatsByType.get(threatType) || 0;
-        this._stats.threatsByType.set(threatType, count + 1);
+        const threatType = result.threatType;
+        if (threatType !== undefined) {
+          const count = this._stats.threatsByType.get(threatType) ?? 0;
+          this._stats.threatsByType.set(threatType, count + 1);
+        }
         return result;
       }
     }
@@ -259,8 +260,8 @@ export class SecurityManager implements ISecurityManager {
     };
   }
 
-  setSecurityPolicy(config: Partial<SecurityPolicyConfig> | any): void {
-    const normalized = { ...config };
+  setSecurityPolicy(config: Partial<SecurityPolicyConfig & { enableThreatDetection?: boolean }>): void {
+    const normalized: Record<string, unknown> = { ...config };
     if ('enableThreatDetection' in normalized) {
       normalized.threatDetectionEnabled = normalized.enableThreatDetection;
       delete normalized.enableThreatDetection;
@@ -340,7 +341,7 @@ export class SecurityManager implements ISecurityManager {
       roles: ['user'],
       permissions: ['read'],
       ipAddress: '127.0.0.1',
-      userAgent: request.headers.get('user-agent') || '',
+      userAgent: request.headers.get('user-agent') ?? '',
     };
   }
 
@@ -350,7 +351,7 @@ export class SecurityManager implements ISecurityManager {
       roles: [],
       permissions: [],
       ipAddress: '127.0.0.1',
-      userAgent: request.headers.get('user-agent') || '',
+      userAgent: request.headers.get('user-agent') ?? '',
     };
   }
 
@@ -478,7 +479,7 @@ export class SecurityManager implements ISecurityManager {
     let riskScore = 0;
 
     if (result.isThreat && result.threatType != null) {
-      const patterns = this._threatPatterns.get(result.threatType) || [];
+      const patterns = this._threatPatterns.get(result.threatType) ?? [];
       detectedPatterns.push(...patterns);
       riskScore = result.confidence * 100;
     }
@@ -573,7 +574,7 @@ export class SecurityManager implements ISecurityManager {
     const signatureConfig = this._securityPolicy.signatureConfig;
     const signature = request.headers.get(signatureConfig.headerName);
 
-    if (!signature) {
+    if (signature === undefined || signature.length === 0) {
       return false;
     }
 
@@ -588,7 +589,7 @@ export class SecurityManager implements ISecurityManager {
     const timestampConfig = this._securityPolicy.timestampConfig;
     const timestampHeader = request.headers.get(timestampConfig.headerName);
 
-    if (!timestampHeader) {
+    if (timestampHeader === undefined || timestampHeader.length === 0) {
       return false;
     }
 
@@ -615,7 +616,7 @@ export class SecurityManager implements ISecurityManager {
     const nonceConfig = this._securityPolicy.nonceConfig;
     const nonce = request.headers.get(nonceConfig.headerName);
 
-    if (!nonce) {
+    if (nonce === undefined || nonce.length === 0) {
       return false;
     }
 
@@ -770,8 +771,8 @@ export class SecurityManager implements ISecurityManager {
     const logEntry: SecurityAuditLog = {
       timestamp: new Date(),
       event,
-      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-      userAgent: request.headers.get('user-agent') || 'unknown',
+      ipAddress: request.headers.get('x-forwarded-for') ?? 'unknown',
+      userAgent: request.headers.get('user-agent') ?? 'unknown',
       userId: context?.userId,
       details: {
         method: request.line.method,
@@ -787,7 +788,7 @@ export class SecurityManager implements ISecurityManager {
   }
 
   getAuditLog(limit?: number): SecurityAuditLog[] {
-    if (limit) {
+    if (limit !== undefined && limit > 0) {
       return this._auditLog.slice(-limit);
     }
     return [...this._auditLog];
@@ -814,7 +815,7 @@ export class SecurityManager implements ISecurityManager {
   }
 
   getRateLimitEntry(ipAddress: string): RateLimitEntry | null {
-    return this._rateLimitEntries.get(ipAddress) || null;
+    return this._rateLimitEntries.get(ipAddress) ?? null;
   }
 
   addNonce(nonce: string, ipAddress: string): void {
@@ -854,7 +855,7 @@ export class SecurityManager implements ISecurityManager {
 
   createExtendedContext(request: HttpRequest, userId: string, authMethod: AuthMethod): ExtendedSecurityContext {
     const baseContext = this._createAuthenticatedContext(request, userId);
-    const ipInfo = this._getIPInfo(request.headers.get('x-forwarded-for') || '127.0.0.1');
+    const ipInfo = this._getIPInfo(request.headers.get('x-forwarded-for') ?? '127.0.0.1');
 
     const tokenInfo: TokenInfo = {
       userId,
@@ -873,7 +874,7 @@ export class SecurityManager implements ISecurityManager {
       lastActivity: new Date(),
       expiresAt: new Date(Date.now() + 3600000),
       ipAddress: ipInfo.address,
-      userAgent: request.headers.get('user-agent') || '',
+      userAgent: request.headers.get('user-agent') ?? '',
     };
 
     return {
@@ -909,7 +910,7 @@ export class SecurityManager implements ISecurityManager {
     }
 
     const contentType = request.headers.get('content-type');
-    if (!contentType) {
+    if (contentType === undefined || contentType.length === 0) {
       return true;
     }
 
@@ -928,11 +929,11 @@ export class SecurityManager implements ISecurityManager {
   }
 
   getThreatPatterns(threatType: ThreatType): string[] {
-    return this._threatPatterns.get(threatType) || [];
+    return this._threatPatterns.get(threatType) ?? [];
   }
 
   addThreatPattern(threatType: ThreatType, pattern: string): void {
-    const patterns = this._threatPatterns.get(threatType) || [];
+    const patterns = this._threatPatterns.get(threatType) ?? [];
     patterns.push(pattern);
     this._threatPatterns.set(threatType, patterns);
   }
@@ -968,11 +969,11 @@ export class SecurityManager implements ISecurityManager {
     return privateRanges.some((range) => ipAddress.startsWith(range));
   }
 
-  private _isTorExitNode(ipAddress: string): boolean {
+  private _isTorExitNode(_ipAddress: string): boolean {
     return false;
   }
 
-  private _isVPN(ipAddress: string): boolean {
+  private _isVPN(_ipAddress: string): boolean {
     return false;
   }
 

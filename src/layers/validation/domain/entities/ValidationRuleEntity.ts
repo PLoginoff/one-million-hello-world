@@ -14,7 +14,7 @@ export interface ValidationRuleData {
   maxLength?: number;
   min?: number;
   max?: number;
-  customValidator?: (value: any) => boolean;
+  customValidator?: (value: unknown) => boolean;
   errorMessage?: string;
   createdAt: number;
 }
@@ -95,7 +95,7 @@ export class ValidationRuleEntity {
   static createCustomRule(
     id: string,
     name: string,
-    validator: (value: any) => boolean,
+    validator: (value: unknown) => boolean,
     required: boolean = false,
     errorMessage?: string
   ): ValidationRuleEntity {
@@ -113,54 +113,59 @@ export class ValidationRuleEntity {
   /**
    * Validate value against rule
    */
-  validate(value: any): { valid: boolean; error?: string } {
+  validate(value: unknown): { valid: boolean; error?: string } {
     if (value === undefined || value === null) {
       if (this.data.required) {
-        return { valid: false, error: this.data.errorMessage || `${this.data.name} is required` };
+        return { valid: false, error: this._getErrorMessage(`${this.data.name} is required`) };
       }
       return { valid: true };
     }
 
     if (this.data.type === 'string' && typeof value !== 'string') {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must be a string` };
+      return { valid: false, error: this._getErrorMessage(`${this.data.name} must be a string`) };
     }
 
     if (this.data.type === 'number' && typeof value !== 'number') {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must be a number` };
+      return { valid: false, error: this._getErrorMessage(`${this.data.name} must be a number`) };
     }
 
     if (this.data.minLength !== undefined && typeof value === 'string' && value.length < this.data.minLength) {
       return {
         valid: false,
-        error: this.data.errorMessage || `${this.data.name} must be at least ${this.data.minLength} characters`,
+        error: this._getErrorMessage(`${this.data.name} must be at least ${this.data.minLength} characters`),
       };
     }
 
     if (this.data.maxLength !== undefined && typeof value === 'string' && value.length > this.data.maxLength) {
       return {
         valid: false,
-        error: this.data.errorMessage || `${this.data.name} must not exceed ${this.data.maxLength} characters`,
+        error: this._getErrorMessage(`${this.data.name} must not exceed ${this.data.maxLength} characters`),
       };
     }
 
     if (this.data.min !== undefined && typeof value === 'number' && value < this.data.min) {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must be at least ${this.data.min}` };
+      return { valid: false, error: this._getErrorMessage(`${this.data.name} must be at least ${this.data.min}`) };
     }
 
     if (this.data.max !== undefined && typeof value === 'number' && value > this.data.max) {
-      return { valid: false, error: this.data.errorMessage || `${this.data.name} must not exceed ${this.data.max}` };
+      return { valid: false, error: this._getErrorMessage(`${this.data.name} must not exceed ${this.data.max}`) };
     }
 
-    if (this.data.pattern && typeof value === 'string') {
+    if (
+      this.data.pattern !== undefined &&
+      this.data.pattern !== null &&
+      this.data.pattern !== '' &&
+      typeof value === 'string'
+    ) {
       const regex = new RegExp(this.data.pattern);
       if (!regex.test(value)) {
-        return { valid: false, error: this.data.errorMessage || `${this.data.name} does not match required pattern` };
+        return { valid: false, error: this._getErrorMessage(`${this.data.name} does not match required pattern`) };
       }
     }
 
     if (this.data.customValidator) {
       if (!this.data.customValidator(value)) {
-        return { valid: false, error: this.data.errorMessage || `${this.data.name} is invalid` };
+        return { valid: false, error: this._getErrorMessage(`${this.data.name} is invalid`) };
       }
     }
 
@@ -179,6 +184,12 @@ export class ValidationRuleEntity {
    */
   toObject(): ValidationRuleData {
     return { ...this.data };
+  }
+
+  private _getErrorMessage(defaultMessage: string): string {
+    return this.data.errorMessage !== undefined && this.data.errorMessage !== null && this.data.errorMessage !== ''
+      ? this.data.errorMessage
+      : defaultMessage;
   }
 
   /**

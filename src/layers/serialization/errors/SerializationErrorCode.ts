@@ -95,5 +95,5 @@ export function getErrorMessage(code: SerializationErrorCode): string {
     [SerializationErrorCode.HOOK_EXECUTION_FAILED]: 'Hook execution failed',
   };
 
-  return messages[code] || 'Unknown error';
+  return messages[code] ?? 'Unknown error';
 }

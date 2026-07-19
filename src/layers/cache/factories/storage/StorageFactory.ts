@@ -13,25 +13,29 @@ export enum StorageType {
   DISTRIBUTED = 'DISTRIBUTED',
 }
 
+export type DistributedStorageOptions = string | { nodeId?: string; nodes?: string[] };
+
 export class StorageFactory {
   /**
    * Create storage by type
    */
-  static create<T>(type: StorageType = StorageType.IN_MEMORY, options?: any): IStorage<T> {
+  static create<T>(type: StorageType = StorageType.IN_MEMORY, options?: DistributedStorageOptions): IStorage<T> {
     switch (type) {
       case StorageType.IN_MEMORY:
         return new InMemoryStorage<T>();
-      case StorageType.DISTRIBUTED:
-        return new DistributedStorage<T>(options?.nodeId ?? options);
+      case StorageType.DISTRIBUTED: {
+        const nodeId = typeof options === 'string' ? options : options?.nodeId;
+        return new DistributedStorage<T>(nodeId);
+      }
       default:
-        throw new Error(`Unsupported storage type: ${type}`);
+        throw new Error(`Unsupported storage type: ${String(type)}`);
     }
   }
 
   /**
    * Create in-memory storage
    */
-  static createInMemory<T>(_options?: any): IStorage<T> {
+  static createInMemory<T>(_options?: unknown): IStorage<T> {
     return new InMemoryStorage<T>();
   }
 

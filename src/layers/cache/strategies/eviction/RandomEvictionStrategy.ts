@@ -18,15 +18,15 @@ export class RandomEvictionStrategy<T> implements IEvictionStrategy<T> {
     return keys[randomIndex];
   }
 
-  onAccess(key: string, entry: CacheEntry<T>): void {
+  onAccess(_key: string, _entry: CacheEntry<T>): void {
     // Random doesn't track access
   }
 
-  onAdd(key: string, entry: CacheEntry<T>): void {
+  onAdd(_key: string, _entry: CacheEntry<T>): void {
     // Random doesn't track insertion
   }
 
-  onRemove(key: string): void {
+  onRemove(_key: string): void {
     // Random doesn't track insertion
   }
 

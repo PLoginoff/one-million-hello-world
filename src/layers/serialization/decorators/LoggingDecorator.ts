@@ -16,7 +16,7 @@ export interface ILogger {
 
 export class ConsoleLogger implements ILogger {
   log(message: string): void {
-    console.log(`[Serialization] ${message}`);
+    console.warn(`[Serialization] ${message}`);
   }
 
   error(message: string, error?: Error): void {
@@ -28,7 +28,7 @@ export class ConsoleLogger implements ILogger {
   }
 
   debug(message: string): void {
-    console.debug(`[Serialization Debug] ${message}`);
+    console.warn(`[Serialization Debug] ${message}`);
   }
 }
 

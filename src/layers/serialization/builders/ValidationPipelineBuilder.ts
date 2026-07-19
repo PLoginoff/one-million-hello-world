@@ -72,8 +72,8 @@ export class ValidationPipelineBuilder {
     const pipeline = new ValidationPipeline();
 
     for (const validator of this._validators) {
-      if (validator instanceof Object && 'setEnabled' in validator) {
-        (validator as any).setEnabled(this._enabled);
+      if ('setEnabled' in validator && typeof validator.setEnabled === 'function') {
+        (validator as IValidator & { setEnabled(enabled: boolean): void }).setEnabled(this._enabled);
       }
       pipeline.addValidator(validator);
     }

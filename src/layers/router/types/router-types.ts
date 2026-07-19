@@ -109,9 +109,9 @@ export interface RouteParameter {
   type: ParameterType;
   required: boolean;
   pattern?: RegExp;
-  defaultValue?: any;
+  defaultValue?: unknown;
   description?: string;
-  validator?: (value: any) => boolean;
+  validator?: (value: unknown) => boolean;
 }
 
 /**

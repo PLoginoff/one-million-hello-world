@@ -30,7 +30,7 @@ export class StrategyExecutionEntity {
     this.executionId = executionId;
     this.status = status;
     this.parameters = { ...parameters };
-    this.metadata = metadata || this._createDefaultMetadata();
+    this.metadata = metadata ?? this._createDefaultMetadata();
     this.result = result;
   }
 

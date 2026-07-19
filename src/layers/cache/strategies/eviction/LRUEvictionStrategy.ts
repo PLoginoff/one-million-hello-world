@@ -32,7 +32,7 @@ export class LRUEvictionStrategy<T> implements IEvictionStrategy<T> {
     }
 
     // Fallback to entry's lastAccessedAt if tracking failed
-    if (!oldestKey) {
+    if (oldestKey == null || oldestKey === '') {
       let oldestTime = Infinity;
       for (const [key, entry] of entries.entries()) {
         if (entry.lastAccessedAt < oldestTime) {
@@ -45,11 +45,11 @@ export class LRUEvictionStrategy<T> implements IEvictionStrategy<T> {
     return oldestKey;
   }
 
-  onAccess(key: string, entry: CacheEntry<T>): void {
+  onAccess(key: string, _entry: CacheEntry<T>): void {
     this.accessOrder.set(key, this.accessCounter++);
   }
 
-  onAdd(key: string, entry: CacheEntry<T>): void {
+  onAdd(key: string, _entry: CacheEntry<T>): void {
     this.accessOrder.set(key, this.accessCounter++);
   }
 

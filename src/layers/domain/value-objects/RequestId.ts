@@ -4,7 +4,7 @@ export class RequestId implements ValueObject {
   readonly value: string;
 
   constructor(value?: string) {
-    this.value = value !== undefined ? value : RequestId._generate();
+    this.value = value ?? RequestId._generate();
     this._validate();
   }
 

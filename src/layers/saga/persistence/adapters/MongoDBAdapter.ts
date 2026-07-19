@@ -22,66 +22,72 @@ export class MongoDBAdapter {
   /**
    * Connect to database
    */
-  async connect(): Promise<void> {
-    console.log(`Connecting to MongoDB at ${this._config.uri}`);
+  connect(): Promise<void> {
+    console.warn(`Connecting to MongoDB at ${this._config.uri}`);
+    return Promise.resolve();
   }
 
   /**
    * Disconnect from database
    */
-  async disconnect(): Promise<void> {
-    console.log('Disconnecting from MongoDB');
+  disconnect(): Promise<void> {
+    console.warn('Disconnecting from MongoDB');
+    return Promise.resolve();
   }
 
   /**
    * Find documents
    */
-  async find(filter?: unknown): Promise<unknown[]> {
-    console.log(`Finding documents in MongoDB collection ${this._config.collection} with filter:`, filter);
-    return [];
+  find(filter?: unknown): Promise<unknown[]> {
+    console.warn(`Finding documents in MongoDB collection ${this._config.collection} with filter:`, filter);
+    return Promise.resolve([]);
   }
 
   /**
    * Find one document
    */
-  async findOne(filter: unknown): Promise<unknown | null> {
-    console.log(`Finding one document in MongoDB collection ${this._config.collection} with filter:`, filter);
-    return null;
+  findOne(filter: unknown): Promise<unknown> {
+    console.warn(`Finding one document in MongoDB collection ${this._config.collection} with filter:`, filter);
+    return Promise.resolve(null);
   }
 
   /**
    * Insert document
    */
-  async insert(document: unknown): Promise<string> {
-    console.log(`Inserting document into MongoDB collection ${this._config.collection}:`, document);
-    return 'id';
+  insert(document: unknown): Promise<string> {
+    console.warn(`Inserting document into MongoDB collection ${this._config.collection}:`, document);
+    return Promise.resolve('id');
   }
 
   /**
    * Update document
    */
-  async update(filter: unknown, update: unknown): Promise<void> {
-    console.log(`Updating document in MongoDB collection ${this._config.collection}:`, filter, update);
+  update(filter: unknown, update: unknown): Promise<void> {
+    console.warn(`Updating document in MongoDB collection ${this._config.collection}:`, filter, update);
+    return Promise.resolve();
   }
 
   /**
    * Delete document
    */
-  async delete(filter: unknown): Promise<void> {
-    console.log(`Deleting document from MongoDB collection ${this._config.collection}:`, filter);
+  delete(filter: unknown): Promise<void> {
+    console.warn(`Deleting document from MongoDB collection ${this._config.collection}:`, filter);
+    return Promise.resolve();
   }
 
   /**
    * Create index
    */
-  async createIndex(keys: unknown, options?: unknown): Promise<void> {
-    console.log(`Creating index in MongoDB collection ${this._config.collection}:`, keys, options);
+  createIndex(keys: unknown, options?: unknown): Promise<void> {
+    console.warn(`Creating index in MongoDB collection ${this._config.collection}:`, keys, options);
+    return Promise.resolve();
   }
 
   /**
    * Drop collection
    */
-  async dropCollection(): Promise<void> {
-    console.log(`Dropping MongoDB collection ${this._config.collection}`);
+  dropCollection(): Promise<void> {
+    console.warn(`Dropping MongoDB collection ${this._config.collection}`);
+    return Promise.resolve();
   }
 }

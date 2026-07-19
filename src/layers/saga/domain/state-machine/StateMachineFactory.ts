@@ -5,8 +5,8 @@
  * Provides convenient methods for creating configured state machines.
  */
 
-import { SagaStateMachine, SagaState } from './SagaStateMachine';
-import { StepStateMachine, StepState } from './StepStateMachine';
+import { SagaStateMachine, SagaState, StateTransition } from './SagaStateMachine';
+import { StepStateMachine, StepState, StepStateTransition } from './StepStateMachine';
 
 export class StateMachineFactory {
   /**
@@ -32,7 +32,7 @@ export class StateMachineFactory {
    */
   static createSagaStateMachineWithTransitions(
     initialState: SagaState,
-    transitions: any[],
+    transitions: StateTransition[],
     context?: unknown
   ): SagaStateMachine {
     const machine = new SagaStateMachine(initialState, context);
@@ -48,7 +48,7 @@ export class StateMachineFactory {
   static createStepStateMachineWithTransitions(
     stepId: string,
     initialState: StepState,
-    transitions: any[],
+    transitions: StepStateTransition[],
     context?: unknown
   ): StepStateMachine {
     const machine = new StepStateMachine(stepId, initialState, context);

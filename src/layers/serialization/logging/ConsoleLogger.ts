@@ -17,10 +17,10 @@ export class ConsoleLogger extends BaseLogger {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        console.debug(formatted);
+        console.warn(formatted);
         break;
       case LogLevel.INFO:
-        console.info(formatted);
+        console.warn(formatted);
         break;
       case LogLevel.WARN:
         console.warn(formatted);

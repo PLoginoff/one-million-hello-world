@@ -8,7 +8,7 @@ import { IRepositoryStrategy } from './IRepositoryStrategy';
 import { RepositoryEntity } from '../../domain/entities/RepositoryEntity';
 
 export class CachedQueryStrategy implements IRepositoryStrategy {
-  private cache: Map<string, any>;
+  private cache: Map<string, unknown>;
 
   constructor() {
     this.cache = new Map();
@@ -18,18 +18,18 @@ export class CachedQueryStrategy implements IRepositoryStrategy {
     return 'CACHED_QUERY';
   }
 
-  async query(repository: RepositoryEntity, query: any): Promise<any> {
+  query(repository: RepositoryEntity, query: unknown): Promise<unknown> {
     const cacheKey = this.getCacheKey(repository.data.id, query);
     const cached = this.cache.get(cacheKey);
-    if (cached) {
-      return cached;
+    if (cached !== undefined) {
+      return Promise.resolve(cached);
     }
     const result = query;
     this.cache.set(cacheKey, result);
-    return result;
+    return Promise.resolve(result);
   }
 
-  private getCacheKey(repositoryId: string, query: any): string {
+  private getCacheKey(repositoryId: string, query: unknown): string {
     return `${repositoryId}:${JSON.stringify(query)}`;
   }
 

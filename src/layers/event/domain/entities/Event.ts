@@ -33,28 +33,22 @@ export class Event<T = unknown> implements IDomainEvent<T> {
     if (options.payload === undefined) {
       throw new Error('Event: payload is required');
     }
-    this.id = options.id !== undefined ? options.id : new EventId();
+    if (options.id === null) {
+      throw new Error('Event: id is required');
+    }
+    if (options.metadata === null) {
+      throw new Error('Event: metadata is required');
+    }
+    this.id = options.id ?? new EventId();
     this.type = options.type instanceof EventType ? options.type : new EventType(options.type);
     this.payload = options.payload instanceof EventPayload ? options.payload : new EventPayload(options.payload);
-    this.metadata = options.metadata !== undefined ? options.metadata : EventMetadata.create('system');
-    this.occurredAt = options.occurredAt || new Date();
+    this.metadata = options.metadata ?? EventMetadata.create('system');
+    this.occurredAt = options.occurredAt ?? new Date();
     this._validate();
   }
 
   private _validate(): void {
-    if (!this.id) {
-      throw new Error('Event: id is required');
-    }
-    if (!this.type) {
-      throw new Error('Event: type is required');
-    }
-    if (!this.payload) {
-      throw new Error('Event: payload is required');
-    }
-    if (!this.metadata) {
-      throw new Error('Event: metadata is required');
-    }
-    if (!(this.occurredAt instanceof Date) || isNaN(this.occurredAt.getTime())) {
+    if (!(this.occurredAt instanceof Date) || Number.isNaN(this.occurredAt.getTime())) {
       throw new Error('Event: occurredAt must be a valid Date');
     }
   }
@@ -143,13 +137,14 @@ export class Event<T = unknown> implements IDomainEvent<T> {
     return new Event({ type, payload, metadata: EventMetadata.create('system') });
   }
 
-  static fromPrimitive<T>(primitive: any): Event<T> {
+  static fromPrimitive<T>(primitive: unknown): Event<T> {
+    const p = primitive as Record<string, unknown>;
     return new Event({
-      id: EventId.fromString(primitive.id),
-      type: EventType.fromString(primitive.type),
-      payload: primitive.payload,
-      metadata: EventMetadata.fromJSON(primitive.metadata),
-      occurredAt: new Date(primitive.occurredAt),
+      id: EventId.fromString(p.id as string),
+      type: EventType.fromString(p.type as string),
+      payload: p.payload as T,
+      metadata: EventMetadata.fromJSON(p.metadata),
+      occurredAt: new Date(p.occurredAt as string | number | Date),
     });
   }
 }

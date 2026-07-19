@@ -4,9 +4,7 @@
  * Type definitions for the repository facade that provides a unified interface.
  */
 
-import { DomainEntity } from '../../../../domain/types/domain-types';
 import { ParsedQuery } from '../../query-parser/types/query-parser-types';
-import { HandlerResult } from '../../handler/types/handler-types';
 
 /**
  * Repository facade configuration

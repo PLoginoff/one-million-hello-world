@@ -181,7 +181,7 @@ export class CompressionAlgorithm {
       throw new Error('Max level must be greater than or equal to min level');
     }
 
-    if (!data.supportedFormats || data.supportedFormats.length === 0) {
+    if (data.supportedFormats.length === 0) {
       throw new Error('At least one supported format is required');
     }
   }

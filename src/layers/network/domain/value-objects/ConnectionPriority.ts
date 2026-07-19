@@ -58,7 +58,7 @@ export class ConnectionPriority {
       [ConnectionPriorityEnum.HIGH, 10],
       [ConnectionPriorityEnum.CRITICAL, 20],
     ]);
-    return new ConnectionPriority(value, weights.get(value) || 5);
+    return new ConnectionPriority(value, weights.get(value) ?? 5);
   }
 
   /**

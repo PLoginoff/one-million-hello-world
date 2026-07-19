@@ -8,7 +8,7 @@ import { IVersioningStrategy } from './IVersioningStrategy';
 
 export class WrapperVersioningStrategy implements IVersioningStrategy {
   applyVersioning(data: string, version: string): string {
-    const parsed = JSON.parse(data);
+    const parsed = JSON.parse(data) as unknown;
     return JSON.stringify({
       version,
       data: parsed,
@@ -21,7 +21,7 @@ export class WrapperVersioningStrategy implements IVersioningStrategy {
 
   extractVersion(data: string): { version: string; data: string } | null {
     try {
-      const parsed = JSON.parse(data);
+      const parsed = JSON.parse(data) as Record<string, unknown>;
       if (typeof parsed === 'object' && parsed !== null && 'version' in parsed && 'data' in parsed) {
         return {
           version: parsed.version as string,
@@ -40,7 +40,7 @@ export class WrapperVersioningStrategy implements IVersioningStrategy {
 
   isVersioned(data: string): boolean {
     try {
-      const parsed = JSON.parse(data);
+      const parsed = JSON.parse(data) as Record<string, unknown>;
       return typeof parsed === 'object' && parsed !== null && 'version' in parsed && 'data' in parsed;
     } catch {
       return false;

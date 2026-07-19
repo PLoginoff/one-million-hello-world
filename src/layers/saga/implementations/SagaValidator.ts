@@ -23,7 +23,7 @@ export class SagaValidator implements ISagaValidator {
     if (!step.name || step.name.trim() === '') {
       errors.push({
         stepIndex,
-        stepName: step.name || '(unnamed)',
+        stepName: step.name ?? '(unnamed)',
         message: 'Step name is required',
         severity: 'error',
       });
@@ -84,7 +84,7 @@ export class SagaValidator implements ISagaValidator {
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       const name = step.name;
-      const indices = nameMap.get(name) || [];
+      const indices = nameMap.get(name) ?? [];
       indices.push(i);
       nameMap.set(name, indices);
     }

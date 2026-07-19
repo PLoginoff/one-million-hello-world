@@ -18,7 +18,7 @@ export class HeaderVersioningStrategy implements IVersioningStrategy {
     const lines = data.split('\n');
     const versionLine = lines.find((line) => line.startsWith('X-API-Version:'));
 
-    if (versionLine) {
+    if (versionLine !== undefined && versionLine !== '') {
       const version = versionLine.replace('X-API-Version:', '').trim();
       const dataWithoutVersion = lines.filter((line) => !line.startsWith('X-API-Version:')).join('\n');
       return { version, data: dataWithoutVersion };

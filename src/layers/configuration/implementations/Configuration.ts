@@ -17,22 +17,22 @@ export class Configuration implements IConfiguration {
     this._metrics = new Map();
   }
 
-  async execute(context: ConfigurationContext): Promise<ConfigurationResult<unknown>> {
+  execute(context: ConfigurationContext): Promise<ConfigurationResult<unknown>> {
     const startTime = Date.now();
     try {
       const output = this._process(context);
       this._recordMetric('successCount', 1);
       this._recordMetric('lastExecutionTime', Date.now() - startTime);
-      return { success: true, data: output };
+      return Promise.resolve({ success: true, data: output });
     } catch (error) {
       this._recordMetric('failureCount', 1);
-      return {
+      return Promise.resolve({
         success: false,
         error: {
           code: 'CONFIGURATION_EXECUTION_ERROR',
           message: error instanceof Error ? error.message : 'Unknown error',
         },
-      };
+      });
     }
   }
 
@@ -53,7 +53,7 @@ export class Configuration implements IConfiguration {
   }
 
   private _recordMetric(name: string, delta: number): void {
-    const current = this._metrics.get(name) || 0;
+    const current = this._metrics.get(name) ?? 0;
     this._metrics.set(name, current + delta);
   }
 }

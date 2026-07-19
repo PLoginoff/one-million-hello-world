@@ -17,17 +17,17 @@ export class ConsoleEventPublisher implements IEventPublisher {
     this._prefix = prefix;
   }
 
-  async publish(event: Event): Promise<PublishResult> {
+  publish(event: Event): Promise<PublishResult> {
     if (!this._connected) {
-      return {
+      return Promise.resolve({
         success: false,
         eventId: event.id.value,
         publishedAt: new Date(),
         error: new Error('Publisher is not connected'),
-      };
+      });
     }
 
-    console.log(this._prefix, {
+    console.warn(this._prefix, {
       id: event.id.value,
       type: event.type.value,
       payload: event.payload.data,
@@ -35,11 +35,11 @@ export class ConsoleEventPublisher implements IEventPublisher {
       occurredAt: event.occurredAt.toISOString(),
     });
 
-    return {
+    return Promise.resolve({
       success: true,
       eventId: event.id.value,
       publishedAt: new Date(),
-    };
+    });
   }
 
   async publishBatch(events: Event[]): Promise<PublishResult[]> {
@@ -57,11 +57,13 @@ export class ConsoleEventPublisher implements IEventPublisher {
     return this._connected;
   }
 
-  async connect(): Promise<void> {
+  connect(): Promise<void> {
     this._connected = true;
+    return Promise.resolve();
   }
 
-  async disconnect(): Promise<void> {
+  disconnect(): Promise<void> {
     this._connected = false;
+    return Promise.resolve();
   }
 }

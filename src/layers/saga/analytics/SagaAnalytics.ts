@@ -132,7 +132,7 @@ export class SagaAnalytics {
     if (executions.length === 0) return 0;
     const durations = executions.map((e) => e.getDuration()).sort((a, b) => a - b);
     const index = Math.ceil((percentile / 100) * durations.length) - 1;
-    return durations[index] || 0;
+    return durations[index] ?? 0;
   }
 
   private _getTopFailureReasons(executions: SagaExecutionEntity[]): Array<{ reason: string; count: number }> {
@@ -140,8 +140,8 @@ export class SagaAnalytics {
     const failed = executions.filter((e) => e.status === 'failed');
 
     for (const execution of failed) {
-      const reason = execution.metadata.getErrorMessage() || 'Unknown';
-      reasons[reason] = (reasons[reason] || 0) + 1;
+      const reason = execution.metadata.getErrorMessage() ?? 'Unknown';
+      reasons[reason] = (reasons[reason] ?? 0) + 1;
     }
 
     return Object.entries(reasons)

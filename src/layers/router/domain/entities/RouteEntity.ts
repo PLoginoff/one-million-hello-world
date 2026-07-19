@@ -121,7 +121,7 @@ export class RouteEntity {
    * Add middleware
    */
   addMiddleware(middleware: string): RouteEntity {
-    const middlewareList = this.data.middleware || [];
+    const middlewareList = this.data.middleware ?? [];
     return new RouteEntity({ ...this.data, middleware: [...middlewareList, middleware] });
   }
 

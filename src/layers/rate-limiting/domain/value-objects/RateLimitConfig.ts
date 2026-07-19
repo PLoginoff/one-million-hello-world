@@ -57,7 +57,7 @@ export class RateLimitConfig {
    * Get burst limit
    */
   getBurstLimit(): number {
-    return this.data.burstLimit || this.data.limit;
+    return this.data.burstLimit ?? this.data.limit;
   }
 
   /**

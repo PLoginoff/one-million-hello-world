@@ -60,12 +60,12 @@ export class XMLStrategy implements ISerializationStrategy {
 
   private _fromXML(data: string): unknown {
     const trimmed = data.trim();
-    const rootMatch = trimmed.match(/^<(\w+)>(.*?)<\/\1>$/s) || trimmed.match(/^<(\w+) \/>$/s);
+    const rootMatch = trimmed.match(/^<(\w+)>(.*?)<\/\1>$/s) ?? trimmed.match(/^<(\w+) \/>$/s);
     if (!rootMatch) {
       return {};
     }
 
-    const rootTag = rootMatch[1];
+    const rootTag = rootMatch[1] ?? 'root';
     const inner = rootMatch[2] ?? '';
     const innerTrimmed = inner.trim();
 

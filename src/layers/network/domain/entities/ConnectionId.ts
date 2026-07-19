@@ -38,7 +38,7 @@ export class ConnectionId {
    */
   static fromString(value: string): ConnectionId {
     const parts = value.split('_');
-    const prefix = parts[0] || 'conn';
+    const prefix = parts[0] ?? 'conn';
     const timestamp = parts[1] ? parseInt(parts[1], 10) : Date.now();
     return new ConnectionId(value, prefix, timestamp);
   }

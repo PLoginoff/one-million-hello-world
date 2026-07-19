@@ -60,8 +60,8 @@ export class ValidatorFactory implements IValidatorFactory {
     });
 
     this._validators.set('schema', (config?: Record<string, unknown>) => {
-      const schema = config?.schema as Record<string, unknown>;
-      if (!schema) {
+      const schema = config?.schema as Record<string, unknown> | undefined;
+      if (schema === undefined) {
         throw new Error('Schema is required for SchemaValidator');
       }
       return new SchemaValidator(schema);

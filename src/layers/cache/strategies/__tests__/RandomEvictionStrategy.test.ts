@@ -84,7 +84,7 @@ describe('RandomEvictionStrategy', () => {
       }
       
       const evicted = strategy.selectEntryToEvict(entries);
-      expect(entries.has(evicted || '')).toBe(true);
+      expect(entries.has(evicted ?? '')).toBe(true);
     });
   });
 

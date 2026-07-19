@@ -48,7 +48,7 @@ export class SagaConfigBuilder {
    * Set saga name
    */
   withName(name: string): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ name });
     return this;
   }
@@ -57,7 +57,7 @@ export class SagaConfigBuilder {
    * Set description
    */
   withDescription(description: string): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ description });
     return this;
   }
@@ -66,7 +66,7 @@ export class SagaConfigBuilder {
    * Set timeout
    */
   withTimeout(timeout: number): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ timeout });
     return this;
   }
@@ -75,7 +75,7 @@ export class SagaConfigBuilder {
    * Set retry policy
    */
   withRetryPolicy(retryPolicy: RetryPolicy): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ retryPolicy });
     return this;
   }
@@ -84,7 +84,7 @@ export class SagaConfigBuilder {
    * Set compensation strategy
    */
   withCompensationStrategy(strategy: CompensationStrategy): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ compensationStrategy: strategy });
     return this;
   }
@@ -93,7 +93,7 @@ export class SagaConfigBuilder {
    * Set isolation level
    */
   withIsolationLevel(level: IsolationLevel): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ isolationLevel: level });
     return this;
   }
@@ -102,7 +102,7 @@ export class SagaConfigBuilder {
    * Enable or disable metrics
    */
   withMetrics(enabled: boolean): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ enableMetrics: enabled });
     return this;
   }
@@ -111,7 +111,7 @@ export class SagaConfigBuilder {
    * Enable or disable logging
    */
   withLogging(enabled: boolean): SagaConfigBuilder {
-    const currentConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const currentConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
     this._config.sagaConfig = currentConfig.withUpdates({ enableLogging: enabled });
     return this;
   }
@@ -136,7 +136,7 @@ export class SagaConfigBuilder {
    * Build the configuration
    */
   build(): SagaBuilderConfig {
-    const sagaConfig = this._config.sagaConfig || DomainSagaConfig.createDefault('default');
+    const sagaConfig = this._config.sagaConfig ?? DomainSagaConfig.createDefault('default');
 
     return {
       sagaConfig,

@@ -20,7 +20,7 @@ export class JSONNegotiator extends BaseContentNegotiator {
     return type.includes('application/json') || type.includes('text/json') || type === '*/*';
   }
 
-  protected _mapToContentType(type: string): ContentType {
+  protected _mapToContentType(_type: string): ContentType {
     return ContentType.JSON;
   }
 

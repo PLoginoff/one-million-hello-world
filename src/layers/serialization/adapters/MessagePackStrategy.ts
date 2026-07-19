@@ -201,7 +201,6 @@ export class MessagePackStrategy implements ISerializationStrategy {
       return null;
     }
 
-    const byte = data[0];
     const result = this._decodeValue(data, 0);
     return result.value;
   }

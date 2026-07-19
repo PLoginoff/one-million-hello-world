@@ -6,7 +6,11 @@
  */
 
 import { StrategyBuilderConfig } from '../builders/StrategyConfigBuilder';
-import { StrategyValidationService } from '../../domain/services/StrategyValidationService';
+import {
+  StrategyValidationService,
+  ValidationError,
+  ValidationWarning,
+} from '../../domain/services/StrategyValidationService';
 
 export interface ConfigValidationResult {
   isValid: boolean;
@@ -40,7 +44,7 @@ export class StrategyConfigValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
 
-    if (!config.strategyConfig) {
+    if (config.strategyConfig === undefined || config.strategyConfig === null) {
       errors.push({
         path: 'strategyConfig',
         message: 'Strategy configuration is required',
@@ -49,14 +53,14 @@ export class StrategyConfigValidator {
     } else {
       const configValidation = this._validationService.validateStrategyConfig(config.strategyConfig);
       errors.push(
-        ...configValidation.errors.map((e: any) => ({
+        ...configValidation.errors.map((e: ValidationError) => ({
           path: `strategyConfig.${e.field}`,
           message: e.message,
           code: e.code,
         }))
       );
       warnings.push(
-        ...configValidation.warnings.map((w: any) => ({
+        ...configValidation.warnings.map((w: ValidationWarning) => ({
           path: `strategyConfig.${w.field}`,
           message: w.message,
           code: w.code,
@@ -88,7 +92,7 @@ export class StrategyConfigValidator {
       });
     }
 
-    if (config.name && config.name.length > 100) {
+    if (config.name !== undefined && config.name !== null && config.name !== '' && config.name.length > 100) {
       warnings.push({
         path: 'name',
         message: 'Configuration name is very long',
@@ -96,7 +100,7 @@ export class StrategyConfigValidator {
       });
     }
 
-    if (config.tags && config.tags.length > 20) {
+    if (config.tags !== undefined && config.tags !== null && config.tags.length > 20) {
       warnings.push({
         path: 'tags',
         message: 'Too many tags, consider reducing',
@@ -135,7 +139,7 @@ export class StrategyConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name === undefined || config.name === null || config.name === '') {
       warnings.push({
         path: 'name',
         message: 'Configuration name should be set in production for better observability',
@@ -143,7 +147,11 @@ export class StrategyConfigValidator {
       });
     }
 
-    if (config.strategyConfig && config.strategyConfig.data.priority < 50) {
+    if (
+      config.strategyConfig !== undefined &&
+      config.strategyConfig !== null &&
+      config.strategyConfig.data.priority < 50
+    ) {
       warnings.push({
         path: 'strategyConfig.priority',
         message: 'Low priority strategy in production',

@@ -131,7 +131,7 @@ export class MiddlewareEntity {
    * Check if middleware matches path
    */
   matchesPath(requestPath: string): boolean {
-    if (!this.data.path) return true;
+    if (this.data.path == null) return true;
     return requestPath.startsWith(this.data.path);
   }
 
@@ -139,7 +139,7 @@ export class MiddlewareEntity {
    * Check if middleware matches method
    */
   matchesMethod(requestMethod: string): boolean {
-    if (!this.data.method) return true;
+    if (this.data.method == null) return true;
     return requestMethod.toLowerCase() === this.data.method.toLowerCase();
   }
 

@@ -1,21 +1,24 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import 'reflect-metadata';
 import { CompositionRoot } from './application/CompositionRoot';
 import { Pipeline } from './application/Pipeline';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const portValue = process.env.PORT;
+const PORT = portValue != null && portValue !== '' ? portValue : 3000;
 
 app.use(express.json());
 
 const composition = new CompositionRoot();
 const pipeline = new Pipeline(composition);
 
-app.use(pipeline.middleware());
+app.use((req, res, next): void => {
+  void pipeline.middleware()(req, res, next);
+});
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Hello World endpoint: http://localhost:${PORT}`);
-  console.log(`Health endpoint: http://localhost:${PORT}/health`);
-  console.log(`Architecture: 85+ layers, deep clean architecture`);
+  console.warn(`Server is running on port ${PORT}`);
+  console.warn(`Hello World endpoint: http://localhost:${PORT}`);
+  console.warn(`Health endpoint: http://localhost:${PORT}/health`);
+  console.warn(`Architecture: 85+ layers, deep clean architecture`);
 });

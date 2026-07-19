@@ -25,24 +25,27 @@ export class GetVersionUseCase implements UseCase<GetVersionInput, GetVersionOut
     this._layers = layers;
   }
 
-  async execute(input: GetVersionInput, context: ServiceContext): Promise<ServiceResult<GetVersionOutput>> {
+  async execute(_input: GetVersionInput, _context: ServiceContext): Promise<ServiceResult<GetVersionOutput>> {
     try {
       const result: GetVersionOutput = {
         version: this._version,
         name: 'one-million-hello-world',
         description: 'A Hello World HTTP server with deep clean architecture and 85+ layers',
         layers: this._layers,
-        environment: process.env.NODE_ENV || 'development',
+        environment:
+          process.env.NODE_ENV !== undefined && process.env.NODE_ENV !== null && process.env.NODE_ENV !== ''
+            ? process.env.NODE_ENV
+            : 'development',
         nodeVersion: process.version,
         timestamp: new Date().toISOString(),
       };
-      return { success: true, data: result };
+      return Promise.resolve({ success: true, data: result });
     } catch (error) {
       const errorResult: ServiceError = {
         code: 'VERSION_ERROR',
         message: error instanceof Error ? error.message : 'Version retrieval failed',
       };
-      return { success: false, error: errorResult };
+      return Promise.resolve({ success: false, error: errorResult });
     }
   }
 }

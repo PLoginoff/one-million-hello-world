@@ -19,7 +19,7 @@ export class SchemaValidationStrategy implements IValidationStrategy {
     return 'SCHEMA_VALIDATION';
   }
 
-  validate(value: any): ValidationResultEntity {
+  validate(value: unknown): ValidationResultEntity {
     const result = SchemaValidationService.validate(value, this.schema);
 
     if (result.valid) {

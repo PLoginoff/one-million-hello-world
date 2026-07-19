@@ -117,7 +117,7 @@ export class CircuitValidationService {
 
     if (validStates.includes(currentState) && validStates.includes(newState)) {
       const allowedTransitions = validTransitions[currentState];
-      if (!allowedTransitions || !allowedTransitions.includes(newState)) {
+      if (!allowedTransitions.includes(newState)) {
         errors.push({
           field: 'stateTransition',
           message: `Invalid transition from ${currentState} to ${newState}`,
@@ -273,7 +273,7 @@ export class CircuitValidationService {
 
     if (state.transitions.length > 0) {
       const lastTransition = state.transitions[state.transitions.length - 1];
-      if (lastTransition && lastTransition.to !== state.currentState) {
+      if (lastTransition.to !== state.currentState) {
         errors.push({
           field: 'transitionHistory',
           message: 'Last transition does not match current state',

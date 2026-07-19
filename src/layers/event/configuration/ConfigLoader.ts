@@ -116,14 +116,14 @@ export class ConfigLoader {
     for (const [envKey, optionKey] of Object.entries(envMap)) {
       const value = process.env[envKey];
       if (value !== undefined) {
-        (options as any)[optionKey] = this._parseEnvValue(value);
+        (options as Record<string, boolean | number | string | undefined>)[optionKey] = this._parseEnvValue(value);
       }
     }
 
     return options;
   }
 
-  private _loadFromFile(filePath: string): EventBusConfigOptions {
+  private _loadFromFile(_filePath: string): EventBusConfigOptions {
     return {};
   }
 

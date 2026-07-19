@@ -13,7 +13,7 @@ export class ServiceError extends Error {
     this.name = 'ServiceError';
     this.code = code;
     this.serviceId = serviceId;
-    if (Error.captureStackTrace) {
+    if (Error.captureStackTrace !== undefined) {
       Error.captureStackTrace(this, this.constructor);
     }
   }

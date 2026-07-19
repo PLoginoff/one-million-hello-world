@@ -35,7 +35,7 @@ export class ParallelExecutionStrategy implements IMiddlewareStrategy {
   async execute(context: MiddlewareContextEntity): Promise<MiddlewareContextEntity> {
     const results = await Promise.all(this.handlers.map((handler) => handler(context)));
 
-    return results[results.length - 1] || context;
+    return results[results.length - 1] ?? context;
   }
 
   /**

@@ -92,7 +92,11 @@ export class StrategyConfig {
    * Check if has fallback strategy
    */
   hasFallbackStrategy(): boolean {
-    return !!this.data.fallbackStrategy;
+    return (
+      this.data.fallbackStrategy !== undefined &&
+      this.data.fallbackStrategy !== null &&
+      this.data.fallbackStrategy !== ''
+    );
   }
 
   /**

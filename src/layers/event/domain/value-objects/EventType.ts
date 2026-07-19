@@ -81,7 +81,7 @@ export class EventType {
   }
 
   static create(category: string, subcategory?: string): EventType {
-    if (subcategory) {
+    if (subcategory !== undefined && subcategory !== '') {
       return new EventType(`${category}.${subcategory}`);
     }
     return new EventType(category);

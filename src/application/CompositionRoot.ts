@@ -3,6 +3,7 @@ import { Controller } from '../layers/controller/implementations/Controller';
 import { Service } from '../layers/service/implementations/Service';
 import { DomainManager } from '../layers/domain/implementations/DomainManager';
 import { Repository } from '../layers/repository/implementations/Repository';
+import { DomainEntity } from '../layers/domain/types/domain-types';
 import { Validator } from '../layers/validation/implementations/Validator';
 import { MiddlewareManager } from '../layers/middleware/implementations/MiddlewareManager';
 import { SecurityManager } from '../layers/security/implementations/SecurityManager';
@@ -38,7 +39,7 @@ export class CompositionRoot {
   readonly controller: Controller;
   readonly service: Service;
   readonly domainManager: DomainManager;
-  readonly repository: Repository<any>;
+  readonly repository: Repository<DomainEntity>;
   readonly validator: Validator;
   readonly middlewareManager: MiddlewareManager;
   readonly securityManager: SecurityManager;

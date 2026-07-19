@@ -77,7 +77,7 @@ export class BasicAuthStrategy implements IAuthenticationStrategy {
     };
   }
 
-  validateToken(token: string): {
+  validateToken(_token: string): {
     valid: boolean;
     userId?: string;
     error?: string;

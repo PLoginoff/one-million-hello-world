@@ -9,7 +9,10 @@ export class EventId {
   private readonly _value: string;
 
   constructor(value?: string) {
-    this._value = value !== undefined ? value : this._generate();
+    if (value === null) {
+      throw new Error('EventId must be a non-empty string');
+    }
+    this._value = value ?? this._generate();
     this._validate();
   }
 

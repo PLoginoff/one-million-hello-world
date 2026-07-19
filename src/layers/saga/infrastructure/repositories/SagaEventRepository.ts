@@ -43,22 +43,27 @@ export class InMemorySagaEventRepository implements SagaEventRepository {
   }
 
   async save(event: SagaEvent): Promise<void> {
+    await Promise.resolve();
     this._storage.push(event);
   }
 
   async findByExecutionId(executionId: string): Promise<SagaEvent[]> {
+    await Promise.resolve();
     return this._storage.filter((e) => e.executionId === executionId);
   }
 
   async findByEventType(eventType: string): Promise<SagaEvent[]> {
+    await Promise.resolve();
     return this._storage.filter((e) => e.eventType === eventType);
   }
 
   async findByTimeRange(startTime: number, endTime: number): Promise<SagaEvent[]> {
+    await Promise.resolve();
     return this._storage.filter((e) => e.timestamp >= startTime && e.timestamp <= endTime);
   }
 
   async deleteByExecutionId(executionId: string): Promise<void> {
+    await Promise.resolve();
     const indices: number[] = [];
     for (let i = 0; i < this._storage.length; i++) {
       if (this._storage[i].executionId === executionId) {
@@ -71,6 +76,7 @@ export class InMemorySagaEventRepository implements SagaEventRepository {
   }
 
   async deleteOlderThan(timestamp: number): Promise<void> {
+    await Promise.resolve();
     for (let i = this._storage.length - 1; i >= 0; i--) {
       if (this._storage[i].timestamp < timestamp) {
         this._storage.splice(i, 1);
@@ -79,6 +85,7 @@ export class InMemorySagaEventRepository implements SagaEventRepository {
   }
 
   async count(): Promise<number> {
+    await Promise.resolve();
     return this._storage.length;
   }
 

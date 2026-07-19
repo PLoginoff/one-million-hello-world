@@ -20,7 +20,7 @@ export class Backup implements IBackup {
   async execute(context: BackupContext): Promise<BackupResult<unknown>> {
     const startTime = Date.now();
     try {
-      const output = this._process(context);
+      const output = await Promise.resolve(this._process(context));
       this._recordMetric('successCount', 1);
       this._recordMetric('lastExecutionTime', Date.now() - startTime);
       return { success: true, data: output };
@@ -53,7 +53,7 @@ export class Backup implements IBackup {
   }
 
   private _recordMetric(name: string, delta: number): void {
-    const current = this._metrics.get(name) || 0;
+    const current = this._metrics.get(name) ?? 0;
     this._metrics.set(name, current + delta);
   }
 }

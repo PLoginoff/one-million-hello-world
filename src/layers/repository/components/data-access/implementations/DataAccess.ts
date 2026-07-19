@@ -42,43 +42,45 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
     this._initializeOperationCounts();
   }
 
-  async read(id: string): Promise<DataAccessResult<T>> {
+  read(id: string): Promise<DataAccessResult<T>> {
     this._incrementOperationCount(DataAccessOperation.READ);
-    const startTime = Date.now();
 
     try {
       const entity = this._data.get(id);
 
       if (!entity) {
-        return {
+        return Promise.resolve({
           success: false,
           error: this._createError(DataAccessOperation.READ, 'ENTITY_NOT_FOUND', `Entity with ID ${id} not found`),
-        };
+        });
       }
 
-      return { success: true, data: entity };
+      return Promise.resolve({ success: true, data: entity });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.READ,
           'READ_ERROR',
           error instanceof Error ? error.message : 'Unknown read error'
         ),
-      };
+      });
     }
   }
 
-  async write(entity: T): Promise<DataAccessResult<T>> {
+  write(entity: T): Promise<DataAccessResult<T>> {
     this._incrementOperationCount(DataAccessOperation.WRITE);
-    const startTime = Date.now();
 
     try {
-      if (this._config.maxStorageSize && this._data.size >= this._config.maxStorageSize) {
-        return {
+      if (
+        this._config.maxStorageSize !== undefined &&
+        this._config.maxStorageSize !== null &&
+        this._data.size >= this._config.maxStorageSize
+      ) {
+        return Promise.resolve({
           success: false,
           error: this._createError(DataAccessOperation.WRITE, 'STORAGE_FULL', 'Maximum storage size reached'),
-        };
+        });
       }
 
       const metadata = this._createMetadata(entity);
@@ -86,129 +88,123 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
       this._metadata.set(entity.id, metadata);
       this._lastModified = new Date();
 
-      return { success: true, data: entity };
+      return Promise.resolve({ success: true, data: entity });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.WRITE,
           'WRITE_ERROR',
           error instanceof Error ? error.message : 'Unknown write error'
         ),
-      };
+      });
     }
   }
 
-  async delete(id: string): Promise<DataAccessResult<void>> {
+  delete(id: string): Promise<DataAccessResult<void>> {
     this._incrementOperationCount(DataAccessOperation.DELETE);
-    const startTime = Date.now();
 
     try {
       if (!this._data.has(id)) {
-        return {
+        return Promise.resolve({
           success: false,
           error: this._createError(DataAccessOperation.DELETE, 'ENTITY_NOT_FOUND', `Entity with ID ${id} not found`),
-        };
+        });
       }
 
       this._data.delete(id);
       this._metadata.delete(id);
       this._lastModified = new Date();
 
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.DELETE,
           'DELETE_ERROR',
           error instanceof Error ? error.message : 'Unknown delete error'
         ),
-      };
+      });
     }
   }
 
-  async exists(id: string): Promise<DataAccessResult<boolean>> {
+  exists(id: string): Promise<DataAccessResult<boolean>> {
     this._incrementOperationCount(DataAccessOperation.EXISTS);
-    const startTime = Date.now();
 
     try {
       const exists = this._data.has(id);
-      return { success: true, data: exists };
+      return Promise.resolve({ success: true, data: exists });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.EXISTS,
           'EXISTS_ERROR',
           error instanceof Error ? error.message : 'Unknown exists error'
         ),
-      };
+      });
     }
   }
 
-  async count(): Promise<DataAccessResult<number>> {
+  count(): Promise<DataAccessResult<number>> {
     this._incrementOperationCount(DataAccessOperation.COUNT);
-    const startTime = Date.now();
 
     try {
       const count = this._data.size;
-      return { success: true, data: count };
+      return Promise.resolve({ success: true, data: count });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.COUNT,
           'COUNT_ERROR',
           error instanceof Error ? error.message : 'Unknown count error'
         ),
-      };
+      });
     }
   }
 
-  async readAll(): Promise<DataAccessResult<T[]>> {
+  readAll(): Promise<DataAccessResult<T[]>> {
     this._incrementOperationCount(DataAccessOperation.READ);
-    const startTime = Date.now();
 
     try {
       const entities = Array.from(this._data.values());
-      return { success: true, data: entities };
+      return Promise.resolve({ success: true, data: entities });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.READ,
           'READ_ALL_ERROR',
           error instanceof Error ? error.message : 'Unknown read all error'
         ),
-      };
+      });
     }
   }
 
-  async clear(): Promise<DataAccessResult<void>> {
+  clear(): Promise<DataAccessResult<void>> {
     this._incrementOperationCount(DataAccessOperation.CLEAR);
-    const startTime = Date.now();
 
     try {
       this._data.clear();
       this._metadata.clear();
       this._lastModified = new Date();
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.CLEAR,
           'CLEAR_ERROR',
           error instanceof Error ? error.message : 'Unknown clear error'
         ),
-      };
+      });
     }
   }
 
   async bulkWrite(entities: T[]): Promise<BulkOperationResult> {
     this._incrementOperationCount(DataAccessOperation.WRITE);
-    const startTime = Date.now();
 
     const successful: T[] = [];
     const failed: Array<{ entity: T; error: DataAccessError }> = [];
@@ -242,7 +238,6 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
 
   async bulkDelete(ids: string[]): Promise<BulkOperationResult> {
     this._incrementOperationCount(DataAccessOperation.DELETE);
-    const startTime = Date.now();
 
     const successful: string[] = [];
     const failed: Array<{ id: string; error: DataAccessError }> = [];
@@ -282,28 +277,28 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
     };
   }
 
-  async restoreSnapshot(snapshot: DataSnapshot<T>): Promise<DataAccessResult<void>> {
-    if (!snapshot || !(snapshot.data instanceof Map) || !(snapshot.metadata instanceof Map)) {
-      return {
+  restoreSnapshot(snapshot: DataSnapshot<T>): Promise<DataAccessResult<void>> {
+    if (snapshot == null || !(snapshot.data instanceof Map) || !(snapshot.metadata instanceof Map)) {
+      return Promise.resolve({
         success: false,
         error: this._createError(DataAccessOperation.READ, 'INVALID_SNAPSHOT', 'Invalid snapshot format'),
-      };
+      });
     }
 
     try {
       this._data = new Map(snapshot.data);
       this._metadata = new Map(snapshot.metadata);
       this._lastModified = new Date();
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.WRITE,
           'SNAPSHOT_RESTORE_ERROR',
           error instanceof Error ? error.message : 'Unknown snapshot restore error'
         ),
-      };
+      });
     }
   }
 
@@ -327,51 +322,51 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
     return { ...this._config };
   }
 
-  async createIndex(config: IndexConfig): Promise<DataAccessResult<void>> {
+  createIndex(config: IndexConfig): Promise<DataAccessResult<void>> {
     if (!this._config.enableIndexing) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.READ,
           'INDEXING_DISABLED',
           'Indexing is not enabled in configuration'
         ),
-      };
+      });
     }
 
     try {
       this._indexes.set(config.field, config);
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.READ,
           'INDEX_CREATE_ERROR',
           error instanceof Error ? error.message : 'Unknown index create error'
         ),
-      };
+      });
     }
   }
 
-  async dropIndex(field: string): Promise<DataAccessResult<void>> {
+  dropIndex(field: string): Promise<DataAccessResult<void>> {
     try {
       this._indexes.delete(field);
-      return { success: true };
+      return Promise.resolve({ success: true });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         error: this._createError(
           DataAccessOperation.READ,
           'INDEX_DROP_ERROR',
           error instanceof Error ? error.message : 'Unknown index drop error'
         ),
-      };
+      });
     }
   }
 
   getOperationCount(operation: DataAccessOperation): number {
-    return this._operationCounts.get(operation) || 0;
+    return this._operationCounts.get(operation) ?? 0;
   }
 
   resetOperationCounts(): void {
@@ -385,7 +380,7 @@ export class DataAccess<T extends DomainEntity> implements IDataAccess<T> {
   }
 
   private _incrementOperationCount(operation: DataAccessOperation): void {
-    const currentCount = this._operationCounts.get(operation) || 0;
+    const currentCount = this._operationCounts.get(operation) ?? 0;
     this._operationCounts.set(operation, currentCount + 1);
   }
 

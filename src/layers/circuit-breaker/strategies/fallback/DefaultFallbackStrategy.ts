@@ -13,13 +13,13 @@ export class DefaultFallbackStrategy<T> implements IFallbackStrategy<T> {
     this.name = 'DefaultFallbackStrategy';
   }
 
-  async execute(context: FallbackContext<T>): Promise<FallbackResult<T>> {
-    return {
+  execute(context: FallbackContext<T>): Promise<FallbackResult<T>> {
+    return Promise.resolve({
       success: false,
       error: `Circuit is open: ${context.originalError.message}`,
       fromFallback: true,
       strategyName: this.name,
-    };
+    });
   }
 
   isAvailable(): boolean {

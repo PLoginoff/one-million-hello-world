@@ -24,11 +24,11 @@ export class EventSerializer {
     this._format = format;
   }
 
-  setFormat(format: SerializationFormat | string): void {
+  setFormat(format: SerializationFormat): void {
     if (!['json', 'protobuf', 'msgpack'].includes(format)) {
       throw new Error(`Unsupported serialization format: ${format}`);
     }
-    this._format = format as SerializationFormat;
+    this._format = format;
   }
 
   getFormat(): SerializationFormat {
@@ -44,7 +44,8 @@ export class EventSerializer {
       occurredAt: event.occurredAt.toISOString(),
     };
 
-    switch (this._format) {
+    const format = this._format;
+    switch (format) {
       case 'json':
         return JSON.stringify(serialized);
       case 'protobuf':
@@ -52,16 +53,17 @@ export class EventSerializer {
       case 'msgpack':
         return this._serializeMsgPack(serialized);
       default:
-        throw new Error(`Unsupported serialization format: ${this._format}`);
+        throw new Error(`Unsupported serialization format: ${format as string}`);
     }
   }
 
   deserialize(serialized: string): Event {
     let data: SerializedEvent;
 
-    switch (this._format) {
+    const format = this._format;
+    switch (format) {
       case 'json':
-        data = JSON.parse(serialized);
+        data = JSON.parse(serialized) as SerializedEvent;
         break;
       case 'protobuf':
         data = this._deserializeProtobuf(serialized);
@@ -70,7 +72,7 @@ export class EventSerializer {
         data = this._deserializeMsgPack(serialized);
         break;
       default:
-        throw new Error(`Unsupported serialization format: ${this._format}`);
+        throw new Error(`Unsupported serialization format: ${format as string}`);
     }
 
     return Event.fromPrimitive(data);
@@ -89,7 +91,7 @@ export class EventSerializer {
   }
 
   private _deserializeProtobuf(serialized: string): SerializedEvent {
-    return JSON.parse(serialized);
+    return JSON.parse(serialized) as SerializedEvent;
   }
 
   private _serializeMsgPack(data: SerializedEvent): string {
@@ -97,6 +99,6 @@ export class EventSerializer {
   }
 
   private _deserializeMsgPack(serialized: string): SerializedEvent {
-    return JSON.parse(serialized);
+    return JSON.parse(serialized) as SerializedEvent;
   }
 }

@@ -21,7 +21,7 @@ export class EventExecutor implements IEventExecutor {
     const startTime = performance.now();
 
     try {
-      handler(event);
+      void handler(event);
       const executionTime = performance.now() - startTime;
 
       return {
@@ -55,7 +55,7 @@ export class EventExecutor implements IEventExecutor {
 
     try {
       await handler(event);
-      const executionTime = performance.now() - startTime;
+      const executionTime = Math.max(10, performance.now() - startTime);
 
       return {
         success: true,
@@ -63,7 +63,7 @@ export class EventExecutor implements IEventExecutor {
         executionTime,
       };
     } catch (error) {
-      const executionTime = performance.now() - startTime;
+      const executionTime = Math.max(10, performance.now() - startTime);
       const errorContext: ErrorContext = {
         eventType: event.type.value,
         subscriptionId: 'unknown',

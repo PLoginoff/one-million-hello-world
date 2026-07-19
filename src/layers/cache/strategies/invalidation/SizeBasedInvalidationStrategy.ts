@@ -17,7 +17,7 @@ export class SizeBasedInvalidationStrategy<T> implements IInvalidationStrategy<T
     this.currentSize = 0;
   }
 
-  shouldInvalidate(entry: CacheEntry<T>, currentTime: number): boolean {
+  shouldInvalidate(_entry: CacheEntry<T>, _currentTime: number): boolean {
     // This strategy is used by the cache manager, not per-entry
     return false;
   }

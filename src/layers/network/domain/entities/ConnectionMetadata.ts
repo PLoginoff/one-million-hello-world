@@ -96,7 +96,7 @@ export class ConnectionMetadata {
   /**
    * Get user context
    */
-  getUserContext(key: string): unknown | undefined {
+  getUserContext(key: string): unknown {
     return this.userContext.get(key);
   }
 

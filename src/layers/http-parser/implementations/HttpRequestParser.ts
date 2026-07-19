@@ -41,6 +41,7 @@ import {
   HttpResponse,
   ExtendedHttpResponse,
   HttpStatusLine,
+  ParseMetrics,
 } from '../types/http-parser-types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -338,19 +339,26 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   validate(request: HttpRequest): boolean {
-    if (!request.line?.method || !request.line?.path || !request.line?.version) {
+    if (request.line == null) {
+      return false;
+    }
+    const { method, path, version } = request.line;
+    if (
+      method == null ||
+      method.length === 0 ||
+      path == null ||
+      path.length === 0 ||
+      version == null ||
+      version.length === 0
+    ) {
       return false;
     }
 
-    if (!Object.values(HttpMethod).includes(request.line.method)) {
+    if (!Object.values(HttpMethod).includes(method)) {
       return false;
     }
 
-    if (!Object.values(HttpVersion).includes(request.line.version)) {
-      return false;
-    }
-
-    if (!request.headers) {
+    if (!Object.values(HttpVersion).includes(version)) {
       return false;
     }
 
@@ -370,14 +378,14 @@ export class HttpRequestParser implements IHttpRequestParser {
     this._state = ParserState.PARSING_REQUEST_LINE;
     this._warnings = [];
 
-    const parserConfig = config || this._extendedDefaultConfig;
+    const parserConfig = config ?? this._extendedDefaultConfig;
     const baseResult = this.parse(raw, parserConfig);
 
     if (!baseResult.success || !baseResult.data) {
       this._state = ParserState.ERROR;
       this._stats.errorCount++;
       const errorCode = baseResult.error?.code ?? ParseErrorCode.MALFORMED_REQUEST;
-      const currentCount = this._stats.parseErrors.get(errorCode) || 0;
+      const currentCount = this._stats.parseErrors.get(errorCode) ?? 0;
       this._stats.parseErrors.set(errorCode, currentCount + 1);
       return {
         success: false,
@@ -394,40 +402,40 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
 
     if (extendedRequest.line.path.includes('?')) {
-      const queryString = extendedRequest.line.path.split('?')[1] || '';
+      const queryString = extendedRequest.line.path.split('?')[1] ?? '';
       extendedRequest.query = this.parseQueryString(queryString);
     }
 
     const cookieHeader = extendedRequest.headers.get('cookie');
-    if (cookieHeader) {
+    if (cookieHeader != null && cookieHeader.length > 0) {
       extendedRequest.cookies = this.parseCookies(cookieHeader);
     }
 
     const contentType = extendedRequest.headers.get('content-type');
-    if (contentType) {
+    if (contentType != null && contentType.length > 0) {
       const mimeType = this.parseMimeType(contentType);
-      if (mimeType) {
+      if (mimeType != null) {
         extendedRequest.mimeType = mimeType;
       }
     }
 
     const contentDisposition = extendedRequest.headers.get('content-disposition');
-    if (contentDisposition) {
+    if (contentDisposition != null && contentDisposition.length > 0) {
       const disposition = this.parseContentDisposition(contentDisposition);
-      if (disposition) {
+      if (disposition != null) {
         extendedRequest.contentDisposition = disposition;
       }
     }
 
     this._state = ParserState.PARSING_BODY;
     const transferEncoding = extendedRequest.headers.get('transfer-encoding');
-    if (transferEncoding === 'chunked' && parserConfig.allowChunkedEncoding) {
+    if (transferEncoding === 'chunked' && parserConfig.allowChunkedEncoding === true) {
       extendedRequest.chunks = this.parseChunkedEncoding(extendedRequest.body);
     }
 
-    if (contentType?.includes('multipart/form-data')) {
+    if (contentType != null && contentType.includes('multipart/form-data')) {
       const boundary = contentType.split('boundary=')[1];
-      if (boundary) {
+      if (boundary != null && boundary.length > 0) {
         extendedRequest.multipart = this.parseMultipartFormData(extendedRequest.body, boundary);
       }
     }
@@ -463,7 +471,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     const pairs = queryString.split('&');
     for (const pair of pairs) {
       const [name, value] = pair.split('=');
-      parameters.push({ name: name || '', value: decodeURIComponent(value || '') });
+      parameters.push({ name: name ?? '', value: decodeURIComponent(value ?? '') });
     }
 
     return { parameters, raw: queryString };
@@ -488,7 +496,7 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   parseMimeType(contentType: string): MimeType | null {
-    if (!contentType) {
+    if (contentType.length === 0) {
       return null;
     }
 
@@ -496,15 +504,15 @@ export class HttpRequestParser implements IHttpRequestParser {
     const [type, subtype] = parts[0].split('/') as [string, string];
 
     const mimeType: MimeType = {
-      type: type || '',
-      subtype: subtype || '',
+      type: type ?? '',
+      subtype: subtype ?? '',
     };
 
     for (let i = 1; i < parts.length; i++) {
       const [key, value] = parts[i].trim().split('=') as [string, string | undefined];
-      if (key === 'charset' && value) {
+      if (key === 'charset' && value != null && value.length > 0) {
         mimeType.charset = value;
-      } else if (key === 'boundary' && value) {
+      } else if (key === 'boundary' && value != null && value.length > 0) {
         mimeType.boundary = value;
       }
     }
@@ -513,7 +521,7 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   parseContentDisposition(contentDisposition: string): ContentDisposition | null {
-    if (!contentDisposition) {
+    if (contentDisposition.length === 0) {
       return null;
     }
 
@@ -527,7 +535,7 @@ export class HttpRequestParser implements IHttpRequestParser {
 
     for (let i = 1; i < parts.length; i++) {
       const [key, value] = parts[i].trim().split('=') as [string, string | undefined];
-      const cleanValue = value ? value.replace(/"/g, '') : '';
+      const cleanValue = value != null && value.length > 0 ? value.replace(/"/g, '') : '';
 
       if (key === 'filename') {
         disposition.filename = cleanValue;
@@ -556,7 +564,7 @@ export class HttpRequestParser implements IHttpRequestParser {
       }
 
       i++;
-      const data = Buffer.from(lines[i] || '', 'utf-8');
+      const data = Buffer.from(lines[i] ?? '', 'utf-8');
 
       chunks.push({
         size,
@@ -602,16 +610,16 @@ export class HttpRequestParser implements IHttpRequestParser {
       };
 
       const contentDisposition = headers.get('content-disposition');
-      if (contentDisposition) {
+      if (contentDisposition != null && contentDisposition.length > 0) {
         const disposition = this.parseContentDisposition(contentDisposition);
-        if (disposition) {
+        if (disposition != null) {
           part.name = disposition.name;
           part.filename = disposition.filename;
         }
       }
 
       const contentType = headers.get('content-type');
-      if (contentType) {
+      if (contentType != null && contentType.length > 0) {
         part.contentType = contentType;
       }
 
@@ -651,28 +659,26 @@ export class HttpRequestParser implements IHttpRequestParser {
   }
 
   validateResponse(response: HttpResponse): boolean {
-    if (!response.line?.version || !response.line?.statusCode) {
+    if (response.line == null) {
+      return false;
+    }
+    const { version, statusCode } = response.line;
+    if (version == null || version.length === 0 || statusCode === 0) {
       return false;
     }
 
-    if (!Object.values(HttpVersion).includes(response.line.version)) {
+    if (!Object.values(HttpVersion).includes(version)) {
       return false;
     }
 
-    if (response.line.statusCode < 100 || response.line.statusCode > 599) {
-      return false;
-    }
-
-    if (!response.headers) {
+    if (statusCode < 100 || statusCode > 599) {
       return false;
     }
 
     return true;
   }
 
-  parseResponse(raw: Buffer, config?: Partial<ParserConfig>): ParseResult<HttpResponse> {
-    const parserConfig = config || this._defaultConfig;
-
+  parseResponse(raw: Buffer, _config?: Partial<ParserConfig>): ParseResult<HttpResponse> {
     try {
       const rawString = raw.toString('utf-8');
       const lines = rawString.split('\r\n');
@@ -795,14 +801,14 @@ export class HttpRequestParser implements IHttpRequestParser {
     this._state = ParserState.PARSING_REQUEST_LINE;
     this._warnings = [];
 
-    const parserConfig = config || this._extendedDefaultConfig;
+    const parserConfig = config ?? this._extendedDefaultConfig;
     const baseResult = this.parseResponse(raw, parserConfig);
 
     if (!baseResult.success || !baseResult.data) {
       this._state = ParserState.ERROR;
       this._stats.errorCount++;
       const errorCode = baseResult.error?.code ?? ParseErrorCode.MALFORMED_REQUEST;
-      const currentCount = this._stats.parseErrors.get(errorCode) || 0;
+      const currentCount = this._stats.parseErrors.get(errorCode) ?? 0;
       this._stats.parseErrors.set(errorCode, currentCount + 1);
       return {
         success: false,
@@ -819,15 +825,15 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
 
     const contentType = extendedResponse.headers.get('content-type');
-    if (contentType) {
+    if (contentType != null && contentType.length > 0) {
       const mimeType = this.parseMimeType(contentType);
-      if (mimeType) {
+      if (mimeType != null) {
         extendedResponse.mimeType = mimeType;
       }
     }
 
     const transferEncoding = extendedResponse.headers.get('transfer-encoding');
-    if (transferEncoding === 'chunked' && parserConfig.allowChunkedEncoding) {
+    if (transferEncoding === 'chunked' && parserConfig.allowChunkedEncoding === true) {
       extendedResponse.chunks = this.parseChunkedEncoding(extendedResponse.body);
     }
 
@@ -969,7 +975,7 @@ export class HttpRequestParser implements IHttpRequestParser {
     };
   }
 
-  private _calculateMetrics() {
+  private _calculateMetrics(): ParseMetrics {
     const now = Date.now();
     const duration = Math.max(1, now - this._parseStartTime);
     return {

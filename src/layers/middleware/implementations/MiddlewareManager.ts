@@ -33,6 +33,8 @@ import {
   LogOutputFormat,
   LogOutputTarget,
   MetricType,
+  DiagnosticStep,
+  HealthCheck,
 } from '../types/middleware-types';
 
 export class MiddlewareManager implements IMiddlewareManager {
@@ -80,7 +82,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       totalCorrelations: 0,
       logsByLevel: {} as Record<LogLevel, number>,
       logsByCategory: {} as Record<LogCategory, number>,
-      metricsByType: {} as Record<any, number>,
+      metricsByType: {} as Record<MetricType, number>,
       spansByStatus: {} as Record<SpanStatus, number>,
       averageLogProcessingTime: 0,
       averageMetricProcessingTime: 0,
@@ -112,7 +114,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     this._logs.push(entry);
     this._statistics.totalLogs++;
-    this._statistics.logsByLevel[level] = (this._statistics.logsByLevel[level] || 0) + 1;
+    this._statistics.logsByLevel[level] = (this._statistics.logsByLevel[level] ?? 0) + 1;
   }
 
   logWithCategory(level: LogLevel, category: LogCategory, message: string, context?: Record<string, unknown>): void {
@@ -137,8 +139,8 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     this._logs.push(entry);
     this._statistics.totalLogs++;
-    this._statistics.logsByLevel[level] = (this._statistics.logsByLevel[level] || 0) + 1;
-    this._statistics.logsByCategory[category] = (this._statistics.logsByCategory[category] || 0) + 1;
+    this._statistics.logsByLevel[level] = (this._statistics.logsByLevel[level] ?? 0) + 1;
+    this._statistics.logsByCategory[category] = (this._statistics.logsByCategory[category] ?? 0) + 1;
   }
 
   recordMetric(metric: MetricData): void {
@@ -148,7 +150,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     this._metrics.push(metric);
     this._statistics.totalMetrics++;
-    this._statistics.metricsByType[metric.type] = (this._statistics.metricsByType[metric.type] || 0) + 1;
+    this._statistics.metricsByType[metric.type] = (this._statistics.metricsByType[metric.type] ?? 0) + 1;
   }
 
   getMetricStatistics(metricName: string): MetricStatistics {
@@ -185,9 +187,9 @@ export class MiddlewareManager implements IMiddlewareManager {
       avg,
       min,
       max,
-      p50: sorted[p50Index] || 0,
-      p95: sorted[p95Index] || 0,
-      p99: sorted[p99Index] || 0,
+      p50: sorted[p50Index] ?? 0,
+      p95: sorted[p95Index] ?? 0,
+      p99: sorted[p99Index] ?? 0,
     };
   }
 
@@ -196,11 +198,12 @@ export class MiddlewareManager implements IMiddlewareManager {
       return this._createDummySpan(operationName);
     }
 
-    if (this._config.enableSpanSampling && Math.random() > (this._config.spanSamplingRate || 1.0)) {
+    if (this._config.enableSpanSampling === true && Math.random() > (this._config.spanSamplingRate ?? 1.0)) {
       return this._createDummySpan(operationName);
     }
 
-    const traceId = parentSpanId ? this._spans.get(parentSpanId)?.traceId || this._generateId() : this._generateId();
+    const traceId =
+      parentSpanId != null ? (this._spans.get(parentSpanId)?.traceId ?? this._generateId()) : this._generateId();
     const span: TraceSpan = {
       traceId,
       spanId: this._generateId(),
@@ -212,7 +215,7 @@ export class MiddlewareManager implements IMiddlewareManager {
 
     this._spans.set(span.spanId, span);
     this._statistics.totalSpans++;
-    this._statistics.spansByStatus[SpanStatus.OK] = (this._statistics.spansByStatus[SpanStatus.OK] || 0) + 1;
+    this._statistics.spansByStatus[SpanStatus.OK] = (this._statistics.spansByStatus[SpanStatus.OK] ?? 0) + 1;
     return span;
   }
 
@@ -227,7 +230,7 @@ export class MiddlewareManager implements IMiddlewareManager {
       existingSpan.duration = existingSpan.endTime.getTime() - existingSpan.startTime.getTime();
       if (existingSpan.status != null) {
         this._statistics.spansByStatus[existingSpan.status] =
-          (this._statistics.spansByStatus[existingSpan.status] || 0) + 1;
+          (this._statistics.spansByStatus[existingSpan.status] ?? 0) + 1;
       }
     }
   }
@@ -267,10 +270,10 @@ export class MiddlewareManager implements IMiddlewareManager {
       return this._createDummyContext();
     }
 
-    const requestId = request.headers.get('x-request-id') || this._generateId();
-    const correlationId = request.headers.get('x-correlation-id') || this._generateId();
-    const traceId = request.headers.get('x-trace-id') || this._generateId();
-    const userId = request.headers.get('x-user-id') || undefined;
+    const requestId = request.headers.get('x-request-id') ?? this._generateId();
+    const correlationId = request.headers.get('x-correlation-id') ?? this._generateId();
+    const traceId = request.headers.get('x-trace-id') ?? this._generateId();
+    const userId = request.headers.get('x-user-id') ?? undefined;
 
     const context: CorrelationContext = {
       correlationId,
@@ -311,13 +314,13 @@ export class MiddlewareManager implements IMiddlewareManager {
     if (filter.endTime) {
       filtered = filtered.filter((log) => log.timestamp <= filter.endTime!);
     }
-    if (filter.correlationId) {
+    if (filter.correlationId != null) {
       filtered = filtered.filter((log) => log.correlationId === filter.correlationId);
     }
-    if (filter.userId) {
+    if (filter.userId != null) {
       filtered = filtered.filter((log) => log.userId === filter.userId);
     }
-    if (filter.messagePattern) {
+    if (filter.messagePattern != null) {
       const regex = new RegExp(filter.messagePattern, 'i');
       filtered = filtered.filter((log) => regex.test(log.message));
     }
@@ -335,7 +338,7 @@ export class MiddlewareManager implements IMiddlewareManager {
   getFilteredMetrics(filter: MetricFilter): MetricData[] {
     let filtered = [...this._metrics];
 
-    if (filter.name) {
+    if (filter.name != null) {
       filtered = filtered.filter((metric) => metric.name === filter.name);
     }
     if (filter.type != null) {
@@ -368,10 +371,10 @@ export class MiddlewareManager implements IMiddlewareManager {
   getFilteredSpans(filter: SpanFilter): TraceSpan[] {
     let filtered = Array.from(this._spans.values());
 
-    if (filter.traceId) {
+    if (filter.traceId != null) {
       filtered = filtered.filter((span) => span.traceId === filter.traceId);
     }
-    if (filter.operationName) {
+    if (filter.operationName != null) {
       filtered = filtered.filter((span) => span.operationName === filter.operationName);
     }
     if (filter.status != null) {
@@ -383,11 +386,11 @@ export class MiddlewareManager implements IMiddlewareManager {
     if (filter.endTime) {
       filtered = filtered.filter((span) => span.endTime && span.endTime <= filter.endTime!);
     }
-    if (filter.minDuration) {
-      filtered = filtered.filter((span) => span.duration && span.duration >= filter.minDuration!);
+    if (filter.minDuration != null) {
+      filtered = filtered.filter((span) => span.duration != null && span.duration >= filter.minDuration!);
     }
-    if (filter.maxDuration) {
-      filtered = filtered.filter((span) => span.duration && span.duration <= filter.maxDuration!);
+    if (filter.maxDuration != null) {
+      filtered = filtered.filter((span) => span.duration != null && span.duration <= filter.maxDuration!);
     }
     if (filter.limit !== undefined) {
       filtered = filtered.slice(0, filter.limit);
@@ -413,7 +416,7 @@ export class MiddlewareManager implements IMiddlewareManager {
   }
 
   getHealthStatus(): MiddlewareHealthStatus {
-    const checks: any[] = [];
+    const checks: HealthCheck[] = [];
     let score = 100;
 
     const loggingCheck = {
@@ -469,7 +472,7 @@ export class MiddlewareManager implements IMiddlewareManager {
   runDiagnostics(): MiddlewareDiagnostics {
     const traceId = this._generateId();
     const timestamp = new Date();
-    const steps: any[] = [];
+    const steps: DiagnosticStep[] = [];
     let totalDuration = 0;
 
     const loggingStep = {
@@ -549,11 +552,11 @@ export class MiddlewareManager implements IMiddlewareManager {
     const errors: LogEntry[] = [];
 
     logs.forEach((log) => {
-      byLevel[log.level] = (byLevel[log.level] || 0) + 1;
+      byLevel[log.level] = (byLevel[log.level] ?? 0) + 1;
       if (log.category != null) {
-        byCategory[log.category] = (byCategory[log.category] || 0) + 1;
+        byCategory[log.category] = (byCategory[log.category] ?? 0) + 1;
       }
-      messageCounts[log.message] = (messageCounts[log.message] || 0) + 1;
+      messageCounts[log.message] = (messageCounts[log.message] ?? 0) + 1;
       if (log.level === LogLevel.ERROR || log.level === LogLevel.FATAL) {
         errors.push(log);
       }

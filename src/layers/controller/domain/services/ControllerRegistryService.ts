@@ -10,7 +10,7 @@ import { ControllerScopeValueObject } from '../value-objects/ControllerScopeValu
 export interface ControllerRegistration {
   controller: ControllerEntity;
   scope: ControllerScopeValueObject;
-  instance?: any;
+  instance?: unknown;
 }
 
 export class ControllerRegistryService {
@@ -54,7 +54,7 @@ export class ControllerRegistryService {
   /**
    * Set instance for controller
    */
-  setInstance(controllerId: string, instance: any): void {
+  setInstance(controllerId: string, instance: unknown): void {
     const registration = this.registrations.get(controllerId);
     if (registration) {
       registration.instance = instance;
@@ -64,7 +64,7 @@ export class ControllerRegistryService {
   /**
    * Get instance for controller
    */
-  getInstance(controllerId: string): any | undefined {
+  getInstance(controllerId: string): unknown {
     const registration = this.registrations.get(controllerId);
     return registration?.instance;
   }

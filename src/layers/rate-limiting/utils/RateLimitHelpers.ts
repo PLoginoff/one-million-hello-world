@@ -4,6 +4,15 @@
  * Utility functions for rate limiting operations.
  */
 
+interface RateLimitRequestLike {
+  ip?: string;
+  connection?: { remoteAddress?: string };
+  socket?: { remoteAddress?: string };
+  headers?: Record<string, string | string[] | undefined>;
+  user?: { id?: string };
+  session?: { userId?: string };
+}
+
 export class RateLimitHelpers {
   /**
    * Calculate retry after time in seconds
@@ -26,28 +35,29 @@ export class RateLimitHelpers {
   /**
    * Extract IP address from request
    */
-  static extractIp(request: any): string {
-    return (
-      request.ip ||
-      request.connection?.remoteAddress ||
-      request.socket?.remoteAddress ||
-      request.headers?.['x-forwarded-for']?.split(',')[0] ||
-      '0.0.0.0'
-    );
+  static extractIp(request: RateLimitRequestLike): string {
+    const forwarded = request.headers?.['x-forwarded-for'];
+    const forwardedIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : undefined;
+
+    return request.ip ?? request.connection?.remoteAddress ?? request.socket?.remoteAddress ?? forwardedIp ?? '0.0.0.0';
   }
 
   /**
    * Extract user ID from request
    */
-  static extractUserId(request: any): string | undefined {
-    return request.user?.id || request.session?.userId || request.headers?.['x-user-id'];
+  static extractUserId(request: RateLimitRequestLike): string | undefined {
+    const headerUserId = request.headers?.['x-user-id'];
+    return request.user?.id ?? request.session?.userId ?? (typeof headerUserId === 'string' ? headerUserId : undefined);
   }
 
   /**
    * Extract API key from request
    */
-  static extractApiKey(request: any): string | undefined {
-    return request.headers?.['x-api-key'] || request.headers?.['authorization']?.replace(/^Bearer /i, '');
+  static extractApiKey(request: RateLimitRequestLike): string | undefined {
+    const apiKey = request.headers?.['x-api-key'];
+    const auth = request.headers?.['authorization'];
+    const authStr = typeof auth === 'string' ? auth.replace(/^Bearer /i, '') : undefined;
+    return typeof apiKey === 'string' ? apiKey : authStr;
   }
 
   /**
@@ -63,7 +73,7 @@ export class RateLimitHelpers {
     'X-RateLimit-Reset': string;
     'Retry-After'?: string;
   } {
-    const headers: any = {
+    const headers: Record<string, string | undefined> = {
       'X-RateLimit-Limit': limit.toString(),
       'X-RateLimit-Remaining': remaining.toString(),
       'X-RateLimit-Reset': Math.ceil(resetAt / 1000).toString(),
@@ -73,7 +83,12 @@ export class RateLimitHelpers {
       headers['Retry-After'] = this.calculateRetryAfter(resetAt).toString();
     }
 
-    return headers;
+    return headers as {
+      'X-RateLimit-Limit': string;
+      'X-RateLimit-Remaining': string;
+      'X-RateLimit-Reset': string;
+      'Retry-After'?: string;
+    };
   }
 
   /**

@@ -15,7 +15,7 @@ export class MiddlewareError extends Error {
     this.code = code;
     this.middlewareId = middlewareId;
     this.originalError = originalError;
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }

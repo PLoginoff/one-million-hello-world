@@ -20,7 +20,7 @@ export class XMLNegotiator extends BaseContentNegotiator {
     return type.includes('application/xml') || type.includes('text/xml');
   }
 
-  protected _mapToContentType(type: string): ContentType {
+  protected _mapToContentType(_type: string): ContentType {
     return ContentType.XML;
   }
 

@@ -19,7 +19,7 @@ export class MemoryEventStore implements IEventStore {
     this._typeIndex = new Map();
     this._correlationIndex = new Map();
     this._options = {
-      maxSize: options.maxSize || 10000,
+      maxSize: options.maxSize ?? 10000,
       ttl: options.ttl,
     };
   }
@@ -38,14 +38,14 @@ export class MemoryEventStore implements IEventStore {
     }
   }
 
-  async get(eventId: string): Promise<Event | undefined> {
-    return this._events.get(eventId);
+  get(eventId: string): Promise<Event | undefined> {
+    return Promise.resolve(this._events.get(eventId));
   }
 
-  async getByType(eventType: string): Promise<Event[]> {
+  getByType(eventType: string): Promise<Event[]> {
     const ids = this._typeIndex.get(eventType);
     if (!ids) {
-      return [];
+      return Promise.resolve([]);
     }
 
     const events: Event[] = [];
@@ -56,13 +56,13 @@ export class MemoryEventStore implements IEventStore {
       }
     }
 
-    return events.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
+    return Promise.resolve(events.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime()));
   }
 
-  async getByCorrelationId(correlationId: string): Promise<Event[]> {
+  getByCorrelationId(correlationId: string): Promise<Event[]> {
     const ids = this._correlationIndex.get(correlationId);
     if (!ids) {
-      return [];
+      return Promise.resolve([]);
     }
 
     const events: Event[] = [];
@@ -73,53 +73,57 @@ export class MemoryEventStore implements IEventStore {
       }
     }
 
-    return events.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
+    return Promise.resolve(events.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime()));
   }
 
-  async getAll(limit?: number, offset?: number): Promise<Event[]> {
+  getAll(limit?: number, offset?: number): Promise<Event[]> {
     const events = Array.from(this._events.values()).sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 
-    if (offset) {
+    if (offset !== undefined && offset > 0) {
       events.splice(0, offset);
     }
 
-    if (limit) {
-      return events.slice(0, limit);
+    if (limit !== undefined && limit > 0) {
+      return Promise.resolve(events.slice(0, limit));
     }
 
-    return events;
+    return Promise.resolve(events);
   }
 
-  async count(): Promise<number> {
-    return this._events.size;
+  count(): Promise<number> {
+    return Promise.resolve(this._events.size);
   }
 
-  async countByType(eventType: string): Promise<number> {
+  countByType(eventType: string): Promise<number> {
     const ids = this._typeIndex.get(eventType);
-    return ids ? ids.size : 0;
+    return Promise.resolve(ids ? ids.size : 0);
   }
 
-  async clear(): Promise<void> {
+  clear(): Promise<void> {
     this._events.clear();
     this._typeIndex.clear();
     this._correlationIndex.clear();
+    return Promise.resolve();
   }
 
-  async exists(eventId: string): Promise<boolean> {
-    return this._events.has(eventId);
+  exists(eventId: string): Promise<boolean> {
+    return Promise.resolve(this._events.has(eventId));
   }
 
-  private async _ensureCapacity(): Promise<void> {
-    if (this._options.maxSize && this._events.size >= this._options.maxSize) {
+  private _ensureCapacity(): Promise<void> {
+    if (
+      this._options.maxSize !== undefined &&
+      this._options.maxSize > 0 &&
+      this._events.size >= this._options.maxSize
+    ) {
       const oldestEvent = Array.from(this._events.values()).sort(
         (a, b) => a.occurredAt.getTime() - b.occurredAt.getTime()
       )[0];
 
-      if (oldestEvent) {
-        this._events.delete(oldestEvent.id.value);
-        this._removeFromIndexes(oldestEvent);
-      }
+      this._events.delete(oldestEvent.id.value);
+      this._removeFromIndexes(oldestEvent);
     }
+    return Promise.resolve();
   }
 
   private _updateTypeIndex(event: Event): void {

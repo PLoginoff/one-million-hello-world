@@ -25,7 +25,7 @@ export class SchemaValidationService {
    * Validate data against schema
    */
   static validate(
-    data: any,
+    data: unknown,
     schema: ValidationSchema
   ): {
     valid: boolean;
@@ -33,9 +33,10 @@ export class SchemaValidationService {
   } {
     const errors: Array<{ field: string; message: string }> = [];
 
+    const dataRecord = data as Record<string, unknown>;
     for (const [field, fieldSchema] of Object.entries(schema)) {
-      const value = data[field];
-      const result = this.validateField(field, value, fieldSchema, data);
+      const value = dataRecord[field];
+      const result = this.validateField(field, value, fieldSchema, dataRecord);
       errors.push(...result);
     }
 
@@ -50,14 +51,14 @@ export class SchemaValidationService {
    */
   private static validateField(
     field: string,
-    value: any,
+    value: unknown,
     schema: FieldSchema,
-    parent: any
+    _parent: unknown
   ): Array<{ field: string; message: string }> {
     const errors: Array<{ field: string; message: string }> = [];
 
     if (value === undefined || value === null) {
-      if (schema.required) {
+      if (schema.required === true) {
         errors.push({ field, message: `${field} is required` });
       }
       return errors;
@@ -104,7 +105,7 @@ export class SchemaValidationService {
       errors.push({ field, message: `${field} must not exceed ${schema.max}` });
     }
 
-    if (schema.pattern && typeof value === 'string') {
+    if (schema.pattern !== undefined && schema.pattern !== null && schema.pattern !== '' && typeof value === 'string') {
       const regex = new RegExp(schema.pattern);
       if (!regex.test(value)) {
         errors.push({ field, message: `${field} does not match required pattern` });
@@ -112,15 +113,17 @@ export class SchemaValidationService {
     }
 
     if (schema.type === 'object' && schema.properties) {
+      const obj = value as Record<string, unknown>;
       for (const [subField, subSchema] of Object.entries(schema.properties)) {
-        const subValue = value[subField];
-        errors.push(...this.validateField(`${field}.${subField}`, subValue, subSchema, value));
+        const subValue = obj[subField];
+        errors.push(...this.validateField(`${field}.${subField}`, subValue, subSchema, obj));
       }
     }
 
     if (schema.type === 'array' && schema.items) {
-      for (let i = 0; i < value.length; i++) {
-        errors.push(...this.validateField(`${field}[${i}]`, value[i], schema.items, value));
+      const arr = value as unknown[];
+      for (let i = 0; i < arr.length; i++) {
+        errors.push(...this.validateField(`${field}[${i}]`, arr[i], schema.items, arr));
       }
     }
 
@@ -131,7 +134,7 @@ export class SchemaValidationService {
    * Validate partial data against schema (ignore missing fields)
    */
   static validatePartial(
-    data: any,
+    data: unknown,
     schema: ValidationSchema
   ): {
     valid: boolean;

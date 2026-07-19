@@ -89,6 +89,9 @@ export class ConfigLoader {
 
     for (const source of this._sources) {
       const config = source.load();
+      if (config instanceof Promise) {
+        throw new Error('Cannot use async config source in loadSync');
+      }
       mergedConfig = { ...mergedConfig, ...config };
     }
 

@@ -4,8 +4,6 @@
  * Type definitions for applying pagination to data collections.
  */
 
-import { ParsedPagination } from '../../query-parser/types/query-parser-types';
-
 /**
  * Pagination result
  */

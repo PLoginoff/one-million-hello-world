@@ -26,7 +26,7 @@ export class CompressionResultEntity {
     this.originalSize = originalSize;
     this.compressedSize = compressedSize;
     this.algorithm = algorithm;
-    this.metadata = metadata || this._createDefaultMetadata();
+    this.metadata = metadata ?? this._createDefaultMetadata();
     this.compressionRatio = this._calculateCompressionRatio();
   }
 

@@ -38,7 +38,7 @@ export class ValidationService {
   /**
    * Validate data against all rules
    */
-  validate(data: Record<string, any>): ValidationResultEntity {
+  validate(data: Record<string, unknown>): ValidationResultEntity {
     let result = ValidationResultEntity.success();
 
     for (const [field, value] of Object.entries(data)) {
@@ -46,7 +46,12 @@ export class ValidationService {
       for (const rule of fieldRules) {
         const validation = rule.validate(value);
         if (!validation.valid) {
-          result = result.addError(field, validation.error || 'Validation failed');
+          result = result.addError(
+            field,
+            validation.error !== undefined && validation.error !== null && validation.error !== ''
+              ? validation.error
+              : 'Validation failed'
+          );
         }
       }
     }
@@ -57,14 +62,19 @@ export class ValidationService {
   /**
    * Validate specific field
    */
-  validateField(field: string, value: any): ValidationResultEntity {
+  validateField(field: string, value: unknown): ValidationResultEntity {
     let result = ValidationResultEntity.success();
     const fieldRules = this.getRulesForField(field);
 
     for (const rule of fieldRules) {
       const validation = rule.validate(value);
       if (!validation.valid) {
-        result = result.addError(field, validation.error || 'Validation failed');
+        result = result.addError(
+          field,
+          validation.error !== undefined && validation.error !== null && validation.error !== ''
+            ? validation.error
+            : 'Validation failed'
+        );
       }
     }
 

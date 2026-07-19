@@ -91,7 +91,7 @@ export class NetworkFactory {
    * Create connection ID
    */
   static createConnectionId(prefix?: string): ConnectionId {
-    return prefix ? ConnectionId.withPrefix(prefix) : ConnectionId.create();
+    return prefix !== undefined && prefix !== '' ? ConnectionId.withPrefix(prefix) : ConnectionId.create();
   }
 
   /**
@@ -192,7 +192,7 @@ export class NetworkFactory {
     loadBalancer: RoundRobinStrategy;
     metrics: NetworkMetrics;
   } {
-    const finalConfig = config || DefaultConfigs.DEFAULT;
+    const finalConfig = config ?? DefaultConfigs.DEFAULT;
 
     return {
       config: finalConfig,

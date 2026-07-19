@@ -60,8 +60,13 @@ export class QueryBuilder implements IQueryBuilder {
   }
 
   limit(limit: number): IQueryBuilder {
-    if (this._config.enableValidation && this._config.maxLimit) {
-      this._state.limit = Math.min(limit, this._config.maxLimit);
+    if (
+      this._config.enableValidation === true &&
+      this._config.maxLimit !== undefined &&
+      this._config.maxLimit > 0 &&
+      limit > this._config.maxLimit
+    ) {
+      this._state.limit = this._config.maxLimit;
     } else {
       this._state.limit = limit;
     }
@@ -86,7 +91,7 @@ export class QueryBuilder implements IQueryBuilder {
 
     if (this._state.limit !== undefined) {
       options.limit = this._state.limit;
-    } else if (this._config.defaultLimit) {
+    } else if (this._config.defaultLimit !== undefined && this._config.defaultLimit > 0) {
       options.limit = this._config.defaultLimit;
     }
 

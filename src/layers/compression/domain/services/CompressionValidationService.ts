@@ -229,7 +229,7 @@ export class CompressionValidationService {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    if (!data || data.length === 0) {
+    if (data.length === 0) {
       errors.push({
         field: 'data',
         message: 'Input data is required',

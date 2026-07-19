@@ -181,7 +181,8 @@ export class TOMLStrategy implements ISerializationStrategy {
         currentSection = result;
         const parts = sectionName.split('.');
         for (const part of parts) {
-          if (!currentSection[part]) {
+          const sectionValue = currentSection[part];
+          if (sectionValue === undefined || sectionValue === null) {
             currentSection[part] = {};
           }
           if (typeof currentSection[part] === 'object') {

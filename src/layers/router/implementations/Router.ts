@@ -24,6 +24,7 @@ import {
   ValidationError,
   ValidationWarning,
   CacheEntry,
+  CacheStrategy,
 } from '../types/router-types';
 
 export class Router implements IRouter {
@@ -51,7 +52,7 @@ export class Router implements IRouter {
       enableLogging: false,
       maxRoutes: 1000,
       defaultPriority: RoutePriority.MEDIUM,
-      defaultCache: 'NONE' as any,
+      defaultCache: CacheStrategy.NONE,
     };
     this._statistics = this._initStatistics();
   }
@@ -184,7 +185,7 @@ export class Router implements IRouter {
       const routeWithGroup = {
         ...route,
         group: group.name,
-        middleware: [...(group.middleware || []), ...(route.middleware || [])],
+        middleware: [...(group.middleware ?? []), ...(route.middleware ?? [])],
       };
       this.registerRoute(routeWithGroup);
     });
@@ -207,11 +208,11 @@ export class Router implements IRouter {
       filtered = filtered.filter((r) => r.method === filter.method);
     }
 
-    if (filter.path) {
+    if (filter.path != null && filter.path !== '') {
       filtered = filtered.filter((r) => r.path === filter.path);
     }
 
-    if (filter.pathPattern) {
+    if (filter.pathPattern != null && filter.pathPattern !== '') {
       const regex = new RegExp(filter.pathPattern);
       filtered = filtered.filter((r) => regex.test(r.path));
     }
@@ -224,15 +225,15 @@ export class Router implements IRouter {
       filtered = filtered.filter((r) => r.status === filter.status);
     }
 
-    if (filter.tags && filter.tags.length > 0) {
+    if (filter.tags != null && filter.tags.length > 0) {
       filtered = filtered.filter((r) => filter.tags!.some((tag) => r.tags?.includes(tag)));
     }
 
-    if (filter.group) {
+    if (filter.group != null && filter.group !== '') {
       filtered = filtered.filter((r) => r.group === filter.group);
     }
 
-    if (filter.version) {
+    if (filter.version != null && filter.version !== '') {
       filtered = filtered.filter((r) => r.version === filter.version);
     }
 
@@ -252,7 +253,7 @@ export class Router implements IRouter {
     if (index !== -1) {
       this._routes[index] = { ...this._routes[index], ...updates } as Route;
       const updatedRoute = this._routes[index];
-      if (updatedRoute && updatedRoute.method && updatedRoute.path) {
+      if (updatedRoute.method != null && updatedRoute.path != null) {
         this._updateRouteMetadata(updatedRoute);
       }
     }
@@ -343,7 +344,7 @@ export class Router implements IRouter {
           });
         }
 
-        if (param.pattern && param.required && !param.defaultValue) {
+        if (param.pattern != null && param.required === true && param.defaultValue === undefined) {
           warnings.push({
             path: route.path,
             field: 'parameter',
@@ -410,13 +411,13 @@ export class Router implements IRouter {
 
     this._statistics.routesByMethod = {} as Record<HttpMethod, number>;
     this._routes.forEach((route) => {
-      this._statistics.routesByMethod[route.method] = (this._statistics.routesByMethod[route.method] || 0) + 1;
+      this._statistics.routesByMethod[route.method] = (this._statistics.routesByMethod[route.method] ?? 0) + 1;
     });
 
     this._statistics.routesByPriority = {} as Record<RoutePriority, number>;
     this._routes.forEach((route) => {
       this._statistics.routesByPriority[route.priority ?? RoutePriority.MEDIUM] =
-        (this._statistics.routesByPriority[route.priority ?? RoutePriority.MEDIUM] || 0) + 1;
+        (this._statistics.routesByPriority[route.priority ?? RoutePriority.MEDIUM] ?? 0) + 1;
     });
   }
 
@@ -426,12 +427,12 @@ export class Router implements IRouter {
       path: route.path,
       method: route.method,
       handler: route.handler,
-      parameters: route.parameters || [],
-      middleware: route.middleware || [],
-      tags: route.tags || [],
-      description: route.description || '',
-      version: route.version || '',
-      group: route.group || '',
+      parameters: route.parameters ?? [],
+      middleware: route.middleware ?? [],
+      tags: route.tags ?? [],
+      description: route.description ?? '',
+      version: route.version ?? '',
+      group: route.group ?? '',
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
@@ -499,7 +500,7 @@ export class Router implements IRouter {
 
       if (routeSegment && routeSegment.startsWith(':')) {
         const paramName = routeSegment.substring(1);
-        const paramValue = requestSegments[i] || '';
+        const paramValue = requestSegments[i] ?? '';
         parameters[paramName] = paramValue;
       }
     }

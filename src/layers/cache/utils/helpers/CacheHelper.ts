@@ -27,7 +27,7 @@ export class CacheHelper {
    * Parse a cache key into its parts
    */
   static parseKey(key: string): string[] {
-    if (!key) return [];
+    if (key == null || key === '') return [];
     return key.split(':');
   }
 
@@ -49,10 +49,18 @@ export class CacheHelper {
    * Deserialize a cache entry from JSON
    */
   static deserialize<T>(data: string): CacheEntry<T> {
-    const parsed = JSON.parse(data);
-    const entry = new CacheEntry<T>(parsed.key, parsed.value, parsed.ttl, parsed.createdAt);
-    entry.accessCount = parsed.accessCount ?? 0;
-    entry.lastAccessedAt = parsed.lastAccessedAt ?? parsed.createdAt;
+    const parsed = JSON.parse(data) as unknown;
+    if (typeof parsed !== 'object' || parsed === null) {
+      throw new Error('Invalid cache entry data');
+    }
+    const raw = parsed as Record<string, unknown>;
+    const key = String(raw.key ?? '');
+    const value = raw.value as T;
+    const ttl = Number(raw.ttl ?? 0);
+    const createdAt = Number(raw.createdAt ?? 0);
+    const entry = new CacheEntry<T>(key, value, ttl, createdAt);
+    entry.accessCount = Number(raw.accessCount ?? 0);
+    entry.lastAccessedAt = Number(raw.lastAccessedAt ?? createdAt);
     return entry;
   }
 
@@ -102,18 +110,16 @@ export class CacheHelper {
    */
   static deepClone<T>(obj: T): T {
     if (obj === null || typeof obj !== 'object') return obj;
-    if (obj instanceof Date) return new Date(obj.getTime()) as any;
-    if (obj instanceof Array) return obj.map((item) => CacheHelper.deepClone(item)) as any;
-    if (obj instanceof Object) {
-      const clonedObj = {} as any;
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          clonedObj[key] = CacheHelper.deepClone(obj[key]);
-        }
-      }
-      return clonedObj;
+    if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
+    if (Array.isArray(obj)) {
+      return obj.map((item: unknown) => CacheHelper.deepClone(item)) as unknown as T;
     }
-    return obj;
+    const clonedObj: Record<string, unknown> = {};
+    const record = obj as unknown as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
+      clonedObj[key] = CacheHelper.deepClone(record[key]);
+    }
+    return clonedObj as unknown as T;
   }
 
   /**

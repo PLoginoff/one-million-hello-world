@@ -17,9 +17,9 @@ export interface DispatchResult {
 
 export interface DispatchPolicy {
   name: string;
-  shouldDispatch: (event: any) => boolean;
-  onDispatch?: (event: any) => void;
-  onError?: (event: any, error: Error) => void;
+  shouldDispatch: (event: unknown) => boolean;
+  onDispatch?: (event: unknown) => void;
+  onError?: (event: unknown, error: Error) => void;
 }
 
 export interface EventHandlerMetadata {

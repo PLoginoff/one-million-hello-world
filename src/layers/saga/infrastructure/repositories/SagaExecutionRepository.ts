@@ -27,14 +27,17 @@ export class InMemorySagaExecutionRepository implements SagaExecutionRepository 
   }
 
   async save(execution: SagaExecutionEntity): Promise<void> {
+    await Promise.resolve();
     this._storage.set(execution.executionId, execution);
   }
 
   async findById(executionId: string): Promise<SagaExecutionEntity | null> {
-    return this._storage.get(executionId) || null;
+    await Promise.resolve();
+    return this._storage.get(executionId) ?? null;
   }
 
   async findBySagaId(sagaId: string): Promise<SagaExecutionEntity[]> {
+    await Promise.resolve();
     const executions: SagaExecutionEntity[] = [];
     for (const execution of this._storage.values()) {
       if (execution.sagaId === sagaId) {
@@ -45,6 +48,7 @@ export class InMemorySagaExecutionRepository implements SagaExecutionRepository 
   }
 
   async findByStatus(status: string): Promise<SagaExecutionEntity[]> {
+    await Promise.resolve();
     const executions: SagaExecutionEntity[] = [];
     for (const execution of this._storage.values()) {
       if (execution.status === status) {
@@ -55,10 +59,12 @@ export class InMemorySagaExecutionRepository implements SagaExecutionRepository 
   }
 
   async delete(executionId: string): Promise<void> {
+    await Promise.resolve();
     this._storage.delete(executionId);
   }
 
   async deleteBySagaId(sagaId: string): Promise<void> {
+    await Promise.resolve();
     const toDelete: string[] = [];
     for (const [id, execution] of this._storage.entries()) {
       if (execution.sagaId === sagaId) {
@@ -71,15 +77,18 @@ export class InMemorySagaExecutionRepository implements SagaExecutionRepository 
   }
 
   async findAll(limit: number = 100, offset: number = 0): Promise<SagaExecutionEntity[]> {
+    await Promise.resolve();
     const executions = Array.from(this._storage.values());
     return executions.slice(offset, offset + limit);
   }
 
   async count(): Promise<number> {
+    await Promise.resolve();
     return this._storage.size;
   }
 
   async countByStatus(status: string): Promise<number> {
+    await Promise.resolve();
     let count = 0;
     for (const execution of this._storage.values()) {
       if (execution.status === status) {

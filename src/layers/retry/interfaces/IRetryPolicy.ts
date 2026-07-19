@@ -5,7 +5,7 @@
  * including exponential backoff, jitter, and idempotency.
  */
 
-import { RetryStrategy, RetryResult, RetryConfig } from '../types/retry-types';
+import { RetryResult, RetryConfig } from '../types/retry-types';
 
 /**
  * Interface for retry operations

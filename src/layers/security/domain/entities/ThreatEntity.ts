@@ -12,7 +12,7 @@ export interface ThreatData {
   description: string;
   sourceIp: string;
   timestamp: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export class ThreatEntity {
@@ -37,7 +37,7 @@ export class ThreatEntity {
     severity: ThreatSeverity,
     description: string,
     sourceIp: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): ThreatEntity {
     return new ThreatEntity({
       type,
@@ -101,7 +101,7 @@ export class ThreatEntity {
   /**
    * Get metadata value
    */
-  getMetadata(key: string): any | undefined {
+  getMetadata(key: string): unknown {
     return this.data.metadata?.[key];
   }
 

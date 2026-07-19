@@ -70,10 +70,10 @@ export class Logger implements ILogger {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] [${level}] ${message}`;
 
-    if (context) {
-      console.log(logMessage, context);
+    if (context !== undefined && context !== null) {
+      console.warn(logMessage, context);
     } else {
-      console.log(logMessage);
+      console.warn(logMessage);
     }
   }
 }

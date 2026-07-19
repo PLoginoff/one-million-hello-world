@@ -23,7 +23,7 @@ export class LFUEvictionStrategy<T> implements IEvictionStrategy<T> {
     let leastAccessCount = Infinity;
 
     for (const [key, entry] of entries.entries()) {
-      const freq = this.frequencyMap.get(key) || entry.accessCount;
+      const freq = this.frequencyMap.get(key) ?? entry.accessCount;
       if (freq < leastAccessCount) {
         leastAccessCount = freq;
         leastAccessedKey = key;
@@ -33,12 +33,12 @@ export class LFUEvictionStrategy<T> implements IEvictionStrategy<T> {
     return leastAccessedKey;
   }
 
-  onAccess(key: string, entry: CacheEntry<T>): void {
-    const currentFreq = this.frequencyMap.get(key) || 0;
+  onAccess(key: string, _entry: CacheEntry<T>): void {
+    const currentFreq = this.frequencyMap.get(key) ?? 0;
     this.frequencyMap.set(key, currentFreq + 1);
   }
 
-  onAdd(key: string, entry: CacheEntry<T>): void {
+  onAdd(key: string, _entry: CacheEntry<T>): void {
     this.frequencyMap.set(key, 0);
   }
 

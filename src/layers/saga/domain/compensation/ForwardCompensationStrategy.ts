@@ -5,7 +5,7 @@
  * Used when compensation must follow execution order.
  */
 
-import { SagaExecutionEntity } from '../entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep } from '../entities/SagaExecution';
 
 export class ForwardCompensationStrategy {
   /**
@@ -20,7 +20,7 @@ export class ForwardCompensationStrategy {
   /**
    * Check if step should be compensated
    */
-  shouldCompensate(step: any): boolean {
+  shouldCompensate(step: SagaStep): boolean {
     return step.status === 'completed';
   }
 

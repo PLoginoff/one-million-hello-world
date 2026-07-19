@@ -17,6 +17,7 @@ import { ParseMetricsValueObject } from '../domain/value-objects/ParseMetricsVal
 import { HttpRequestEntity } from '../domain/entities/HttpRequestEntity';
 import { HttpResponseEntity } from '../domain/entities/HttpResponseEntity';
 import { HttpHeaderEntity } from '../domain/entities/HttpHeaderEntity';
+import { HttpRequestLine, HttpStatusLine, HttpHeaders, ParserState } from '../types/http-parser-types';
 
 export class HttpParserFactory {
   /**
@@ -112,7 +113,7 @@ export class HttpParserFactory {
    * Create parser state value object
    */
   static createParserState(state: string): ParserStateValueObject {
-    return ParserStateValueObject.create(state as any);
+    return ParserStateValueObject.create(state as ParserState);
   }
 
   /**
@@ -160,21 +161,26 @@ export class HttpParserFactory {
   /**
    * Create HTTP request entity
    */
-  static createHttpRequestEntity(line: any, headers: any, body: any, raw: any): HttpRequestEntity {
+  static createHttpRequestEntity(
+    line: HttpRequestLine,
+    headers: HttpHeaders,
+    body: Buffer,
+    raw: Buffer
+  ): HttpRequestEntity {
     return HttpRequestEntity.create(line, headers, body, raw);
   }
 
   /**
    * Create HTTP request entity from raw buffer
    */
-  static createHttpRequestEntityFromRaw(raw: any): HttpRequestEntity {
+  static createHttpRequestEntityFromRaw(raw: Buffer): HttpRequestEntity {
     return HttpRequestEntity.fromRaw(raw);
   }
 
   /**
    * Create HTTP response entity
    */
-  static createHttpResponseEntity(line: any, headers: any, body: any): HttpResponseEntity {
+  static createHttpResponseEntity(line: HttpStatusLine, headers: HttpHeaders, body: Buffer): HttpResponseEntity {
     return HttpResponseEntity.create(line, headers, body);
   }
 

@@ -15,12 +15,14 @@ export class CompressionPlugin implements ISerializationPlugin {
     this._enabled = enabled;
   }
 
-  async initialize(): Promise<void> {
-    console.log(`[CompressionPlugin] Initialized`);
+  initialize(): Promise<void> {
+    console.warn(`[CompressionPlugin] Initialized`);
+    return Promise.resolve();
   }
 
-  async cleanup(): Promise<void> {
-    console.log(`[CompressionPlugin] Cleaned up`);
+  cleanup(): Promise<void> {
+    console.warn(`[CompressionPlugin] Cleaned up`);
+    return Promise.resolve();
   }
 
   afterSerialize(serialized: string): string {
@@ -30,7 +32,7 @@ export class CompressionPlugin implements ISerializationPlugin {
 
     try {
       const compressed = btoa(serialized);
-      console.log(`[CompressionPlugin] Compressed: ${serialized.length} -> ${compressed.length} chars`);
+      console.warn(`[CompressionPlugin] Compressed: ${serialized.length} -> ${compressed.length} chars`);
       return compressed;
     } catch {
       return serialized;
@@ -44,7 +46,7 @@ export class CompressionPlugin implements ISerializationPlugin {
 
     try {
       const decompressed = atob(data);
-      console.log(`[CompressionPlugin] Decompressed: ${data.length} -> ${decompressed.length} chars`);
+      console.warn(`[CompressionPlugin] Decompressed: ${data.length} -> ${decompressed.length} chars`);
       return decompressed;
     } catch {
       return data;

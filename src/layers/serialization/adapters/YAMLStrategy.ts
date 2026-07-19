@@ -114,7 +114,6 @@ export class YAMLStrategy implements ISerializationStrategy {
     }
 
     const firstLine = lines[0];
-    const indent = firstLine.search(/\S/);
 
     if (firstLine.trim().startsWith('- ')) {
       return this._parseArray(lines, baseIndent);

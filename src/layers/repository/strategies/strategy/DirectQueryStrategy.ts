@@ -12,7 +12,7 @@ export class DirectQueryStrategy implements IRepositoryStrategy {
     return 'DIRECT_QUERY';
   }
 
-  async query(repository: RepositoryEntity, query: any): Promise<any> {
-    return query;
+  query(repository: RepositoryEntity, query: unknown): Promise<unknown> {
+    return Promise.resolve(query);
   }
 }

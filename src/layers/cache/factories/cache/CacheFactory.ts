@@ -5,15 +5,7 @@
  */
 
 import { CacheManager } from '../../core/managers/CacheManager';
-import { CacheService } from '../../core/services/CacheService';
-import { InMemoryStorage } from '../../storage/implementations/in-memory/InMemoryStorage';
-import { DistributedStorage } from '../../storage/implementations/distributed/DistributedStorage';
-import { EvictionStrategyFactory } from '../strategies/EvictionStrategyFactory';
-import { TimeBasedInvalidationStrategy } from '../../strategies/invalidation/TimeBasedInvalidationStrategy';
-import { BasicStatisticsCollector } from '../../statistics/collectors/BasicStatisticsCollector';
-import { DetailedStatisticsCollector } from '../../statistics/collectors/DetailedStatisticsCollector';
 import { DefaultConfigs, CacheConfigOptions } from '../../configuration/defaults/DefaultConfigs';
-import { InvalidationStrategy } from '../../types/cache-types';
 import { StorageType } from '../storage/StorageFactory';
 
 export interface CacheFactoryOptions {
@@ -26,21 +18,8 @@ export class CacheFactory {
   /**
    * Create cache with default configuration
    */
-  static create<T>(config?: Partial<CacheConfigOptions>, options?: CacheFactoryOptions): CacheManager<T> {
+  static create<T>(config?: Partial<CacheConfigOptions>, _options?: CacheFactoryOptions): CacheManager<T> {
     const cacheConfig = config ? DefaultConfigs.custom(config) : DefaultConfigs.DEFAULT;
-    const storage = this.createStorage<T>(options?.storageType, options?.nodeId);
-    const evictionStrategy = EvictionStrategyFactory.create<T>(cacheConfig.invalidationStrategy);
-    const invalidationStrategy = new TimeBasedInvalidationStrategy<T>();
-    const statsCollector = this.createStatsCollector(options?.useDetailedStats);
-
-    const cacheService = new CacheService<T>(
-      storage,
-      evictionStrategy,
-      invalidationStrategy,
-      statsCollector,
-      cacheConfig
-    );
-
     return new CacheManager<T>(cacheConfig);
   }
 
@@ -84,19 +63,5 @@ export class CacheFactory {
    */
   static createCustom<T>(config: CacheConfigOptions, options?: CacheFactoryOptions): CacheManager<T> {
     return this.create<T>(config, options);
-  }
-
-  private static createStorage<T>(type?: StorageType, nodeId?: string): any {
-    if (type === StorageType.DISTRIBUTED) {
-      return new DistributedStorage<T>(nodeId);
-    }
-    return new InMemoryStorage<T>();
-  }
-
-  private static createStatsCollector(detailed?: boolean): any {
-    if (detailed) {
-      return new DetailedStatisticsCollector();
-    }
-    return new BasicStatisticsCollector();
   }
 }

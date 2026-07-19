@@ -47,10 +47,10 @@ export class SchemaValidator implements IValidator {
   }
 
   private _validate(data: unknown, schema: Schema, path: string, errors: string[], warnings: string[]): void {
-    if (schema.type) {
+    if (schema.type !== undefined && schema.type !== null && schema.type !== '') {
       const actualType = typeof data;
       if (actualType !== schema.type) {
-        errors.push(`${path || 'root'}: Expected type '${schema.type}', got '${actualType}'`);
+        errors.push(`${path ?? 'root'}: Expected type '${schema.type}', got '${actualType}'`);
       }
     }
 
@@ -60,17 +60,17 @@ export class SchemaValidator implements IValidator {
       if (schema.required) {
         for (const field of schema.required) {
           if (!(field in obj)) {
-            errors.push(`${path || 'root'}: Required field '${field}' is missing`);
+            errors.push(`${path ?? 'root'}: Required field '${field}' is missing`);
           }
         }
       }
 
       if (schema.properties) {
         for (const [key, value] of Object.entries(obj)) {
-          if (schema.properties[key]) {
+          if (key in schema.properties) {
             this._validate(value, schema.properties[key], `${path}.${key}`, errors, warnings);
           } else if (schema.additionalProperties === false) {
-            warnings.push(`${path || 'root'}: Additional property '${key}' not allowed`);
+            warnings.push(`${path ?? 'root'}: Additional property '${key}' not allowed`);
           }
         }
       }
@@ -80,17 +80,17 @@ export class SchemaValidator implements IValidator {
       const str = data;
 
       if (schema.minLength !== undefined && str.length < schema.minLength) {
-        errors.push(`${path || 'root'}: String length ${str.length} is less than minimum ${schema.minLength}`);
+        errors.push(`${path ?? 'root'}: String length ${str.length} is less than minimum ${schema.minLength}`);
       }
 
       if (schema.maxLength !== undefined && str.length > schema.maxLength) {
-        errors.push(`${path || 'root'}: String length ${str.length} exceeds maximum ${schema.maxLength}`);
+        errors.push(`${path ?? 'root'}: String length ${str.length} exceeds maximum ${schema.maxLength}`);
       }
 
-      if (schema.pattern) {
+      if (schema.pattern !== undefined && schema.pattern !== null && schema.pattern !== '') {
         const regex = new RegExp(schema.pattern);
         if (!regex.test(str)) {
-          errors.push(`${path || 'root'}: String does not match pattern '${schema.pattern}'`);
+          errors.push(`${path ?? 'root'}: String does not match pattern '${schema.pattern}'`);
         }
       }
     }
@@ -99,11 +99,11 @@ export class SchemaValidator implements IValidator {
       const arr = data as unknown[];
 
       if (schema.minItems !== undefined && arr.length < schema.minItems) {
-        errors.push(`${path || 'root'}: Array length ${arr.length} is less than minimum ${schema.minItems}`);
+        errors.push(`${path ?? 'root'}: Array length ${arr.length} is less than minimum ${schema.minItems}`);
       }
 
       if (schema.maxItems !== undefined && arr.length > schema.maxItems) {
-        errors.push(`${path || 'root'}: Array length ${arr.length} exceeds maximum ${schema.maxItems}`);
+        errors.push(`${path ?? 'root'}: Array length ${arr.length} exceeds maximum ${schema.maxItems}`);
       }
     }
   }

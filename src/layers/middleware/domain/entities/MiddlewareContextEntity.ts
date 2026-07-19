@@ -5,9 +5,9 @@
  */
 
 export interface MiddlewareContextData {
-  request: any;
-  response: any;
-  metadata: Map<string, any>;
+  request: unknown;
+  response: unknown;
+  metadata: Map<string, unknown>;
   timestamp: number;
 }
 
@@ -24,7 +24,7 @@ export class MiddlewareContextEntity {
   /**
    * Create middleware context
    */
-  static create(request: any, response: any): MiddlewareContextEntity {
+  static create(request: unknown, response: unknown): MiddlewareContextEntity {
     return new MiddlewareContextEntity({
       request,
       response,
@@ -36,42 +36,42 @@ export class MiddlewareContextEntity {
   /**
    * Get request
    */
-  getRequest(): any {
+  getRequest(): unknown {
     return this.data.request;
   }
 
   /**
    * Get response
    */
-  getResponse(): any {
+  getResponse(): unknown {
     return this.data.response;
   }
 
   /**
    * Set request
    */
-  setRequest(request: any): MiddlewareContextEntity {
+  setRequest(request: unknown): MiddlewareContextEntity {
     return new MiddlewareContextEntity({ ...this.data, request });
   }
 
   /**
    * Set response
    */
-  setResponse(response: any): MiddlewareContextEntity {
+  setResponse(response: unknown): MiddlewareContextEntity {
     return new MiddlewareContextEntity({ ...this.data, response });
   }
 
   /**
    * Get metadata value
    */
-  getMetadata(key: string): any {
+  getMetadata(key: string): unknown {
     return this.data.metadata.get(key);
   }
 
   /**
    * Set metadata value
    */
-  setMetadata(key: string, value: any): MiddlewareContextEntity {
+  setMetadata(key: string, value: unknown): MiddlewareContextEntity {
     const newMetadata = new Map(this.data.metadata);
     newMetadata.set(key, value);
     return new MiddlewareContextEntity({ ...this.data, metadata: newMetadata });

@@ -22,7 +22,6 @@ import {
   HealthStatus,
   NetworkDiagnostics,
   EventSubscription,
-  EventFilter,
   ConnectionState,
 } from '../types/network-types';
 

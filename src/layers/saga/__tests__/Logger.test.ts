@@ -87,14 +87,14 @@ describe('Logger', () => {
 
   describe('debug', () => {
     it('should not log when disabled', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.debug('test message');
       expect(consoleLogSpy).not.toHaveBeenCalled();
       consoleLogSpy.mockRestore();
     });
 
     it('should log when enabled and level allows', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.DEBUG);
       logger.debug('test message');
@@ -103,7 +103,7 @@ describe('Logger', () => {
     });
 
     it('should not log when level is higher than DEBUG', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.INFO);
       logger.debug('test message');
@@ -112,7 +112,7 @@ describe('Logger', () => {
     });
 
     it('should log with context', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.DEBUG);
       logger.debug('test message', { key: 'value' });
@@ -123,14 +123,14 @@ describe('Logger', () => {
 
   describe('info', () => {
     it('should not log when disabled', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.info('test message');
       expect(consoleLogSpy).not.toHaveBeenCalled();
       consoleLogSpy.mockRestore();
     });
 
     it('should log when enabled and level allows', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.INFO);
       logger.info('test message');
@@ -139,7 +139,7 @@ describe('Logger', () => {
     });
 
     it('should not log when level is higher than INFO', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.WARN);
       logger.info('test message');
@@ -148,7 +148,7 @@ describe('Logger', () => {
     });
 
     it('should log with context', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.info('test message', { key: 'value' });
       expect(consoleLogSpy).toHaveBeenCalled();
@@ -158,14 +158,14 @@ describe('Logger', () => {
 
   describe('warn', () => {
     it('should not log when disabled', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.warn('test message');
       expect(consoleLogSpy).not.toHaveBeenCalled();
       consoleLogSpy.mockRestore();
     });
 
     it('should log when enabled and level allows', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.WARN);
       logger.warn('test message');
@@ -174,7 +174,7 @@ describe('Logger', () => {
     });
 
     it('should not log when level is higher than WARN', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.ERROR);
       logger.warn('test message');
@@ -183,7 +183,7 @@ describe('Logger', () => {
     });
 
     it('should log with context', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.warn('test message', { key: 'value' });
       expect(consoleLogSpy).toHaveBeenCalled();
@@ -193,14 +193,14 @@ describe('Logger', () => {
 
   describe('error', () => {
     it('should not log when disabled', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.error('test message');
       expect(consoleLogSpy).not.toHaveBeenCalled();
       consoleLogSpy.mockRestore();
     });
 
     it('should log when enabled and level allows', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.ERROR);
       logger.error('test message');
@@ -209,7 +209,7 @@ describe('Logger', () => {
     });
 
     it('should log with context', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.error('test message', { key: 'value' });
       expect(consoleLogSpy).toHaveBeenCalled();
@@ -219,7 +219,7 @@ describe('Logger', () => {
 
   describe('log level priority', () => {
     it('should allow DEBUG when set to DEBUG', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.DEBUG);
       logger.debug('debug');
@@ -231,7 +231,7 @@ describe('Logger', () => {
     });
 
     it('should allow INFO when set to INFO', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.INFO);
       logger.debug('debug');
@@ -243,7 +243,7 @@ describe('Logger', () => {
     });
 
     it('should allow WARN when set to WARN', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.WARN);
       logger.debug('debug');
@@ -255,7 +255,7 @@ describe('Logger', () => {
     });
 
     it('should allow ERROR when set to ERROR', () => {
-      const consoleLogSpy = jest.spyOn(console, 'log');
+      const consoleLogSpy = jest.spyOn(console, 'warn');
       logger.setEnabled(true);
       logger.setLogLevel(LogLevel.ERROR);
       logger.debug('debug');

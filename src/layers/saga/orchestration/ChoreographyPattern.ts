@@ -5,7 +5,7 @@
  * Services communicate via events to coordinate saga execution.
  */
 
-import { SagaExecutionEntity } from '../domain/entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep } from '../domain/entities/SagaExecution';
 
 export class ChoreographyPattern {
   private readonly _eventBus: SagaEventBus;
@@ -17,10 +17,11 @@ export class ChoreographyPattern {
   /**
    * Execute saga with choreography pattern
    */
-  async execute(sagaId: string, steps: any[]): Promise<SagaExecutionEntity> {
+  async execute(sagaId: string, steps: SagaStep[]): Promise<SagaExecutionEntity> {
     const executionId = `exec_${Date.now()}`;
     const execution = new SagaExecutionEntity(executionId, sagaId, 'pending', steps, []);
 
+    await Promise.resolve();
     this._eventBus.publish('saga-started', { executionId, sagaId });
 
     return execution;
@@ -30,6 +31,7 @@ export class ChoreographyPattern {
    * Handle step completion event
    */
   async handleStepCompleted(stepId: string, result: unknown): Promise<void> {
+    await Promise.resolve();
     this._eventBus.publish('step-completed', { stepId, result });
   }
 
@@ -49,7 +51,7 @@ class SagaEventBus {
   }
 
   publish(eventType: string, data: unknown): void {
-    const subscribers = this._subscribers.get(eventType) || new Set();
+    const subscribers = this._subscribers.get(eventType) ?? new Set();
     for (const handler of subscribers) {
       handler(data);
     }

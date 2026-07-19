@@ -4,7 +4,13 @@
  * Defines the contract for fluent query building API.
  */
 
-import { QueryBuilderState, QueryBuilderConfig, QueryBuildResult } from '../types/query-builder-types';
+import {
+  QueryBuilderState,
+  QueryBuilderConfig,
+  QueryBuildResult,
+  FilterClause,
+  SortClause,
+} from '../types/query-builder-types';
 
 /**
  * Interface for query builder operations
@@ -192,14 +198,14 @@ export interface IQueryBuilder {
    *
    * @returns Array of filter clauses
    */
-  getFilters(): any[];
+  getFilters(): FilterClause[];
 
   /**
    * Gets the current sorts
    *
    * @returns Array of sort clauses
    */
-  getSorts(): any[];
+  getSorts(): SortClause[];
 
   /**
    * Gets the current limit

@@ -31,9 +31,10 @@ export class MemoryEventQueue implements IEventQueue {
     this._processor = processor;
   }
 
-  async enqueue(event: Event): Promise<void> {
+  enqueue(event: Event): Promise<void> {
     this._queue.push(event);
     this._stats.size = this._queue.length;
+    return Promise.resolve();
   }
 
   async enqueueBatch(events: Event[]): Promise<void> {
@@ -42,44 +43,47 @@ export class MemoryEventQueue implements IEventQueue {
     }
   }
 
-  async dequeue(): Promise<Event | undefined> {
-    return this._queue.shift();
+  dequeue(): Promise<Event | undefined> {
+    return Promise.resolve(this._queue.shift());
   }
 
-  async peek(): Promise<Event | undefined> {
-    return this._queue[0];
+  peek(): Promise<Event | undefined> {
+    return Promise.resolve(this._queue[0]);
   }
 
-  async size(): Promise<number> {
-    return this._queue.length;
+  size(): Promise<number> {
+    return Promise.resolve(this._queue.length);
   }
 
-  async isEmpty(): Promise<boolean> {
-    return this._queue.length === 0;
+  isEmpty(): Promise<boolean> {
+    return Promise.resolve(this._queue.length === 0);
   }
 
-  async clear(): Promise<void> {
+  clear(): Promise<void> {
     this._queue = [];
     this._stats.size = 0;
+    return Promise.resolve();
   }
 
   getStats(): QueueStats {
     return { ...this._stats };
   }
 
-  async startProcessing(): Promise<void> {
+  startProcessing(): Promise<void> {
     if (this._processing) {
-      return;
+      return Promise.resolve();
     }
 
     this._processing = true;
     this._processQueue().catch(() => {
       // Background processing errors are recorded in stats
     });
+    return Promise.resolve();
   }
 
-  async stopProcessing(): Promise<void> {
+  stopProcessing(): Promise<void> {
     this._processing = false;
+    return Promise.resolve();
   }
 
   isProcessing(): boolean {

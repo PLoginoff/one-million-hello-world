@@ -115,7 +115,6 @@ export class QueryParser implements IQueryParser {
         aggregations: [],
       };
 
-      const lower = query.toLowerCase();
       let remaining = query;
 
       const sortMatch = /\bsort\s+by\s+/i.exec(remaining);
@@ -129,7 +128,7 @@ export class QueryParser implements IQueryParser {
 
       const limitMatch = /\blimit\s+(\d+)/i.exec(query);
       const offsetMatch = /\boffset\s+(\d+)/i.exec(query);
-      if (limitMatch || offsetMatch) {
+      if (limitMatch ?? offsetMatch) {
         parsedQuery.pagination = {
           limit: limitMatch ? parseInt(limitMatch[1], 10) : 100,
           offset: offsetMatch ? parseInt(offsetMatch[1], 10) : 0,
@@ -402,14 +401,16 @@ export class QueryParser implements IQueryParser {
     }
   }
 
-  validate(query: any): ParseResult {
-    if (!query) {
+  validate(query: ParsedQuery): ParseResult {
+    const errors: Array<{ code: string; message: string; position: number; severity: ErrorSeverity }> = [];
+
+    if (query?.filters == null) {
       return {
         success: false,
         errors: [
           {
-            code: 'VALIDATION_ERROR',
-            message: 'Query is undefined',
+            code: 'INVALID_QUERY',
+            message: 'Query is null or undefined',
             position: 0,
             severity: ErrorSeverity.ERROR,
           },
@@ -417,8 +418,6 @@ export class QueryParser implements IQueryParser {
         warnings: [],
       };
     }
-
-    const errors: Array<{ code: string; message: string; position: number; severity: ErrorSeverity }> = [];
 
     if (this._config.allowedFields.length > 0) {
       for (const filter of query.filters) {
@@ -464,33 +463,29 @@ export class QueryParser implements IQueryParser {
     };
   }
 
-  serialize(query: any): string {
-    if (!query) {
+  serialize(query: ParsedQuery): string {
+    if (query == null) {
       return '';
     }
-
-    const filters = query.filters || [];
-    const sorts = query.sorts || [];
-    const projections = query.projections || [];
-    const groups = query.groups || [];
-    const aggregations = query.aggregations || [];
+    const filters = query.filters ?? [];
+    const sorts = query.sorts ?? [];
     const pagination = query.pagination;
 
     const parts: string[] = [];
 
     if (filters.length > 0) {
-      parts.push(filters.map((f: any) => `${f.field} ${f.operator} ${f.value}`).join(' AND '));
+      parts.push(filters.map((f) => `${f.field} ${f.operator} ${String(f.value)}`).join(' AND '));
     }
 
     if (sorts.length > 0) {
-      parts.push(sorts.map((s: any) => `ORDER BY ${s.field} ${s.direction}`).join(', '));
+      parts.push(sorts.map((s) => `ORDER BY ${s.field} ${s.direction}`).join(', '));
     }
 
-    if (pagination && pagination.limit > 0) {
+    if (pagination.limit > 0) {
       parts.push(`LIMIT ${pagination.limit}`);
     }
 
-    if (pagination && pagination.offset > 0) {
+    if (pagination.offset > 0) {
       parts.push(`OFFSET ${pagination.offset}`);
     }
 
@@ -543,7 +538,12 @@ export class QueryParser implements IQueryParser {
     };
   }
 
-  getStats() {
+  getStats(): {
+    totalParses: number;
+    successfulParses: number;
+    failedParses: number;
+    averageParseTime: number;
+  } {
     return { ...this._stats };
   }
 
@@ -555,7 +555,7 @@ export class QueryParser implements IQueryParser {
 
     const field = parts[0];
     const operator = this._parseFilterOperator(parts[1]);
-    const value = parts.slice(2).join(' ') || '';
+    const value = parts.slice(2).join(' ') ?? '';
 
     return {
       field,
@@ -593,8 +593,8 @@ export class QueryParser implements IQueryParser {
 
   private _parsePaginationExpression(expression: string): ParsedPagination {
     const parts = expression.split(',');
-    const limit = parseInt(parts[0], 10) || 100;
-    const offset = parseInt(parts[1], 10) || 0;
+    const limit = parseInt(parts[0], 10) ?? 100;
+    const offset = parseInt(parts[1], 10) ?? 0;
 
     return {
       limit,
@@ -605,7 +605,7 @@ export class QueryParser implements IQueryParser {
   private _parseAggregationExpression(expression: string): ParsedAggregation {
     const parts = expression.split('(');
     const func = this._parseAggregationFunction(parts[0]);
-    const field = parts[1]?.replace(')', '').trim() || '*';
+    const field = parts[1]?.replace(')', '').trim() ?? '*';
 
     return {
       function: func,

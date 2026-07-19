@@ -6,7 +6,7 @@
  */
 
 import { IFilterEngine } from '../interfaces/IFilterEngine';
-import { ParsedFilter, LogicalOperator } from '../../query-parser/types/query-parser-types';
+import { ParsedFilter, LogicalOperator, FilterOperator } from '../../query-parser/types/query-parser-types';
 import {
   FilterResult,
   FilterContext,
@@ -14,7 +14,6 @@ import {
   FilterChainConfig,
   CompiledFilter,
   FilterOptimizationHint,
-  FilterError,
   NullHandling,
 } from '../types/filter-engine-types';
 
@@ -64,7 +63,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
         evaluatedIndexes.add(0);
 
         for (let i = 1; i < filters.length; i++) {
-          const nextOperator = filters[i].logicalOperator || LogicalOperator.AND;
+          const nextOperator = filters[i].logicalOperator ?? LogicalOperator.AND;
 
           if (this._chainConfig.shortCircuitEvaluation) {
             if (
@@ -109,7 +108,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
   }
 
   compile(filter: ParsedFilter): CompiledFilter {
-    const cacheKey = `${filter.field}_${filter.operator}_${filter.value}`;
+    const cacheKey = `${filter.field}_${filter.operator}_${String(filter.value)}`;
     const cached = this._compiledCache.get(cacheKey);
 
     if (cached) {
@@ -127,9 +126,8 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     return compiled;
   }
 
-  applyCompiled(data: T[], filters: CompiledFilter[], context?: FilterContext): FilterResult<T> {
+  applyCompiled(data: T[], filters: CompiledFilter[], _context?: FilterContext): FilterResult<T> {
     const startTime = Date.now();
-    const effectiveContext = context ? { ...this._context, ...context } : this._context;
 
     try {
       let filteredData = [...data];
@@ -177,16 +175,16 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     const value = filter.value;
 
     switch (operator) {
-      case 'EQUALS':
+      case FilterOperator.EQUALS:
         return 1 / totalCount;
-      case 'NOT_EQUALS':
+      case FilterOperator.NOT_EQUALS:
         return (totalCount - 1) / totalCount;
-      case 'IN':
+      case FilterOperator.IN:
         if (Array.isArray(value)) {
           return Math.min(value.length / totalCount, 1);
         }
         return 0.5;
-      case 'NOT_IN':
+      case FilterOperator.NOT_IN:
         if (Array.isArray(value)) {
           return Math.max((totalCount - value.length) / totalCount, 0);
         }
@@ -239,7 +237,12 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
   }
 
   validate(filter: ParsedFilter): boolean {
-    return !!filter.field && !!filter.operator;
+    return (
+      filter.field !== undefined &&
+      filter.field !== '' &&
+      filter.operator !== undefined &&
+      (filter.operator as string) !== ''
+    );
   }
 
   combine(filters: ParsedFilter[], operator: 'AND' | 'OR'): ParsedFilter {
@@ -263,7 +266,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
   negate(filter: ParsedFilter): ParsedFilter {
     return {
       ...filter,
-      negated: !filter.negated,
+      negated: filter.negated !== true,
     };
   }
 
@@ -272,7 +275,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
       const entity = item as Record<string, unknown>;
       const filter = compiled.filter;
       const result = this._compareValues(entity[filter.field], filter.operator, filter.value, context);
-      return filter.negated ? !result : result;
+      return filter.negated === true ? !result : result;
     } catch (error) {
       return context.nullHandling === NullHandling.TREAT_AS_MATCH;
     }
@@ -285,7 +288,7 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
 
       const result = this._compareValues(fieldValue, filter.operator, filter.value);
 
-      return filter.negated ? !result : result;
+      return filter.negated === true ? !result : result;
     };
   }
 
@@ -339,9 +342,9 @@ export class FilterEngine<T = unknown> implements IFilterEngine<T> {
     const operator = filter.operator;
 
     switch (operator) {
-      case 'EQUALS':
+      case FilterOperator.EQUALS:
         return 1;
-      case 'IN':
+      case FilterOperator.IN:
         return Array.isArray(filter.value) ? filter.value.length : 10;
       default:
         return 5;

@@ -6,7 +6,6 @@
 
 import { MiddlewareEntity } from '../entities/MiddlewareEntity';
 import { MiddlewareContextEntity } from '../entities/MiddlewareContextEntity';
-import { MiddlewareExecutionOrderValueObject } from '../value-objects/MiddlewareExecutionOrderValueObject';
 
 export type MiddlewareFunction = (
   context: MiddlewareContextEntity

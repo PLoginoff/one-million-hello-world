@@ -5,7 +5,7 @@
  */
 
 import { CacheEntry } from '../../domain/entities/CacheEntry';
-import { CacheKey } from '../../domain/entities/CacheKey';
+import { CacheStats } from '../../domain/value-objects/CacheStats';
 import { CacheLevel } from '../../domain/value-objects/CacheLevel';
 import { IStorage } from '../../storage/interfaces/IStorage';
 import { IEvictionStrategy } from '../../strategies/eviction/IEvictionStrategy';
@@ -134,7 +134,7 @@ export class CacheService<T> {
     }
 
     const keyToEvict = this.evictionStrategy.selectEntryToEvict(entries);
-    if (keyToEvict) {
+    if (keyToEvict != null && keyToEvict !== '') {
       this.storage.delete(keyToEvict);
       this.statsCollector.recordEviction();
     }
@@ -143,7 +143,7 @@ export class CacheService<T> {
   /**
    * Get statistics
    */
-  getStats() {
+  getStats(): CacheStats {
     return this.statsCollector.getStats();
   }
 

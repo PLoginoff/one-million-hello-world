@@ -21,7 +21,6 @@ import {
   SecurityAuditLog,
   SecurityEvent,
   RateLimitEntry,
-  NonceEntry,
   IPInfo,
   AuthMethod,
   SecurityWarning,
@@ -71,7 +70,7 @@ export interface ISecurityManager {
    *
    * @param config - Security policy configuration
    */
-  setSecurityPolicy(config: Partial<SecurityPolicyConfig> | any): void;
+  setSecurityPolicy(config: Partial<SecurityPolicyConfig & { enableThreatDetection?: boolean }>): void;
 
   /**
    * Gets the current security policy configuration

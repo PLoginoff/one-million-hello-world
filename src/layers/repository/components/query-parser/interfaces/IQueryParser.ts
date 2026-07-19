@@ -56,7 +56,7 @@ export interface IQueryParser {
    * @param query - Parsed query to validate
    * @returns Parse result with validation errors if any
    */
-  validate(query: any): ParseResult;
+  validate(query: ParsedQuery): ParseResult;
 
   /**
    * Serializes a parsed query to a string
@@ -64,7 +64,7 @@ export interface IQueryParser {
    * @param query - Parsed query to serialize
    * @returns Serialized query string
    */
-  serialize(query: any): string;
+  serialize(query: ParsedQuery): string;
 
   /**
    * Sets parser configuration

@@ -58,7 +58,7 @@ export class NetworkMetrics {
    * Get metric samples
    */
   getSamples(name: string): NetworkMetricData[] {
-    return this.metrics.get(name) || [];
+    return this.metrics.get(name) ?? [];
   }
 
   /**

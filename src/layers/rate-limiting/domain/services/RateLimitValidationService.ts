@@ -199,7 +199,7 @@ export class RateLimitValidationService {
       });
     }
 
-    if (request.isDenied() && !request.reason) {
+    if (request.isDenied() === true && request.reason === undefined) {
       warnings.push({
         field: 'reason',
         message: 'Request is denied but has no reason',

@@ -56,7 +56,7 @@ export class SecurityManager {
    * Check if user has permission
    */
   hasPermission(userId: string, resource: string, action: string): boolean {
-    const userRoles = this._userRoles.get(userId) || new Set();
+    const userRoles = this._userRoles.get(userId) ?? new Set();
 
     for (const policy of this._policies.values()) {
       for (const rule of policy.rules) {
@@ -76,7 +76,7 @@ export class SecurityManager {
    * Assign role to user
    */
   assignRole(userId: string, role: string): void {
-    const roles = this._userRoles.get(userId) || new Set();
+    const roles = this._userRoles.get(userId) ?? new Set();
     roles.add(role);
     this._userRoles.set(userId, roles);
   }
@@ -102,7 +102,7 @@ export class SecurityManager {
    * Get audit logs
    */
   getAuditLogs(limit?: number): AuditLogEntry[] {
-    if (limit) {
+    if (limit !== undefined && limit > 0) {
       return this._auditLogs.slice(-limit);
     }
     return [...this._auditLogs];
@@ -113,7 +113,7 @@ export class SecurityManager {
    */
   getAuditLogsByUser(userId: string, limit?: number): AuditLogEntry[] {
     const logs = this._auditLogs.filter((l) => l.userId === userId);
-    if (limit) {
+    if (limit !== undefined && limit > 0) {
       return logs.slice(-limit);
     }
     return logs;

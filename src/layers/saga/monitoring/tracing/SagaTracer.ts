@@ -5,8 +5,6 @@
  * Provides detailed execution traces for debugging and observability.
  */
 
-import { SagaExecutionEntity } from '../../domain/entities/SagaExecution';
-
 export interface TraceSpan {
   spanId: string;
   parentSpanId?: string;
@@ -127,7 +125,7 @@ export class SagaTracer {
    * Get trace by ID
    */
   getTrace(traceId: string): Trace | null {
-    return this._traces.get(traceId) || null;
+    return this._traces.get(traceId) ?? null;
   }
 
   /**

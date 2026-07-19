@@ -47,7 +47,7 @@ export class RetryPolicy implements IRetryPolicy {
     return {
       success: false,
       attempts,
-      error: lastError?.message || 'Max attempts reached',
+      error: lastError?.message ?? 'Max attempts reached',
     };
   }
 
@@ -93,16 +93,7 @@ export class RetryPolicy implements IRetryPolicy {
 
   private _delay(ms: number): Promise<void> {
     return new Promise((resolve) => {
-      const start = Date.now();
-      const end = start + ms;
-      const loop = () => {
-        if (Date.now() >= end) {
-          resolve();
-        } else {
-          Promise.resolve().then(loop);
-        }
-      };
-      loop();
+      setTimeout(resolve, ms);
     });
   }
 }

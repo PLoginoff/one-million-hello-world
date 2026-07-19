@@ -36,9 +36,9 @@ export class Controller implements IController {
 
   createContext(request: HttpRequest, parameters: Record<string, string>): ControllerContext {
     return {
-      requestId: request.headers.get('x-request-id') || this._generateId(),
-      correlationId: request.headers.get('x-correlation-id') || this._generateId(),
-      userId: request.headers.get('x-user-id') || undefined,
+      requestId: request.headers.get('x-request-id') ?? this._generateId(),
+      correlationId: request.headers.get('x-correlation-id') ?? this._generateId(),
+      userId: request.headers.get('x-user-id') ?? undefined,
       parameters,
       headers: new Map(request.headers),
     };

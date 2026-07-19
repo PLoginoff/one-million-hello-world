@@ -6,7 +6,7 @@
  */
 
 import { IEventDispatcher, DispatchOptions, DispatchMiddleware, DispatchResult } from '../interfaces';
-import { IEventHandlerRegistry } from '../interfaces';
+import { IEventHandlerRegistry, HandlerRegistration } from '../interfaces';
 import { IEventBus } from '../../core/interfaces';
 import { Event } from '../../domain/entities/Event';
 
@@ -32,10 +32,10 @@ export class EventDispatcher implements IEventDispatcher {
     let handlersFailed = 0;
     const errors: Error[] = [];
 
-    const executeHandler = async (registration: any): Promise<void> => {
-      const maxRetries = options.retryOnFailure ? (options.maxRetries ?? 1) : 1;
+    const executeHandler = async (registration: HandlerRegistration): Promise<void> => {
+      const maxRetries = options.retryOnFailure === true ? (options.maxRetries ?? 1) : 1;
       try {
-        if (timeout) {
+        if (timeout !== undefined) {
           await this._retryWithTimeout(registration.handler, event, timeout, maxRetries);
         } else {
           await this._retryHandler(registration.handler, event, maxRetries);

@@ -5,12 +5,10 @@
  */
 
 import {
-  MetricValue,
   MetricDefinition,
   MetricData,
   MetricType,
   MetricsConfig,
-  MetricsCollector,
   PerformanceMetrics,
   OperationMetrics,
   Timer,

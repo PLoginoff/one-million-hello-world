@@ -22,8 +22,6 @@ import {
   Sanitizer,
   ValidationErrorCode,
   ValidationWarningCode,
-  ValidationSeverity,
-  FieldType,
 } from '../types/validation-types';
 
 /**

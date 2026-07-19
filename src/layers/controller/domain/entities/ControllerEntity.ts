@@ -70,7 +70,7 @@ export class ControllerEntity {
    * Add middleware
    */
   addMiddleware(middleware: string): ControllerEntity {
-    const middlewareList = this.data.middleware || [];
+    const middlewareList = this.data.middleware ?? [];
     return new ControllerEntity({
       ...this.data,
       middleware: [...middlewareList, middleware],

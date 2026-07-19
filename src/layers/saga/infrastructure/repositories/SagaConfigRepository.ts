@@ -23,22 +23,27 @@ export class InMemorySagaConfigRepository implements SagaConfigRepository {
   }
 
   async save(config: SagaConfig): Promise<void> {
+    await Promise.resolve();
     this._storage.set(config.getName(), config);
   }
 
   async findByName(name: string): Promise<SagaConfig | null> {
-    return this._storage.get(name) || null;
+    await Promise.resolve();
+    return this._storage.get(name) ?? null;
   }
 
   async findAll(): Promise<SagaConfig[]> {
+    await Promise.resolve();
     return Array.from(this._storage.values());
   }
 
   async delete(name: string): Promise<void> {
+    await Promise.resolve();
     this._storage.delete(name);
   }
 
   async exists(name: string): Promise<boolean> {
+    await Promise.resolve();
     return this._storage.has(name);
   }
 

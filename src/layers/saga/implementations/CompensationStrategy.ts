@@ -62,7 +62,7 @@ export class CompensationStrategy implements ICompensationStrategy {
     return results;
   }
 
-  shouldContinueOnError<T>(error: Error, context: CompensationContext<T>): boolean {
+  shouldContinueOnError<T>(_error: Error, _context: CompensationContext<T>): boolean {
     return this._continueOnError;
   }
 

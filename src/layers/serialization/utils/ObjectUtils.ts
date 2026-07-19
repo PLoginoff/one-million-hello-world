@@ -16,16 +16,18 @@ export class ObjectUtils {
       return new Date(obj.getTime()) as T;
     }
     if (obj instanceof Array) {
-      return obj.map((item) => this.deepClone(item)) as T;
+      const cloned: unknown[] = (obj as unknown[]).map((item) => this.deepClone(item));
+      return cloned as unknown as T;
     }
     if (obj instanceof Object) {
-      const clonedObj = {} as T;
-      for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          clonedObj[key] = this.deepClone(obj[key]);
+      const sourceObj = obj as Record<string, unknown>;
+      const clonedObj: Record<string, unknown> = {};
+      for (const key in sourceObj) {
+        if (Object.prototype.hasOwnProperty.call(sourceObj, key)) {
+          clonedObj[key] = this.deepClone(sourceObj[key]);
         }
       }
-      return clonedObj;
+      return clonedObj as unknown as T;
     }
     return obj;
   }
@@ -37,7 +39,7 @@ export class ObjectUtils {
     const result = this.deepClone(target);
     for (const source of sources) {
       for (const key in source) {
-        if (source.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
           const sourceValue = source[key];
           const targetValue = result[key];
 
@@ -59,7 +61,7 @@ export class ObjectUtils {
    * Shallow merges objects
    */
   static merge<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]): T {
-    return Object.assign({}, target, ...sources);
+    return Object.assign({}, target, ...sources) as unknown as T;
   }
 
   /**
@@ -197,9 +199,10 @@ export class ObjectUtils {
 
     Object.freeze(obj);
 
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = obj[key];
+    const record = obj as Record<string, unknown>;
+    for (const key in record) {
+      if (Object.prototype.hasOwnProperty.call(record, key)) {
+        const value = record[key];
         if (typeof value === 'object' && value !== null && !Object.isFrozen(value)) {
           this.deepFreeze(value);
         }
@@ -225,7 +228,7 @@ export class ObjectUtils {
   ): Record<K, T[keyof T]> {
     const result = {} as Record<K, T[keyof T]>;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         result[mapper(key)] = obj[key];
       }
     }
@@ -241,7 +244,7 @@ export class ObjectUtils {
   ): Record<keyof T, V> {
     const result = {} as Record<keyof T, V>;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         result[key] = mapper(obj[key], key);
       }
     }
@@ -257,7 +260,7 @@ export class ObjectUtils {
   ): Partial<T> {
     const result = {} as Partial<T>;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key) && predicate(obj[key], key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key) && predicate(obj[key], key)) {
         result[key] = obj[key];
       }
     }

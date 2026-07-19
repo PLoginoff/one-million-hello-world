@@ -6,7 +6,6 @@
  */
 
 import { SagaExecutionEntity } from '../domain/entities/SagaExecution';
-import { SagaConfig } from '../domain/value-objects/SagaConfig';
 
 export interface TestScenario {
   name: string;

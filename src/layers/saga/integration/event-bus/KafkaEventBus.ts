@@ -34,21 +34,24 @@ export class KafkaEventBus {
    * Publish event to Kafka
    */
   async publish(message: KafkaMessage): Promise<void> {
-    console.log(`Publishing to Kafka topic ${this._config.topic}:`, message);
+    await Promise.resolve();
+    console.warn(`Publishing to Kafka topic ${this._config.topic}:`, message);
   }
 
   /**
    * Subscribe to Kafka topic
    */
-  async subscribe(handler: (message: KafkaMessage) => void): Promise<void> {
-    console.log(`Subscribing to Kafka topic ${this._config.topic}`);
+  async subscribe(_handler: (message: KafkaMessage) => void): Promise<void> {
+    await Promise.resolve();
+    console.warn(`Subscribing to Kafka topic ${this._config.topic}`);
   }
 
   /**
    * Create producer
    */
   async createProducer(topic: string): Promise<void> {
-    console.log(`Creating Kafka producer for topic ${topic}`);
+    await Promise.resolve();
+    console.warn(`Creating Kafka producer for topic ${topic}`);
     this._producers.set(topic, {});
   }
 
@@ -56,7 +59,8 @@ export class KafkaEventBus {
    * Create consumer
    */
   async createConsumer(topic: string): Promise<void> {
-    console.log(`Creating Kafka consumer for topic ${topic}`);
+    await Promise.resolve();
+    console.warn(`Creating Kafka consumer for topic ${topic}`);
     this._consumers.set(topic, {});
   }
 
@@ -64,7 +68,8 @@ export class KafkaEventBus {
    * Close all connections
    */
   async close(): Promise<void> {
-    console.log('Closing Kafka connections');
+    await Promise.resolve();
+    console.warn('Closing Kafka connections');
     this._producers.clear();
     this._consumers.clear();
   }

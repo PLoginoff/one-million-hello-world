@@ -32,7 +32,7 @@ export class CompressionMetadata {
    * Get decompression time
    */
   getDecompressionTime(): number {
-    return this.data.decompressionTime || 0;
+    return this.data.decompressionTime ?? 0;
   }
 
   /**
@@ -53,21 +53,21 @@ export class CompressionMetadata {
    * Get compression level
    */
   getLevel(): number {
-    return this.data.level || 0;
+    return this.data.level ?? 0;
   }
 
   /**
    * Get strategy
    */
   getStrategy(): string {
-    return this.data.strategy || 'default';
+    return this.data.strategy ?? 'default';
   }
 
   /**
    * Get total processing time
    */
   getTotalTime(): number {
-    return this.data.compressionTime + (this.data.decompressionTime || 0);
+    return this.data.compressionTime + (this.data.decompressionTime ?? 0);
   }
 
   /**

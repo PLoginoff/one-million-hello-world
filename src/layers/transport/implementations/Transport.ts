@@ -18,7 +18,7 @@ export class Transport implements ITransport {
     };
   }
 
-  async send(data: string, status: number = 200): Promise<TransportResult> {
+  send(data: string, status: number = 200): Promise<TransportResult> {
     try {
       let processedData = data;
 
@@ -26,17 +26,17 @@ export class Transport implements ITransport {
         processedData = this._applyChunkedEncoding(data);
       }
 
-      return {
+      return Promise.resolve({
         success: true,
         data: processedData,
         status,
-      };
+      });
     } catch (error) {
-      return {
+      return Promise.resolve({
         success: false,
         status: 500,
         error: error instanceof Error ? error.message : 'Transport send failed',
-      };
+      });
     }
   }
 

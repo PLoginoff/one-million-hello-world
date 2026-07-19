@@ -55,7 +55,7 @@ export class Proxy implements IProxy {
   }
 
   clearCache(key?: string): void {
-    if (key) {
+    if (key != null && key !== '') {
       this._cache.delete(key);
     } else {
       this._cache.clear();

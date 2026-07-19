@@ -89,7 +89,7 @@ export class SagaStepDefinition {
    * Check if has compensation
    */
   hasCompensation(): boolean {
-    return !!this.data.compensationAction;
+    return this.data.compensationAction != null && this.data.compensationAction !== '';
   }
 
   /**

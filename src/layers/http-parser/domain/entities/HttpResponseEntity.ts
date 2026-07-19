@@ -73,7 +73,7 @@ export class HttpResponseEntity {
    */
   getContentLength(): number {
     const contentLength = this.getHeader('content-length');
-    return contentLength ? parseInt(contentLength, 10) : this.body.length;
+    return contentLength != null && contentLength.length > 0 ? parseInt(contentLength, 10) : this.body.length;
   }
 
   /**
@@ -157,7 +157,7 @@ export class HttpResponseEntity {
   }
 
   private validateStatusLine(line: HttpStatusLine): void {
-    if (!line.version || !line.statusCode) {
+    if (line.version.length === 0 || line.statusCode === 0) {
       throw new Error('Invalid status line: missing required fields');
     }
 

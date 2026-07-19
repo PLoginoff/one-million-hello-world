@@ -4,7 +4,7 @@ export class CorrelationId implements ValueObject {
   readonly value: string;
 
   constructor(value?: string) {
-    this.value = value !== undefined ? value : CorrelationId._generate();
+    this.value = value ?? CorrelationId._generate();
     this._validate();
   }
 

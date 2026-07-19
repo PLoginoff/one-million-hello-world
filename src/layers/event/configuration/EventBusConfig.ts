@@ -74,7 +74,10 @@ export class EventBusConfig {
     };
   }
 
-  static fromJSON(json: any): EventBusConfig {
-    return new EventBusConfig(json);
+  static fromJSON(json: unknown): EventBusConfig {
+    if (json !== null && typeof json === 'object') {
+      return new EventBusConfig(json as EventBusConfigOptions);
+    }
+    return new EventBusConfig();
   }
 }

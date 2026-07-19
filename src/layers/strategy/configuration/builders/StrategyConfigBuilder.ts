@@ -43,7 +43,7 @@ export class StrategyConfigBuilder {
    * Set strategy name
    */
   withName(name: string): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ name });
     return this;
   }
@@ -52,7 +52,7 @@ export class StrategyConfigBuilder {
    * Set description
    */
   withDescription(description: string): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ description });
     return this;
   }
@@ -61,7 +61,7 @@ export class StrategyConfigBuilder {
    * Set enabled
    */
   withEnabled(enabled: boolean): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ enabled });
     return this;
   }
@@ -70,7 +70,7 @@ export class StrategyConfigBuilder {
    * Set priority
    */
   withPriority(priority: number): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ priority });
     return this;
   }
@@ -79,7 +79,7 @@ export class StrategyConfigBuilder {
    * Set timeout
    */
   withTimeout(timeout: number): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ timeout });
     return this;
   }
@@ -88,7 +88,7 @@ export class StrategyConfigBuilder {
    * Set retry policy
    */
   withRetryPolicy(retryPolicy: RetryPolicy): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ retryPolicy });
     return this;
   }
@@ -97,7 +97,7 @@ export class StrategyConfigBuilder {
    * Set fallback strategy
    */
   withFallbackStrategy(fallbackStrategy: string): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ fallbackStrategy });
     return this;
   }
@@ -106,7 +106,7 @@ export class StrategyConfigBuilder {
    * Add tag
    */
   withTag(tag: string): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     const currentTags = currentConfig.getTags();
     this._config.strategyConfig = currentConfig.withUpdates({ tags: [...currentTags, tag] });
     return this;
@@ -116,7 +116,7 @@ export class StrategyConfigBuilder {
    * Set tags
    */
   withTags(tags: string[]): StrategyConfigBuilder {
-    const currentConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const currentConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
     this._config.strategyConfig = currentConfig.withUpdates({ tags });
     return this;
   }
@@ -157,7 +157,7 @@ export class StrategyConfigBuilder {
    * Build the configuration
    */
   build(): StrategyBuilderConfig {
-    const strategyConfig = this._config.strategyConfig || DomainStrategyConfig.createDefault('default');
+    const strategyConfig = this._config.strategyConfig ?? DomainStrategyConfig.createDefault('default');
 
     return {
       strategyConfig,

@@ -16,6 +16,19 @@ export interface ValidatorMetadata {
   async?: boolean;
 }
 
+interface IEnableableValidator {
+  setEnabled(enabled: boolean): void;
+}
+
+function isEnableableValidator(value: unknown): value is IEnableableValidator {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'setEnabled' in value &&
+    typeof (value as IEnableableValidator).setEnabled === 'function'
+  );
+}
+
 export class ValidatorRegistry {
   private _validators: Map<string, { validator: IValidator; metadata: ValidatorMetadata }>;
   private _categoryMap: Map<string, string[]>;
@@ -37,7 +50,7 @@ export class ValidatorRegistry {
   register(key: string, validator: IValidator, metadata: ValidatorMetadata): void {
     this._validators.set(key, { validator, metadata });
 
-    if (metadata.category) {
+    if (metadata.category !== undefined && metadata.category.length > 0) {
       const categoryValidators = this._categoryMap.get(metadata.category) ?? [];
       if (!categoryValidators.includes(key)) {
         categoryValidators.push(key);
@@ -64,7 +77,7 @@ export class ValidatorRegistry {
   unregister(key: string): void {
     const entry = this._validators.get(key);
     if (entry) {
-      if (entry.metadata.category) {
+      if (entry.metadata.category !== undefined && entry.metadata.category.length > 0) {
         const categoryValidators = this._categoryMap.get(entry.metadata.category) ?? [];
         const index = categoryValidators.indexOf(key);
         if (index > -1) {
@@ -207,8 +220,8 @@ export class ValidatorRegistry {
     const entry = this._validators.get(key);
     if (entry) {
       entry.metadata.enabled = true;
-      if (entry.validator instanceof Object && 'setEnabled' in entry.validator) {
-        (entry.validator as any).setEnabled(true);
+      if (isEnableableValidator(entry.validator)) {
+        entry.validator.setEnabled(true);
       }
     }
   }
@@ -222,8 +235,8 @@ export class ValidatorRegistry {
     const entry = this._validators.get(key);
     if (entry) {
       entry.metadata.enabled = false;
-      if (entry.validator instanceof Object && 'setEnabled' in entry.validator) {
-        (entry.validator as any).setEnabled(false);
+      if (isEnableableValidator(entry.validator)) {
+        entry.validator.setEnabled(false);
       }
     }
   }

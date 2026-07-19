@@ -87,7 +87,7 @@ export class Serializer implements ISerializer {
     };
 
     try {
-      if (this._config.strictMode && this._config.maxDataSize) {
+      if (this._config.strictMode && this._config.maxDataSize !== undefined && this._config.maxDataSize > 0) {
         const dataSize = JSON.stringify(data).length;
         if (dataSize > this._config.maxDataSize) {
           throw SerializationError.serializationFailed({

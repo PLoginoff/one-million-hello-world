@@ -15,5 +15,5 @@ export interface IValidationStrategy {
   /**
    * Validate value
    */
-  validate(value: any, context?: any): ValidationResultEntity;
+  validate(value: unknown, context?: unknown): ValidationResultEntity;
 }

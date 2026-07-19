@@ -94,7 +94,7 @@ export class MiddlewareExecutionOrderValueObject {
    * Convert to string
    */
   toString(): string {
-    if (this.referenceId) {
+    if (this.referenceId != null && this.referenceId !== '') {
       return `${this.order}:${this.referenceId}`;
     }
     return this.order;

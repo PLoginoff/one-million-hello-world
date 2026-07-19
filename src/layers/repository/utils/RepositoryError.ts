@@ -13,7 +13,7 @@ export class RepositoryError extends Error {
     this.name = 'RepositoryError';
     this.code = code;
     this.repositoryId = repositoryId;
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }

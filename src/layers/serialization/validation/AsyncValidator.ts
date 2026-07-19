@@ -4,7 +4,7 @@
  * Validator that supports asynchronous validation.
  */
 
-import { IValidator, ValidationResult } from './IValidator';
+import { ValidationResult } from './IValidator';
 import { BaseValidator } from './BaseValidator';
 
 export type AsyncValidationFunction = (data: unknown) => Promise<ValidationResult>;
@@ -20,13 +20,13 @@ export class AsyncValidator extends BaseValidator {
   }
 
   async validateAsync(data: unknown): Promise<ValidationResult> {
-    if (this._timeout) {
+    if (this._timeout !== undefined && this._timeout !== null) {
       return this._validateWithTimeout(data);
     }
     return this._asyncValidator(data);
   }
 
-  validate(data: unknown): ValidationResult {
+  validate(_data: unknown): ValidationResult {
     this._success(['Async validation called synchronously - use validateAsync instead']);
     return {
       valid: false,

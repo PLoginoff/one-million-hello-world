@@ -34,8 +34,8 @@ export class ContentNegotiationManager {
     const parsed = this._parseAcceptHeader(trimmed);
     for (const { type } of parsed) {
       for (const negotiator of this._negotiators) {
-        if ((negotiator as any)._canHandle(type)) {
-          return (negotiator as any)._mapToContentType(type);
+        if (negotiator.canHandle(type)) {
+          return negotiator.mapToContentType(type);
         }
       }
     }
@@ -55,15 +55,15 @@ export class ContentNegotiationManager {
       return;
     }
 
-    let current = this._chain;
-    while (current.getPriority() < negotiator.getPriority() && (current as any)._next) {
-      current = (current as any)._next;
+    let current = this._chain as BaseContentNegotiator;
+    while (current.getPriority() < negotiator.getPriority() && current.getNext() !== null) {
+      current = current.getNext() as BaseContentNegotiator;
     }
 
-    const next = (current as any)._next;
-    (current as any)._next = negotiator;
+    const next = current.getNext();
+    current.setNext(negotiator);
     this._negotiators.push(negotiator as BaseContentNegotiator);
-    if (next) {
+    if (next !== null) {
       negotiator.setNext(next);
     }
   }

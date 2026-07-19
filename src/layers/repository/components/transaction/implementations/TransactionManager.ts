@@ -14,7 +14,6 @@ import {
   IsolationLevel,
   TransactionStats,
   TransactionOperation,
-  TransactionOperationType,
   TransactionSnapshot,
   TransactionError,
 } from '../types/transaction-types';
@@ -45,11 +44,8 @@ export class TransactionManager implements ITransactionManager {
     this._transactionIdCounter = 0;
   }
 
-  async begin(config?: Partial<TransactionConfig>): Promise<TransactionResult<TransactionContext>> {
+  begin(config?: Partial<TransactionConfig>): Promise<TransactionResult<TransactionContext>> {
     const transactionId = this._generateTransactionId();
-    const startTime = Date.now();
-
-    const transactionConfig = { ...this._config, ...config };
 
     const snapshot: TransactionSnapshot = {
       data: new Map(),
@@ -70,19 +66,19 @@ export class TransactionManager implements ITransactionManager {
     this._stats.totalTransactions++;
     this._stats.activeTransactions++;
 
-    return {
+    return Promise.resolve({
       success: true,
       data: context,
       transactionId,
       state: TransactionState.ACTIVE,
-    };
+    });
   }
 
-  async commit(transactionId: string): Promise<TransactionResult<void>> {
+  commit(transactionId: string): Promise<TransactionResult<void>> {
     const context = this._transactions.get(transactionId);
 
     if (!context) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: TransactionState.FAILED,
@@ -92,16 +88,16 @@ export class TransactionManager implements ITransactionManager {
           'TRANSACTION_NOT_FOUND',
           `Transaction ${transactionId} not found`
         ),
-      };
+      });
     }
 
     if (context.state !== TransactionState.ACTIVE) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: context.state,
         error: this._createError(transactionId, context.state, 'INVALID_STATE', `Transaction is not in ACTIVE state`),
-      };
+      });
     }
 
     context.state = TransactionState.COMMITTED;
@@ -111,18 +107,18 @@ export class TransactionManager implements ITransactionManager {
     const duration = Date.now() - context.startTime.getTime();
     this._updateAverageDuration(duration);
 
-    return {
+    return Promise.resolve({
       success: true,
       transactionId,
       state: TransactionState.COMMITTED,
-    };
+    });
   }
 
-  async rollback(transactionId: string): Promise<TransactionResult<void>> {
+  rollback(transactionId: string): Promise<TransactionResult<void>> {
     const context = this._transactions.get(transactionId);
 
     if (!context) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: TransactionState.FAILED,
@@ -132,16 +128,16 @@ export class TransactionManager implements ITransactionManager {
           'TRANSACTION_NOT_FOUND',
           `Transaction ${transactionId} not found`
         ),
-      };
+      });
     }
 
     if (context.state !== TransactionState.ACTIVE) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: context.state,
         error: this._createError(transactionId, context.state, 'INVALID_STATE', `Transaction is not in ACTIVE state`),
-      };
+      });
     }
 
     context.state = TransactionState.ROLLED_BACK;
@@ -151,11 +147,11 @@ export class TransactionManager implements ITransactionManager {
     const duration = Date.now() - context.startTime.getTime();
     this._updateAverageDuration(duration);
 
-    return {
+    return Promise.resolve({
       success: true,
       transactionId,
       state: TransactionState.ROLLED_BACK,
-    };
+    });
   }
 
   getTransaction(transactionId: string): TransactionContext | undefined {
@@ -172,11 +168,11 @@ export class TransactionManager implements ITransactionManager {
     return state === TransactionState.ACTIVE;
   }
 
-  async setIsolationLevel(transactionId: string, level: IsolationLevel): Promise<TransactionResult<void>> {
+  setIsolationLevel(transactionId: string, level: IsolationLevel): Promise<TransactionResult<void>> {
     const context = this._transactions.get(transactionId);
 
     if (!context || context.state !== TransactionState.ACTIVE) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: context ? context.state : TransactionState.FAILED,
@@ -186,16 +182,16 @@ export class TransactionManager implements ITransactionManager {
           'TRANSACTION_NOT_FOUND',
           `Transaction ${transactionId} not found or not active`
         ),
-      };
+      });
     }
 
     context.snapshot.metadata.set('isolationLevel', level);
 
-    return {
+    return Promise.resolve({
       success: true,
       transactionId,
       state: context.state,
-    };
+    });
   }
 
   getStats(): TransactionStats {
@@ -261,7 +257,7 @@ export class TransactionManager implements ITransactionManager {
     const now = Date.now();
     let cleaned = 0;
 
-    for (const [id, context] of this._transactions) {
+    for (const [, context] of this._transactions) {
       if (context.state === TransactionState.ACTIVE) {
         const duration = now - context.startTime.getTime();
         const timeout = context.timeout ?? this._config.timeout;
@@ -277,11 +273,11 @@ export class TransactionManager implements ITransactionManager {
     return cleaned;
   }
 
-  async setTimeout(transactionId: string, timeout: number): Promise<TransactionResult<void>> {
+  setTimeout(transactionId: string, timeout: number): Promise<TransactionResult<void>> {
     const context = this._transactions.get(transactionId);
 
     if (!context) {
-      return {
+      return Promise.resolve({
         success: false,
         transactionId,
         state: TransactionState.FAILED,
@@ -291,17 +287,17 @@ export class TransactionManager implements ITransactionManager {
           'TRANSACTION_NOT_FOUND',
           `Transaction ${transactionId} not found`
         ),
-      };
+      });
     }
 
     context.timeout = timeout;
     context.snapshot.metadata.set('timeout', timeout);
 
-    return {
+    return Promise.resolve({
       success: true,
       transactionId,
       state: context.state,
-    };
+    });
   }
 
   getTimeout(transactionId: string): number | undefined {

@@ -42,6 +42,7 @@ export class CacheEntry<T> {
    * Get time since last access
    */
   getTimeSinceLastAccess(currentTime: number = Date.now()): number {
+    if (this.accessCount === 0) return 0;
     return currentTime - this.lastAccessedAt;
   }
 

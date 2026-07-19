@@ -272,7 +272,7 @@ export class SerializerBuilder {
     }
 
     for (const plugin of this._plugins) {
-      serializer.registerPlugin(plugin);
+      void serializer.registerPlugin(plugin);
     }
 
     for (const hook of this._hooks) {

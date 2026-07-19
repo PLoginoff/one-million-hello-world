@@ -6,7 +6,11 @@
  */
 
 import { RetryBuilderConfig } from '../builders/RetryConfigBuilder';
-import { RetryValidationService } from '../../domain/services/RetryValidationService';
+import {
+  RetryValidationService,
+  ValidationError,
+  ValidationWarning,
+} from '../../domain/services/RetryValidationService';
 
 export interface ConfigValidationResult {
   isValid: boolean;
@@ -40,7 +44,7 @@ export class RetryConfigValidator {
     const errors: ConfigValidationError[] = [];
     const warnings: ConfigValidationWarning[] = [];
 
-    if (!config.retryPolicy) {
+    if (config.retryPolicy === undefined || config.retryPolicy === null) {
       errors.push({
         path: 'retryPolicy',
         message: 'Retry policy is required',
@@ -49,22 +53,22 @@ export class RetryConfigValidator {
     } else {
       const policyValidation = this._validationService.validateRetryPolicy(config.retryPolicy);
       errors.push(
-        ...policyValidation.errors.map((e: any) => ({
-          path: `retryPolicy.${e.field}`,
-          message: e.message,
-          code: e.code,
+        ...policyValidation.errors.map((error: ValidationError) => ({
+          path: `retryPolicy.${error.field}`,
+          message: error.message,
+          code: error.code,
         }))
       );
       warnings.push(
-        ...policyValidation.warnings.map((w: any) => ({
-          path: `retryPolicy.${w.field}`,
-          message: w.message,
-          code: w.code,
+        ...policyValidation.warnings.map((warning: ValidationWarning) => ({
+          path: `retryPolicy.${warning.field}`,
+          message: warning.message,
+          code: warning.code,
         }))
       );
     }
 
-    if (!config.retryCondition) {
+    if (config.retryCondition === undefined || config.retryCondition === null) {
       errors.push({
         path: 'retryCondition',
         message: 'Retry condition is required',
@@ -73,17 +77,17 @@ export class RetryConfigValidator {
     } else {
       const conditionValidation = this._validationService.validateRetryCondition(config.retryCondition);
       errors.push(
-        ...conditionValidation.errors.map((e: any) => ({
-          path: `retryCondition.${e.field}`,
-          message: e.message,
-          code: e.code,
+        ...conditionValidation.errors.map((error: ValidationError) => ({
+          path: `retryCondition.${error.field}`,
+          message: error.message,
+          code: error.code,
         }))
       );
       warnings.push(
-        ...conditionValidation.warnings.map((w: any) => ({
-          path: `retryCondition.${w.field}`,
-          message: w.message,
-          code: w.code,
+        ...conditionValidation.warnings.map((warning: ValidationWarning) => ({
+          path: `retryCondition.${warning.field}`,
+          message: warning.message,
+          code: warning.code,
         }))
       );
     }
@@ -135,7 +139,7 @@ export class RetryConfigValidator {
       });
     }
 
-    if (!config.name) {
+    if (config.name === undefined || config.name === null || config.name.trim().length === 0) {
       warnings.push({
         path: 'name',
         message: 'Configuration name should be set in production for better observability',

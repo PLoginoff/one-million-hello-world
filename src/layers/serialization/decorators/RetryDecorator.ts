@@ -28,7 +28,7 @@ export class RetryDecorator implements ISerializationStrategy {
       initialDelay: 100,
       maxDelay: 1000,
       backoffMultiplier: 2,
-      retryableErrors: (error: Error) => {
+      retryableErrors: (error: Error): boolean => {
         const retryablePatterns = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'timeout'];
         return retryablePatterns.some((pattern) => error.message.includes(pattern));
       },

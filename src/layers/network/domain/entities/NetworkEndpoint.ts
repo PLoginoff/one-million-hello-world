@@ -44,7 +44,7 @@ export class NetworkEndpoint {
   static fromAddress(address: string): NetworkEndpoint {
     const [host, portStr] = address.split(':');
     const port = portStr ? parseInt(portStr, 10) : 80;
-    return new NetworkEndpoint(host || 'localhost', port, 'tcp', false);
+    return new NetworkEndpoint(host ?? 'localhost', port, 'tcp', false);
   }
 
   /**
@@ -52,14 +52,14 @@ export class NetworkEndpoint {
    */
   static fromUrl(url: string): NetworkEndpoint {
     const protocolMatch = url.match(/^([a-z]+):\/\//i);
-    const protocol = protocolMatch?.[1]?.toLowerCase() || 'http';
+    const protocol = protocolMatch?.[1]?.toLowerCase() ?? 'http';
     const withoutProtocol = url.replace(/^https?:\/\//i, '').replace(/^wss?:\/\//i, '');
     const hostParts = withoutProtocol.split('/');
-    const hostPort = hostParts[0] || 'localhost';
+    const hostPort = hostParts[0] ?? 'localhost';
     const [host, portStr] = hostPort.split(':');
     const port = portStr ? parseInt(portStr, 10) : protocol === 'https' || protocol === 'wss' ? 443 : 80;
     const secure = protocol === 'https' || protocol === 'wss';
-    return new NetworkEndpoint(host || 'localhost', port, protocol, secure);
+    return new NetworkEndpoint(host ?? 'localhost', port, protocol, secure);
   }
 
   /**

@@ -91,7 +91,7 @@ export class ParserStatistics {
    */
   recordError(errorCode: ParseErrorCode): void {
     this._stats.errorCount++;
-    const currentCount = this._stats.parseErrors.get(errorCode) || 0;
+    const currentCount = this._stats.parseErrors.get(errorCode) ?? 0;
     this._stats.parseErrors.set(errorCode, currentCount + 1);
     this._updateSuccessRate();
   }

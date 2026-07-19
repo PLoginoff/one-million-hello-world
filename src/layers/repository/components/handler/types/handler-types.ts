@@ -5,7 +5,6 @@
  */
 
 import { DomainEntity } from '../../../../domain/types/domain-types';
-import { ParsedQuery } from '../../query-parser/types/query-parser-types';
 
 /**
  * Handler operation type
@@ -40,9 +39,9 @@ export interface HandlerContext {
 /**
  * Handler result
  */
-export interface HandlerResult<T = any> {
+export interface HandlerResult<T = unknown> {
   success: boolean;
-  data?: T | T[];
+  data?: T | T[] | number | boolean | Record<string, unknown> | BulkOperationResult<T>;
   error?: HandlerError;
   metrics: HandlerMetrics;
   metadata: Record<string, unknown>;
@@ -104,7 +103,7 @@ export interface HandlerStats {
 export interface OperationHandler<T extends DomainEntity> {
   operation: HandlerOperation;
   canHandle(operation: HandlerOperation): boolean;
-  handle(context: HandlerContext, input: unknown): Promise<HandlerResult<any>>;
+  handle(context: HandlerContext, input: unknown): Promise<HandlerResult<T>>;
 }
 
 /**

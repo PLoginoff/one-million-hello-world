@@ -60,7 +60,7 @@ export class ServiceStatistics {
   }
 
   private _recordService(serviceId: string): void {
-    const currentCount = this._serviceCounts.get(serviceId) || 0;
+    const currentCount = this._serviceCounts.get(serviceId) ?? 0;
     this._serviceCounts.set(serviceId, currentCount + 1);
     this._updateMostExecutedServices();
   }

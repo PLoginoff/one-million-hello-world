@@ -10,7 +10,7 @@ import { ValidationRuleEntity } from '../domain/entities/ValidationRuleEntity';
 import { ValidationResultEntity } from '../domain/entities/ValidationResultEntity';
 import { ValidationSeverityValueObject } from '../domain/value-objects/ValidationSeverityValueObject';
 import { ValidationService } from '../domain/services/ValidationService';
-import { SchemaValidationService, ValidationSchema } from '../domain/services/SchemaValidationService';
+import { ValidationSchema } from '../domain/services/SchemaValidationService';
 import { ValidationStatistics } from '../statistics/ValidationStatistics';
 import { SchemaValidationStrategy } from '../strategies/strategy/SchemaValidationStrategy';
 import { RuleBasedValidationStrategy } from '../strategies/strategy/RuleBasedValidationStrategy';
@@ -127,7 +127,7 @@ export class ValidationFactory {
   static createCustomRule(
     id: string,
     name: string,
-    validator: (value: any) => boolean,
+    validator: (value: unknown) => boolean,
     required: boolean = false,
     errorMessage?: string
   ): ValidationRuleEntity {

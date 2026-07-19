@@ -132,7 +132,7 @@ export class LRUCacheProvider<T = unknown> implements ICacheProvider<T> {
    */
   private _evictLRU(): void {
     const lruKey = this._accessOrder.shift();
-    if (lruKey) {
+    if (lruKey !== undefined) {
       this._cache.delete(lruKey);
     }
   }

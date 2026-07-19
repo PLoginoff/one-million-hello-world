@@ -13,7 +13,7 @@ export class MessageQueue implements IMessageQueue {
   private _deadLetterQueue: Message[];
   private _config: QueueConfig;
   private _stats: QueueStats;
-  private _handler: MessageHandler<any> | null;
+  private _handler: MessageHandler<unknown> | null;
   private _isRunning: boolean;
   private _processing: boolean;
 
@@ -71,7 +71,6 @@ export class MessageQueue implements IMessageQueue {
     }
 
     const message = this._queue.shift() as Message<T>;
-    if (!message) return;
 
     try {
       await handler(message.data);
@@ -96,16 +95,16 @@ export class MessageQueue implements IMessageQueue {
   }
 
   registerHandler<T>(handler: MessageHandler<T>): void {
-    this._handler = handler;
+    this._handler = handler as MessageHandler<unknown>;
   }
 
   start(): void {
-    if (this._isRunning || !this._handler) {
+    if (this._isRunning || this._handler == null) {
       return;
     }
 
     this._isRunning = true;
-    this._processQueue();
+    void this._processQueue();
   }
 
   stop(): void {
@@ -148,13 +147,13 @@ export class MessageQueue implements IMessageQueue {
       const now = Date.now();
       const message = this._queue[0];
 
-      if (message && message.scheduledAt > now) {
+      if (message.scheduledAt > now) {
         await this._delay(100);
         continue;
       }
 
       this._processing = true;
-      await this.dequeue(this._handler as any);
+      await this.dequeue(this._handler);
       this._processing = false;
     }
   }
@@ -163,11 +162,11 @@ export class MessageQueue implements IMessageQueue {
     return new Promise((resolve) => {
       const start = Date.now();
       const end = start + ms;
-      const loop = () => {
+      const loop = (): void => {
         if (Date.now() >= end) {
           resolve();
         } else {
-          Promise.resolve().then(loop);
+          void Promise.resolve().then(loop);
         }
       };
       loop();

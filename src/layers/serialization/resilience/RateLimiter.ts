@@ -36,19 +36,8 @@ export class RateLimiter {
   /**
    * Checks if a request is allowed
    */
-  async allow(): Promise<boolean> {
-    this._cleanup();
-
-    switch (this._config.strategy) {
-      case RateLimitStrategy.TOKEN_BUCKET:
-        return this._allowTokenBucket();
-      case RateLimitStrategy.FIXED_WINDOW:
-        return this._allowFixedWindow();
-      case RateLimitStrategy.SLIDING_WINDOW:
-        return this._allowSlidingWindow();
-      default:
-        return true;
-    }
+  allow(): Promise<boolean> {
+    return Promise.resolve(this.allowSync());
   }
 
   /**

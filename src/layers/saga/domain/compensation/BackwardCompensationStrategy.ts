@@ -5,7 +5,7 @@
  * Standard compensation pattern for sagas.
  */
 
-import { SagaExecutionEntity } from '../entities/SagaExecution';
+import { SagaExecutionEntity, SagaStep } from '../entities/SagaExecution';
 
 export class BackwardCompensationStrategy {
   /**
@@ -20,7 +20,7 @@ export class BackwardCompensationStrategy {
   /**
    * Check if step should be compensated
    */
-  shouldCompensate(step: any): boolean {
+  shouldCompensate(step: SagaStep): boolean {
     return step.status === 'completed';
   }
 

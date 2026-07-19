@@ -8,7 +8,6 @@
 import {
   ContentType,
   SerializationFormat,
-  SerializationResult,
   SerializationConfig,
   SerializationOptions,
   ExtendedSerializationResult,

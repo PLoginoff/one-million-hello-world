@@ -108,7 +108,7 @@ export abstract class BaseNegotiator implements IContentNegotiator {
    * @returns Base type
    */
   protected _extractBaseType(contentType: string): string {
-    return contentType.split('/')[0] || '*';
+    return contentType.split('/')[0] ?? '*';
   }
 
   /**

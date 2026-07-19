@@ -45,7 +45,7 @@ export class CircuitConfigBuilder {
    * Set failure threshold
    */
   withFailureThreshold(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ failureThreshold: value });
     return this;
   }
@@ -54,7 +54,7 @@ export class CircuitConfigBuilder {
    * Set success threshold
    */
   withSuccessThreshold(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ successThreshold: value });
     return this;
   }
@@ -63,7 +63,7 @@ export class CircuitConfigBuilder {
    * Set timeout
    */
   withTimeout(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ timeout: value });
     return this;
   }
@@ -72,7 +72,7 @@ export class CircuitConfigBuilder {
    * Set reset timeout
    */
   withResetTimeout(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ resetTimeout: value });
     return this;
   }
@@ -81,7 +81,7 @@ export class CircuitConfigBuilder {
    * Set sliding window size
    */
   withSlidingWindowSize(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ slidingWindowSize: value });
     this._config.slidingWindowSize = value;
     return this;
@@ -91,7 +91,7 @@ export class CircuitConfigBuilder {
    * Set minimum requests
    */
   withMinimumRequests(value: number): CircuitConfigBuilder {
-    const currentThreshold = this._config.threshold || CircuitThreshold.createDefault();
+    const currentThreshold = this._config.threshold ?? CircuitThreshold.createDefault();
     this._config.threshold = currentThreshold.withUpdates({ minimumRequests: value });
     return this;
   }
@@ -151,7 +151,7 @@ export class CircuitConfigBuilder {
    * Build the configuration
    */
   build(): CircuitConfig {
-    const threshold = this._config.threshold || CircuitThreshold.createDefault();
+    const threshold = this._config.threshold ?? CircuitThreshold.createDefault();
 
     return {
       threshold,

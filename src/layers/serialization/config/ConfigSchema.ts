@@ -4,7 +4,6 @@
  * Schema definition for configuration validation.
  */
 
-import { SerializationConfig } from '../types/serialization-types';
 import { SerializationFormat } from '../types/serialization-types';
 
 export interface SchemaProperty {
@@ -41,7 +40,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
     for (const [key, property] of Object.entries(this._schema)) {
       const value = config[key as keyof T];
 
-      if (property.required && value === undefined) {
+      if (property.required === true && value === undefined) {
         errors.push(`Required property '${key}' is missing`);
         continue;
       }
@@ -96,7 +95,7 @@ export class ConfigSchema<T = Record<string, unknown>> {
       }
     }
 
-    if (property.pattern && typeof value === 'string') {
+    if (property.pattern !== undefined && typeof value === 'string') {
       const regex = new RegExp(property.pattern);
       if (!regex.test(value)) {
         errors.push(`Property '${key}' does not match pattern ${property.pattern}`);

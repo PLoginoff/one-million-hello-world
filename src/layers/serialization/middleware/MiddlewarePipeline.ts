@@ -88,9 +88,9 @@ export class MiddlewarePipeline<T = unknown> {
 
     let currentIndex = 0;
 
-    const next = async (ctx: MiddlewareContext<T>): Promise<MiddlewareContext<T>> => {
+    const next = (ctx: MiddlewareContext<T>): Promise<MiddlewareContext<T>> => {
       if (currentIndex >= this._middlewares.length) {
-        return ctx;
+        return Promise.resolve(ctx);
       }
 
       const middleware = this._middlewares[currentIndex++];

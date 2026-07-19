@@ -33,10 +33,14 @@ export class EventReconstructor {
 
     for (const event of sortedEvents) {
       switch (event.getEventType()) {
-        case 'saga-created':
-          const data = event.getData() as any;
-          sagaId = data.sagaId || sagaId;
+        case 'saga-created': {
+          const data = event.getData() as Record<string, unknown>;
+          const extractedSagaId = data['sagaId'];
+          if (typeof extractedSagaId === 'string') {
+            sagaId = extractedSagaId;
+          }
           break;
+        }
         case 'saga-started':
           status = 'running';
           break;
@@ -44,11 +48,13 @@ export class EventReconstructor {
           status = 'completed';
           metadata = metadata.markAsCompleted();
           break;
-        case 'saga-failed':
+        case 'saga-failed': {
           status = 'failed';
-          const errorData = event.getData() as any;
-          metadata = metadata.markAsFailed(errorData.errorMessage || 'Unknown error');
+          const errorData = event.getData() as Record<string, unknown>;
+          const errorMessage = errorData['errorMessage'];
+          metadata = metadata.markAsFailed(typeof errorMessage === 'string' ? errorMessage : 'Unknown error');
           break;
+        }
         case 'saga-compensating':
           status = 'compensating';
           break;
@@ -114,6 +120,6 @@ export class EventReconstructor {
       'retry-attempted': 'Retry attempt was made',
     };
 
-    return descriptions[eventType] || 'Unknown event';
+    return descriptions[eventType] ?? 'Unknown event';
   }
 }

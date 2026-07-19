@@ -15,11 +15,11 @@ export class ErrorHandler implements IErrorHandler {
   constructor(logger: ILogger) {
     this._logger = logger;
     this._severityRules = new Map<string, (error: Error) => ErrorSeverity>([
-      ['ValidationError', () => ErrorSeverity.LOW],
-      ['TimeoutError', () => ErrorSeverity.MEDIUM],
-      ['NetworkError', () => ErrorSeverity.MEDIUM],
-      ['DatabaseError', () => ErrorSeverity.HIGH],
-      ['CriticalError', () => ErrorSeverity.CRITICAL],
+      ['ValidationError', (): ErrorSeverity => ErrorSeverity.LOW],
+      ['TimeoutError', (): ErrorSeverity => ErrorSeverity.MEDIUM],
+      ['NetworkError', (): ErrorSeverity => ErrorSeverity.MEDIUM],
+      ['DatabaseError', (): ErrorSeverity => ErrorSeverity.HIGH],
+      ['CriticalError', (): ErrorSeverity => ErrorSeverity.CRITICAL],
     ]);
   }
 
@@ -59,7 +59,9 @@ export class ErrorHandler implements IErrorHandler {
   formatErrorMessage(error: Error, context: ErrorContext): string {
     const parts = [
       `Error in ${context.operation}`,
-      context.stepName ? `at step '${context.stepName}'` : '',
+      context.stepName !== undefined && context.stepName !== null && context.stepName.length > 0
+        ? `at step '${context.stepName}'`
+        : '',
       context.stepIndex !== undefined ? `(index ${context.stepIndex})` : '',
       `: ${error.message}`,
     ];

@@ -165,9 +165,10 @@ export class FeatureFlag {
     switch (condition.type) {
       case 'user-id':
         return this._evaluateOperator(condition.operator, userId, value);
-      case 'user-group':
-        const groups = (userAttributes?.['groups'] as string[]) || [];
+      case 'user-group': {
+        const groups = ((userAttributes?.groups ?? undefined) as string[] | undefined) ?? [];
         return groups.some((group) => this._evaluateOperator(condition.operator, group, value));
+      }
       case 'custom':
         if (userAttributes) {
           const attrValue = userAttributes[condition.value as string];

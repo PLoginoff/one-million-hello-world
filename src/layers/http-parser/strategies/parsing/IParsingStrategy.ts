@@ -16,11 +16,11 @@ export interface IParsingStrategy {
    * Parse HTTP request with this strategy
    */
   parseRequest(
-    raw: any,
+    raw: Buffer,
     config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   };
 
@@ -28,11 +28,11 @@ export interface IParsingStrategy {
    * Parse HTTP response with this strategy
    */
   parseResponse(
-    raw: any,
+    raw: Buffer,
     config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   };
 

@@ -13,7 +13,7 @@ export class TransientStrategy implements IControllerStrategy {
     return 'TRANSIENT';
   }
 
-  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): any {
+  resolve(controller: ControllerEntity, scope: ControllerScopeValueObject): unknown {
     if (!scope.isTransient()) {
       throw new Error('Transient strategy requires transient scope');
     }
@@ -21,7 +21,7 @@ export class TransientStrategy implements IControllerStrategy {
     return this.createInstance(controller);
   }
 
-  private createInstance(controller: ControllerEntity): any {
+  private createInstance(_controller: ControllerEntity): unknown {
     return {};
   }
 }

@@ -5,7 +5,7 @@
  * Tests cover serialization formats, round-trip conversion, and edge cases.
  */
 
-import { EventSerializer } from '../../utils/EventSerializer';
+import { EventSerializer, SerializationFormat } from '../../utils/EventSerializer';
 import { Event } from '../../domain/entities/Event';
 
 describe('EventSerializer', () => {
@@ -236,7 +236,7 @@ describe('EventSerializer', () => {
     });
 
     it('should accept all valid formats', () => {
-      const formats = ['json', 'protobuf', 'msgpack'];
+      const formats: SerializationFormat[] = ['json', 'protobuf', 'msgpack'];
 
       for (const format of formats) {
         serializer.setFormat(format);

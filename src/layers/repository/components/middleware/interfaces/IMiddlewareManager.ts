@@ -5,7 +5,6 @@
  */
 
 import {
-  MiddlewareFunction,
   MiddlewareContext,
   MiddlewareResult,
   MiddlewareChain,

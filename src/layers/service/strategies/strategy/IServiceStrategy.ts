@@ -5,7 +5,6 @@
  */
 
 import { ServiceEntity } from '../../domain/entities/ServiceEntity';
-import { ServiceStatusValueObject } from '../../domain/value-objects/ServiceStatusValueObject';
 
 export interface IServiceStrategy {
   /**
@@ -16,5 +15,5 @@ export interface IServiceStrategy {
   /**
    * Execute service
    */
-  execute(service: ServiceEntity, input: any): Promise<any>;
+  execute(service: ServiceEntity, input: unknown): Promise<unknown>;
 }

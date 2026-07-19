@@ -4,19 +4,29 @@
  * Utility functions for middleware operations.
  */
 
+export interface MiddlewareContext {
+  [key: string]: unknown;
+  request?: {
+    path?: string;
+    method?: string;
+  };
+}
+
+export type MiddlewareHandler = (context: MiddlewareContext) => unknown;
+
 export class MiddlewareHelpers {
   /**
    * Wrap async handler with error handling
    */
   static wrapAsyncHandler(
-    handler: (context: any) => Promise<any>,
-    errorHandler?: (error: Error, context: any) => any
-  ): (context: any) => Promise<any> {
-    return async (context: any) => {
+    handler: (context: MiddlewareContext) => Promise<unknown>,
+    errorHandler?: (error: Error, context: MiddlewareContext) => unknown
+  ): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
       try {
         return await handler(context);
       } catch (error) {
-        if (errorHandler) {
+        if (errorHandler !== undefined) {
           return errorHandler(error as Error, context);
         }
         throw error;
@@ -27,8 +37,8 @@ export class MiddlewareHelpers {
   /**
    * Wrap handler with timeout
    */
-  static withTimeout(handler: (context: any) => Promise<any>, timeoutMs: number): (context: any) => Promise<any> {
-    return async (context: any) => {
+  static withTimeout(handler: MiddlewareHandler, timeoutMs: number): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
       return Promise.race([
         handler(context),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Middleware execution timeout')), timeoutMs)),
@@ -40,11 +50,11 @@ export class MiddlewareHelpers {
    * Wrap handler with retry logic
    */
   static withRetry(
-    handler: (context: any) => Promise<any>,
+    handler: (context: MiddlewareContext) => Promise<unknown>,
     maxRetries: number = 3,
     delayMs: number = 100
-  ): (context: any) => Promise<any> {
-    return async (context: any) => {
+  ): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
       let lastError: Error | undefined;
 
       for (let i = 0; i <= maxRetries; i++) {
@@ -65,12 +75,12 @@ export class MiddlewareHelpers {
   /**
    * Compose multiple handlers
    */
-  static composeHandlers(...handlers: Array<(context: any) => Promise<any> | any>): (context: any) => Promise<any> {
-    return async (context: any) => {
-      let currentContext = context;
+  static composeHandlers(...handlers: MiddlewareHandler[]): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
+      let currentContext: unknown = context;
 
       for (const handler of handlers) {
-        currentContext = await handler(currentContext);
+        currentContext = await handler(currentContext as MiddlewareContext);
       }
 
       return currentContext;
@@ -81,10 +91,10 @@ export class MiddlewareHelpers {
    * Create conditional middleware
    */
   static conditional(
-    condition: (context: any) => boolean,
-    handler: (context: any) => Promise<any> | any
-  ): (context: any) => Promise<any> {
-    return async (context: any) => {
+    condition: (context: MiddlewareContext) => boolean,
+    handler: MiddlewareHandler
+  ): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
       if (condition(context)) {
         return await handler(context);
       }
@@ -95,9 +105,9 @@ export class MiddlewareHelpers {
   /**
    * Create middleware that runs on specific paths
    */
-  static pathFilter(paths: string[], handler: (context: any) => Promise<any> | any): (context: any) => Promise<any> {
-    return async (context: any) => {
-      const requestPath = context.request?.path || '';
+  static pathFilter(paths: string[], handler: MiddlewareHandler): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
+      const requestPath = context.request?.path ?? '';
       const matches = paths.some((path) => requestPath.startsWith(path));
 
       if (matches) {
@@ -110,12 +120,9 @@ export class MiddlewareHelpers {
   /**
    * Create middleware that runs on specific methods
    */
-  static methodFilter(
-    methods: string[],
-    handler: (context: any) => Promise<any> | any
-  ): (context: any) => Promise<any> {
-    return async (context: any) => {
-      const requestMethod = context.request?.method?.toLowerCase() || '';
+  static methodFilter(methods: string[], handler: MiddlewareHandler): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
+      const requestMethod = context.request?.method?.toLowerCase() ?? '';
       const matches = methods.some((method) => method.toLowerCase() === requestMethod);
 
       if (matches) {
@@ -129,10 +136,10 @@ export class MiddlewareHelpers {
    * Measure execution time of handler
    */
   static measureTime(
-    handler: (context: any) => Promise<any> | any,
-    onMeasure: (time: number, context: any) => void
-  ): (context: any) => Promise<any> {
-    return async (context: any) => {
+    handler: MiddlewareHandler,
+    onMeasure: (time: number, context: MiddlewareContext) => void
+  ): (context: MiddlewareContext) => Promise<unknown> {
+    return async (context: MiddlewareContext) => {
       const startTime = Date.now();
       const result = await handler(context);
       const executionTime = Date.now() - startTime;
@@ -145,7 +152,7 @@ export class MiddlewareHelpers {
    * Deep clone context
    */
   static cloneContext<T>(context: T): T {
-    return JSON.parse(JSON.stringify(context));
+    return JSON.parse(JSON.stringify(context)) as T;
   }
 
   /**

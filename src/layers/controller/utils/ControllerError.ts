@@ -13,7 +13,7 @@ export class ControllerError extends Error {
     this.name = 'ControllerError';
     this.code = code;
     this.controllerId = controllerId;
-    if (Error.captureStackTrace) {
+    if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     }
   }

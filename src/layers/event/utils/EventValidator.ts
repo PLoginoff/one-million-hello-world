@@ -6,7 +6,6 @@
  */
 
 import { Event } from '../domain/entities/Event';
-import { EventType } from '../domain/value-objects/EventType';
 
 export interface ValidationError {
   message: string;

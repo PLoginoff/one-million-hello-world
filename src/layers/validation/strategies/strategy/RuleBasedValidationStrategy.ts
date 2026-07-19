@@ -27,15 +27,15 @@ export class RuleBasedValidationStrategy implements IValidationStrategy {
     this.rules.delete(ruleId);
   }
 
-  validate(value: any): ValidationResultEntity {
+  validate(value: unknown): ValidationResultEntity {
     let result = ValidationResultEntity.success();
 
-    for (const [field, fieldRule] of this.rules.entries()) {
-      const fieldValue = value[fieldRule.data.name];
+    for (const [, fieldRule] of this.rules.entries()) {
+      const fieldValue = (value as Record<string, unknown>)[fieldRule.data.name];
       const validation = fieldRule.validate(fieldValue);
 
       if (!validation.valid) {
-        result = result.addError(fieldRule.data.name, validation.error || 'Validation failed');
+        result = result.addError(fieldRule.data.name, validation.error ?? 'Validation failed');
       }
     }
 

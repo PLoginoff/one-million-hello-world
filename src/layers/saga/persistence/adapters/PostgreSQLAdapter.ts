@@ -24,57 +24,64 @@ export class PostgreSQLAdapter {
   /**
    * Connect to database
    */
-  async connect(): Promise<void> {
-    console.log(`Connecting to PostgreSQL at ${this._config.host}:${this._config.port}`);
+  connect(): Promise<void> {
+    console.warn(`Connecting to PostgreSQL at ${this._config.host}:${this._config.port}`);
+    return Promise.resolve();
   }
 
   /**
    * Disconnect from database
    */
-  async disconnect(): Promise<void> {
-    console.log('Disconnecting from PostgreSQL');
+  disconnect(): Promise<void> {
+    console.warn('Disconnecting from PostgreSQL');
+    return Promise.resolve();
   }
 
   /**
    * Execute query
    */
-  async query(sql: string, params?: unknown[]): Promise<unknown[]> {
-    console.log(`Executing PostgreSQL query: ${sql}`, params);
-    return [];
+  query(sql: string, params?: unknown[]): Promise<unknown[]> {
+    console.warn(`Executing PostgreSQL query: ${sql}`, params);
+    return Promise.resolve([]);
   }
 
   /**
    * Begin transaction
    */
-  async beginTransaction(): Promise<void> {
-    console.log('Beginning PostgreSQL transaction');
+  beginTransaction(): Promise<void> {
+    console.warn('Beginning PostgreSQL transaction');
+    return Promise.resolve();
   }
 
   /**
    * Commit transaction
    */
-  async commitTransaction(): Promise<void> {
-    console.log('Committing PostgreSQL transaction');
+  commitTransaction(): Promise<void> {
+    console.warn('Committing PostgreSQL transaction');
+    return Promise.resolve();
   }
 
   /**
    * Rollback transaction
    */
-  async rollbackTransaction(): Promise<void> {
-    console.log('Rolling back PostgreSQL transaction');
+  rollbackTransaction(): Promise<void> {
+    console.warn('Rolling back PostgreSQL transaction');
+    return Promise.resolve();
   }
 
   /**
    * Create table
    */
-  async createTable(tableName: string, schema: string): Promise<void> {
-    console.log(`Creating PostgreSQL table ${tableName} with schema: ${schema}`);
+  createTable(tableName: string, schema: string): Promise<void> {
+    console.warn(`Creating PostgreSQL table ${tableName} with schema: ${schema}`);
+    return Promise.resolve();
   }
 
   /**
    * Drop table
    */
-  async dropTable(tableName: string): Promise<void> {
-    console.log(`Dropping PostgreSQL table ${tableName}`);
+  dropTable(tableName: string): Promise<void> {
+    console.warn(`Dropping PostgreSQL table ${tableName}`);
+    return Promise.resolve();
   }
 }

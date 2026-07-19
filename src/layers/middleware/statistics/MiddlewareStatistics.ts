@@ -64,7 +64,7 @@ export class MiddlewareStatistics {
    * Record middleware invocation
    */
   recordMiddlewareInvocation(middlewareId: string): void {
-    const currentCount = this._middlewareCounts.get(middlewareId) || 0;
+    const currentCount = this._middlewareCounts.get(middlewareId) ?? 0;
     this._middlewareCounts.set(middlewareId, currentCount + 1);
     this._stats.totalMiddlewareInvoked++;
     this._updateMostExecutedMiddlewares();

@@ -96,14 +96,14 @@ export class DataTransformer implements IDataTransformer {
     if (this._config.enableNormalization) {
       result = this.normalize(result.data!);
       if (!result.success) {
-        return { success: false, errors: result.errors } as any;
+        return { success: false, errors: result.errors };
       }
     }
 
     if (this._config.enableEnrichment && enrichment) {
       result = this.enrich(result.data!, enrichment);
       if (!result.success) {
-        return { success: false, errors: result.errors } as any;
+        return { success: false, errors: result.errors };
       }
     }
 

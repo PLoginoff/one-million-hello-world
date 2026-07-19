@@ -48,7 +48,7 @@ export class MetricsCollector implements IMetricsCollector {
     const metricValue: MetricValue = {
       value,
       timestamp: new Date(),
-      labels: labels || {},
+      labels: labels ?? {},
     };
 
     metric.values.push(metricValue);
@@ -56,11 +56,11 @@ export class MetricsCollector implements IMetricsCollector {
   }
 
   increment(name: string, value?: number, labels?: Record<string, string>): void {
-    this.record(name, value || 1, labels);
+    this.record(name, value ?? 1, labels);
   }
 
   decrement(name: string, value?: number, labels?: Record<string, string>): void {
-    this.record(name, -(value || 1), labels);
+    this.record(name, -(value ?? 1), labels);
   }
 
   gauge(name: string, value: number, labels?: Record<string, string>): void {
@@ -170,15 +170,15 @@ export class MetricsCollector implements IMetricsCollector {
     const startTime = Date.now();
 
     return {
-      start: () => {
+      start: (): void => {
         // Timer started at creation
       },
-      stop: () => {
+      stop: (): number => {
         const duration = Date.now() - startTime;
         this.timing(name, duration, labels);
         return duration;
       },
-      elapsed: () => {
+      elapsed: (): number => {
         return Date.now() - startTime;
       },
     };
@@ -221,7 +221,7 @@ export class MetricsCollector implements IMetricsCollector {
 
   getOperationMetrics(operation: string): OperationMetrics {
     return (
-      this._operationMetrics.get(operation) || {
+      this._operationMetrics.get(operation) ?? {
         operation,
         totalCount: 0,
         successCount: 0,
@@ -272,7 +272,7 @@ export class MetricsCollector implements IMetricsCollector {
     metric.values = metric.values.filter((v) => now - v.timestamp.getTime() < this._config.retentionPeriod);
   }
 
-  private _createEmptyAggregation() {
+  private _createEmptyAggregation(): MetricData['aggregation'] {
     return {
       sum: 0,
       count: 0,

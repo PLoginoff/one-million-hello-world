@@ -152,7 +152,7 @@ export class CacheManager implements ICacheManager {
       }
     }
 
-    if (oldestKey) {
+    if (oldestKey != null && oldestKey !== '') {
       this._cache.delete(oldestKey);
     }
   }
@@ -168,7 +168,7 @@ export class CacheManager implements ICacheManager {
       }
     }
 
-    if (leastAccessedKey) {
+    if (leastAccessedKey != null && leastAccessedKey !== '') {
       this._cache.delete(leastAccessedKey);
     }
   }

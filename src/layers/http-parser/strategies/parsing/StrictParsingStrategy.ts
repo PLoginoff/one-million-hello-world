@@ -14,11 +14,11 @@ export class StrictParsingStrategy implements IParsingStrategy {
   }
 
   parseRequest(
-    raw: any,
+    raw: Buffer,
     config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   } {
     try {
@@ -74,10 +74,10 @@ export class StrictParsingStrategy implements IParsingStrategy {
       }
 
       const headerLines = lines.slice(1, emptyLineIndex);
-      const headers = new Map();
+      const headers = new Map<string, string>();
 
       for (const line of headerLines) {
-        if (!line.trim()) continue;
+        if (line.trim().length === 0) continue;
 
         const colonIndex = line.indexOf(':');
         if (colonIndex === -1) {
@@ -143,11 +143,11 @@ export class StrictParsingStrategy implements IParsingStrategy {
   }
 
   parseResponse(
-    raw: any,
+    raw: Buffer,
     config: ParserConfigOptions
   ): {
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: string;
   } {
     try {
@@ -198,10 +198,10 @@ export class StrictParsingStrategy implements IParsingStrategy {
       }
 
       const headerLines = lines.slice(1, emptyLineIndex);
-      const headers = new Map();
+      const headers = new Map<string, string>();
 
       for (const line of headerLines) {
-        if (!line.trim()) continue;
+        if (line.trim().length === 0) continue;
 
         const colonIndex = line.indexOf(':');
         if (colonIndex === -1) {
@@ -234,6 +234,13 @@ export class StrictParsingStrategy implements IParsingStrategy {
       const bodyStart = emptyLineIndex + 1;
       const bodyLines = lines.slice(bodyStart);
       const body = Buffer.from(bodyLines.join('\r\n'), 'utf-8');
+
+      if (body.length > config.maxBodySize) {
+        return {
+          success: false,
+          error: `Body size exceeds maximum of ${config.maxBodySize}`,
+        };
+      }
 
       return {
         success: true,

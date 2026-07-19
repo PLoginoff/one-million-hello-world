@@ -135,7 +135,7 @@ export class SecurityFactory {
     severity: ThreatSeverity,
     description: string,
     sourceIp: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): ThreatEntity {
     return ThreatEntity.fromBasic(type, severity, description, sourceIp, metadata);
   }

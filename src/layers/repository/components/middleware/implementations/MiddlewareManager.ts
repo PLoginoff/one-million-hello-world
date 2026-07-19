@@ -7,7 +7,6 @@
 
 import { IMiddlewareManager } from '../interfaces/IMiddlewareManager';
 import {
-  MiddlewareFunction,
   MiddlewareContext,
   MiddlewareResult,
   MiddlewareChain,
@@ -77,8 +76,8 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
 
     return {
       middlewares: enabledMiddlewares,
-      execute: async (context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> => {
-        return this._executeChain(context, enabledMiddlewares);
+      execute: (context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> => {
+        return Promise.resolve(this._executeChain(context, enabledMiddlewares));
       },
     };
   }
@@ -114,7 +113,7 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
             if (this._config.enableErrorHandling) {
               return result;
             }
-            throw new Error(result.error?.message || 'Middleware error');
+            throw new Error(result.error?.message ?? 'Middleware error');
           }
         } catch (error) {
           this._stats.failedExecutions++;
@@ -162,7 +161,7 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
       .sort((a, b) => a.priority - b.priority);
 
     const chain = this.createChain(middlewares);
-    return this.executeChain(context, chain);
+    return Promise.resolve(this.executeChain(context, chain));
   }
 
   createPipeline(name: string, middlewares: Middleware<T>[], parallel?: boolean): MiddlewarePipeline<T> {
@@ -171,27 +170,27 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
     return {
       name,
       middlewares: enabledMiddlewares,
-      parallel: parallel || false,
-      execute: async (context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> => {
+      parallel: parallel ?? false,
+      execute: (context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> => {
         if (enabledMiddlewares.length === 0) {
-          return {
+          return Promise.resolve({
             success: true,
             data: context.data,
             metadata: context.metadata,
-          };
+          });
         }
 
-        if (parallel) {
-          return this._executeParallel(context, enabledMiddlewares);
+        if (parallel === true) {
+          return Promise.resolve(this._executeParallel(context, enabledMiddlewares));
         } else {
-          return this._executeSequential(context, enabledMiddlewares);
+          return Promise.resolve(this._executeSequential(context, enabledMiddlewares));
         }
       },
     };
   }
 
-  async executePipeline(pipeline: MiddlewarePipeline<T>, context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> {
-    return pipeline.execute(context);
+  executePipeline(pipeline: MiddlewarePipeline<T>, context: MiddlewareContext<T>): Promise<MiddlewareResult<T>> {
+    return Promise.resolve(pipeline.execute(context));
   }
 
   setConfig(config: Partial<MiddlewareConfig>): void {
@@ -234,11 +233,11 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
   }
 
   getMiddlewaresForOperation(operation: string): Middleware<T>[] {
-    return this._operationMiddlewares.get(operation) || [];
+    return this._operationMiddlewares.get(operation) ?? [];
   }
 
   addMiddlewareForOperation(operation: string, middleware: Middleware<T>): void {
-    const existing = this._operationMiddlewares.get(operation) || [];
+    const existing = this._operationMiddlewares.get(operation) ?? [];
     existing.push(middleware);
     this._operationMiddlewares.set(operation, existing);
   }
@@ -252,7 +251,7 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
       operation,
       timestamp: new Date(),
       data,
-      metadata: metadata || {},
+      metadata: metadata ?? {},
       state: new Map(),
     };
   }
@@ -268,12 +267,9 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
     };
   }
 
-  private async _executeChain(
-    context: MiddlewareContext<T>,
-    middlewares: Middleware<T>[]
-  ): Promise<MiddlewareResult<T>> {
+  private _executeChain(context: MiddlewareContext<T>, middlewares: Middleware<T>[]): Promise<MiddlewareResult<T>> {
     const chain = this.createChain(middlewares);
-    return this.executeChain(context, chain);
+    return Promise.resolve(this.executeChain(context, chain));
   }
 
   private async _executeSequential(
@@ -323,12 +319,12 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
     this._incrementMiddlewareExecutionCount(middleware.name);
 
     try {
-      const next = async (): Promise<MiddlewareResult<T>> => {
-        return {
+      const next = (): Promise<MiddlewareResult<T>> => {
+        return Promise.resolve({
           success: true,
           data: context.data,
           metadata: context.metadata,
-        };
+        });
       };
 
       return await middleware.execute(context, next);
@@ -346,7 +342,7 @@ export class MiddlewareManager<T = unknown> implements IMiddlewareManager<T> {
   }
 
   private _incrementMiddlewareExecutionCount(name: string): void {
-    const count = this._stats.middlewareExecutionCounts.get(name) || 0;
+    const count = this._stats.middlewareExecutionCounts.get(name) ?? 0;
     this._stats.middlewareExecutionCounts.set(name, count + 1);
   }
 

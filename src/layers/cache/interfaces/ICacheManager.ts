@@ -5,14 +5,7 @@
  * including multi-level caching and invalidation strategies.
  */
 
-import {
-  CacheEntry,
-  CacheStats,
-  InvalidationStrategy,
-  CacheLevel,
-  CacheConfig,
-  CacheResult,
-} from '../types/cache-types';
+import { CacheEntry, CacheStats, CacheConfig, CacheResult } from '../types/cache-types';
 
 /**
  * Interface for cache operations

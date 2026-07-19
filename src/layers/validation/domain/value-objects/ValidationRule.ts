@@ -135,7 +135,7 @@ export class ValidationRule {
       if (!result.isValid) {
         const error: RuleValidationError = {
           field: this.data.name,
-          message: result.message || `Validation failed for ${constraint.type}`,
+          message: this._coalesceMessage(result.message, `Validation failed for ${constraint.type}`),
           code: `${constraint.type.toUpperCase()}_VALIDATION_FAILED`,
           severity: this.data.severity === 'error' || this.data.severity === 'warning' ? 'error' : 'critical',
         };
@@ -215,32 +215,44 @@ export class ValidationRule {
     switch (constraint.type) {
       case 'required':
         if (value === null || value === undefined || value === '') {
-          return { isValid: false, message: constraint.message || 'Field is required' };
+          return { isValid: false, message: constraint.message ?? 'Field is required' };
         }
         break;
       case 'min':
         if (typeof value === 'number' && typeof constraint.value === 'number' && value < constraint.value) {
-          return { isValid: false, message: constraint.message || `Value must be at least ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Value must be at least ${constraint.value}`),
+          };
         }
         break;
       case 'max':
         if (typeof value === 'number' && typeof constraint.value === 'number' && value > constraint.value) {
-          return { isValid: false, message: constraint.message || `Value must be at most ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Value must be at most ${constraint.value}`),
+          };
         }
         break;
       case 'minLength':
         if (typeof value === 'string' && typeof constraint.value === 'number' && value.length < constraint.value) {
-          return { isValid: false, message: constraint.message || `Length must be at least ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Length must be at least ${constraint.value}`),
+          };
         }
         break;
       case 'maxLength':
         if (typeof value === 'string' && typeof constraint.value === 'number' && value.length > constraint.value) {
-          return { isValid: false, message: constraint.message || `Length must be at most ${constraint.value}` };
+          return {
+            isValid: false,
+            message: this._coalesceMessage(constraint.message, `Length must be at most ${constraint.value}`),
+          };
         }
         break;
       case 'pattern':
         if (typeof value === 'string' && constraint.value instanceof RegExp && !constraint.value.test(value)) {
-          return { isValid: false, message: constraint.message || 'Value does not match pattern' };
+          return { isValid: false, message: constraint.message ?? 'Value does not match pattern' };
         }
         break;
       default:
@@ -248,6 +260,10 @@ export class ValidationRule {
     }
 
     return { isValid: true };
+  }
+
+  private _coalesceMessage(message: string | undefined | null, fallback: string): string {
+    return message !== undefined && message !== null && message !== '' ? message : fallback;
   }
 
   private _validateRule(data: ValidationRuleData): void {

@@ -5,7 +5,7 @@
  * including entity management, value objects, and domain events.
  */
 
-import { DomainEntity, ValueObject, DomainEvent, AggregateRoot, DomainResult } from '../types/domain-types';
+import { DomainEntity, ValueObject, DomainEvent, DomainResult } from '../types/domain-types';
 
 /**
  * Interface for domain operations

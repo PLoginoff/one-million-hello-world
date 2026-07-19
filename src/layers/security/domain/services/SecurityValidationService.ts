@@ -27,7 +27,7 @@ export class SecurityValidationService {
       errors.push('User agent is required');
     }
 
-    if (context.data.authenticated && !context.data.userId) {
+    if (context.data.authenticated && (context.data.userId === undefined || context.data.userId.length === 0)) {
       errors.push('User ID is required for authenticated context');
     }
 

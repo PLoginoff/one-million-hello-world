@@ -24,7 +24,7 @@ export class StrategyFactory {
    * Create fallback strategy
    */
   static createFallbackStrategy<T>(options?: StrategyFactoryOptions): IFallbackStrategy<T> {
-    const fallbackType = options?.fallbackType || 'default';
+    const fallbackType = options?.fallbackType ?? 'default';
 
     switch (fallbackType) {
       case 'value':
@@ -49,7 +49,7 @@ export class StrategyFactory {
    * Create state transition strategy
    */
   static createTransitionStrategy(options?: StrategyFactoryOptions): IStateTransitionStrategy {
-    const transitionType = options?.transitionType || 'default';
+    const transitionType = options?.transitionType ?? 'default';
 
     switch (transitionType) {
       case 'default':

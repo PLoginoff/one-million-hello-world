@@ -60,7 +60,7 @@ export class RepositoryStatistics {
   }
 
   private _recordRepository(repositoryId: string): void {
-    const currentCount = this._repositoryCounts.get(repositoryId) || 0;
+    const currentCount = this._repositoryCounts.get(repositoryId) ?? 0;
     this._repositoryCounts.set(repositoryId, currentCount + 1);
     this._updateMostQueriedRepositories();
   }

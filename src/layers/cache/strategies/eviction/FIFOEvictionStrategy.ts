@@ -40,11 +40,11 @@ export class FIFOEvictionStrategy<T> implements IEvictionStrategy<T> {
     return oldestKey;
   }
 
-  onAccess(key: string, entry: CacheEntry<T>): void {
+  onAccess(_key: string, _entry: CacheEntry<T>): void {
     // FIFO doesn't track access
   }
 
-  onAdd(key: string, entry: CacheEntry<T>): void {
+  onAdd(key: string, _entry: CacheEntry<T>): void {
     this.insertionOrder.push(key);
   }
 
