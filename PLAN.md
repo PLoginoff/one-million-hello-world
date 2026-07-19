@@ -77,9 +77,9 @@ The 779k gap is filled through five parallel tracks:
 **Acceptance:** `npm run lint` exits with 0 errors.
 
 ### Task 1.4: Enforce quality gates in CI
-- [ ] Verify `.github/workflows/ci.yml` runs `npm run build`, `npm test`, `npm run lint`
-- [ ] Add `npm run type-check` step if not present
-- [ ] Ensure CI fails on test or lint failure
+- [x] Verify `.github/workflows/ci.yml` runs `npm run build`, `npm test`, `npm run lint`
+- [x] `npm run type-check` step present
+- [x] CI fails on test or lint failure (all steps run in build job)
 
 **Acceptance:** CI workflow is valid and would catch regressions.
 
@@ -90,15 +90,15 @@ The 779k gap is filled through five parallel tracks:
 **Goal:** The 10 most critical layers become deep, observable, and integration-tested.
 
 ### Task 2.1: Controller Layer
-- [ ] Add `IControllerStrategy` interface
-- [ ] Add `DefaultControllerStrategy`, `LoggingControllerStrategy`, `MetricsControllerStrategy`
-- [ ] Add `ControllerFactory` with profile-based creation
-- [ ] Add `ControllerConfigBuilder`, `ControllerConfigValidator`, default profiles
-- [ ] Add `ControllerHealthCheck`
-- [ ] Add `ControllerMetricsCollector`
-- [ ] Add controller-specific error classes and mappers
-- [ ] Write unit tests for every new component
-- [ ] Write integration test: Router → Controller
+- [x] Add `IControllerStrategy` interface (already existed)
+- [x] Add `DefaultControllerStrategy`, `LoggingControllerStrategy`, `MetricsControllerStrategy`
+- [x] Add `ControllerFactory` with profile-based creation (already existed)
+- [x] Add `ControllerConfigBuilder`, `ControllerConfigValidator`, default profiles (already existed)
+- [x] Add `ControllerHealthCheck`
+- [x] Add `ControllerMetricsCollector`
+- [x] Add controller-specific error classes and mappers (`ControllerErrorMapper`)
+- [x] Write unit tests for every new component (45 tests)
+- [x] Write integration test: Router → Controller
 
 **Expected new lines:** ~2,700
 

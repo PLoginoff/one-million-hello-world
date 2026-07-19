@@ -6,3 +6,4 @@
 
 export { ControllerError } from './ControllerError';
 export { ControllerHelpers } from './ControllerHelpers';
+export { ControllerErrorMapper, MappedError } from './ControllerErrorMapper';
