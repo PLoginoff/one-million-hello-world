@@ -1,0 +1,103 @@
+{
+  "dashboard": {
+    "title": "One Million Hello World - Overview",
+    "tags": ["hello-world", "overview"],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "refresh": "30s",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {"expr": "sum(rate(http_requests_total[5m]))", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+        "targets": [
+          {"expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))", "refId": "A"}
+        ],
+        "thresholds": [
+          {"color": "green", "value": null},
+          {"color": "yellow", "value": 0.05},
+          {"color": "red", "value": 0.10}
+        ]
+      },
+      {
+        "title": "P95 Latency",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+        "targets": [
+          {"expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Active Pods",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+        "targets": [
+          {"expr": "count(kube_pod_status_ready{namespace=\"hello-world\"}==1)", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Requests by Status Code",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {"expr": "sum by (status) (rate(http_requests_total[5m]))", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Latency Distribution",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+        "targets": [
+          {"expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket[5m]))", "legend": "P50", "refId": "A"},
+          {"expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))", "legend": "P95", "refId": "B"},
+          {"expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))", "legend": "P99", "refId": "C"}
+        ]
+      },
+      {
+        "title": "Cache Hit Rate",
+        "type": "gauge",
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 12},
+        "targets": [
+          {"expr": "cache_hit_rate", "refId": "A"}
+        ],
+        "thresholds": [
+          {"color": "red", "value": null},
+          {"color": "yellow", "value": 0.5},
+          {"color": "green", "value": 0.8}
+        ]
+      },
+      {
+        "title": "Rate Limit Denials",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 12},
+        "targets": [
+          {"expr": "rate(rate_limiting_denied_total[5m])", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Circuit Breaker Status",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 12},
+        "targets": [
+          {"expr": "circuit_breaker_state", "refId": "A"}
+        ]
+      },
+      {
+        "title": "Layer Health",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 18},
+        "targets": [
+          {"expr": "layer_health_status", "format": "table", "refId": "A"}
+        ]
+      }
+    ]
+  }
+}

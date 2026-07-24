@@ -1,0 +1,34 @@
+# Staging values for one-million-hello-world
+
+replicaCount: 2
+
+image:
+  repository: one-million-hello-world
+  tag: staging
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+config:
+  NODE_ENV: staging
+  LOG_LEVEL: info
+  RATE_LIMIT_ENABLED: "true"
+  CACHE_ENABLED: "true"
+
+ingress:
+  enabled: true
+  hosts:
+    - host: staging-api.example.com
+      paths:
+        - /

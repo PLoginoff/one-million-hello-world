@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "A Hello World HTTP server with 1 million lines of code across 25 architectural layers",
   "main": "dist/index.js",
+  "bin": {
+    "omhw": "dist/cli/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "start:dev": "ts-node src/index.ts",
+    "cli": "ts-node src/cli/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -49,6 +53,7 @@
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.75.0",
     "@opentelemetry/sdk-trace-node": "^2.7.1",
+    "commander": "12.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",

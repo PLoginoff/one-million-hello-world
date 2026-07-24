@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: one-million-hello-world-sm
+  namespace: monitoring
+  labels:
+    app: one-million-hello-world
+spec:
+  selector:
+    matchLabels:
+      app: one-million-hello-world
+  namespaceSelector:
+    matchNames:
+      - hello-world
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

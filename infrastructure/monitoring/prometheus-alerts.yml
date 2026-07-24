@@ -1,0 +1,102 @@
+groups:
+  - name: one-million-hello-world
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "High error rate ({{ $value | humanizePercentage }})"
+          description: "5xx error rate exceeds 5% for 5 minutes"
+
+      - alert: VeryHighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(http_requests_total[5m])) > 0.10
+        for: 15m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "Critical error rate ({{ $value | humanizePercentage }})"
+          description: "5xx error rate exceeds 10% for 15 minutes"
+
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "P95 latency above 2s"
+          description: "95th percentile latency is {{ $value }}s"
+
+      - alert: RateLimitExceeded
+        expr: rate(rate_limiting_denied_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "Rate limit denials spiking"
+          description: "{{ $value }} rate-limited requests/sec"
+
+      - alert: CacheHitRateLow
+        expr: |
+          cache_hit_rate < 0.50
+        for: 15m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "Cache hit rate below 50%"
+          description: "Current hit rate: {{ $value | humanizePercentage }}"
+
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_state{state="open"} == 1
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "Circuit breaker open"
+          description: "Circuit breaker for {{ $labels.service }} is open"
+
+      - alert: PodNotReady
+        expr: kube_pod_status_ready{namespace="hello-world"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "Pod not ready"
+          description: "Pod {{ $labels.pod }} not ready for 5m"
+
+      - alert: HighMemoryUsage
+        expr: |
+          container_memory_working_set_bytes{namespace="hello-world"}
+          / container_spec_memory_limit_bytes{namespace="hello-world"} > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "High memory usage ({{ $value | humanizePercentage }})"
+          description: "Container {{ $labels.container }} memory near limit"
+
+      - alert: HighCPUUsage
+        expr: |
+          rate(container_cpu_usage_seconds_total{namespace="hello-world"}[5m])
+          / container_spec_cpu_quota{namespace="hello-world"} > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "High CPU usage ({{ $value | humanizePercentage }})"
+          description: "Container {{ $labels.container }} CPU near limit"

@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: one-million-hello-world-pdb
+  namespace: hello-world
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: one-million-hello-world
