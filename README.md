@@ -2,9 +2,9 @@
 
 This project is a fully-featured implementation of a classic HTTP server returning "Hello World" using enterprise-grade architectural patterns and best practices.
 
-The codebase contains **1 million lines** (currently 100k+)
+The codebase targets **1 million lines** (currently ~63K across all file types)
 
-![Progress](https://img.shields.io/badge/progress-17%25-red)
+![Progress](https://img.shields.io/badge/progress-6%25-red)
 
 ## Contents
 
@@ -424,24 +424,32 @@ terraform apply -var="image_uri=your-ecr-image-uri"
 
 ## Actual Statistics
 
-Run `make stats` to see current numbers.
+Run `npm run cli -- stats` to see current numbers.
 
-Latest snapshot:
-- **Total files**: 2,987
-- **Approximate lines of code**: 220,979
-- **TypeScript files**: 2,638
-- **Architecture layers**: 85+
-- **Infrastructure files**: Terraform, K8s, Helm, Docker Compose, Prometheus, Grafana
+Latest snapshot (after Epics 1-7):
+- **Total files**: 4,551
+- **Total lines (all types)**: ~63,000
+- **TypeScript files**: 3,892
+- **TypeScript lines**: ~15,000
+- **Markdown lines**: ~55,000
+- **Architecture layers**: 105
+- **Test suites**: 379
+- **Tests**: 5,108
+- **Test coverage**: ~31%
+- **Infrastructure**: Terraform (AWS/GCP/Azure), K8s, Helm, Docker, Prometheus, Grafana, Loki, Alertmanager
+- **CI/CD**: 7 GitHub Actions workflows (CI, release, Docker, Terraform, Helm, security scan, badge)
+- **Documentation**: 15 ADRs, 104 per-layer docs, OpenAPI spec, runbook, deployment guide
 
 ------------------------------------
 
 ## Expected Statistics
 
-- **Lines of code**: 1,000,000 (goal)
-- **Architecture layers**: 50+ (vertical + horizontal + meta)
-- **Files**: 3,000+
-- **Test coverage**: 95%+ (target)
-- **Deployment targets**: Docker, Kubernetes, AWS, GCP, Azure
+- **Lines of code**: 1,000,000 (goal — currently ~63K, ~6%)
+- **Architecture layers**: 105 (achieved)
+- **Files**: 4,551 (achieved 3,000+ target)
+- **Test suites**: 379 (5,108 tests)
+- **Test coverage**: 95%+ (target — currently ~31%)
+- **Deployment targets**: Docker, Kubernetes, AWS, GCP, Azure (achieved)
 
 ------------------------------------
 
