@@ -1,1 +1,1 @@
-export { DataQualityConfigBuilder } from './DataQualityBuilder';
+export { DataQualityConfigurationBuilder, DataQualityConfiguration } from './DataQualityConfigurationBuilder';

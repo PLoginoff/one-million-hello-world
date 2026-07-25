@@ -1,4 +1,5 @@
-export { IWorkflowEngineStrategy } from './WorkflowEngineStrategy';
-export { DefaultWorkflowEngineStrategy } from './WorkflowEngineStrategy';
-export { OptimizedWorkflowEngineStrategy } from './WorkflowEngineStrategy';
-export { FallbackWorkflowEngineStrategy } from './WorkflowEngineStrategy';
+export { WorkflowEngineDefaultStrategy } from './DefaultStrategy';
+export { WorkflowEngineFastStrategy } from './FastStrategy';
+export { WorkflowEngineReliableStrategy } from './ReliableStrategy';
+export { WorkflowEngineCachedStrategy } from './CachedStrategy';
+export { WorkflowEngineBatchStrategy } from './BatchStrategy';

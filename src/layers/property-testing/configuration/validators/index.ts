@@ -1,1 +1,1 @@
-export { PropertyTestingConfigValidator } from './PropertyTestingValidator';
+export { PropertyTestingConfigurationValidator, ValidationResult } from './PropertyTestingConfigurationValidator';

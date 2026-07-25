@@ -1,1 +1,1 @@
-export {};
+export { DisasterRecoveryStrategyFactory, IDisasterRecoveryStrategy } from './DisasterRecoveryStrategyFactory';

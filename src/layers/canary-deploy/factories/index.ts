@@ -1,1 +1,1 @@
-export { CanaryDeployFactory } from './CanaryDeployFactory';
+export { CanaryDeployStrategyFactory, ICanaryDeployStrategy } from './CanaryDeployStrategyFactory';

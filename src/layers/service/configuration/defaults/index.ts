@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, ServiceConfigOptions } from './DefaultConfigs';
+export { ServiceDEFAULTS, ServiceLIMITS, ServiceSTRATEGIES } from './ServiceDefaults';

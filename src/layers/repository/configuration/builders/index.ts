@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { RepositoryConfigBuilder } from './RepositoryConfigBuilder';
+export { RepositoryConfigurationBuilder, RepositoryConfiguration } from './RepositoryConfigurationBuilder';

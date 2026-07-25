@@ -1,1 +1,1 @@
-export { SnapshotConfigBuilder } from './SnapshotBuilder';
+export { SnapshotConfigurationBuilder, SnapshotConfiguration } from './SnapshotConfigurationBuilder';

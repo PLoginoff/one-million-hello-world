@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { ServiceConfigBuilder } from './ServiceConfigBuilder';
+export { ServiceConfigurationBuilder, ServiceConfiguration } from './ServiceConfigurationBuilder';

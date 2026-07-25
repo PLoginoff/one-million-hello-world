@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { RouterConfigBuilder } from './RouterConfigBuilder';
+export { RouterConfigurationBuilder, RouterConfiguration } from './RouterConfigurationBuilder';

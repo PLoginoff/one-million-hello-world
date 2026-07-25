@@ -1,4 +1,5 @@
-export { IChaosEngineeringStrategy } from './ChaosEngineeringStrategy';
-export { DefaultChaosEngineeringStrategy } from './ChaosEngineeringStrategy';
-export { OptimizedChaosEngineeringStrategy } from './ChaosEngineeringStrategy';
-export { FallbackChaosEngineeringStrategy } from './ChaosEngineeringStrategy';
+export { ChaosEngineeringDefaultStrategy } from './DefaultStrategy';
+export { ChaosEngineeringFastStrategy } from './FastStrategy';
+export { ChaosEngineeringReliableStrategy } from './ReliableStrategy';
+export { ChaosEngineeringCachedStrategy } from './CachedStrategy';
+export { ChaosEngineeringBatchStrategy } from './BatchStrategy';

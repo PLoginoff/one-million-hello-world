@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { ValidationConfigBuilder } from './ValidationConfigBuilder';
+export { ValidationConfigurationBuilder, ValidationConfiguration } from './ValidationConfigurationBuilder';

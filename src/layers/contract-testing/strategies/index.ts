@@ -1,4 +1,5 @@
-export { IContractTestingStrategy } from './ContractTestingStrategy';
-export { DefaultContractTestingStrategy } from './ContractTestingStrategy';
-export { OptimizedContractTestingStrategy } from './ContractTestingStrategy';
-export { FallbackContractTestingStrategy } from './ContractTestingStrategy';
+export { ContractTestingDefaultStrategy } from './DefaultStrategy';
+export { ContractTestingFastStrategy } from './FastStrategy';
+export { ContractTestingReliableStrategy } from './ReliableStrategy';
+export { ContractTestingCachedStrategy } from './CachedStrategy';
+export { ContractTestingBatchStrategy } from './BatchStrategy';

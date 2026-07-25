@@ -1,1 +1,1 @@
-export { BotDetectionConfigValidator } from './BotDetectionValidator';
+export { BotDetectionConfigurationValidator, ValidationResult } from './BotDetectionConfigurationValidator';

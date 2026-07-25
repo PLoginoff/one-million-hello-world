@@ -1,1 +1,1 @@
-export { EdgeCacheConfigBuilder } from './EdgeCacheBuilder';
+export { EdgeCacheConfigurationBuilder, EdgeCacheConfiguration } from './EdgeCacheConfigurationBuilder';

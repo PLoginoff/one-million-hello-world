@@ -1,1 +1,1 @@
-export { RulesEngineConfigValidator } from './RulesEngineValidator';
+export { RulesEngineConfigurationValidator, ValidationResult } from './RulesEngineConfigurationValidator';

@@ -1,1 +1,1 @@
-export { BpmnConfigValidator } from './BpmnValidator';
+export { BpmnConfigurationValidator, ValidationResult } from './BpmnConfigurationValidator';

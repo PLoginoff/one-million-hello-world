@@ -1,1 +1,1 @@
-export { EncryptionConfigBuilder } from './EncryptionBuilder';
+export { EncryptionConfigurationBuilder, EncryptionConfiguration } from './EncryptionConfigurationBuilder';

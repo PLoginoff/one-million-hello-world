@@ -1,4 +1,5 @@
-export { IOutboxStrategy } from './OutboxStrategy';
-export { DefaultOutboxStrategy } from './OutboxStrategy';
-export { OptimizedOutboxStrategy } from './OutboxStrategy';
-export { FallbackOutboxStrategy } from './OutboxStrategy';
+export { OutboxDefaultStrategy } from './DefaultStrategy';
+export { OutboxFastStrategy } from './FastStrategy';
+export { OutboxReliableStrategy } from './ReliableStrategy';
+export { OutboxCachedStrategy } from './CachedStrategy';
+export { OutboxBatchStrategy } from './BatchStrategy';

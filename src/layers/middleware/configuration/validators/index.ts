@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { MiddlewareConfigValidator } from './MiddlewareConfigValidator';
+export { MiddlewareConfigurationValidator, ValidationResult } from './MiddlewareConfigurationValidator';

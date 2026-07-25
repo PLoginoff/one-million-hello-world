@@ -1,1 +1,1 @@
-export {};
+export { OnboardingConfigurationValidator, ValidationResult } from './OnboardingConfigurationValidator';

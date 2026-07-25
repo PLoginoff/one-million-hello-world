@@ -1,1 +1,1 @@
-export { GraphqlConfigBuilder } from './GraphqlBuilder';
+export { GraphqlConfigurationBuilder, GraphqlConfiguration } from './GraphqlConfigurationBuilder';

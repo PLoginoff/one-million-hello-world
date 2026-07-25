@@ -1,1 +1,1 @@
-export { CqrsConfigValidator } from './CqrsValidator';
+export { CqrsConfigurationValidator, ValidationResult } from './CqrsConfigurationValidator';

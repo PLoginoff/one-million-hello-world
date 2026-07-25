@@ -1,1 +1,4 @@
-export {};
+export {
+  BatchProcessingConfigurationBuilder,
+  BatchProcessingConfiguration,
+} from './BatchProcessingConfigurationBuilder';

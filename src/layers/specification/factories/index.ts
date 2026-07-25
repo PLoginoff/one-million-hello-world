@@ -1,1 +1,1 @@
-export { SpecificationFactory } from './SpecificationFactory';
+export { SpecificationStrategyFactory, ISpecificationStrategy } from './SpecificationStrategyFactory';

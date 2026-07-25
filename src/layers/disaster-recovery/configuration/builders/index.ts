@@ -1,1 +1,4 @@
-export {};
+export {
+  DisasterRecoveryConfigurationBuilder,
+  DisasterRecoveryConfiguration,
+} from './DisasterRecoveryConfigurationBuilder';

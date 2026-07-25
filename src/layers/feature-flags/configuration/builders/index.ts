@@ -1,1 +1,1 @@
-export { FeatureFlagsConfigBuilder } from './FeatureFlagsBuilder';
+export { FeatureFlagsConfigurationBuilder, FeatureFlagsConfiguration } from './FeatureFlagsConfigurationBuilder';

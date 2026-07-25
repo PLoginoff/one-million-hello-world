@@ -1,4 +1,5 @@
-export { IPolicyEngineStrategy } from './PolicyEngineStrategy';
-export { DefaultPolicyEngineStrategy } from './PolicyEngineStrategy';
-export { OptimizedPolicyEngineStrategy } from './PolicyEngineStrategy';
-export { FallbackPolicyEngineStrategy } from './PolicyEngineStrategy';
+export { PolicyEngineDefaultStrategy } from './DefaultStrategy';
+export { PolicyEngineFastStrategy } from './FastStrategy';
+export { PolicyEngineReliableStrategy } from './ReliableStrategy';
+export { PolicyEngineCachedStrategy } from './CachedStrategy';
+export { PolicyEngineBatchStrategy } from './BatchStrategy';

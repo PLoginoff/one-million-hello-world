@@ -1,0 +1,56 @@
+/**
+ * AuditDefaultStrategy
+ *
+ * Standard audit strategy with balanced performance.
+ */
+
+import { AuditContext, AuditResult } from '../types/audit-types';
+
+export interface IAuditStrategy {
+  readonly name: string;
+  readonly priority: number;
+  execute(context: AuditContext): Promise<AuditResult<unknown>>;
+  canHandle(context: AuditContext): boolean;
+}
+
+export class AuditDefaultStrategy implements IAuditStrategy {
+  readonly name = 'default';
+  readonly priority = 0;
+  private _config: Record<string, unknown>;
+  private _executionCount: number;
+
+  constructor(config: Record<string, unknown> = {}) {
+    this._config = config;
+    this._executionCount = 0;
+  }
+
+  canHandle(context: AuditContext): boolean {
+    return context.input !== null && context.input !== undefined;
+  }
+
+  async execute(context: AuditContext): Promise<AuditResult<unknown>> {
+    this._executionCount++;
+    await Promise.resolve();
+    return {
+      success: true,
+      data: {
+        strategy: this.name,
+        input: context.input,
+        metadata: context.metadata,
+        executionCount: this._executionCount,
+      },
+    };
+  }
+
+  configure(config: Record<string, unknown>): void {
+    this._config = { ...this._config, ...config };
+  }
+
+  getConfig(): Record<string, unknown> {
+    return { ...this._config };
+  }
+
+  getExecutionCount(): number {
+    return this._executionCount;
+  }
+}

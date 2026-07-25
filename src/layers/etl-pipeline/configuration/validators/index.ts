@@ -1,1 +1,1 @@
-export { EtlPipelineConfigValidator } from './EtlPipelineValidator';
+export { EtlPipelineConfigurationValidator, ValidationResult } from './EtlPipelineConfigurationValidator';

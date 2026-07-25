@@ -1,3 +1,5 @@
-export { IDomainStrategy } from './IDomainStrategy';
-export { DefaultDomainStrategy } from './DefaultDomainStrategy';
-export { EventSourcingDomainStrategy, EventSourcingState } from './EventSourcingDomainStrategy';
+export { DomainDefaultStrategy } from './DefaultStrategy';
+export { DomainFastStrategy } from './FastStrategy';
+export { DomainReliableStrategy } from './ReliableStrategy';
+export { DomainCachedStrategy } from './CachedStrategy';
+export { DomainBatchStrategy } from './BatchStrategy';

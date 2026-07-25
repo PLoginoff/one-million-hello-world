@@ -1,1 +1,1 @@
-export {};
+export { NotificationConfigurationBuilder, NotificationConfiguration } from './NotificationConfigurationBuilder';

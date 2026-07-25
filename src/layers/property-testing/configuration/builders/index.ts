@@ -1,1 +1,4 @@
-export { PropertyTestingConfigBuilder } from './PropertyTestingBuilder';
+export {
+  PropertyTestingConfigurationBuilder,
+  PropertyTestingConfiguration,
+} from './PropertyTestingConfigurationBuilder';

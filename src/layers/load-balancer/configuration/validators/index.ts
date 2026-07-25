@@ -1,1 +1,1 @@
-export { LoadBalancerConfigValidator } from './LoadBalancerValidator';
+export { LoadBalancerConfigurationValidator, ValidationResult } from './LoadBalancerConfigurationValidator';

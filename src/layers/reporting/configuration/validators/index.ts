@@ -1,1 +1,1 @@
-export {};
+export { ReportingConfigurationValidator, ValidationResult } from './ReportingConfigurationValidator';

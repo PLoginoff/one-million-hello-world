@@ -1,1 +1,1 @@
-export { BackupConfigValidator } from './BackupValidator';
+export { BackupConfigurationValidator, ValidationResult } from './BackupConfigurationValidator';

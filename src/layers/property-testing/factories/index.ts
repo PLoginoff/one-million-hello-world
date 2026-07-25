@@ -1,1 +1,1 @@
-export { PropertyTestingFactory } from './PropertyTestingFactory';
+export { PropertyTestingStrategyFactory, IPropertyTestingStrategy } from './PropertyTestingStrategyFactory';

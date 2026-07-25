@@ -1,1 +1,1 @@
-export { GraphqlConfigValidator } from './GraphqlValidator';
+export { GraphqlConfigurationValidator, ValidationResult } from './GraphqlConfigurationValidator';

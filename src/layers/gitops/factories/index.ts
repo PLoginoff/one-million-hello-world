@@ -1,1 +1,1 @@
-export { GitopsFactory } from './GitopsFactory';
+export { GitopsStrategyFactory, IGitopsStrategy } from './GitopsStrategyFactory';

@@ -1,1 +1,1 @@
-export { AuthorizationConfigValidator } from './AuthorizationValidator';
+export { AuthorizationConfigurationValidator, ValidationResult } from './AuthorizationConfigurationValidator';

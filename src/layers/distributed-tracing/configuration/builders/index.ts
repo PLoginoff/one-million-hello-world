@@ -1,1 +1,4 @@
-export { DistributedTracingConfigBuilder } from './DistributedTracingBuilder';
+export {
+  DistributedTracingConfigurationBuilder,
+  DistributedTracingConfiguration,
+} from './DistributedTracingConfigurationBuilder';

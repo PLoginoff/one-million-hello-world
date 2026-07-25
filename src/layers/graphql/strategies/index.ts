@@ -1,4 +1,5 @@
-export { IGraphqlStrategy } from './GraphqlStrategy';
-export { DefaultGraphqlStrategy } from './GraphqlStrategy';
-export { OptimizedGraphqlStrategy } from './GraphqlStrategy';
-export { FallbackGraphqlStrategy } from './GraphqlStrategy';
+export { GraphqlDefaultStrategy } from './DefaultStrategy';
+export { GraphqlFastStrategy } from './FastStrategy';
+export { GraphqlReliableStrategy } from './ReliableStrategy';
+export { GraphqlCachedStrategy } from './CachedStrategy';
+export { GraphqlBatchStrategy } from './BatchStrategy';

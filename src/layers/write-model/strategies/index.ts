@@ -1,4 +1,5 @@
-export { IWriteModelStrategy } from './WriteModelStrategy';
-export { DefaultWriteModelStrategy } from './WriteModelStrategy';
-export { OptimizedWriteModelStrategy } from './WriteModelStrategy';
-export { FallbackWriteModelStrategy } from './WriteModelStrategy';
+export { WriteModelDefaultStrategy } from './DefaultStrategy';
+export { WriteModelFastStrategy } from './FastStrategy';
+export { WriteModelReliableStrategy } from './ReliableStrategy';
+export { WriteModelCachedStrategy } from './CachedStrategy';
+export { WriteModelBatchStrategy } from './BatchStrategy';

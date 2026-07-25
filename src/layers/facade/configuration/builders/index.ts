@@ -1,7 +1,1 @@
-/**
- * Facade Configuration Builders
- *
- * Exports configuration builders.
- */
-
-export { FacadeConfigBuilder, FacadeBuilderConfig } from './FacadeConfigBuilder';
+export { FacadeConfigurationBuilder, FacadeConfiguration } from './FacadeConfigurationBuilder';

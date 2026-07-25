@@ -1,1 +1,1 @@
-export { MigrationsConfigBuilder } from './MigrationsBuilder';
+export { MigrationsConfigurationBuilder, MigrationsConfiguration } from './MigrationsConfigurationBuilder';

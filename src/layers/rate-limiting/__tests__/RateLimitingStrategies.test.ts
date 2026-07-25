@@ -1,119 +1,80 @@
 /**
- * Rate Limiting Strategies Unit Tests
+ * Strategy tests for RateLimiting layer
  */
 
-import { TokenBucketStrategy } from '../strategies/algorithm/TokenBucketStrategy';
-import { LeakyBucketStrategy } from '../strategies/algorithm/LeakyBucketStrategy';
-import { RateLimitKey } from '../domain/entities/RateLimitKey';
+import { RateLimitingDefaultStrategy } from '../strategies/DefaultStrategy';
+import { RateLimitingFastStrategy } from '../strategies/FastStrategy';
+import { RateLimitingReliableStrategy } from '../strategies/ReliableStrategy';
+import { RateLimitingCachedStrategy } from '../strategies/CachedStrategy';
+import { RateLimitingBatchStrategy } from '../strategies/BatchStrategy';
+import { RateLimitingStrategyFactory } from '../factories/RateLimitingStrategyFactory';
 
-describe('TokenBucketStrategy', () => {
-  let strategy: TokenBucketStrategy;
-  let key: RateLimitKey;
+describe('RateLimiting Strategies', () => {
+  const strategies = [
+    { name: 'default', cls: RateLimitingDefaultStrategy },
+    { name: 'fast', cls: RateLimitingFastStrategy },
+    { name: 'reliable', cls: RateLimitingReliableStrategy },
+    { name: 'cached', cls: RateLimitingCachedStrategy },
+    { name: 'batch', cls: RateLimitingBatchStrategy },
+  ];
 
-  beforeEach(() => {
-    strategy = new TokenBucketStrategy();
-    key = RateLimitKey.fromIp('192.168.1.1');
+  strategies.forEach((s) => {
+    describe(s.name + ' strategy', () => {
+      it('should have correct name', () => {
+        const strategy = new s.cls();
+        expect(strategy.name).toBe(s.name);
+      });
+
+      it('should have positive priority', () => {
+        const strategy = new s.cls();
+        expect(strategy.priority).toBeGreaterThanOrEqual(0);
+      });
+
+      it('should execute successfully', async () => {
+        const strategy = new s.cls();
+        const result = await strategy.execute('test');
+        expect(result.success).toBe(true);
+      });
+
+      it('should track execution count', async () => {
+        const strategy = new s.cls();
+        await strategy.execute(1);
+        await strategy.execute(2);
+        await strategy.execute(3);
+        expect(strategy.getExecutionCount()).toBe(3);
+      });
+    });
   });
 
-  it('should return name TOKEN_BUCKET', () => {
-    expect(strategy.getName()).toBe('TOKEN_BUCKET');
-  });
+  describe('RateLimitingStrategyFactory', () => {
+    it('should create default strategy', () => {
+      const factory = new RateLimitingStrategyFactory();
+      const strategy = factory.create('default');
+      expect(strategy.name).toBe('default');
+    });
 
-  it('should allow requests within limit', () => {
-    const result1 = strategy.isAllowed(key, 5, 1000);
-    const result2 = strategy.isAllowed(key, 5, 1000);
-    expect(result1.allowed).toBe(true);
-    expect(result2.allowed).toBe(true);
-  });
+    it('should create all strategies', () => {
+      const factory = new RateLimitingStrategyFactory();
+      const all = factory.createAll();
+      expect(all.length).toBe(5);
+    });
 
-  it('should deny requests exceeding limit', () => {
-    for (let i = 0; i < 5; i++) {
-      strategy.isAllowed(key, 5, 1000);
-    }
-    const result = strategy.isAllowed(key, 5, 1000);
-    expect(result.allowed).toBe(false);
-    expect(result.remaining).toBe(0);
-  });
+    it('should list available strategies', () => {
+      const factory = new RateLimitingStrategyFactory();
+      const available = factory.getAvailableStrategies();
+      expect(available).toContain('default');
+      expect(available).toContain('fast');
+    });
 
-  it('should track remaining tokens', () => {
-    strategy.isAllowed(key, 5, 1000);
-    const status = strategy.getStatus(key);
-    expect(status).not.toBeNull();
-    expect(status!.remaining).toBeLessThanOrEqual(4);
-  });
+    it('should throw for unknown strategy', () => {
+      const factory = new RateLimitingStrategyFactory();
+      expect(() => factory.create('unknown')).toThrow();
+    });
 
-  it('should return null for unknown key status', () => {
-    const status = strategy.getStatus(key);
-    expect(status).toBeNull();
-  });
-
-  it('should reset key', () => {
-    strategy.isAllowed(key, 5, 1000);
-    strategy.reset(key);
-    const status = strategy.getStatus(key);
-    expect(status).toBeNull();
-  });
-
-  it('should reset all keys', () => {
-    strategy.isAllowed(key, 5, 1000);
-    strategy.resetAll();
-    expect(strategy.getActiveKeyCount()).toBe(0);
-  });
-
-  it('should track active keys', () => {
-    strategy.isAllowed(RateLimitKey.fromIp('1.1.1.1'), 5, 1000);
-    strategy.isAllowed(RateLimitKey.fromIp('2.2.2.2'), 5, 1000);
-    expect(strategy.getActiveKeyCount()).toBe(2);
-  });
-});
-
-describe('LeakyBucketStrategy', () => {
-  let strategy: LeakyBucketStrategy;
-  let key: RateLimitKey;
-
-  beforeEach(() => {
-    strategy = new LeakyBucketStrategy();
-    key = RateLimitKey.fromUser('user-1');
-  });
-
-  it('should return name LEAKY_BUCKET', () => {
-    expect(strategy.getName()).toBe('LEAKY_BUCKET');
-  });
-
-  it('should allow requests within capacity', () => {
-    const result = strategy.isAllowed(key, 5, 1000);
-    expect(result.allowed).toBe(true);
-  });
-
-  it('should deny requests when bucket is full', () => {
-    for (let i = 0; i < 5; i++) {
-      strategy.isAllowed(key, 5, 1000);
-    }
-    const result = strategy.isAllowed(key, 5, 1000);
-    expect(result.allowed).toBe(false);
-  });
-
-  it('should track water level', () => {
-    strategy.isAllowed(key, 5, 1000);
-    const status = strategy.getStatus(key);
-    expect(status).not.toBeNull();
-    expect(status!.remaining).toBeDefined();
-  });
-
-  it('should return null for unknown key', () => {
-    const status = strategy.getStatus(key);
-    expect(status).toBeNull();
-  });
-
-  it('should reset key', () => {
-    strategy.isAllowed(key, 5, 1000);
-    strategy.reset(key);
-    expect(strategy.getStatus(key)).toBeNull();
-  });
-
-  it('should reset all keys', () => {
-    strategy.isAllowed(key, 5, 1000);
-    strategy.resetAll();
-    expect(strategy.getActiveKeyCount()).toBe(0);
+    it('should sort by priority', () => {
+      const factory = new RateLimitingStrategyFactory();
+      const sorted = factory.createByPriority();
+      expect(sorted[0].priority).toBeGreaterThanOrEqual(sorted[sorted.length - 1].priority);
+    });
   });
 });

@@ -1,1 +1,1 @@
-export { DataLakeConfigBuilder } from './DataLakeBuilder';
+export { DataLakeConfigurationBuilder, DataLakeConfiguration } from './DataLakeConfigurationBuilder';

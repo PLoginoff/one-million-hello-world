@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { RepositoryConfigValidator } from './RepositoryConfigValidator';
+export { RepositoryConfigurationValidator } from './RepositoryConfigurationValidator';

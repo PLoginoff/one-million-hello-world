@@ -1,8 +1,1 @@
-/**
- * Default Configurations
- *
- * Exports default cache configurations.
- */
-
-export { DefaultConfigs } from './DefaultConfigs';
-export type { CacheConfigOptions } from './DefaultConfigs';
+export { CacheDEFAULTS, CacheLIMITS, CacheSTRATEGIES } from './CacheDefaults';

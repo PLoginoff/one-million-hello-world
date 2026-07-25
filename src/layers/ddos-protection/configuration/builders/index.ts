@@ -1,1 +1,1 @@
-export { DdosProtectionConfigBuilder } from './DdosProtectionBuilder';
+export { DdosProtectionConfigurationBuilder, DdosProtectionConfiguration } from './DdosProtectionConfigurationBuilder';

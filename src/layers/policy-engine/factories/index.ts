@@ -1,1 +1,1 @@
-export { PolicyEngineFactory } from './PolicyEngineFactory';
+export { PolicyEngineStrategyFactory, IPolicyEngineStrategy } from './PolicyEngineStrategyFactory';

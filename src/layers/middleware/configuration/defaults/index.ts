@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, MiddlewareConfigOptions } from './DefaultConfigs';
+export { MiddlewareDEFAULTS, MiddlewareLIMITS, MiddlewareSTRATEGIES } from './MiddlewareDefaults';

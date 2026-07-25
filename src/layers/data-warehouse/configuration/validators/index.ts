@@ -1,1 +1,1 @@
-export { DataWarehouseConfigValidator } from './DataWarehouseValidator';
+export { DataWarehouseConfigurationValidator, ValidationResult } from './DataWarehouseConfigurationValidator';

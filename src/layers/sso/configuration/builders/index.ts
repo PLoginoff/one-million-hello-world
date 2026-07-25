@@ -1,1 +1,1 @@
-export { SsoConfigBuilder } from './SsoBuilder';
+export { SsoConfigurationBuilder, SsoConfiguration } from './SsoConfigurationBuilder';

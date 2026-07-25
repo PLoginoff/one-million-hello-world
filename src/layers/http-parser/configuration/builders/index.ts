@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { ParserConfigBuilder } from './ParserConfigBuilder';
+export { HttpParserConfigurationBuilder, HttpParserConfiguration } from './HttpParserConfigurationBuilder';

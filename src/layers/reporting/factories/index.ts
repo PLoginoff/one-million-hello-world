@@ -1,1 +1,1 @@
-export {};
+export { ReportingStrategyFactory, IReportingStrategy } from './ReportingStrategyFactory';

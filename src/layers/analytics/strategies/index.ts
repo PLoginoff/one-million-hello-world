@@ -1,4 +1,5 @@
-export { IAnalyticsStrategy } from './AnalyticsStrategy';
-export { DefaultAnalyticsStrategy } from './AnalyticsStrategy';
-export { OptimizedAnalyticsStrategy } from './AnalyticsStrategy';
-export { FallbackAnalyticsStrategy } from './AnalyticsStrategy';
+export { AnalyticsDefaultStrategy } from './DefaultStrategy';
+export { AnalyticsFastStrategy } from './FastStrategy';
+export { AnalyticsReliableStrategy } from './ReliableStrategy';
+export { AnalyticsCachedStrategy } from './CachedStrategy';
+export { AnalyticsBatchStrategy } from './BatchStrategy';

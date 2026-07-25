@@ -1,1 +1,1 @@
-export { DistributedTracingFactory } from './DistributedTracingFactory';
+export { DistributedTracingStrategyFactory, IDistributedTracingStrategy } from './DistributedTracingStrategyFactory';

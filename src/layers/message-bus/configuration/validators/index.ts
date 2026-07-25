@@ -1,1 +1,1 @@
-export { MessageBusConfigValidator } from './MessageBusValidator';
+export { MessageBusConfigurationValidator, ValidationResult } from './MessageBusConfigurationValidator';

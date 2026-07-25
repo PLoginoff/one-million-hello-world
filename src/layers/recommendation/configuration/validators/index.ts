@@ -1,1 +1,1 @@
-export {};
+export { RecommendationConfigurationValidator, ValidationResult } from './RecommendationConfigurationValidator';

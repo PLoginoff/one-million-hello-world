@@ -1,4 +1,5 @@
-export { IDistributedTracingStrategy } from './DistributedTracingStrategy';
-export { DefaultDistributedTracingStrategy } from './DistributedTracingStrategy';
-export { OptimizedDistributedTracingStrategy } from './DistributedTracingStrategy';
-export { FallbackDistributedTracingStrategy } from './DistributedTracingStrategy';
+export { DistributedTracingDefaultStrategy } from './DefaultStrategy';
+export { DistributedTracingFastStrategy } from './FastStrategy';
+export { DistributedTracingReliableStrategy } from './ReliableStrategy';
+export { DistributedTracingCachedStrategy } from './CachedStrategy';
+export { DistributedTracingBatchStrategy } from './BatchStrategy';

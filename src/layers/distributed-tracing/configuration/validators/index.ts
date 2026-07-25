@@ -1,1 +1,1 @@
-export { DistributedTracingConfigValidator } from './DistributedTracingValidator';
+export { DistributedTracingConfigurationValidator, ValidationResult } from './DistributedTracingConfigurationValidator';

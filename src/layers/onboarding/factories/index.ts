@@ -1,1 +1,1 @@
-export {};
+export { OnboardingStrategyFactory, IOnboardingStrategy } from './OnboardingStrategyFactory';

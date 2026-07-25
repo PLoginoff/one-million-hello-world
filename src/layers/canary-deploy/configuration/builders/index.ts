@@ -1,1 +1,1 @@
-export { CanaryDeployConfigBuilder } from './CanaryDeployBuilder';
+export { CanaryDeployConfigurationBuilder, CanaryDeployConfiguration } from './CanaryDeployConfigurationBuilder';

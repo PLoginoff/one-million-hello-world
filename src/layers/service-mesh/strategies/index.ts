@@ -1,4 +1,5 @@
-export { IServiceMeshStrategy } from './ServiceMeshStrategy';
-export { DefaultServiceMeshStrategy } from './ServiceMeshStrategy';
-export { OptimizedServiceMeshStrategy } from './ServiceMeshStrategy';
-export { FallbackServiceMeshStrategy } from './ServiceMeshStrategy';
+export { ServiceMeshDefaultStrategy } from './DefaultStrategy';
+export { ServiceMeshFastStrategy } from './FastStrategy';
+export { ServiceMeshReliableStrategy } from './ReliableStrategy';
+export { ServiceMeshCachedStrategy } from './CachedStrategy';
+export { ServiceMeshBatchStrategy } from './BatchStrategy';

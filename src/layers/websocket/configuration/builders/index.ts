@@ -1,1 +1,1 @@
-export { WebsocketConfigBuilder } from './WebsocketBuilder';
+export { WebsocketConfigurationBuilder, WebsocketConfiguration } from './WebsocketConfigurationBuilder';

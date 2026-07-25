@@ -1,1 +1,1 @@
-export { GraphqlFactory } from './GraphqlFactory';
+export { GraphqlStrategyFactory, IGraphqlStrategy } from './GraphqlStrategyFactory';

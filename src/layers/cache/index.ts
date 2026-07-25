@@ -21,10 +21,10 @@ export { CacheStats } from './domain/value-objects/CacheStats';
 export { CacheValidationService } from './domain/services';
 
 // Configuration Layer
-export { DefaultConfigs } from './configuration/defaults';
-export type { CacheConfigOptions } from './configuration/defaults';
-export { CacheConfigValidator } from './configuration/validators';
-export { CacheConfigBuilder } from './configuration/builders';
+export { CacheDEFAULTS, CacheLIMITS, CacheSTRATEGIES } from './configuration/defaults';
+
+export { CacheConfigurationValidator } from './configuration/validators';
+export { CacheConfigurationBuilder, CacheConfiguration } from './configuration/builders';
 
 // Strategies Layer
 export { IEvictionStrategy } from './strategies/eviction';

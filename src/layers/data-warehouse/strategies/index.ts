@@ -1,4 +1,5 @@
-export { IDataWarehouseStrategy } from './DataWarehouseStrategy';
-export { DefaultDataWarehouseStrategy } from './DataWarehouseStrategy';
-export { OptimizedDataWarehouseStrategy } from './DataWarehouseStrategy';
-export { FallbackDataWarehouseStrategy } from './DataWarehouseStrategy';
+export { DataWarehouseDefaultStrategy } from './DefaultStrategy';
+export { DataWarehouseFastStrategy } from './FastStrategy';
+export { DataWarehouseReliableStrategy } from './ReliableStrategy';
+export { DataWarehouseCachedStrategy } from './CachedStrategy';
+export { DataWarehouseBatchStrategy } from './BatchStrategy';

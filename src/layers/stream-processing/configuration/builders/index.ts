@@ -1,1 +1,4 @@
-export { StreamProcessingConfigBuilder } from './StreamProcessingBuilder';
+export {
+  StreamProcessingConfigurationBuilder,
+  StreamProcessingConfiguration,
+} from './StreamProcessingConfigurationBuilder';

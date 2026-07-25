@@ -1,1 +1,1 @@
-export { FeatureFlagsFactory } from './FeatureFlagsFactory';
+export { FeatureFlagsStrategyFactory, IFeatureFlagsStrategy } from './FeatureFlagsStrategyFactory';

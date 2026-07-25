@@ -1,4 +1,5 @@
-export { ISpecificationStrategy } from './SpecificationStrategy';
-export { DefaultSpecificationStrategy } from './SpecificationStrategy';
-export { OptimizedSpecificationStrategy } from './SpecificationStrategy';
-export { FallbackSpecificationStrategy } from './SpecificationStrategy';
+export { SpecificationDefaultStrategy } from './DefaultStrategy';
+export { SpecificationFastStrategy } from './FastStrategy';
+export { SpecificationReliableStrategy } from './ReliableStrategy';
+export { SpecificationCachedStrategy } from './CachedStrategy';
+export { SpecificationBatchStrategy } from './BatchStrategy';

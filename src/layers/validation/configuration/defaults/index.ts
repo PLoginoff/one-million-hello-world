@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, ValidationConfigOptions } from './DefaultConfigs';
+export { ValidationDEFAULTS, ValidationLIMITS, ValidationSTRATEGIES } from './ValidationDefaults';

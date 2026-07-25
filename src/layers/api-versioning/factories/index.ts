@@ -1,1 +1,1 @@
-export {};
+export { ApiVersioningStrategyFactory, IApiVersioningStrategy } from './ApiVersioningStrategyFactory';

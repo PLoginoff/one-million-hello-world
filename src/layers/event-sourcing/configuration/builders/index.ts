@@ -1,1 +1,1 @@
-export { EventSourcingConfigBuilder } from './EventSourcingBuilder';
+export { EventSourcingConfigurationBuilder, EventSourcingConfiguration } from './EventSourcingConfigurationBuilder';

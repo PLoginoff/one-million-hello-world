@@ -1,1 +1,1 @@
-export { AuditConfigBuilder } from './AuditBuilder';
+export { AuditConfigurationBuilder, AuditConfiguration } from './AuditConfigurationBuilder';

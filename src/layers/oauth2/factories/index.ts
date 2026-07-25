@@ -1,1 +1,1 @@
-export { Oauth2Factory } from './Oauth2Factory';
+export { Oauth2StrategyFactory, IOauth2Strategy } from './Oauth2StrategyFactory';

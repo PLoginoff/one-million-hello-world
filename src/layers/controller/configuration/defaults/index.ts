@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, ControllerConfigOptions } from './DefaultConfigs';
+export { ControllerDEFAULTS, ControllerLIMITS, ControllerSTRATEGIES } from './ControllerDefaults';

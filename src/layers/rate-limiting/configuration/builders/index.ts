@@ -1,7 +1,1 @@
-/**
- * Rate Limiting Configuration Builders
- *
- * Exports configuration builders.
- */
-
-export { RateLimitConfigBuilder } from './RateLimitConfigBuilder';
+export { RateLimitingConfigurationBuilder, RateLimitingConfiguration } from './RateLimitingConfigurationBuilder';

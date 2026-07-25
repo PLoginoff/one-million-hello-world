@@ -1,1 +1,1 @@
-export { MigrationsFactory } from './MigrationsFactory';
+export { MigrationsStrategyFactory, IMigrationsStrategy } from './MigrationsStrategyFactory';

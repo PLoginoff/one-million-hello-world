@@ -1,1 +1,1 @@
-export { ObservabilityConfigValidator } from './ObservabilityValidator';
+export { ObservabilityConfigurationValidator, ValidationResult } from './ObservabilityConfigurationValidator';

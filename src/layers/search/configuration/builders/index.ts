@@ -1,1 +1,1 @@
-export {};
+export { SearchConfigurationBuilder, SearchConfiguration } from './SearchConfigurationBuilder';

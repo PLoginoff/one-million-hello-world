@@ -1,1 +1,1 @@
-export { ConfigurationFactory } from './ConfigurationFactory';
+export { ConfigurationStrategyFactory, IConfigurationStrategy } from './ConfigurationStrategyFactory';

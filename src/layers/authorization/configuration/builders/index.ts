@@ -1,1 +1,1 @@
-export { AuthorizationConfigBuilder } from './AuthorizationBuilder';
+export { AuthorizationConfigurationBuilder, AuthorizationConfiguration } from './AuthorizationConfigurationBuilder';

@@ -1,1 +1,1 @@
-export {};
+export { DataLineageConfigurationBuilder, DataLineageConfiguration } from './DataLineageConfigurationBuilder';

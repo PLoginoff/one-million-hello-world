@@ -1,1 +1,1 @@
-export { Oauth2ConfigValidator } from './Oauth2Validator';
+export { Oauth2ConfigurationValidator, ValidationResult } from './Oauth2ConfigurationValidator';

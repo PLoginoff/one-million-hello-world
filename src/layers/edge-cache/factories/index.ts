@@ -1,1 +1,1 @@
-export { EdgeCacheFactory } from './EdgeCacheFactory';
+export { EdgeCacheStrategyFactory, IEdgeCacheStrategy } from './EdgeCacheStrategyFactory';

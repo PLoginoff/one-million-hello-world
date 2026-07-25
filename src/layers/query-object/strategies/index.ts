@@ -1,4 +1,5 @@
-export { IQueryObjectStrategy } from './QueryObjectStrategy';
-export { DefaultQueryObjectStrategy } from './QueryObjectStrategy';
-export { OptimizedQueryObjectStrategy } from './QueryObjectStrategy';
-export { FallbackQueryObjectStrategy } from './QueryObjectStrategy';
+export { QueryObjectDefaultStrategy } from './DefaultStrategy';
+export { QueryObjectFastStrategy } from './FastStrategy';
+export { QueryObjectReliableStrategy } from './ReliableStrategy';
+export { QueryObjectCachedStrategy } from './CachedStrategy';
+export { QueryObjectBatchStrategy } from './BatchStrategy';

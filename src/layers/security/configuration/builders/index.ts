@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { SecurityConfigBuilder } from './SecurityConfigBuilder';
+export { SecurityConfigurationBuilder, SecurityConfiguration } from './SecurityConfigurationBuilder';

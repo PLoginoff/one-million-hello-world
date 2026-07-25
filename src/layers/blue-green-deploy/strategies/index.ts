@@ -1,4 +1,5 @@
-export { IBlueGreenDeployStrategy } from './BlueGreenDeployStrategy';
-export { DefaultBlueGreenDeployStrategy } from './BlueGreenDeployStrategy';
-export { OptimizedBlueGreenDeployStrategy } from './BlueGreenDeployStrategy';
-export { FallbackBlueGreenDeployStrategy } from './BlueGreenDeployStrategy';
+export { BlueGreenDeployDefaultStrategy } from './DefaultStrategy';
+export { BlueGreenDeployFastStrategy } from './FastStrategy';
+export { BlueGreenDeployReliableStrategy } from './ReliableStrategy';
+export { BlueGreenDeployCachedStrategy } from './CachedStrategy';
+export { BlueGreenDeployBatchStrategy } from './BatchStrategy';

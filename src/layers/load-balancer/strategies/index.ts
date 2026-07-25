@@ -1,4 +1,5 @@
-export { ILoadBalancerStrategy } from './LoadBalancerStrategy';
-export { DefaultLoadBalancerStrategy } from './LoadBalancerStrategy';
-export { OptimizedLoadBalancerStrategy } from './LoadBalancerStrategy';
-export { FallbackLoadBalancerStrategy } from './LoadBalancerStrategy';
+export { LoadBalancerDefaultStrategy } from './DefaultStrategy';
+export { LoadBalancerFastStrategy } from './FastStrategy';
+export { LoadBalancerReliableStrategy } from './ReliableStrategy';
+export { LoadBalancerCachedStrategy } from './CachedStrategy';
+export { LoadBalancerBatchStrategy } from './BatchStrategy';

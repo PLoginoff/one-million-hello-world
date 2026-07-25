@@ -1,1 +1,1 @@
-export { BackupConfigBuilder } from './BackupBuilder';
+export { BackupConfigurationBuilder, BackupConfiguration } from './BackupConfigurationBuilder';

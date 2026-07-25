@@ -1,1 +1,1 @@
-export { SchemaRegistryConfigValidator } from './SchemaRegistryValidator';
+export { SchemaRegistryConfigurationValidator, ValidationResult } from './SchemaRegistryConfigurationValidator';

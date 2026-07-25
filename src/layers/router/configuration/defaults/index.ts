@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, RouterConfigOptions } from './DefaultConfigs';
+export { RouterDEFAULTS, RouterLIMITS, RouterSTRATEGIES } from './RouterDefaults';

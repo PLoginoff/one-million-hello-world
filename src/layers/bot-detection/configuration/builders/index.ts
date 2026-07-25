@@ -1,1 +1,1 @@
-export { BotDetectionConfigBuilder } from './BotDetectionBuilder';
+export { BotDetectionConfigurationBuilder, BotDetectionConfiguration } from './BotDetectionConfigurationBuilder';

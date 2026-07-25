@@ -1,1 +1,1 @@
-export { EtlPipelineFactory } from './EtlPipelineFactory';
+export { EtlPipelineStrategyFactory, IEtlPipelineStrategy } from './EtlPipelineStrategyFactory';

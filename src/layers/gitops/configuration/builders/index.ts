@@ -1,1 +1,1 @@
-export { GitopsConfigBuilder } from './GitopsBuilder';
+export { GitopsConfigurationBuilder, GitopsConfiguration } from './GitopsConfigurationBuilder';

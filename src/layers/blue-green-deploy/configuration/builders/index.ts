@@ -1,1 +1,4 @@
-export { BlueGreenDeployConfigBuilder } from './BlueGreenDeployBuilder';
+export {
+  BlueGreenDeployConfigurationBuilder,
+  BlueGreenDeployConfiguration,
+} from './BlueGreenDeployConfigurationBuilder';

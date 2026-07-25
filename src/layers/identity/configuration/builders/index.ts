@@ -1,1 +1,1 @@
-export { IdentityConfigBuilder } from './IdentityBuilder';
+export { IdentityConfigurationBuilder, IdentityConfiguration } from './IdentityConfigurationBuilder';

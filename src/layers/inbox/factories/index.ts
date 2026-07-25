@@ -1,1 +1,1 @@
-export { InboxFactory } from './InboxFactory';
+export { InboxStrategyFactory, IInboxStrategy } from './InboxStrategyFactory';

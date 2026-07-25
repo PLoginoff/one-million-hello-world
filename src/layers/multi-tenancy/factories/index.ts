@@ -1,1 +1,1 @@
-export {};
+export { MultiTenancyStrategyFactory, IMultiTenancyStrategy } from './MultiTenancyStrategyFactory';

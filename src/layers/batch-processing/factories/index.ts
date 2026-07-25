@@ -1,1 +1,1 @@
-export {};
+export { BatchProcessingStrategyFactory, IBatchProcessingStrategy } from './BatchProcessingStrategyFactory';

@@ -1,4 +1,5 @@
-export { IJwtValidationStrategy } from './JwtValidationStrategy';
-export { DefaultJwtValidationStrategy } from './JwtValidationStrategy';
-export { OptimizedJwtValidationStrategy } from './JwtValidationStrategy';
-export { FallbackJwtValidationStrategy } from './JwtValidationStrategy';
+export { JwtValidationDefaultStrategy } from './DefaultStrategy';
+export { JwtValidationFastStrategy } from './FastStrategy';
+export { JwtValidationReliableStrategy } from './ReliableStrategy';
+export { JwtValidationCachedStrategy } from './CachedStrategy';
+export { JwtValidationBatchStrategy } from './BatchStrategy';

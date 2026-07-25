@@ -1,1 +1,1 @@
-export { MessageBusConfigBuilder } from './MessageBusBuilder';
+export { MessageBusConfigurationBuilder, MessageBusConfiguration } from './MessageBusConfigurationBuilder';

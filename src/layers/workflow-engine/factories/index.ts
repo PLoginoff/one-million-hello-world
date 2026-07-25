@@ -1,1 +1,1 @@
-export { WorkflowEngineFactory } from './WorkflowEngineFactory';
+export { WorkflowEngineStrategyFactory, IWorkflowEngineStrategy } from './WorkflowEngineStrategyFactory';

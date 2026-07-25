@@ -1,1 +1,4 @@
-export { ContractTestingConfigBuilder } from './ContractTestingBuilder';
+export {
+  ContractTestingConfigurationBuilder,
+  ContractTestingConfiguration,
+} from './ContractTestingConfigurationBuilder';

@@ -1,1 +1,1 @@
-export { ServiceMeshFactory } from './ServiceMeshFactory';
+export { ServiceMeshStrategyFactory, IServiceMeshStrategy } from './ServiceMeshStrategyFactory';

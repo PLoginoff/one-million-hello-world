@@ -1,4 +1,5 @@
-export { IDataQualityStrategy } from './DataQualityStrategy';
-export { DefaultDataQualityStrategy } from './DataQualityStrategy';
-export { OptimizedDataQualityStrategy } from './DataQualityStrategy';
-export { FallbackDataQualityStrategy } from './DataQualityStrategy';
+export { DataQualityDefaultStrategy } from './DefaultStrategy';
+export { DataQualityFastStrategy } from './FastStrategy';
+export { DataQualityReliableStrategy } from './ReliableStrategy';
+export { DataQualityCachedStrategy } from './CachedStrategy';
+export { DataQualityBatchStrategy } from './BatchStrategy';

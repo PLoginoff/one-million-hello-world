@@ -1,1 +1,1 @@
-export { IdentityFactory } from './IdentityFactory';
+export { IdentityStrategyFactory, IIdentityStrategy } from './IdentityStrategyFactory';

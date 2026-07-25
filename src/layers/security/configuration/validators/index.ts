@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { SecurityConfigValidator } from './SecurityConfigValidator';
+export { SecurityConfigurationValidator, ValidationResult } from './SecurityConfigurationValidator';

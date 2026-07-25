@@ -1,1 +1,1 @@
-export { WriteModelConfigValidator } from './WriteModelValidator';
+export { WriteModelConfigurationValidator, ValidationResult } from './WriteModelConfigurationValidator';

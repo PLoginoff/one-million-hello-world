@@ -1,1 +1,1 @@
-export {};
+export { CdnIntegrationStrategyFactory, ICdnIntegrationStrategy } from './CdnIntegrationStrategyFactory';

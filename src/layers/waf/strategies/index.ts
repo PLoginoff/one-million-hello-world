@@ -1,4 +1,5 @@
-export { IWafStrategy } from './WafStrategy';
-export { DefaultWafStrategy } from './WafStrategy';
-export { OptimizedWafStrategy } from './WafStrategy';
-export { FallbackWafStrategy } from './WafStrategy';
+export { WafDefaultStrategy } from './DefaultStrategy';
+export { WafFastStrategy } from './FastStrategy';
+export { WafReliableStrategy } from './ReliableStrategy';
+export { WafCachedStrategy } from './CachedStrategy';
+export { WafBatchStrategy } from './BatchStrategy';

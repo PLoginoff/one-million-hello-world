@@ -1,1 +1,1 @@
-export { InboxConfigValidator } from './InboxValidator';
+export { InboxConfigurationValidator, ValidationResult } from './InboxConfigurationValidator';

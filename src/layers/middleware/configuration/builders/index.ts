@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { MiddlewareConfigBuilder } from './MiddlewareConfigBuilder';
+export { MiddlewareConfigurationBuilder, MiddlewareConfiguration } from './MiddlewareConfigurationBuilder';

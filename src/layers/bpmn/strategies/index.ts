@@ -1,4 +1,5 @@
-export { IBpmnStrategy } from './BpmnStrategy';
-export { DefaultBpmnStrategy } from './BpmnStrategy';
-export { OptimizedBpmnStrategy } from './BpmnStrategy';
-export { FallbackBpmnStrategy } from './BpmnStrategy';
+export { BpmnDefaultStrategy } from './DefaultStrategy';
+export { BpmnFastStrategy } from './FastStrategy';
+export { BpmnReliableStrategy } from './ReliableStrategy';
+export { BpmnCachedStrategy } from './CachedStrategy';
+export { BpmnBatchStrategy } from './BatchStrategy';

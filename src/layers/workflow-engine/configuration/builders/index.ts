@@ -1,1 +1,1 @@
-export { WorkflowEngineConfigBuilder } from './WorkflowEngineBuilder';
+export { WorkflowEngineConfigurationBuilder, WorkflowEngineConfiguration } from './WorkflowEngineConfigurationBuilder';

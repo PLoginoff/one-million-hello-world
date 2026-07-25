@@ -1,1 +1,1 @@
-export { UnitOfWorkFactory } from './UnitOfWorkFactory';
+export { UnitOfWorkStrategyFactory, IUnitOfWorkStrategy } from './UnitOfWorkStrategyFactory';

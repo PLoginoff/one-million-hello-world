@@ -1,1 +1,1 @@
-export { SecretsConfigValidator } from './SecretsValidator';
+export { SecretsConfigurationValidator, ValidationResult } from './SecretsConfigurationValidator';

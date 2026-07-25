@@ -1,1 +1,1 @@
-export { LoadBalancerConfigBuilder } from './LoadBalancerBuilder';
+export { LoadBalancerConfigurationBuilder, LoadBalancerConfiguration } from './LoadBalancerConfigurationBuilder';

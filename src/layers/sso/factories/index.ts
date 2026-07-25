@@ -1,1 +1,1 @@
-export { SsoFactory } from './SsoFactory';
+export { SsoStrategyFactory, ISsoStrategy } from './SsoStrategyFactory';

@@ -1,1 +1,1 @@
-export { OutboxConfigBuilder } from './OutboxBuilder';
+export { OutboxConfigurationBuilder, OutboxConfiguration } from './OutboxConfigurationBuilder';

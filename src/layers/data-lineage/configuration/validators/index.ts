@@ -1,1 +1,1 @@
-export {};
+export { DataLineageConfigurationValidator, ValidationResult } from './DataLineageConfigurationValidator';

@@ -1,1 +1,1 @@
-export { CqrsFactory } from './CqrsFactory';
+export { CqrsStrategyFactory, ICqrsStrategy } from './CqrsStrategyFactory';

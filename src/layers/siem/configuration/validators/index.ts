@@ -1,1 +1,1 @@
-export { SiemConfigValidator } from './SiemValidator';
+export { SiemConfigurationValidator, ValidationResult } from './SiemConfigurationValidator';

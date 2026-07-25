@@ -1,1 +1,1 @@
-export { DataQualityFactory } from './DataQualityFactory';
+export { DataQualityStrategyFactory, IDataQualityStrategy } from './DataQualityStrategyFactory';

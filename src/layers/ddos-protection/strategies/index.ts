@@ -1,4 +1,5 @@
-export { IDdosProtectionStrategy } from './DdosProtectionStrategy';
-export { DefaultDdosProtectionStrategy } from './DdosProtectionStrategy';
-export { OptimizedDdosProtectionStrategy } from './DdosProtectionStrategy';
-export { FallbackDdosProtectionStrategy } from './DdosProtectionStrategy';
+export { DdosProtectionDefaultStrategy } from './DefaultStrategy';
+export { DdosProtectionFastStrategy } from './FastStrategy';
+export { DdosProtectionReliableStrategy } from './ReliableStrategy';
+export { DdosProtectionCachedStrategy } from './CachedStrategy';
+export { DdosProtectionBatchStrategy } from './BatchStrategy';

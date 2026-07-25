@@ -1,1 +1,1 @@
-export { PolicyEngineConfigValidator } from './PolicyEngineValidator';
+export { PolicyEngineConfigurationValidator, ValidationResult } from './PolicyEngineConfigurationValidator';

@@ -1,4 +1,5 @@
-export { IReadModelStrategy } from './ReadModelStrategy';
-export { DefaultReadModelStrategy } from './ReadModelStrategy';
-export { OptimizedReadModelStrategy } from './ReadModelStrategy';
-export { FallbackReadModelStrategy } from './ReadModelStrategy';
+export { ReadModelDefaultStrategy } from './DefaultStrategy';
+export { ReadModelFastStrategy } from './FastStrategy';
+export { ReadModelReliableStrategy } from './ReliableStrategy';
+export { ReadModelCachedStrategy } from './CachedStrategy';
+export { ReadModelBatchStrategy } from './BatchStrategy';

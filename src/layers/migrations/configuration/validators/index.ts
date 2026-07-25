@@ -1,1 +1,1 @@
-export { MigrationsConfigValidator } from './MigrationsValidator';
+export { MigrationsConfigurationValidator, ValidationResult } from './MigrationsConfigurationValidator';

@@ -1,4 +1,5 @@
-export { IOauth2Strategy } from './Oauth2Strategy';
-export { DefaultOauth2Strategy } from './Oauth2Strategy';
-export { OptimizedOauth2Strategy } from './Oauth2Strategy';
-export { FallbackOauth2Strategy } from './Oauth2Strategy';
+export { Oauth2DefaultStrategy } from './DefaultStrategy';
+export { Oauth2FastStrategy } from './FastStrategy';
+export { Oauth2ReliableStrategy } from './ReliableStrategy';
+export { Oauth2CachedStrategy } from './CachedStrategy';
+export { Oauth2BatchStrategy } from './BatchStrategy';

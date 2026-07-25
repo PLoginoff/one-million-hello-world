@@ -1,1 +1,1 @@
-export { ReadModelFactory } from './ReadModelFactory';
+export { ReadModelStrategyFactory, IReadModelStrategy } from './ReadModelStrategyFactory';

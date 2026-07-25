@@ -1,1 +1,1 @@
-export { StreamProcessingFactory } from './StreamProcessingFactory';
+export { StreamProcessingStrategyFactory, IStreamProcessingStrategy } from './StreamProcessingStrategyFactory';

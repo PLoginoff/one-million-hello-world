@@ -1,1 +1,1 @@
-export { EtlPipelineConfigBuilder } from './EtlPipelineBuilder';
+export { EtlPipelineConfigurationBuilder, EtlPipelineConfiguration } from './EtlPipelineConfigurationBuilder';

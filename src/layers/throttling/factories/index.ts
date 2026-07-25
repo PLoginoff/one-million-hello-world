@@ -1,1 +1,1 @@
-export { ThrottlingFactory } from './ThrottlingFactory';
+export { ThrottlingStrategyFactory, IThrottlingStrategy } from './ThrottlingStrategyFactory';

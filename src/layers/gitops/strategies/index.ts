@@ -1,4 +1,5 @@
-export { IGitopsStrategy } from './GitopsStrategy';
-export { DefaultGitopsStrategy } from './GitopsStrategy';
-export { OptimizedGitopsStrategy } from './GitopsStrategy';
-export { FallbackGitopsStrategy } from './GitopsStrategy';
+export { GitopsDefaultStrategy } from './DefaultStrategy';
+export { GitopsFastStrategy } from './FastStrategy';
+export { GitopsReliableStrategy } from './ReliableStrategy';
+export { GitopsCachedStrategy } from './CachedStrategy';
+export { GitopsBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { ServiceMeshConfigValidator } from './ServiceMeshValidator';
+export { ServiceMeshConfigurationValidator, ValidationResult } from './ServiceMeshConfigurationValidator';

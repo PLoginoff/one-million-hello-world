@@ -1,4 +1,5 @@
-export { ISchemaRegistryStrategy } from './SchemaRegistryStrategy';
-export { DefaultSchemaRegistryStrategy } from './SchemaRegistryStrategy';
-export { OptimizedSchemaRegistryStrategy } from './SchemaRegistryStrategy';
-export { FallbackSchemaRegistryStrategy } from './SchemaRegistryStrategy';
+export { SchemaRegistryDefaultStrategy } from './DefaultStrategy';
+export { SchemaRegistryFastStrategy } from './FastStrategy';
+export { SchemaRegistryReliableStrategy } from './ReliableStrategy';
+export { SchemaRegistryCachedStrategy } from './CachedStrategy';
+export { SchemaRegistryBatchStrategy } from './BatchStrategy';

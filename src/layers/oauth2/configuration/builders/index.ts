@@ -1,1 +1,1 @@
-export { Oauth2ConfigBuilder } from './Oauth2Builder';
+export { Oauth2ConfigurationBuilder, Oauth2Configuration } from './Oauth2ConfigurationBuilder';

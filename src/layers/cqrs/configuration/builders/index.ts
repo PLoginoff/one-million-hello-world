@@ -1,1 +1,1 @@
-export { CqrsConfigBuilder } from './CqrsBuilder';
+export { CqrsConfigurationBuilder, CqrsConfiguration } from './CqrsConfigurationBuilder';

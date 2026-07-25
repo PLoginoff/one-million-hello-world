@@ -1,4 +1,5 @@
-export { IConfigurationStrategy } from './ConfigurationStrategy';
-export { DefaultConfigurationStrategy } from './ConfigurationStrategy';
-export { OptimizedConfigurationStrategy } from './ConfigurationStrategy';
-export { FallbackConfigurationStrategy } from './ConfigurationStrategy';
+export { ConfigurationDefaultStrategy } from './DefaultStrategy';
+export { ConfigurationFastStrategy } from './FastStrategy';
+export { ConfigurationReliableStrategy } from './ReliableStrategy';
+export { ConfigurationCachedStrategy } from './CachedStrategy';
+export { ConfigurationBatchStrategy } from './BatchStrategy';

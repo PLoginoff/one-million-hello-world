@@ -1,1 +1,1 @@
-export { ReadModelConfigBuilder } from './ReadModelBuilder';
+export { ReadModelConfigurationBuilder, ReadModelConfiguration } from './ReadModelConfigurationBuilder';

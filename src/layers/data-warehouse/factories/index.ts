@@ -1,1 +1,1 @@
-export { DataWarehouseFactory } from './DataWarehouseFactory';
+export { DataWarehouseStrategyFactory, IDataWarehouseStrategy } from './DataWarehouseStrategyFactory';

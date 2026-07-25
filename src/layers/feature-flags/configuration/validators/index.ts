@@ -1,1 +1,1 @@
-export { FeatureFlagsConfigValidator } from './FeatureFlagsValidator';
+export { FeatureFlagsConfigurationValidator, ValidationResult } from './FeatureFlagsConfigurationValidator';

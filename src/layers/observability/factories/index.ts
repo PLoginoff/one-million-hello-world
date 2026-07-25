@@ -1,1 +1,1 @@
-export { ObservabilityFactory } from './ObservabilityFactory';
+export { ObservabilityStrategyFactory, IObservabilityStrategy } from './ObservabilityStrategyFactory';

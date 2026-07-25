@@ -1,1 +1,1 @@
-export { EncryptionFactory } from './EncryptionFactory';
+export { EncryptionStrategyFactory, IEncryptionStrategy } from './EncryptionStrategyFactory';

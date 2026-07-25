@@ -1,1 +1,1 @@
-export { JwtValidationConfigBuilder } from './JwtValidationBuilder';
+export { JwtValidationConfigurationBuilder, JwtValidationConfiguration } from './JwtValidationConfigurationBuilder';

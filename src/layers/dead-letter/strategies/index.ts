@@ -1,4 +1,5 @@
-export { IDeadLetterStrategy } from './DeadLetterStrategy';
-export { DefaultDeadLetterStrategy } from './DeadLetterStrategy';
-export { OptimizedDeadLetterStrategy } from './DeadLetterStrategy';
-export { FallbackDeadLetterStrategy } from './DeadLetterStrategy';
+export { DeadLetterDefaultStrategy } from './DefaultStrategy';
+export { DeadLetterFastStrategy } from './FastStrategy';
+export { DeadLetterReliableStrategy } from './ReliableStrategy';
+export { DeadLetterCachedStrategy } from './CachedStrategy';
+export { DeadLetterBatchStrategy } from './BatchStrategy';

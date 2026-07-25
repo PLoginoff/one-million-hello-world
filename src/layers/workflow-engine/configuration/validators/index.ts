@@ -1,1 +1,1 @@
-export { WorkflowEngineConfigValidator } from './WorkflowEngineValidator';
+export { WorkflowEngineConfigurationValidator, ValidationResult } from './WorkflowEngineConfigurationValidator';

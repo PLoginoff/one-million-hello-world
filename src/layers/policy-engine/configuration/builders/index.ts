@@ -1,1 +1,1 @@
-export { PolicyEngineConfigBuilder } from './PolicyEngineBuilder';
+export { PolicyEngineConfigurationBuilder, PolicyEngineConfiguration } from './PolicyEngineConfigurationBuilder';

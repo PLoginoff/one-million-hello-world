@@ -1,4 +1,5 @@
-export { IObservabilityStrategy } from './ObservabilityStrategy';
-export { DefaultObservabilityStrategy } from './ObservabilityStrategy';
-export { OptimizedObservabilityStrategy } from './ObservabilityStrategy';
-export { FallbackObservabilityStrategy } from './ObservabilityStrategy';
+export { ObservabilityDefaultStrategy } from './DefaultStrategy';
+export { ObservabilityFastStrategy } from './FastStrategy';
+export { ObservabilityReliableStrategy } from './ReliableStrategy';
+export { ObservabilityCachedStrategy } from './CachedStrategy';
+export { ObservabilityBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { ObservabilityConfigBuilder } from './ObservabilityBuilder';
+export { ObservabilityConfigurationBuilder, ObservabilityConfiguration } from './ObservabilityConfigurationBuilder';

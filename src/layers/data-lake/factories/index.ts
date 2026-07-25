@@ -1,1 +1,1 @@
-export { DataLakeFactory } from './DataLakeFactory';
+export { DataLakeStrategyFactory, IDataLakeStrategy } from './DataLakeStrategyFactory';

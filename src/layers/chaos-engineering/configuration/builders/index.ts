@@ -1,1 +1,4 @@
-export { ChaosEngineeringConfigBuilder } from './ChaosEngineeringBuilder';
+export {
+  ChaosEngineeringConfigurationBuilder,
+  ChaosEngineeringConfiguration,
+} from './ChaosEngineeringConfigurationBuilder';

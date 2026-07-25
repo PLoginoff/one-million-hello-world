@@ -1,1 +1,1 @@
-export { ThrottlingConfigBuilder } from './ThrottlingBuilder';
+export { ThrottlingConfigurationBuilder, ThrottlingConfiguration } from './ThrottlingConfigurationBuilder';

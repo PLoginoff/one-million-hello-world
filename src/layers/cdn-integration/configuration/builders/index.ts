@@ -1,1 +1,1 @@
-export {};
+export { CdnIntegrationConfigurationBuilder, CdnIntegrationConfiguration } from './CdnIntegrationConfigurationBuilder';

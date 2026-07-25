@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { RouterConfigValidator } from './RouterConfigValidator';
+export { RouterConfigurationValidator } from './RouterConfigurationValidator';

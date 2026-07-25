@@ -1,1 +1,1 @@
-export { EventSourcingConfigValidator } from './EventSourcingValidator';
+export { EventSourcingConfigurationValidator, ValidationResult } from './EventSourcingConfigurationValidator';

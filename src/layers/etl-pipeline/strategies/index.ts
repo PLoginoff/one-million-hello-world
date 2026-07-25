@@ -1,4 +1,5 @@
-export { IEtlPipelineStrategy } from './EtlPipelineStrategy';
-export { DefaultEtlPipelineStrategy } from './EtlPipelineStrategy';
-export { OptimizedEtlPipelineStrategy } from './EtlPipelineStrategy';
-export { FallbackEtlPipelineStrategy } from './EtlPipelineStrategy';
+export { EtlPipelineDefaultStrategy } from './DefaultStrategy';
+export { EtlPipelineFastStrategy } from './FastStrategy';
+export { EtlPipelineReliableStrategy } from './ReliableStrategy';
+export { EtlPipelineCachedStrategy } from './CachedStrategy';
+export { EtlPipelineBatchStrategy } from './BatchStrategy';

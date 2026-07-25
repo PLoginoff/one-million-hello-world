@@ -1,4 +1,5 @@
-export { IEdgeCacheStrategy } from './EdgeCacheStrategy';
-export { DefaultEdgeCacheStrategy } from './EdgeCacheStrategy';
-export { OptimizedEdgeCacheStrategy } from './EdgeCacheStrategy';
-export { FallbackEdgeCacheStrategy } from './EdgeCacheStrategy';
+export { EdgeCacheDefaultStrategy } from './DefaultStrategy';
+export { EdgeCacheFastStrategy } from './FastStrategy';
+export { EdgeCacheReliableStrategy } from './ReliableStrategy';
+export { EdgeCacheCachedStrategy } from './CachedStrategy';
+export { EdgeCacheBatchStrategy } from './BatchStrategy';

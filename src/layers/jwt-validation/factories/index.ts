@@ -1,1 +1,1 @@
-export { JwtValidationFactory } from './JwtValidationFactory';
+export { JwtValidationStrategyFactory, IJwtValidationStrategy } from './JwtValidationStrategyFactory';

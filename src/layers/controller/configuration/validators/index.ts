@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { ControllerConfigValidator } from './ControllerConfigValidator';
+export { ControllerConfigurationValidator, ValidationResult } from './ControllerConfigurationValidator';

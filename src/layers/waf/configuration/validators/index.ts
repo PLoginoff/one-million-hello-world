@@ -1,1 +1,1 @@
-export { WafConfigValidator } from './WafValidator';
+export { WafConfigurationValidator, ValidationResult } from './WafConfigurationValidator';

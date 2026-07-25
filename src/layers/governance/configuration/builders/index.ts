@@ -1,1 +1,1 @@
-export {};
+export { GovernanceConfigurationBuilder, GovernanceConfiguration } from './GovernanceConfigurationBuilder';

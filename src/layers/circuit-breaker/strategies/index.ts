@@ -1,8 +1,5 @@
-/**
- * Circuit Breaker Strategies
- *
- * Exports all strategy implementations for the Circuit Breaker layer.
- */
-
-export * from './fallback';
-export * from './state-transition';
+export { CircuitBreakerDefaultStrategy } from './DefaultStrategy';
+export { CircuitBreakerFastStrategy } from './FastStrategy';
+export { CircuitBreakerReliableStrategy } from './ReliableStrategy';
+export { CircuitBreakerCachedStrategy } from './CachedStrategy';
+export { CircuitBreakerBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { MfaFactory } from './MfaFactory';
+export { MfaStrategyFactory, IMfaStrategy } from './MfaStrategyFactory';

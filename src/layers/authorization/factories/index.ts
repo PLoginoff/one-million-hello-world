@@ -1,1 +1,1 @@
-export { AuthorizationFactory } from './AuthorizationFactory';
+export { AuthorizationStrategyFactory, IAuthorizationStrategy } from './AuthorizationStrategyFactory';

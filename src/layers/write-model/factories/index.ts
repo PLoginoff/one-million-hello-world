@@ -1,1 +1,1 @@
-export { WriteModelFactory } from './WriteModelFactory';
+export { WriteModelStrategyFactory, IWriteModelStrategy } from './WriteModelStrategyFactory';

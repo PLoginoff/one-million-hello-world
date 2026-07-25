@@ -1,4 +1,5 @@
-export { IStreamProcessingStrategy } from './StreamProcessingStrategy';
-export { DefaultStreamProcessingStrategy } from './StreamProcessingStrategy';
-export { OptimizedStreamProcessingStrategy } from './StreamProcessingStrategy';
-export { FallbackStreamProcessingStrategy } from './StreamProcessingStrategy';
+export { StreamProcessingDefaultStrategy } from './DefaultStrategy';
+export { StreamProcessingFastStrategy } from './FastStrategy';
+export { StreamProcessingReliableStrategy } from './ReliableStrategy';
+export { StreamProcessingCachedStrategy } from './CachedStrategy';
+export { StreamProcessingBatchStrategy } from './BatchStrategy';

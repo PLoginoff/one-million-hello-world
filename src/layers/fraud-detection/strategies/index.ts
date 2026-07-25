@@ -1,4 +1,5 @@
-export { IFraudDetectionStrategy } from './FraudDetectionStrategy';
-export { DefaultFraudDetectionStrategy } from './FraudDetectionStrategy';
-export { OptimizedFraudDetectionStrategy } from './FraudDetectionStrategy';
-export { FallbackFraudDetectionStrategy } from './FraudDetectionStrategy';
+export { FraudDetectionDefaultStrategy } from './DefaultStrategy';
+export { FraudDetectionFastStrategy } from './FastStrategy';
+export { FraudDetectionReliableStrategy } from './ReliableStrategy';
+export { FraudDetectionCachedStrategy } from './CachedStrategy';
+export { FraudDetectionBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { DdosProtectionFactory } from './DdosProtectionFactory';
+export { DdosProtectionStrategyFactory, IDdosProtectionStrategy } from './DdosProtectionStrategyFactory';

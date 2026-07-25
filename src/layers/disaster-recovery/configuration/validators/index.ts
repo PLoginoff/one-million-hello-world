@@ -1,1 +1,1 @@
-export {};
+export { DisasterRecoveryConfigurationValidator, ValidationResult } from './DisasterRecoveryConfigurationValidator';

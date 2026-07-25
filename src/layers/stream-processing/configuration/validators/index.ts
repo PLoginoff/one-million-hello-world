@@ -1,1 +1,1 @@
-export { StreamProcessingConfigValidator } from './StreamProcessingValidator';
+export { StreamProcessingConfigurationValidator, ValidationResult } from './StreamProcessingConfigurationValidator';

@@ -1,4 +1,5 @@
-export { ISecretsStrategy } from './SecretsStrategy';
-export { DefaultSecretsStrategy } from './SecretsStrategy';
-export { OptimizedSecretsStrategy } from './SecretsStrategy';
-export { FallbackSecretsStrategy } from './SecretsStrategy';
+export { SecretsDefaultStrategy } from './DefaultStrategy';
+export { SecretsFastStrategy } from './FastStrategy';
+export { SecretsReliableStrategy } from './ReliableStrategy';
+export { SecretsCachedStrategy } from './CachedStrategy';
+export { SecretsBatchStrategy } from './BatchStrategy';

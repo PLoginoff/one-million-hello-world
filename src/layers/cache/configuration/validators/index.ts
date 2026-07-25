@@ -1,7 +1,1 @@
-/**
- * Configuration Validators
- *
- * Exports configuration validators.
- */
-
-export { CacheConfigValidator } from './CacheConfigValidator';
+export { CacheConfigurationValidator, ValidationResult } from './CacheConfigurationValidator';

@@ -1,4 +1,5 @@
-export { IPropertyTestingStrategy } from './PropertyTestingStrategy';
-export { DefaultPropertyTestingStrategy } from './PropertyTestingStrategy';
-export { OptimizedPropertyTestingStrategy } from './PropertyTestingStrategy';
-export { FallbackPropertyTestingStrategy } from './PropertyTestingStrategy';
+export { PropertyTestingDefaultStrategy } from './DefaultStrategy';
+export { PropertyTestingFastStrategy } from './FastStrategy';
+export { PropertyTestingReliableStrategy } from './ReliableStrategy';
+export { PropertyTestingCachedStrategy } from './CachedStrategy';
+export { PropertyTestingBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { EncryptionConfigValidator } from './EncryptionValidator';
+export { EncryptionConfigurationValidator, ValidationResult } from './EncryptionConfigurationValidator';

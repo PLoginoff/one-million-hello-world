@@ -1,4 +1,5 @@
-export { IIdentityProviderStrategy } from './IdentityProviderStrategy';
-export { DefaultIdentityProviderStrategy } from './IdentityProviderStrategy';
-export { OptimizedIdentityProviderStrategy } from './IdentityProviderStrategy';
-export { FallbackIdentityProviderStrategy } from './IdentityProviderStrategy';
+export { IdentityProviderDefaultStrategy } from './DefaultStrategy';
+export { IdentityProviderFastStrategy } from './FastStrategy';
+export { IdentityProviderReliableStrategy } from './ReliableStrategy';
+export { IdentityProviderCachedStrategy } from './CachedStrategy';
+export { IdentityProviderBatchStrategy } from './BatchStrategy';

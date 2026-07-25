@@ -1,7 +1,1 @@
-/**
- * Configuration Builders
- *
- * Exports configuration builders.
- */
-
-export { CacheConfigBuilder } from './CacheConfigBuilder';
+export { CacheConfigurationBuilder, CacheConfiguration } from './CacheConfigurationBuilder';

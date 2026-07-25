@@ -1,1 +1,1 @@
-export { DataWarehouseConfigBuilder } from './DataWarehouseBuilder';
+export { DataWarehouseConfigurationBuilder, DataWarehouseConfiguration } from './DataWarehouseConfigurationBuilder';

@@ -1,1 +1,1 @@
-export { ServiceMeshConfigBuilder } from './ServiceMeshBuilder';
+export { ServiceMeshConfigurationBuilder, ServiceMeshConfiguration } from './ServiceMeshConfigurationBuilder';

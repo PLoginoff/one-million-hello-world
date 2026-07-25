@@ -1,1 +1,1 @@
-export {};
+export { MultiTenancyConfigurationValidator, ValidationResult } from './MultiTenancyConfigurationValidator';

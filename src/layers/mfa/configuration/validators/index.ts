@@ -1,1 +1,1 @@
-export { MfaConfigValidator } from './MfaValidator';
+export { MfaConfigurationValidator, ValidationResult } from './MfaConfigurationValidator';

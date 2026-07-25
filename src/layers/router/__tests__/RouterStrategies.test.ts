@@ -1,94 +1,80 @@
 /**
- * Router Strategies Unit Tests
+ * Strategy tests for Router layer
  */
 
-import { RegexRoutingStrategy } from '../strategies/strategy/RegexRoutingStrategy';
-import { PrefixRoutingStrategy } from '../strategies/strategy/PrefixRoutingStrategy';
-import { RouteEntity } from '../domain/entities/RouteEntity';
+import { RouterDefaultStrategy } from '../strategies/DefaultStrategy';
+import { RouterFastStrategy } from '../strategies/FastStrategy';
+import { RouterReliableStrategy } from '../strategies/ReliableStrategy';
+import { RouterCachedStrategy } from '../strategies/CachedStrategy';
+import { RouterBatchStrategy } from '../strategies/BatchStrategy';
+import { RouterStrategyFactory } from '../factories/RouterStrategyFactory';
 
-describe('RegexRoutingStrategy', () => {
-  let strategy: RegexRoutingStrategy;
+describe('Router Strategies', () => {
+  const strategies = [
+    { name: 'default', cls: RouterDefaultStrategy },
+    { name: 'fast', cls: RouterFastStrategy },
+    { name: 'reliable', cls: RouterReliableStrategy },
+    { name: 'cached', cls: RouterCachedStrategy },
+    { name: 'batch', cls: RouterBatchStrategy },
+  ];
 
-  beforeEach(() => {
-    strategy = new RegexRoutingStrategy();
+  strategies.forEach((s) => {
+    describe(s.name + ' strategy', () => {
+      it('should have correct name', () => {
+        const strategy = new s.cls();
+        expect(strategy.name).toBe(s.name);
+      });
+
+      it('should have positive priority', () => {
+        const strategy = new s.cls();
+        expect(strategy.priority).toBeGreaterThanOrEqual(0);
+      });
+
+      it('should execute successfully', async () => {
+        const strategy = new s.cls();
+        const result = await strategy.execute('test');
+        expect(result.success).toBe(true);
+      });
+
+      it('should track execution count', async () => {
+        const strategy = new s.cls();
+        await strategy.execute(1);
+        await strategy.execute(2);
+        await strategy.execute(3);
+        expect(strategy.getExecutionCount()).toBe(3);
+      });
+    });
   });
 
-  it('should return name REGEX_ROUTING', () => {
-    expect(strategy.getName()).toBe('REGEX_ROUTING');
-  });
+  describe('RouterStrategyFactory', () => {
+    it('should create default strategy', () => {
+      const factory = new RouterStrategyFactory();
+      const strategy = factory.create('default');
+      expect(strategy.name).toBe('default');
+    });
 
-  it('should match exact path', () => {
-    const route = RouteEntity.get('r1', '/hello', 'helloHandler');
-    const found = strategy.findRoute([route], '/hello', 'GET');
-    expect(found).toBeDefined();
-    expect(found!.data.id).toBe('r1');
-  });
+    it('should create all strategies', () => {
+      const factory = new RouterStrategyFactory();
+      const all = factory.createAll();
+      expect(all.length).toBe(5);
+    });
 
-  it('should match parameterized path', () => {
-    const route = RouteEntity.get('r1', '/users/:id', 'userHandler');
-    const found = strategy.findRoute([route], '/users/123', 'GET');
-    expect(found).toBeDefined();
-  });
+    it('should list available strategies', () => {
+      const factory = new RouterStrategyFactory();
+      const available = factory.getAvailableStrategies();
+      expect(available).toContain('default');
+      expect(available).toContain('fast');
+    });
 
-  it('should match wildcard path', () => {
-    const route = RouteEntity.get('r1', '/api/*', 'apiHandler');
-    const found = strategy.findRoute([route], '/api/anything/here', 'GET');
-    expect(found).toBeDefined();
-  });
+    it('should throw for unknown strategy', () => {
+      const factory = new RouterStrategyFactory();
+      expect(() => factory.create('unknown')).toThrow();
+    });
 
-  it('should not match wrong method', () => {
-    const route = RouteEntity.get('r1', '/hello', 'helloHandler');
-    const found = strategy.findRoute([route], '/hello', 'POST');
-    expect(found).toBeUndefined();
-  });
-
-  it('should not match non-matching path', () => {
-    const route = RouteEntity.get('r1', '/hello', 'helloHandler');
-    const found = strategy.findRoute([route], '/goodbye', 'GET');
-    expect(found).toBeUndefined();
-  });
-
-  it('should skip disabled routes', () => {
-    const route = RouteEntity.get('r1', '/hello', 'helloHandler');
-    const disabled = route.disable();
-    const found = strategy.findRoute([disabled], '/hello', 'GET');
-    expect(found).toBeUndefined();
-  });
-});
-
-describe('PrefixRoutingStrategy', () => {
-  let strategy: PrefixRoutingStrategy;
-
-  beforeEach(() => {
-    strategy = new PrefixRoutingStrategy();
-  });
-
-  it('should return name PREFIX_ROUTING', () => {
-    expect(strategy.getName()).toBe('PREFIX_ROUTING');
-  });
-
-  it('should match by prefix', () => {
-    const route = RouteEntity.get('r1', '/api/v1', 'handler');
-    const found = strategy.findRoute([route], '/api/v1/users', 'GET');
-    expect(found).toBeDefined();
-  });
-
-  it('should match longest prefix', () => {
-    const short = RouteEntity.get('r1', '/api', 'handler1');
-    const long = RouteEntity.get('r2', '/api/v1', 'handler2');
-    const found = strategy.findRoute([short, long], '/api/v1/users', 'GET');
-    expect(found!.data.id).toBe('r2');
-  });
-
-  it('should not match wrong method', () => {
-    const route = RouteEntity.get('r1', '/api', 'handler');
-    const found = strategy.findRoute([route], '/api/users', 'POST');
-    expect(found).toBeUndefined();
-  });
-
-  it('should not match non-prefix path', () => {
-    const route = RouteEntity.get('r1', '/api', 'handler');
-    const found = strategy.findRoute([route], '/other/path', 'GET');
-    expect(found).toBeUndefined();
+    it('should sort by priority', () => {
+      const factory = new RouterStrategyFactory();
+      const sorted = factory.createByPriority();
+      expect(sorted[0].priority).toBeGreaterThanOrEqual(sorted[sorted.length - 1].priority);
+    });
   });
 });

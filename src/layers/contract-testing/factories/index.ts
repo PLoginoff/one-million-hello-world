@@ -1,1 +1,1 @@
-export { ContractTestingFactory } from './ContractTestingFactory';
+export { ContractTestingStrategyFactory, IContractTestingStrategy } from './ContractTestingStrategyFactory';

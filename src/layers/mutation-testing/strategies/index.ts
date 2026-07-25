@@ -1,4 +1,5 @@
-export { IMutationTestingStrategy } from './MutationTestingStrategy';
-export { DefaultMutationTestingStrategy } from './MutationTestingStrategy';
-export { OptimizedMutationTestingStrategy } from './MutationTestingStrategy';
-export { FallbackMutationTestingStrategy } from './MutationTestingStrategy';
+export { MutationTestingDefaultStrategy } from './DefaultStrategy';
+export { MutationTestingFastStrategy } from './FastStrategy';
+export { MutationTestingReliableStrategy } from './ReliableStrategy';
+export { MutationTestingCachedStrategy } from './CachedStrategy';
+export { MutationTestingBatchStrategy } from './BatchStrategy';

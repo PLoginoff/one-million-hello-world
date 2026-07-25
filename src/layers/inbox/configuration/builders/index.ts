@@ -1,1 +1,1 @@
-export { InboxConfigBuilder } from './InboxBuilder';
+export { InboxConfigurationBuilder, InboxConfiguration } from './InboxConfigurationBuilder';

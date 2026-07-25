@@ -1,7 +1,1 @@
-/**
- * Compression Configuration Builders
- *
- * Exports configuration builders.
- */
-
-export { CompressionConfigBuilder, CompressionConfig } from './CompressionConfigBuilder';
+export { CompressionConfigurationBuilder, CompressionConfiguration } from './CompressionConfigurationBuilder';

@@ -1,1 +1,1 @@
-export { SecretsFactory } from './SecretsFactory';
+export { SecretsStrategyFactory, ISecretsStrategy } from './SecretsStrategyFactory';

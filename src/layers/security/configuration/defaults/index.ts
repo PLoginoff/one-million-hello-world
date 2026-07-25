@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, SecurityConfigOptions } from './DefaultConfigs';
+export { SecurityDEFAULTS, SecurityLIMITS, SecuritySTRATEGIES } from './SecurityDefaults';

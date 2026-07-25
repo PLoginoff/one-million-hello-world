@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { RateLimitConfigValidator } from './RateLimitConfigValidator';
+export { RateLimitingConfigurationValidator, ValidationResult } from './RateLimitingConfigurationValidator';

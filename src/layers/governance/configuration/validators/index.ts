@@ -1,1 +1,1 @@
-export {};
+export { GovernanceConfigurationValidator, ValidationResult } from './GovernanceConfigurationValidator';

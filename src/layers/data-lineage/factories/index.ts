@@ -1,1 +1,1 @@
-export {};
+export { DataLineageStrategyFactory, IDataLineageStrategy } from './DataLineageStrategyFactory';

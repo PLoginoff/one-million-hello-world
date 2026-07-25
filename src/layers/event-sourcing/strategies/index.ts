@@ -1,4 +1,5 @@
-export { IEventSourcingStrategy } from './EventSourcingStrategy';
-export { DefaultEventSourcingStrategy } from './EventSourcingStrategy';
-export { OptimizedEventSourcingStrategy } from './EventSourcingStrategy';
-export { FallbackEventSourcingStrategy } from './EventSourcingStrategy';
+export { EventSourcingDefaultStrategy } from './DefaultStrategy';
+export { EventSourcingFastStrategy } from './FastStrategy';
+export { EventSourcingReliableStrategy } from './ReliableStrategy';
+export { EventSourcingCachedStrategy } from './CachedStrategy';
+export { EventSourcingBatchStrategy } from './BatchStrategy';

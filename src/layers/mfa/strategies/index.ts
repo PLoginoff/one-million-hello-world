@@ -1,4 +1,5 @@
-export { IMfaStrategy } from './MfaStrategy';
-export { DefaultMfaStrategy } from './MfaStrategy';
-export { OptimizedMfaStrategy } from './MfaStrategy';
-export { FallbackMfaStrategy } from './MfaStrategy';
+export { MfaDefaultStrategy } from './DefaultStrategy';
+export { MfaFastStrategy } from './FastStrategy';
+export { MfaReliableStrategy } from './ReliableStrategy';
+export { MfaCachedStrategy } from './CachedStrategy';
+export { MfaBatchStrategy } from './BatchStrategy';

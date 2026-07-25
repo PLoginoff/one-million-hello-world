@@ -1,1 +1,1 @@
-export { IdentityConfigValidator } from './IdentityValidator';
+export { IdentityConfigurationValidator, ValidationResult } from './IdentityConfigurationValidator';

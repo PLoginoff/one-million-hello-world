@@ -1,1 +1,1 @@
-export { SsoConfigValidator } from './SsoValidator';
+export { SsoConfigurationValidator, ValidationResult } from './SsoConfigurationValidator';

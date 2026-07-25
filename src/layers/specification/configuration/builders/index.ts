@@ -1,1 +1,1 @@
-export { SpecificationConfigBuilder } from './SpecificationBuilder';
+export { SpecificationConfigurationBuilder, SpecificationConfiguration } from './SpecificationConfigurationBuilder';

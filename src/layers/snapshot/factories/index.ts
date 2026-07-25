@@ -1,1 +1,1 @@
-export { SnapshotFactory } from './SnapshotFactory';
+export { SnapshotStrategyFactory, ISnapshotStrategy } from './SnapshotStrategyFactory';

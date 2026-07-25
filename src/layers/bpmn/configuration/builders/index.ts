@@ -1,1 +1,1 @@
-export { BpmnConfigBuilder } from './BpmnBuilder';
+export { BpmnConfigurationBuilder, BpmnConfiguration } from './BpmnConfigurationBuilder';

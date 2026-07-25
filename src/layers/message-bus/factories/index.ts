@@ -1,1 +1,1 @@
-export { MessageBusFactory } from './MessageBusFactory';
+export { MessageBusStrategyFactory, IMessageBusStrategy } from './MessageBusStrategyFactory';

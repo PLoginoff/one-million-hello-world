@@ -1,4 +1,5 @@
-export { IUnitOfWorkStrategy } from './UnitOfWorkStrategy';
-export { DefaultUnitOfWorkStrategy } from './UnitOfWorkStrategy';
-export { OptimizedUnitOfWorkStrategy } from './UnitOfWorkStrategy';
-export { FallbackUnitOfWorkStrategy } from './UnitOfWorkStrategy';
+export { UnitOfWorkDefaultStrategy } from './DefaultStrategy';
+export { UnitOfWorkFastStrategy } from './FastStrategy';
+export { UnitOfWorkReliableStrategy } from './ReliableStrategy';
+export { UnitOfWorkCachedStrategy } from './CachedStrategy';
+export { UnitOfWorkBatchStrategy } from './BatchStrategy';

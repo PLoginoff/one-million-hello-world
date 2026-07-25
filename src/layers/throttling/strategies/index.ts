@@ -1,4 +1,5 @@
-export { IThrottlingStrategy } from './ThrottlingStrategy';
-export { DefaultThrottlingStrategy } from './ThrottlingStrategy';
-export { OptimizedThrottlingStrategy } from './ThrottlingStrategy';
-export { FallbackThrottlingStrategy } from './ThrottlingStrategy';
+export { ThrottlingDefaultStrategy } from './DefaultStrategy';
+export { ThrottlingFastStrategy } from './FastStrategy';
+export { ThrottlingReliableStrategy } from './ReliableStrategy';
+export { ThrottlingCachedStrategy } from './CachedStrategy';
+export { ThrottlingBatchStrategy } from './BatchStrategy';

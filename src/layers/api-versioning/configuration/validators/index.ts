@@ -1,1 +1,1 @@
-export {};
+export { ApiVersioningConfigurationValidator, ValidationResult } from './ApiVersioningConfigurationValidator';

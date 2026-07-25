@@ -1,1 +1,4 @@
-export {};
+export {
+  AnomalyDetectionConfigurationBuilder,
+  AnomalyDetectionConfiguration,
+} from './AnomalyDetectionConfigurationBuilder';

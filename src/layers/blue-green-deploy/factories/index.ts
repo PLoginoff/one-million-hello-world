@@ -1,1 +1,1 @@
-export { BlueGreenDeployFactory } from './BlueGreenDeployFactory';
+export { BlueGreenDeployStrategyFactory, IBlueGreenDeployStrategy } from './BlueGreenDeployStrategyFactory';

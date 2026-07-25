@@ -1,1 +1,1 @@
-export { WebsocketFactory } from './WebsocketFactory';
+export { WebsocketStrategyFactory, IWebsocketStrategy } from './WebsocketStrategyFactory';

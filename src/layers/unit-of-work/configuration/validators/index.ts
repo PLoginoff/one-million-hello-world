@@ -1,1 +1,1 @@
-export { UnitOfWorkConfigValidator } from './UnitOfWorkValidator';
+export { UnitOfWorkConfigurationValidator, ValidationResult } from './UnitOfWorkConfigurationValidator';

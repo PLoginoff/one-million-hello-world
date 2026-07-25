@@ -1,1 +1,1 @@
-export { ChaosEngineeringConfigValidator } from './ChaosEngineeringValidator';
+export { ChaosEngineeringConfigurationValidator, ValidationResult } from './ChaosEngineeringConfigurationValidator';

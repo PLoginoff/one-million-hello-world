@@ -1,4 +1,5 @@
-export { IMessageBusStrategy } from './MessageBusStrategy';
-export { DefaultMessageBusStrategy } from './MessageBusStrategy';
-export { OptimizedMessageBusStrategy } from './MessageBusStrategy';
-export { FallbackMessageBusStrategy } from './MessageBusStrategy';
+export { MessageBusDefaultStrategy } from './DefaultStrategy';
+export { MessageBusFastStrategy } from './FastStrategy';
+export { MessageBusReliableStrategy } from './ReliableStrategy';
+export { MessageBusCachedStrategy } from './CachedStrategy';
+export { MessageBusBatchStrategy } from './BatchStrategy';

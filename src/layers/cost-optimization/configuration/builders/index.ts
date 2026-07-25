@@ -1,1 +1,4 @@
-export {};
+export {
+  CostOptimizationConfigurationBuilder,
+  CostOptimizationConfiguration,
+} from './CostOptimizationConfigurationBuilder';

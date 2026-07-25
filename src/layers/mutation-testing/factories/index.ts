@@ -1,1 +1,1 @@
-export { MutationTestingFactory } from './MutationTestingFactory';
+export { MutationTestingStrategyFactory, IMutationTestingStrategy } from './MutationTestingStrategyFactory';

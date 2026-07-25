@@ -1,1 +1,4 @@
-export { MutationTestingConfigBuilder } from './MutationTestingBuilder';
+export {
+  MutationTestingConfigurationBuilder,
+  MutationTestingConfiguration,
+} from './MutationTestingConfigurationBuilder';

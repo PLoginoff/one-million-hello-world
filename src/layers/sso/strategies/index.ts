@@ -1,4 +1,5 @@
-export { ISsoStrategy } from './SsoStrategy';
-export { DefaultSsoStrategy } from './SsoStrategy';
-export { OptimizedSsoStrategy } from './SsoStrategy';
-export { FallbackSsoStrategy } from './SsoStrategy';
+export { SsoDefaultStrategy } from './DefaultStrategy';
+export { SsoFastStrategy } from './FastStrategy';
+export { SsoReliableStrategy } from './ReliableStrategy';
+export { SsoCachedStrategy } from './CachedStrategy';
+export { SsoBatchStrategy } from './BatchStrategy';

@@ -1,1 +1,1 @@
-export { SiemConfigBuilder } from './SiemBuilder';
+export { SiemConfigurationBuilder, SiemConfiguration } from './SiemConfigurationBuilder';

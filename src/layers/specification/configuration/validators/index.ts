@@ -1,1 +1,1 @@
-export { SpecificationConfigValidator } from './SpecificationValidator';
+export { SpecificationConfigurationValidator, ValidationResult } from './SpecificationConfigurationValidator';

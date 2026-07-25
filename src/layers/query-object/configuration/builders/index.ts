@@ -1,1 +1,1 @@
-export { QueryObjectConfigBuilder } from './QueryObjectBuilder';
+export { QueryObjectConfigurationBuilder, QueryObjectConfiguration } from './QueryObjectConfigurationBuilder';

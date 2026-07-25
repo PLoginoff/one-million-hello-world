@@ -1,1 +1,1 @@
-export { ApiGatewayConfigBuilder } from './ApiGatewayBuilder';
+export { ApiGatewayConfigurationBuilder, ApiGatewayConfiguration } from './ApiGatewayConfigurationBuilder';

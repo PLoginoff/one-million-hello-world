@@ -1,4 +1,5 @@
-export { IApiGatewayStrategy } from './ApiGatewayStrategy';
-export { DefaultApiGatewayStrategy } from './ApiGatewayStrategy';
-export { OptimizedApiGatewayStrategy } from './ApiGatewayStrategy';
-export { FallbackApiGatewayStrategy } from './ApiGatewayStrategy';
+export { ApiGatewayDefaultStrategy } from './DefaultStrategy';
+export { ApiGatewayFastStrategy } from './FastStrategy';
+export { ApiGatewayReliableStrategy } from './ReliableStrategy';
+export { ApiGatewayCachedStrategy } from './CachedStrategy';
+export { ApiGatewayBatchStrategy } from './BatchStrategy';

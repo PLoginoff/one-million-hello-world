@@ -1,1 +1,1 @@
-export {};
+export { SearchStrategyFactory, ISearchStrategy } from './SearchStrategyFactory';

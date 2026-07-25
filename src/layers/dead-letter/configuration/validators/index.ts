@@ -1,1 +1,1 @@
-export { DeadLetterConfigValidator } from './DeadLetterValidator';
+export { DeadLetterConfigurationValidator, ValidationResult } from './DeadLetterConfigurationValidator';

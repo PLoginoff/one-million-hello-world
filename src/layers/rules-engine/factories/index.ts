@@ -1,1 +1,1 @@
-export { RulesEngineFactory } from './RulesEngineFactory';
+export { RulesEngineStrategyFactory, IRulesEngineStrategy } from './RulesEngineStrategyFactory';

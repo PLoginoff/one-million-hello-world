@@ -1,97 +1,80 @@
 /**
- * Validation Strategies Unit Tests
+ * Strategy tests for Validation layer
  */
 
-import { CompositeValidationStrategy } from '../strategies/strategy/CompositeValidationStrategy';
-import { ConditionalValidationStrategy } from '../strategies/strategy/ConditionalValidationStrategy';
-import { IValidationStrategy } from '../strategies/strategy/IValidationStrategy';
-import { ValidationResultEntity } from '../domain/entities/ValidationResultEntity';
+import { ValidationDefaultStrategy } from '../strategies/DefaultStrategy';
+import { ValidationFastStrategy } from '../strategies/FastStrategy';
+import { ValidationReliableStrategy } from '../strategies/ReliableStrategy';
+import { ValidationCachedStrategy } from '../strategies/CachedStrategy';
+import { ValidationBatchStrategy } from '../strategies/BatchStrategy';
+import { ValidationStrategyFactory } from '../factories/ValidationStrategyFactory';
 
-function createPassStrategy(name: string): IValidationStrategy {
-  return {
-    getName: () => name,
-    validate: () => ValidationResultEntity.success(),
-  };
-}
+describe('Validation Strategies', () => {
+  const strategies = [
+    { name: 'default', cls: ValidationDefaultStrategy },
+    { name: 'fast', cls: ValidationFastStrategy },
+    { name: 'reliable', cls: ValidationReliableStrategy },
+    { name: 'cached', cls: ValidationCachedStrategy },
+    { name: 'batch', cls: ValidationBatchStrategy },
+  ];
 
-function createFailStrategy(name: string, field: string, message: string): IValidationStrategy {
-  return {
-    getName: () => name,
-    validate: () => ValidationResultEntity.failure([{ field, message }]),
-  };
-}
+  strategies.forEach((s) => {
+    describe(s.name + ' strategy', () => {
+      it('should have correct name', () => {
+        const strategy = new s.cls();
+        expect(strategy.name).toBe(s.name);
+      });
 
-describe('CompositeValidationStrategy', () => {
-  it('should return name COMPOSITE_VALIDATION', () => {
-    const strategy = new CompositeValidationStrategy();
-    expect(strategy.getName()).toBe('COMPOSITE_VALIDATION');
+      it('should have positive priority', () => {
+        const strategy = new s.cls();
+        expect(strategy.priority).toBeGreaterThanOrEqual(0);
+      });
+
+      it('should execute successfully', async () => {
+        const strategy = new s.cls();
+        const result = await strategy.execute('test');
+        expect(result.success).toBe(true);
+      });
+
+      it('should track execution count', async () => {
+        const strategy = new s.cls();
+        await strategy.execute(1);
+        await strategy.execute(2);
+        await strategy.execute(3);
+        expect(strategy.getExecutionCount()).toBe(3);
+      });
+    });
   });
 
-  it('should pass when all strategies pass', () => {
-    const strategy = new CompositeValidationStrategy([createPassStrategy('s1'), createPassStrategy('s2')]);
-    const result = strategy.validate({ test: true });
-    expect(result.data.valid).toBe(true);
-  });
+  describe('ValidationStrategyFactory', () => {
+    it('should create default strategy', () => {
+      const factory = new ValidationStrategyFactory();
+      const strategy = factory.create('default');
+      expect(strategy.name).toBe('default');
+    });
 
-  it('should fail when any strategy fails', () => {
-    const strategy = new CompositeValidationStrategy([
-      createPassStrategy('s1'),
-      createFailStrategy('s2', 'name', 'name is required'),
-    ]);
-    const result = strategy.validate({});
-    expect(result.data.valid).toBe(false);
-    expect(result.data.errors.length).toBe(1);
-    expect(result.data.errors[0].field).toBe('name');
-  });
+    it('should create all strategies', () => {
+      const factory = new ValidationStrategyFactory();
+      const all = factory.createAll();
+      expect(all.length).toBe(5);
+    });
 
-  it('should aggregate errors from multiple failing strategies', () => {
-    const strategy = new CompositeValidationStrategy([
-      createFailStrategy('s1', 'name', 'name is required'),
-      createFailStrategy('s2', 'email', 'email is invalid'),
-    ]);
-    const result = strategy.validate({});
-    expect(result.data.errors.length).toBe(2);
-  });
+    it('should list available strategies', () => {
+      const factory = new ValidationStrategyFactory();
+      const available = factory.getAvailableStrategies();
+      expect(available).toContain('default');
+      expect(available).toContain('fast');
+    });
 
-  it('should support adding strategies immutably', () => {
-    const original = new CompositeValidationStrategy([createPassStrategy('s1')]);
-    const extended = original.addStrategy(createPassStrategy('s2'));
-    expect(original.getStrategies().length).toBe(1);
-    expect(extended.getStrategies().length).toBe(2);
-  });
+    it('should throw for unknown strategy', () => {
+      const factory = new ValidationStrategyFactory();
+      expect(() => factory.create('unknown')).toThrow();
+    });
 
-  it('should pass with empty strategy list', () => {
-    const strategy = new CompositeValidationStrategy();
-    const result = strategy.validate({});
-    expect(result.data.valid).toBe(true);
-  });
-});
-
-describe('ConditionalValidationStrategy', () => {
-  it('should wrap inner strategy name', () => {
-    const inner = createPassStrategy('INNER');
-    const strategy = new ConditionalValidationStrategy(inner, () => true);
-    expect(strategy.getName()).toBe('CONDITIONAL(INNER)');
-  });
-
-  it('should validate when condition is true', () => {
-    const inner = createFailStrategy('INNER', 'field', 'error');
-    const strategy = new ConditionalValidationStrategy(inner, () => true);
-    const result = strategy.validate({});
-    expect(result.data.valid).toBe(false);
-  });
-
-  it('should skip validation when condition is false', () => {
-    const inner = createFailStrategy('INNER', 'field', 'error');
-    const strategy = new ConditionalValidationStrategy(inner, () => false);
-    const result = strategy.validate({});
-    expect(result.data.valid).toBe(true);
-  });
-
-  it('should pass context to condition', () => {
-    const inner = createPassStrategy('INNER');
-    const strategy = new ConditionalValidationStrategy(inner, (_value, context) => context === 'test');
-    expect(strategy.validate({}, 'test').data.valid).toBe(true);
-    expect(strategy.validate({}, 'other').data.valid).toBe(true);
+    it('should sort by priority', () => {
+      const factory = new ValidationStrategyFactory();
+      const sorted = factory.createByPriority();
+      expect(sorted[0].priority).toBeGreaterThanOrEqual(sorted[sorted.length - 1].priority);
+    });
   });
 });

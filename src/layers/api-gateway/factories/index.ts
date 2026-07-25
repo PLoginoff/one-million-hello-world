@@ -1,1 +1,1 @@
-export { ApiGatewayFactory } from './ApiGatewayFactory';
+export { ApiGatewayStrategyFactory, IApiGatewayStrategy } from './ApiGatewayStrategyFactory';

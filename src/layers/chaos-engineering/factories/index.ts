@@ -1,1 +1,1 @@
-export { ChaosEngineeringFactory } from './ChaosEngineeringFactory';
+export { ChaosEngineeringStrategyFactory, IChaosEngineeringStrategy } from './ChaosEngineeringStrategyFactory';

@@ -1,1 +1,1 @@
-export { WafConfigBuilder } from './WafBuilder';
+export { WafConfigurationBuilder, WafConfiguration } from './WafConfigurationBuilder';

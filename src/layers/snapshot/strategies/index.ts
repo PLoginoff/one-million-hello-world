@@ -1,4 +1,5 @@
-export { ISnapshotStrategy } from './SnapshotStrategy';
-export { DefaultSnapshotStrategy } from './SnapshotStrategy';
-export { OptimizedSnapshotStrategy } from './SnapshotStrategy';
-export { FallbackSnapshotStrategy } from './SnapshotStrategy';
+export { SnapshotDefaultStrategy } from './DefaultStrategy';
+export { SnapshotFastStrategy } from './FastStrategy';
+export { SnapshotReliableStrategy } from './ReliableStrategy';
+export { SnapshotCachedStrategy } from './CachedStrategy';
+export { SnapshotBatchStrategy } from './BatchStrategy';

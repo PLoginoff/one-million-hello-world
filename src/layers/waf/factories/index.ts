@@ -1,1 +1,1 @@
-export { WafFactory } from './WafFactory';
+export { WafStrategyFactory, IWafStrategy } from './WafStrategyFactory';

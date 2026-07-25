@@ -1,4 +1,5 @@
-export { IWebsocketStrategy } from './WebsocketStrategy';
-export { DefaultWebsocketStrategy } from './WebsocketStrategy';
-export { OptimizedWebsocketStrategy } from './WebsocketStrategy';
-export { FallbackWebsocketStrategy } from './WebsocketStrategy';
+export { WebsocketDefaultStrategy } from './DefaultStrategy';
+export { WebsocketFastStrategy } from './FastStrategy';
+export { WebsocketReliableStrategy } from './ReliableStrategy';
+export { WebsocketCachedStrategy } from './CachedStrategy';
+export { WebsocketBatchStrategy } from './BatchStrategy';

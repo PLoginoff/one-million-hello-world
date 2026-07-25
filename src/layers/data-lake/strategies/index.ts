@@ -1,4 +1,5 @@
-export { IDataLakeStrategy } from './DataLakeStrategy';
-export { DefaultDataLakeStrategy } from './DataLakeStrategy';
-export { OptimizedDataLakeStrategy } from './DataLakeStrategy';
-export { FallbackDataLakeStrategy } from './DataLakeStrategy';
+export { DataLakeDefaultStrategy } from './DefaultStrategy';
+export { DataLakeFastStrategy } from './FastStrategy';
+export { DataLakeReliableStrategy } from './ReliableStrategy';
+export { DataLakeCachedStrategy } from './CachedStrategy';
+export { DataLakeBatchStrategy } from './BatchStrategy';

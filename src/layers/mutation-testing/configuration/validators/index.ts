@@ -1,1 +1,1 @@
-export { MutationTestingConfigValidator } from './MutationTestingValidator';
+export { MutationTestingConfigurationValidator, ValidationResult } from './MutationTestingConfigurationValidator';

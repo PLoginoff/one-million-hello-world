@@ -1,1 +1,1 @@
-export { AnalyticsFactory } from './AnalyticsFactory';
+export { AnalyticsStrategyFactory, IAnalyticsStrategy } from './AnalyticsStrategyFactory';

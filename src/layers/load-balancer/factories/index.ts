@@ -1,1 +1,1 @@
-export { LoadBalancerFactory } from './LoadBalancerFactory';
+export { LoadBalancerStrategyFactory, ILoadBalancerStrategy } from './LoadBalancerStrategyFactory';

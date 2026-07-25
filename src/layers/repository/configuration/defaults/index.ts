@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, RepositoryConfigOptions } from './DefaultConfigs';
+export { RepositoryDEFAULTS, RepositoryLIMITS, RepositorySTRATEGIES } from './RepositoryDefaults';

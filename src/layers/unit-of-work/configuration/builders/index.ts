@@ -1,1 +1,1 @@
-export { UnitOfWorkConfigBuilder } from './UnitOfWorkBuilder';
+export { UnitOfWorkConfigurationBuilder, UnitOfWorkConfiguration } from './UnitOfWorkConfigurationBuilder';

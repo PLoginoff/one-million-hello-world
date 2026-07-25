@@ -1,1 +1,1 @@
-export { CanaryDeployConfigValidator } from './CanaryDeployValidator';
+export { CanaryDeployConfigurationValidator, ValidationResult } from './CanaryDeployConfigurationValidator';

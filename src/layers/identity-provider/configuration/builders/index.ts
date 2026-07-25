@@ -1,1 +1,4 @@
-export { IdentityProviderConfigBuilder } from './IdentityProviderBuilder';
+export {
+  IdentityProviderConfigurationBuilder,
+  IdentityProviderConfiguration,
+} from './IdentityProviderConfigurationBuilder';

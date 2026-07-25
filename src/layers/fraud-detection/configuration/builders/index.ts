@@ -1,1 +1,1 @@
-export { FraudDetectionConfigBuilder } from './FraudDetectionBuilder';
+export { FraudDetectionConfigurationBuilder, FraudDetectionConfiguration } from './FraudDetectionConfigurationBuilder';

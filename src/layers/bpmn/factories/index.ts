@@ -1,1 +1,1 @@
-export { BpmnFactory } from './BpmnFactory';
+export { BpmnStrategyFactory, IBpmnStrategy } from './BpmnStrategyFactory';

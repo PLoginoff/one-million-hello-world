@@ -1,1 +1,1 @@
-export { FraudDetectionFactory } from './FraudDetectionFactory';
+export { FraudDetectionStrategyFactory, IFraudDetectionStrategy } from './FraudDetectionStrategyFactory';

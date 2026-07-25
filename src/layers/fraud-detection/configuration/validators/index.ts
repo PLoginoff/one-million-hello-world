@@ -1,1 +1,1 @@
-export { FraudDetectionConfigValidator } from './FraudDetectionValidator';
+export { FraudDetectionConfigurationValidator, ValidationResult } from './FraudDetectionConfigurationValidator';

@@ -1,1 +1,1 @@
-export { PerformanceTestingFactory } from './PerformanceTestingFactory';
+export { PerformanceTestingStrategyFactory, IPerformanceTestingStrategy } from './PerformanceTestingStrategyFactory';

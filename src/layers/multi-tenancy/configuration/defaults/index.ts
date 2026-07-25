@@ -1,1 +1,1 @@
-export {};
+export { MultiTenancyDEFAULTS, MultiTenancyLIMITS, MultiTenancySTRATEGIES } from './MultiTenancyDefaults';

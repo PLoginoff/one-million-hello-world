@@ -1,1 +1,1 @@
-export { SchemaRegistryFactory } from './SchemaRegistryFactory';
+export { SchemaRegistryStrategyFactory, ISchemaRegistryStrategy } from './SchemaRegistryStrategyFactory';

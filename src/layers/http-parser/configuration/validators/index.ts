@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { ParserConfigValidator } from './ParserConfigValidator';
+export { HttpParserConfigurationValidator, ValidationResult } from './HttpParserConfigurationValidator';

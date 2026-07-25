@@ -1,1 +1,1 @@
-export { SiemFactory } from './SiemFactory';
+export { SiemStrategyFactory, ISiemStrategy } from './SiemStrategyFactory';

@@ -1,1 +1,4 @@
-export { ServiceDiscoveryConfigBuilder } from './ServiceDiscoveryBuilder';
+export {
+  ServiceDiscoveryConfigurationBuilder,
+  ServiceDiscoveryConfiguration,
+} from './ServiceDiscoveryConfigurationBuilder';

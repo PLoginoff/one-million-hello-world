@@ -1,1 +1,1 @@
-export { QueryObjectFactory } from './QueryObjectFactory';
+export { QueryObjectStrategyFactory, IQueryObjectStrategy } from './QueryObjectStrategyFactory';

@@ -1,1 +1,1 @@
-export { AuditFactory } from './AuditFactory';
+export { AuditStrategyFactory, IAuditStrategy } from './AuditStrategyFactory';

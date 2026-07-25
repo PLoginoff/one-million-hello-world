@@ -1,1 +1,1 @@
-export { DdosProtectionConfigValidator } from './DdosProtectionValidator';
+export { DdosProtectionConfigurationValidator, ValidationResult } from './DdosProtectionConfigurationValidator';

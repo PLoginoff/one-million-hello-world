@@ -1,1 +1,1 @@
-export { DeadLetterFactory } from './DeadLetterFactory';
+export { DeadLetterStrategyFactory, IDeadLetterStrategy } from './DeadLetterStrategyFactory';

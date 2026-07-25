@@ -1,1 +1,1 @@
-export {};
+export { SchedulingStrategyFactory, ISchedulingStrategy } from './SchedulingStrategyFactory';

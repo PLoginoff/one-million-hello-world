@@ -1,1 +1,4 @@
-export { PerformanceTestingConfigBuilder } from './PerformanceTestingBuilder';
+export {
+  PerformanceTestingConfigurationBuilder,
+  PerformanceTestingConfiguration,
+} from './PerformanceTestingConfigurationBuilder';

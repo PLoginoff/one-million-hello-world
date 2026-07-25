@@ -1,1 +1,1 @@
-export { ThrottlingConfigValidator } from './ThrottlingValidator';
+export { ThrottlingConfigurationValidator, ValidationResult } from './ThrottlingConfigurationValidator';

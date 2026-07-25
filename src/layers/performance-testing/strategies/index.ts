@@ -1,4 +1,5 @@
-export { IPerformanceTestingStrategy } from './PerformanceTestingStrategy';
-export { DefaultPerformanceTestingStrategy } from './PerformanceTestingStrategy';
-export { OptimizedPerformanceTestingStrategy } from './PerformanceTestingStrategy';
-export { FallbackPerformanceTestingStrategy } from './PerformanceTestingStrategy';
+export { PerformanceTestingDefaultStrategy } from './DefaultStrategy';
+export { PerformanceTestingFastStrategy } from './FastStrategy';
+export { PerformanceTestingReliableStrategy } from './ReliableStrategy';
+export { PerformanceTestingCachedStrategy } from './CachedStrategy';
+export { PerformanceTestingBatchStrategy } from './BatchStrategy';

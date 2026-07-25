@@ -1,1 +1,1 @@
-export { BackupFactory } from './BackupFactory';
+export { BackupStrategyFactory, IBackupStrategy } from './BackupStrategyFactory';

@@ -1,1 +1,1 @@
-export {};
+export { RecommendationStrategyFactory, IRecommendationStrategy } from './RecommendationStrategyFactory';

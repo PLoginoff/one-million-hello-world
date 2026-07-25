@@ -1,7 +1,1 @@
-/**
- * Factories Layer
- *
- * Exports factory components for creating validation objects.
- */
-
-export { ValidationFactory } from './ValidationFactory';
+export { ValidationStrategyFactory, IValidationStrategy } from './ValidationStrategyFactory';

@@ -1,4 +1,5 @@
-export { IRulesEngineStrategy } from './RulesEngineStrategy';
-export { DefaultRulesEngineStrategy } from './RulesEngineStrategy';
-export { OptimizedRulesEngineStrategy } from './RulesEngineStrategy';
-export { FallbackRulesEngineStrategy } from './RulesEngineStrategy';
+export { RulesEngineDefaultStrategy } from './DefaultStrategy';
+export { RulesEngineFastStrategy } from './FastStrategy';
+export { RulesEngineReliableStrategy } from './ReliableStrategy';
+export { RulesEngineCachedStrategy } from './CachedStrategy';
+export { RulesEngineBatchStrategy } from './BatchStrategy';

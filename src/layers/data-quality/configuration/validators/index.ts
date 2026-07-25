@@ -1,1 +1,1 @@
-export { DataQualityConfigValidator } from './DataQualityValidator';
+export { DataQualityConfigurationValidator, ValidationResult } from './DataQualityConfigurationValidator';

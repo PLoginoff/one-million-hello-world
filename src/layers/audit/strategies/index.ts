@@ -1,4 +1,5 @@
-export { IAuditStrategy } from './AuditStrategy';
-export { DefaultAuditStrategy } from './AuditStrategy';
-export { OptimizedAuditStrategy } from './AuditStrategy';
-export { FallbackAuditStrategy } from './AuditStrategy';
+export { AuditDefaultStrategy } from './DefaultStrategy';
+export { AuditFastStrategy } from './FastStrategy';
+export { AuditReliableStrategy } from './ReliableStrategy';
+export { AuditCachedStrategy } from './CachedStrategy';
+export { AuditBatchStrategy } from './BatchStrategy';

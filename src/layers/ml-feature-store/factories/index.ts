@@ -1,1 +1,1 @@
-export {};
+export { MlFeatureStoreStrategyFactory, IMlFeatureStoreStrategy } from './MlFeatureStoreStrategyFactory';

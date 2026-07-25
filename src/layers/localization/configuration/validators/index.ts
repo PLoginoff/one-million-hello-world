@@ -1,1 +1,1 @@
-export {};
+export { LocalizationConfigurationValidator, ValidationResult } from './LocalizationConfigurationValidator';

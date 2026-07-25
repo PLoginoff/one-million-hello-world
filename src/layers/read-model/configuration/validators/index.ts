@@ -1,1 +1,1 @@
-export { ReadModelConfigValidator } from './ReadModelValidator';
+export { ReadModelConfigurationValidator, ValidationResult } from './ReadModelConfigurationValidator';

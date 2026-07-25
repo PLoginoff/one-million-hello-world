@@ -1,1 +1,1 @@
-export { BotDetectionFactory } from './BotDetectionFactory';
+export { BotDetectionStrategyFactory, IBotDetectionStrategy } from './BotDetectionStrategyFactory';

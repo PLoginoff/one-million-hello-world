@@ -1,5 +1,1 @@
-/**
- * Configuration Validators
- */
-
-export { ServiceConfigValidator } from './ServiceConfigValidator';
+export { ServiceConfigurationValidator, ValidationResult } from './ServiceConfigurationValidator';

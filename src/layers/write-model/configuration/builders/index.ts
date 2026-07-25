@@ -1,1 +1,1 @@
-export { WriteModelConfigBuilder } from './WriteModelBuilder';
+export { WriteModelConfigurationBuilder, WriteModelConfiguration } from './WriteModelConfigurationBuilder';

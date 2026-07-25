@@ -1,5 +1,1 @@
-/**
- * Default Configurations
- */
-
-export { DefaultConfigs, ParserConfigOptions } from './DefaultConfigs';
+export { HttpParserDEFAULTS, HttpParserLIMITS, HttpParserSTRATEGIES } from './HttpParserDefaults';

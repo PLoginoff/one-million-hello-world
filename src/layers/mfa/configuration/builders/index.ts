@@ -1,1 +1,1 @@
-export { MfaConfigBuilder } from './MfaBuilder';
+export { MfaConfigurationBuilder, MfaConfiguration } from './MfaConfigurationBuilder';

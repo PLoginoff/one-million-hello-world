@@ -1,1 +1,1 @@
-export { BlueGreenDeployConfigValidator } from './BlueGreenDeployValidator';
+export { BlueGreenDeployConfigurationValidator, ValidationResult } from './BlueGreenDeployConfigurationValidator';

@@ -1,1 +1,1 @@
-export { RulesEngineConfigBuilder } from './RulesEngineBuilder';
+export { RulesEngineConfigurationBuilder, RulesEngineConfiguration } from './RulesEngineConfigurationBuilder';

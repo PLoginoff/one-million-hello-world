@@ -1,4 +1,5 @@
-export { IBotDetectionStrategy } from './BotDetectionStrategy';
-export { DefaultBotDetectionStrategy } from './BotDetectionStrategy';
-export { OptimizedBotDetectionStrategy } from './BotDetectionStrategy';
-export { FallbackBotDetectionStrategy } from './BotDetectionStrategy';
+export { BotDetectionDefaultStrategy } from './DefaultStrategy';
+export { BotDetectionFastStrategy } from './FastStrategy';
+export { BotDetectionReliableStrategy } from './ReliableStrategy';
+export { BotDetectionCachedStrategy } from './CachedStrategy';
+export { BotDetectionBatchStrategy } from './BatchStrategy';

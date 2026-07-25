@@ -1,1 +1,1 @@
-export { DataLakeConfigValidator } from './DataLakeValidator';
+export { DataLakeConfigurationValidator, ValidationResult } from './DataLakeConfigurationValidator';

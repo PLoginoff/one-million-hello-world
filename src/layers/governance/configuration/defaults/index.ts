@@ -1,1 +1,1 @@
-export {};
+export { GovernanceDEFAULTS, GovernanceLIMITS, GovernanceSTRATEGIES } from './GovernanceDefaults';

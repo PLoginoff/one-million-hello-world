@@ -1,4 +1,5 @@
-export { IAuthorizationStrategy } from './AuthorizationStrategy';
-export { DefaultAuthorizationStrategy } from './AuthorizationStrategy';
-export { OptimizedAuthorizationStrategy } from './AuthorizationStrategy';
-export { FallbackAuthorizationStrategy } from './AuthorizationStrategy';
+export { AuthorizationDefaultStrategy } from './DefaultStrategy';
+export { AuthorizationFastStrategy } from './FastStrategy';
+export { AuthorizationReliableStrategy } from './ReliableStrategy';
+export { AuthorizationCachedStrategy } from './CachedStrategy';
+export { AuthorizationBatchStrategy } from './BatchStrategy';

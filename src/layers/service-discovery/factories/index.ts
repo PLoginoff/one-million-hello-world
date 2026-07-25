@@ -1,1 +1,1 @@
-export { ServiceDiscoveryFactory } from './ServiceDiscoveryFactory';
+export { ServiceDiscoveryStrategyFactory, IServiceDiscoveryStrategy } from './ServiceDiscoveryStrategyFactory';

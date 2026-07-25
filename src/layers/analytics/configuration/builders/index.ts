@@ -1,1 +1,1 @@
-export { AnalyticsConfigBuilder } from './AnalyticsBuilder';
+export { AnalyticsConfigurationBuilder, AnalyticsConfiguration } from './AnalyticsConfigurationBuilder';

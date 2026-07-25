@@ -1,1 +1,1 @@
-export { EventSourcingFactory } from './EventSourcingFactory';
+export { EventSourcingStrategyFactory, IEventSourcingStrategy } from './EventSourcingStrategyFactory';

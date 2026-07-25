@@ -1,1 +1,1 @@
-export { AnalyticsConfigValidator } from './AnalyticsValidator';
+export { AnalyticsConfigurationValidator, ValidationResult } from './AnalyticsConfigurationValidator';

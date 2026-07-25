@@ -1,1 +1,1 @@
-export { ApiGatewayConfigValidator } from './ApiGatewayValidator';
+export { ApiGatewayConfigurationValidator, ValidationResult } from './ApiGatewayConfigurationValidator';

@@ -1,1 +1,1 @@
-export { EdgeCacheConfigValidator } from './EdgeCacheValidator';
+export { EdgeCacheConfigurationValidator, ValidationResult } from './EdgeCacheConfigurationValidator';

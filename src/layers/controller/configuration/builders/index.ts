@@ -1,5 +1,1 @@
-/**
- * Configuration Builders
- */
-
-export { ControllerConfigBuilder } from './ControllerConfigBuilder';
+export { ControllerConfigurationBuilder, ControllerConfiguration } from './ControllerConfigurationBuilder';

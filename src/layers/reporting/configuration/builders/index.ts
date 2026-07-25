@@ -1,1 +1,1 @@
-export {};
+export { ReportingConfigurationBuilder, ReportingConfiguration } from './ReportingConfigurationBuilder';

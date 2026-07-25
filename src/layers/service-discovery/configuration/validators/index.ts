@@ -1,1 +1,1 @@
-export { ServiceDiscoveryConfigValidator } from './ServiceDiscoveryValidator';
+export { ServiceDiscoveryConfigurationValidator, ValidationResult } from './ServiceDiscoveryConfigurationValidator';

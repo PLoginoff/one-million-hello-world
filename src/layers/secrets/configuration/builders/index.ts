@@ -1,1 +1,1 @@
-export { SecretsConfigBuilder } from './SecretsBuilder';
+export { SecretsConfigurationBuilder, SecretsConfiguration } from './SecretsConfigurationBuilder';

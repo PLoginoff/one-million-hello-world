@@ -1,1 +1,1 @@
-export {};
+export { LocalizationStrategyFactory, ILocalizationStrategy } from './LocalizationStrategyFactory';

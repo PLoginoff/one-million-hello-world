@@ -1,1 +1,1 @@
-export {};
+export { MlFeatureStoreConfigurationBuilder, MlFeatureStoreConfiguration } from './MlFeatureStoreConfigurationBuilder';

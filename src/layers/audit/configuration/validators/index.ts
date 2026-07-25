@@ -1,1 +1,1 @@
-export { AuditConfigValidator } from './AuditValidator';
+export { AuditConfigurationValidator, ValidationResult } from './AuditConfigurationValidator';

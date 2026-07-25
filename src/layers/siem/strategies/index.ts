@@ -1,4 +1,5 @@
-export { ISiemStrategy } from './SiemStrategy';
-export { DefaultSiemStrategy } from './SiemStrategy';
-export { OptimizedSiemStrategy } from './SiemStrategy';
-export { FallbackSiemStrategy } from './SiemStrategy';
+export { SiemDefaultStrategy } from './DefaultStrategy';
+export { SiemFastStrategy } from './FastStrategy';
+export { SiemReliableStrategy } from './ReliableStrategy';
+export { SiemCachedStrategy } from './CachedStrategy';
+export { SiemBatchStrategy } from './BatchStrategy';

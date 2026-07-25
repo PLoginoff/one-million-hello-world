@@ -1,1 +1,1 @@
-export { SchemaRegistryConfigBuilder } from './SchemaRegistryBuilder';
+export { SchemaRegistryConfigurationBuilder, SchemaRegistryConfiguration } from './SchemaRegistryConfigurationBuilder';

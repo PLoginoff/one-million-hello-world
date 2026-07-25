@@ -1,1 +1,1 @@
-export { WebsocketConfigValidator } from './WebsocketValidator';
+export { WebsocketConfigurationValidator, ValidationResult } from './WebsocketConfigurationValidator';

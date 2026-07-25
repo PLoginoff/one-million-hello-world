@@ -1,1 +1,1 @@
-export {};
+export { LocalizationConfigurationBuilder, LocalizationConfiguration } from './LocalizationConfigurationBuilder';

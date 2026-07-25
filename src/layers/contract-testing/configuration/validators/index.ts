@@ -1,1 +1,1 @@
-export { ContractTestingConfigValidator } from './ContractTestingValidator';
+export { ContractTestingConfigurationValidator, ValidationResult } from './ContractTestingConfigurationValidator';

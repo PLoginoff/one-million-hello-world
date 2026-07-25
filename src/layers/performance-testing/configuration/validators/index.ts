@@ -1,1 +1,1 @@
-export { PerformanceTestingConfigValidator } from './PerformanceTestingValidator';
+export { PerformanceTestingConfigurationValidator, ValidationResult } from './PerformanceTestingConfigurationValidator';

@@ -1,1 +1,1 @@
-export { ConfigurationConfigValidator } from './ConfigurationValidator';
+export { ConfigurationConfigurationValidator, ValidationResult } from './ConfigurationConfigurationValidator';
