@@ -1,0 +1,64 @@
+/**
+ * MfaPriority Value Object
+ *
+ * Priority level for mfa tasks.
+ */
+
+export class MfaPriority {
+  readonly value: number;
+  readonly label: string;
+
+  private constructor(value: number, label: string) {
+    this.value = value;
+    this.label = label;
+  }
+
+  static create(value: number): MfaPriority {
+    if (value < 0 || value > 10) {
+      throw new Error('Priority must be between 0 and 10');
+    }
+    const label = value <= 2 ? 'low' : value <= 5 ? 'medium' : value <= 8 ? 'high' : 'critical';
+    return new MfaPriority(value, label);
+  }
+
+  static low(): MfaPriority {
+    return new MfaPriority(1, 'low');
+  }
+  static medium(): MfaPriority {
+    return new MfaPriority(5, 'medium');
+  }
+  static high(): MfaPriority {
+    return new MfaPriority(8, 'high');
+  }
+  static critical(): MfaPriority {
+    return new MfaPriority(10, 'critical');
+  }
+
+  isLow(): boolean {
+    return this.value <= 2;
+  }
+  isMedium(): boolean {
+    return this.value > 2 && this.value <= 5;
+  }
+  isHigh(): boolean {
+    return this.value > 5 && this.value <= 8;
+  }
+  isCritical(): boolean {
+    return this.value > 8;
+  }
+
+  isHigherThan(other: MfaPriority): boolean {
+    return this.value > other.value;
+  }
+  isLowerThan(other: MfaPriority): boolean {
+    return this.value < other.value;
+  }
+
+  equals(other: MfaPriority): boolean {
+    return this.value === other.value;
+  }
+
+  toString(): string {
+    return this.label + ' (' + this.value + ')';
+  }
+}

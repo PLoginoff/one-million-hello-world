@@ -1,0 +1,64 @@
+/**
+ * LocalizationPriority Value Object
+ *
+ * Priority level for localization tasks.
+ */
+
+export class LocalizationPriority {
+  readonly value: number;
+  readonly label: string;
+
+  private constructor(value: number, label: string) {
+    this.value = value;
+    this.label = label;
+  }
+
+  static create(value: number): LocalizationPriority {
+    if (value < 0 || value > 10) {
+      throw new Error('Priority must be between 0 and 10');
+    }
+    const label = value <= 2 ? 'low' : value <= 5 ? 'medium' : value <= 8 ? 'high' : 'critical';
+    return new LocalizationPriority(value, label);
+  }
+
+  static low(): LocalizationPriority {
+    return new LocalizationPriority(1, 'low');
+  }
+  static medium(): LocalizationPriority {
+    return new LocalizationPriority(5, 'medium');
+  }
+  static high(): LocalizationPriority {
+    return new LocalizationPriority(8, 'high');
+  }
+  static critical(): LocalizationPriority {
+    return new LocalizationPriority(10, 'critical');
+  }
+
+  isLow(): boolean {
+    return this.value <= 2;
+  }
+  isMedium(): boolean {
+    return this.value > 2 && this.value <= 5;
+  }
+  isHigh(): boolean {
+    return this.value > 5 && this.value <= 8;
+  }
+  isCritical(): boolean {
+    return this.value > 8;
+  }
+
+  isHigherThan(other: LocalizationPriority): boolean {
+    return this.value > other.value;
+  }
+  isLowerThan(other: LocalizationPriority): boolean {
+    return this.value < other.value;
+  }
+
+  equals(other: LocalizationPriority): boolean {
+    return this.value === other.value;
+  }
+
+  toString(): string {
+    return this.label + ' (' + this.value + ')';
+  }
+}

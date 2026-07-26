@@ -13,3 +13,6 @@ export {
   ExecutionOrder,
   TimeoutStrategy,
 } from './ServiceComposition';
+export { FacadeThreshold } from './FacadeThreshold';
+export { FacadeTimeWindow } from './FacadeTimeWindow';
+export { FacadePriority } from './FacadePriority';

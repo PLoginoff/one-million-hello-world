@@ -8,3 +8,6 @@ export { RequestMetadata, RequestMetadataData } from './RequestMetadata';
 export { RateLimitConfig, RateLimitConfigData, WindowUnit, RateLimitAlgorithm } from './RateLimitConfig';
 export { RateLimitRule, RateLimitRuleData, RuleCondition } from './RateLimitRule';
 export { RateLimitWindowValueObject } from './RateLimitWindowValueObject';
+export { RateLimitingThreshold } from './RateLimitingThreshold';
+export { RateLimitingTimeWindow } from './RateLimitingTimeWindow';
+export { RateLimitingPriority } from './RateLimitingPriority';

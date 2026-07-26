@@ -7,3 +7,5 @@
 export { CompressionMetadata, CompressionMetadataData } from './CompressionMetadata';
 export { CompressionAlgorithm, CompressionAlgorithmData } from './CompressionAlgorithm';
 export { CompressionThreshold, CompressionThresholdData } from './CompressionThreshold';
+export { CompressionTimeWindow } from './CompressionTimeWindow';
+export { CompressionPriority } from './CompressionPriority';

@@ -7,3 +7,6 @@
 export { AttemptMetadata, AttemptMetadataData } from './AttemptMetadata';
 export { RetryPolicy, RetryPolicyData, BackoffStrategy } from './RetryPolicy';
 export { RetryCondition, RetryConditionData } from './RetryCondition';
+export { RetryThreshold } from './RetryThreshold';
+export { RetryTimeWindow } from './RetryTimeWindow';
+export { RetryPriority } from './RetryPriority';

@@ -1,7 +1,4 @@
-/**
- * Facade Domain Entities
- *
- * Exports all entities for the Facade domain layer.
- */
-
+export { FacadeConfigState, FacadeConfigStateData } from './FacadeConfigState';
+export { FacadeExecution, FacadeExecutionData } from './FacadeExecution';
+export { FacadeMetricsSnapshot, FacadeMetricsSnapshotData } from './FacadeMetricsSnapshot';
 export { FacadeOperationEntity } from './FacadeOperation';

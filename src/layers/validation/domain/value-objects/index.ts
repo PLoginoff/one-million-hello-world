@@ -17,3 +17,6 @@ export {
 } from './ValidationRule';
 export { ValidationSchema, ValidationSchemaData } from './ValidationSchema';
 export { ValidationSeverityValueObject, ValidationSeverity } from './ValidationSeverityValueObject';
+export { ValidationThreshold } from './ValidationThreshold';
+export { ValidationTimeWindow } from './ValidationTimeWindow';
+export { ValidationPriority } from './ValidationPriority';
