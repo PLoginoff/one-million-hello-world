@@ -10,3 +10,5 @@ export {
   ValidationError,
   ValidationWarning,
 } from './FacadeValidationService';
+export { FacadeExecutionService } from './FacadeExecutionService';
+export { FacadeQueryService } from './FacadeQueryService';

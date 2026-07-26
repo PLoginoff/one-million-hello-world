@@ -1,0 +1,90 @@
+/**
+ * BpmnCommandHandler
+ *
+ * Handles bpmn commands.
+ */
+
+export interface BpmnCommand {
+  type: string;
+  payload: Record<string, unknown>;
+  metadata: Record<string, unknown>;
+}
+
+export interface BpmnCommandResult {
+  success: boolean;
+  commandId: string;
+  result?: unknown;
+  error?: string;
+  durationMs: number;
+}
+
+type CommandHandlerFn = (command: BpmnCommand) => Promise<unknown>;
+
+export class BpmnCommandHandler {
+  private _handlers: Map<string, CommandHandlerFn>;
+  private _middleware: Array<(cmd: BpmnCommand) => BpmnCommand>;
+  private _results: BpmnCommandResult[];
+
+  constructor() {
+    this._handlers = new Map();
+    this._middleware = [];
+    this._results = [];
+  }
+
+  register(commandType: string, handler: CommandHandlerFn): void {
+    this._handlers.set(commandType, handler);
+  }
+
+  use(middleware: (cmd: BpmnCommand) => BpmnCommand): void {
+    this._middleware.push(middleware);
+  }
+
+  async handle(command: BpmnCommand): Promise<BpmnCommandResult> {
+    const start = Date.now();
+    let cmd = command;
+    for (let i = 0; i < this._middleware.length; i++) {
+      cmd = this._middleware[i](cmd);
+    }
+    const handler = this._handlers.get(cmd.type);
+    if (!handler) {
+      const result: BpmnCommandResult = {
+        success: false,
+        commandId: (cmd.metadata.commandId as string) ?? 'unknown',
+        error: 'No handler for command type: ' + cmd.type,
+        durationMs: Date.now() - start,
+      };
+      this._results.push(result);
+      return result;
+    }
+    try {
+      const output = await handler(cmd);
+      const okResult: BpmnCommandResult = {
+        success: true,
+        commandId: (cmd.metadata.commandId as string) ?? 'unknown',
+        result: output,
+        durationMs: Date.now() - start,
+      };
+      this._results.push(okResult);
+      return okResult;
+    } catch (e) {
+      const errResult: BpmnCommandResult = {
+        success: false,
+        commandId: (cmd.metadata.commandId as string) ?? 'unknown',
+        error: (e as Error).message,
+        durationMs: Date.now() - start,
+      };
+      this._results.push(errResult);
+      return errResult;
+    }
+  }
+
+  getResults(): BpmnCommandResult[] {
+    return [...this._results];
+  }
+  getRegisteredCommands(): string[] {
+    return Array.from(this._handlers.keys());
+  }
+  clearResults(): void {
+    this._results = [];
+  }
+}

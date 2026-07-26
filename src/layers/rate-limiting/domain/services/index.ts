@@ -9,3 +9,6 @@ export {
   ValidationError,
   ValidationWarning,
 } from './RateLimitValidationService';
+export { RateLimitingExecutionService } from './RateLimitingExecutionService';
+export { RateLimitingValidationService } from './RateLimitingValidationService';
+export { RateLimitingQueryService } from './RateLimitingQueryService';

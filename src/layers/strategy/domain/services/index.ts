@@ -10,3 +10,5 @@ export {
   ValidationError,
   ValidationWarning,
 } from './StrategyValidationService';
+export { StrategyExecutionService } from './StrategyExecutionService';
+export { StrategyQueryService } from './StrategyQueryService';

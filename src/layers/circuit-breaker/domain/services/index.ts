@@ -10,3 +10,6 @@ export {
   ValidationError,
   ValidationWarning,
 } from './CircuitValidationService';
+export { CircuitBreakerExecutionService } from './CircuitBreakerExecutionService';
+export { CircuitBreakerValidationService } from './CircuitBreakerValidationService';
+export { CircuitBreakerQueryService } from './CircuitBreakerQueryService';

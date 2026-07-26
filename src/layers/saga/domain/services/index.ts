@@ -5,3 +5,5 @@
  */
 
 export { SagaValidationService, ValidationResult, ValidationError, ValidationWarning } from './SagaValidationService';
+export { SagaExecutionService } from './SagaExecutionService';
+export { SagaQueryService } from './SagaQueryService';

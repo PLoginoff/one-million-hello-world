@@ -10,3 +10,5 @@ export {
   ValidationError,
   ValidationWarning,
 } from './CompressionValidationService';
+export { CompressionExecutionService } from './CompressionExecutionService';
+export { CompressionQueryService } from './CompressionQueryService';
