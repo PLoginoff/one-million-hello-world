@@ -1,0 +1,110 @@
+/**
+ * MutationTestingProcessingPipeline
+ */
+
+export interface MutationTestingPipelineContext {
+  id: string;
+  input: unknown;
+  metadata: Record<string, unknown>;
+  stages: string[];
+  currentStage: number;
+  output?: unknown;
+  error?: string;
+  startTime: number;
+  endTime?: number;
+}
+
+export interface MutationTestingPipelineStage {
+  name: string;
+  process: (ctx: MutationTestingPipelineContext) => Promise<void>;
+  handleError?: (ctx: MutationTestingPipelineContext, error: Error) => Promise<boolean>;
+}
+
+export class MutationTestingProcessingPipeline {
+  private _stages: MutationTestingPipelineStage[];
+  private _beforeHooks: Array<(ctx: MutationTestingPipelineContext) => void>;
+  private _afterHooks: Array<(ctx: MutationTestingPipelineContext) => void>;
+  private _executions: MutationTestingPipelineContext[];
+
+  constructor() {
+    this._stages = [];
+    this._beforeHooks = [];
+    this._afterHooks = [];
+    this._executions = [];
+  }
+
+  addStage(
+    name: string,
+    process: (ctx: MutationTestingPipelineContext) => Promise<void>,
+    handleError?: (ctx: MutationTestingPipelineContext, error: Error) => Promise<boolean>
+  ): this {
+    this._stages.push({ name, process, handleError });
+    return this;
+  }
+
+  beforeExecute(hook: (ctx: MutationTestingPipelineContext) => void): this {
+    this._beforeHooks.push(hook);
+    return this;
+  }
+
+  afterExecute(hook: (ctx: MutationTestingPipelineContext) => void): this {
+    this._afterHooks.push(hook);
+    return this;
+  }
+
+  async execute(input: unknown, metadata: Record<string, unknown> = {}): Promise<MutationTestingPipelineContext> {
+    const ctx: MutationTestingPipelineContext = {
+      id: 'pipeline-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+      input: input,
+      metadata: metadata,
+      stages: this._stages.map((s) => s.name),
+      currentStage: 0,
+      startTime: Date.now(),
+    };
+
+    this._beforeHooks.forEach((h) => h(ctx));
+
+    for (let i = 0; i < this._stages.length; i++) {
+      ctx.currentStage = i;
+      const stage = this._stages[i];
+      try {
+        await stage.process(ctx);
+      } catch (e) {
+        ctx.error = (e as Error).message;
+        if (stage.handleError) {
+          const shouldContinue = await stage.handleError(ctx, e as Error);
+          if (!shouldContinue) {
+            ctx.endTime = Date.now();
+            this._afterHooks.forEach((h) => h(ctx));
+            this._executions.push(ctx);
+            return ctx;
+          }
+          ctx.error = undefined;
+        } else {
+          ctx.endTime = Date.now();
+          this._afterHooks.forEach((h) => h(ctx));
+          this._executions.push(ctx);
+          return ctx;
+        }
+      }
+    }
+
+    ctx.endTime = Date.now();
+    this._afterHooks.forEach((h) => h(ctx));
+    this._executions.push(ctx);
+    return ctx;
+  }
+
+  getStages(): string[] {
+    return this._stages.map((s) => s.name);
+  }
+  getExecutions(): MutationTestingPipelineContext[] {
+    return [...this._executions];
+  }
+  getExecutionCount(): number {
+    return this._executions.length;
+  }
+  clearExecutions(): void {
+    this._executions = [];
+  }
+}
