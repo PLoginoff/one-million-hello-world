@@ -6,7 +6,7 @@
  */
 
 import { IDeadLetter } from '../interfaces/IDeadLetter';
-import { DeadLetterResult, DeadLetterContext } from '../types/dead-letter-types';
+import { DeadLetterResult, DeadLetterContext, DeadLetterError } from '../types/dead-letter-types';
 
 export class DeadLetter implements IDeadLetter {
   private _config: Record<string, unknown>;
@@ -26,12 +26,13 @@ export class DeadLetter implements IDeadLetter {
       return Promise.resolve({ success: true, data: output });
     } catch (error) {
       this._recordMetric('failureCount', 1);
+      const deadLetterError: DeadLetterError = {
+        code: 'DEADLETTER_EXECUTION_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      };
       return Promise.resolve({
         success: false,
-        error: {
-          code: 'DEADLETTER_EXECUTION_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown error',
-        },
+        error: deadLetterError,
       });
     }
   }

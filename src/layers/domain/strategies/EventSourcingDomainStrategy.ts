@@ -6,8 +6,9 @@
  */
 
 import { IDomainStrategy } from './IDomainStrategy';
+import { ILegacyDomainStrategy } from './ILegacyDomainStrategy';
 import { HelloWorldMessage } from '../entities/HelloWorldMessage';
-import { DomainResult, DomainEvent } from '../types/domain-types';
+import { DomainContext, DomainResult, DomainEvent } from '../types/domain-types';
 import { HelloWorldRequested } from '../events/HelloWorldRequested';
 
 export interface EventSourcingState {
@@ -15,7 +16,7 @@ export interface EventSourcingState {
   snapshots: Map<string, HelloWorldMessage>;
 }
 
-export class EventSourcingDomainStrategy implements IDomainStrategy {
+export class EventSourcingDomainStrategy implements IDomainStrategy<HelloWorldMessage, HelloWorldMessage>, ILegacyDomainStrategy {
   private readonly _state: EventSourcingState;
   private _version: number;
 
@@ -26,6 +27,14 @@ export class EventSourcingDomainStrategy implements IDomainStrategy {
 
   getName(): string {
     return 'EVENT_SOURCING';
+  }
+
+  getPriority(): number {
+    return 10;
+  }
+
+  async execute(input: HelloWorldMessage, context: DomainContext): Promise<DomainResult<HelloWorldMessage>> {
+    return this.process(input);
   }
 
   async process(message: HelloWorldMessage): Promise<DomainResult<HelloWorldMessage>> {

@@ -1,1 +1,15 @@
-export { DomainErrorImpl, DomainErrorCode } from './DomainError';
+export {
+  DomainError,
+  DomainErrorCode,
+  EntityValidationError,
+  PolicyViolationError,
+  EntityNotFoundError,
+  DomainConfigurationError,
+  ConcurrencyConflictError,
+  isDomainError,
+  isEntityValidationError,
+  isPolicyViolationError,
+  isEntityNotFoundError,
+  isDomainConfigurationError,
+  isConcurrencyConflictError,
+} from './DomainError';

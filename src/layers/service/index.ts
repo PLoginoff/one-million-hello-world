@@ -19,4 +19,7 @@ export * from './configuration';
 export * from './strategies';
 export * from './statistics';
 export * from './factories';
+export * from './errors';
+export * from './health';
+export * from './metrics';
 export { ServiceHelpers } from './utils';

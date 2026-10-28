@@ -12,3 +12,8 @@ export * from './domain';
 export * from './configuration';
 export * from './strategies';
 export * from './factories';
+export * from './adapters';
+export * from './health';
+export * from './metrics';
+export * from './statistics';
+export * from './errors';

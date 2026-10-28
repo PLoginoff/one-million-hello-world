@@ -38,4 +38,8 @@ export {
 export { RateLimitDefaults, RateLimitConfigDefaults } from './configuration/defaults/RateLimitDefaults';
 export * from './strategies';
 export * from './factories';
+export * from './health';
+export * from './metrics';
+export * from './errors';
+export * from './adapters';
 export * from './utils';

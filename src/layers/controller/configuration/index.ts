@@ -7,3 +7,4 @@
 export * from './defaults';
 export * from './validators';
 export * from './builders';
+export * from './ControllerProfiles';

@@ -1,1 +1,1 @@
-export { MessageQueueStrategyFactory, IMessageQueueStrategy } from './MessageQueueStrategyFactory';
+export { MessageQueueStrategyFactory, IMessageQueueStrategy, MessageQueueFactory, MessageQueueFactoryOptions } from './MessageQueueStrategyFactory';

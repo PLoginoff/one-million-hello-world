@@ -57,3 +57,14 @@ export interface DomainResult<T> {
   value?: T;
   error?: DomainError;
 }
+
+/**
+ * Domain execution context
+ */
+export interface DomainContext {
+  correlationId: string;
+  causationId?: string;
+  userId?: string;
+  timestamp: Date;
+  metadata?: Record<string, unknown>;
+}

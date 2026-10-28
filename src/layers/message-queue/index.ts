@@ -13,3 +13,12 @@
 export { IMessageQueue, MessageHandler } from './interfaces/IMessageQueue';
 export { MessageQueue } from './implementations/MessageQueue';
 export * from './types/message-queue-types';
+export * from './domain';
+export * from './configuration';
+export * from './strategies';
+export * from './factories';
+export * from './adapters';
+export * from './health';
+export * from './metrics';
+export * from './statistics';
+export * from './errors';

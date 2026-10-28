@@ -1,8 +1,9 @@
 /**
  * Cache Factories
  *
- * Exports cache factories.
+ * Exports all cache factory implementations.
+ *
+ * @module CacheLayer/Factories
  */
 
-export { CacheFactory } from './CacheFactory';
-export type { CacheFactoryOptions } from './CacheFactory';
+export { CacheFactory, CacheProfile, CacheFactoryOptions, createCacheFactory } from './CacheFactory';

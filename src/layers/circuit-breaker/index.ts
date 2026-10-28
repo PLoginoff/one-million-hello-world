@@ -50,6 +50,22 @@ export {
   DefaultStateTransitionStrategy,
 } from './strategies/state-transition/StateTransitionStrategy';
 
+// Strategy Pattern Layer
+export {
+  ICircuitBreakerStrategy,
+  CircuitBreakerContext,
+  CircuitBreakerStrategyResult,
+  DefaultCircuitBreakerStrategy,
+  LoggingCircuitBreakerStrategy,
+  LogLevel,
+  IStructuredLogger,
+  ConsoleLogger,
+  MetricsCircuitBreakerStrategy,
+  IMetricsCollector,
+  InMemoryMetricsCollector,
+  MetricsSnapshot,
+} from './strategies';
+
 // Statistics Layer
 export { CircuitStatisticsCollector, CircuitStatistics } from './statistics/collectors/CircuitStatisticsCollector';
 export { CircuitPerformanceMetrics, PerformanceMetrics } from './statistics/metrics/CircuitPerformanceMetrics';

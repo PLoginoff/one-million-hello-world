@@ -6,7 +6,7 @@
  */
 
 import { IInbox } from '../interfaces/IInbox';
-import { InboxResult, InboxContext } from '../types/inbox-types';
+import { InboxResult, InboxContext, InboxError } from '../types/inbox-types';
 
 export class Inbox implements IInbox {
   private _config: Record<string, unknown>;
@@ -26,12 +26,13 @@ export class Inbox implements IInbox {
       return Promise.resolve({ success: true, data: output });
     } catch (error) {
       this._recordMetric('failureCount', 1);
+      const inboxError: InboxError = {
+        code: 'INBOX_EXECUTION_ERROR',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      };
       return Promise.resolve({
         success: false,
-        error: {
-          code: 'INBOX_EXECUTION_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown error',
-        },
+        error: inboxError,
       });
     }
   }

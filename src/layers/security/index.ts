@@ -18,4 +18,8 @@ export * from './domain';
 export * from './configuration';
 export * from './strategies';
 export * from './factories';
+export * from './health';
+export * from './metrics';
+export * from './errors';
+export * from './adapters';
 export { SecurityHelpers } from './utils';

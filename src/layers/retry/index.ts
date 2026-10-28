@@ -38,3 +38,19 @@ export {
   ConfigValidationError,
   ConfigValidationWarning,
 } from './configuration/validators/RetryConfigValidator';
+
+// Strategy Pattern Layer
+export {
+  IRetryStrategy,
+  RetryContext,
+  RetryStrategyResult,
+  DefaultRetryStrategy,
+  LoggingRetryStrategy,
+  LogLevel,
+  IStructuredLogger,
+  ConsoleLogger,
+  MetricsRetryStrategy,
+  IMetricsCollector,
+  InMemoryMetricsCollector,
+  MetricsSnapshot,
+} from './strategies';

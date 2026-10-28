@@ -1,1 +1,1 @@
-export { DeadLetterConfigurationBuilder, DeadLetterConfiguration } from './DeadLetterConfigurationBuilder';
+export { DeadLetterConfigurationBuilder } from './DeadLetterConfigurationBuilder';
