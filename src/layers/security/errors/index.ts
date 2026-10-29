@@ -4,10 +4,9 @@
  * Exports all security error classes and types.
  */
 
+export type { SecurityErrorCode, SecurityErrorContext } from './SecurityError';
 export {
   SecurityError,
-  SecurityErrorCode,
-  SecurityErrorContext,
   SecurityConfigurationError,
   SecurityExecutionError,
   SecurityTimeoutError,

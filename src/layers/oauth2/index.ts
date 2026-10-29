@@ -12,3 +12,6 @@ export * from './domain';
 export * from './configuration';
 export * from './strategies';
 export * from './factories';
+export * from './core';
+export * from './grants';
+export { OAuth2AuthorizationServer } from './OAuth2AuthorizationServer';

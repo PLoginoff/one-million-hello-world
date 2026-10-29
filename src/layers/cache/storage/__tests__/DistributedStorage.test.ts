@@ -149,11 +149,10 @@ describe('DistributedStorage', () => {
       await storage.set('key1', entry1);
       await storage.set('key2', entry2);
       
-      setTimeout(async () => {
-        await storage.cleanup();
-        expect(storage.has('key1')).toBe(true);
-        expect(storage.has('key2')).toBe(false);
-      }, 10);
+      await new Promise(resolve => setTimeout(resolve, 20));
+      await storage.cleanup();
+      expect(storage.has('key1')).toBe(true);
+      expect(storage.has('key2')).toBe(false);
     });
   });
 

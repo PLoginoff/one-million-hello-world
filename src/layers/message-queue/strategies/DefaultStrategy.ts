@@ -6,15 +6,7 @@
 
 import { MessageQueueStrategyContext, MessageQueueStrategyResult, IMessageQueueStrategy } from '../types/message-queue-types';
 
-/**
- * Base interface for message queue strategies
- */
-export interface IMessageQueueStrategy {
-  readonly name: string;
-  readonly priority: number;
-  execute(context: MessageQueueStrategyContext): Promise<MessageQueueStrategyResult>;
-  canHandle(context: MessageQueueStrategyContext): boolean;
-}
+export type { IMessageQueueStrategy };
 
 export class MessageQueueDefaultStrategy implements IMessageQueueStrategy {
   readonly name = 'default';

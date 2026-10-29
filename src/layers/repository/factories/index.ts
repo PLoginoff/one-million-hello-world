@@ -1,1 +1,1 @@
-export { RepositoryStrategyFactory, IRepositoryStrategy } from './RepositoryStrategyFactory';
+export { RepositoryStrategyFactory, IRepositoryLegacyStrategy } from './RepositoryStrategyFactory';

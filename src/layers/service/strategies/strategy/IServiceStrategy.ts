@@ -13,6 +13,11 @@ export interface IServiceStrategy {
   getName(): string;
 
   /**
+   * Get strategy priority (higher values = higher priority)
+   */
+  getPriority(): number;
+
+  /**
    * Execute service
    */
   execute(service: ServiceEntity, input: unknown): Promise<unknown>;

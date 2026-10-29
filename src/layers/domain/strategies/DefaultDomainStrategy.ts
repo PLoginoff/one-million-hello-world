@@ -86,6 +86,14 @@ export class DefaultDomainStrategy<TInput = unknown, TOutput = unknown> implemen
   }
 
   /**
+   * Alias for execute (backward compatibility).
+   */
+  async process(input: TInput, context?: DomainContext): Promise<DomainResult<TOutput>> {
+    const ctx = context ?? { correlationId: 'default', timestamp: new Date() };
+    return this.execute(input, ctx);
+  }
+
+  /**
    * Gets the total execution count for this strategy instance.
    *
    * @returns The number of times execute has been called

@@ -325,7 +325,7 @@ describe('MemoryEventStore', () => {
     });
 
     it('should handle clearing empty store', async () => {
-      await expect(store.clear()).resolves.not.toThrow();
+      await expect(store.clear()).resolves.toBeUndefined();
       const count = await store.count();
       expect(count).toBe(0);
     });

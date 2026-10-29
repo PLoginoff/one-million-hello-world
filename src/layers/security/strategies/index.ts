@@ -1,4 +1,4 @@
-export { SecurityDefaultStrategy, ISecurityStrategy } from './DefaultStrategy';
+export { SecurityDefaultStrategy, ISecurityStrategy as ISecurityLegacyStrategy } from './DefaultStrategy';
 export { SecurityFastStrategy } from './FastStrategy';
 export { SecurityReliableStrategy } from './ReliableStrategy';
 export { SecurityCachedStrategy } from './CachedStrategy';
@@ -6,7 +6,7 @@ export { SecurityBatchStrategy } from './BatchStrategy';
 export {
   SecurityLoggingStrategy,
   SecurityLoggingStrategyOptions,
-  SecurityLogger,
+  SecurityLogger as SecurityLegacyLogger,
   SecurityLoggingStrategyFactory,
 } from './LoggingStrategy';
 export {

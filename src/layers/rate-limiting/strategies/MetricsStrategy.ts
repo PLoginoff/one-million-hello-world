@@ -63,11 +63,10 @@ export class RateLimitingMetricsStrategy implements IRateLimitingStrategy {
   async execute(
     input: unknown
   ): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }> {
+    this._executionCount++;
     if (Math.random() > this.options.sampleRate) {
       return this.wrappedStrategy.execute(input);
     }
-
-    this._executionCount++;
     const startTime = Date.now();
 
     try {

@@ -7,6 +7,11 @@
 
 export { IWriteModel } from './interfaces/IWriteModel';
 export { WriteModel } from './implementations/WriteModel';
+export * from './implementations/AggregateRoot';
+export * from './implementations/EventStorage';
+export * from './implementations/AggregateRepository';
+export * from './implementations/CommandRouter';
+export * from './implementations/InvariantRegistry';
 export * from './types/write-model-types';
 export * from './domain';
 export * from './configuration';

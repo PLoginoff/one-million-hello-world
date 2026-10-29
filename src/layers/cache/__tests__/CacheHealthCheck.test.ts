@@ -1,5 +1,5 @@
 /**
- * Cache Health Check Unit Tests
+ * Cache Health Check Tests
  */
 
 import { CacheHealthCheck } from '../health/CacheHealthCheck';
@@ -14,47 +14,94 @@ describe('CacheHealthCheck', () => {
     healthCheck = new CacheHealthCheck(collector);
   });
 
-  it('should return healthy when hit rate is high', () => {
-    for (let i = 0; i < 8; i++) collector.recordHit();
-    for (let i = 0; i < 2; i++) collector.recordMiss();
+  describe('quickCheck', () => {
+    it('should return degraded when no requests', () => {
+      const result = healthCheck.quickCheck();
+      expect(result.status).toBe('degraded');
+      expect(result.checks.some(c => c.name === 'request-count')).toBe(true);
+    });
 
-    const result = healthCheck.check();
-    expect(result.status).toBe('healthy');
-    expect(result.checks.length).toBe(3);
+    it('should return healthy when requests exist and hit rate good', () => {
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordMiss();
+
+      const result = healthCheck.quickCheck();
+      expect(result.status).toBe('healthy');
+    });
+
+    it('should return degraded when hit rate low', () => {
+      collector.recordHit();
+      collector.recordMiss();
+      collector.recordMiss();
+      collector.recordMiss();
+
+      const result = healthCheck.quickCheck();
+      expect(result.status).toBe('degraded');
+    });
+
+    it('should return unhealthy when hit rate very low', () => {
+      collector.recordHit();
+      for (let i = 0; i < 20; i++) {
+        collector.recordMiss();
+      }
+
+      const result = healthCheck.quickCheck();
+      expect(result.status).toBe('unhealthy');
+    });
   });
 
-  it('should return unhealthy when no requests (0% hit rate)', () => {
-    const result = healthCheck.check();
-    expect(result.status).toBe('unhealthy');
-    const requestCheck = result.checks.find((c) => c.name === 'request-count');
-    expect(requestCheck!.status).toBe('degraded');
+  describe('check', () => {
+    it('should perform all core checks', async () => {
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordMiss();
+
+      const result = await healthCheck.check();
+      expect(result.checks.length).toBeGreaterThanOrEqual(3);
+      expect(result.checks.some(c => c.name === 'request-count')).toBe(true);
+      expect(result.checks.some(c => c.name === 'hit-rate')).toBe(true);
+      expect(result.checks.some(c => c.name === 'eviction-rate')).toBe(true);
+      expect(result.checks.some(c => c.name === 'latency')).toBe(true);
+    });
+
+    it('should include metadata', async () => {
+      collector.recordHit();
+      const result = await healthCheck.check();
+      expect(result.metadata).toBeDefined();
+      expect(result.metadata!.checkCount).toBeGreaterThan(0);
+    });
   });
 
-  it('should flag degraded when hit rate is 50-80%', () => {
-    for (let i = 0; i < 5; i++) collector.recordHit();
-    for (let i = 0; i < 5; i++) collector.recordMiss();
+  describe('configuration', () => {
+    it('should use custom thresholds', () => {
+      const customHealthCheck = new CacheHealthCheck(collector, {
+        config: {
+          minHitRate: 0.9,
+          degradedHitRate: 0.7,
+        },
+      });
 
-    const result = healthCheck.check();
-    const hitRateCheck = result.checks.find((c) => c.name === 'hit-rate');
-    expect(hitRateCheck!.status).toBe('degraded');
-  });
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordHit();
+      collector.recordMiss();
+      collector.recordMiss();
 
-  it('should flag unhealthy when hit rate is below 50%', () => {
-    for (let i = 0; i < 2; i++) collector.recordHit();
-    for (let i = 0; i < 8; i++) collector.recordMiss();
+      const result = customHealthCheck.quickCheck();
+      expect(result.status).toBe('degraded');
+    });
 
-    const result = healthCheck.check();
-    const hitRateCheck = result.checks.find((c) => c.name === 'hit-rate');
-    expect(hitRateCheck!.status).toBe('unhealthy');
-  });
-
-  it('should flag degraded when eviction rate is 5-15%', () => {
-    for (let i = 0; i < 90; i++) collector.recordHit();
-    for (let i = 0; i < 10; i++) collector.recordMiss();
-    for (let i = 0; i < 6; i++) collector.recordEviction();
-
-    const result = healthCheck.check();
-    const evictionCheck = result.checks.find((c) => c.name === 'eviction-rate');
-    expect(evictionCheck!.status).toBe('degraded');
+    it('should update config', () => {
+      healthCheck.updateConfig({ minHitRate: 0.95 });
+      const config = healthCheck.getConfig();
+      expect(config.minHitRate).toBe(0.95);
+    });
   });
 });

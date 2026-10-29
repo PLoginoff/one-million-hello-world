@@ -48,7 +48,8 @@ const createMockRedisClient = (): RedisClient => {
     },
     async keys(pattern: string) {
       const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-      return Array.from(store.keys()).filter(k => regex.test(k));
+      const allKeys = new Set([...store.keys(), ...sets.keys(), ...hashes.keys(), ...sortedSets.keys()]);
+      return Array.from(allKeys).filter(k => regex.test(k));
     },
     async hget(key: string, field: string) {
       const hash = hashes.get(key);
@@ -140,12 +141,38 @@ const createMockRedisClient = (): RedisClient => {
           return [1, limit - 1, window];
         }
         const current = parseInt(entry.value, 10);
-        if (current >= limit) {
-          return [current, 0, entry.expiry ? entry.expiry - Date.now() : window];
-        }
         const next = current + 1;
         store.set(key, { value: next.toString(), expiry: entry.expiry || Date.now() + window });
+        if (current >= limit) {
+          return [next, 0, entry.expiry ? entry.expiry - Date.now() : window];
+        }
         return [next, limit - next, entry.expiry ? entry.expiry - Date.now() : window];
+      }
+      if (script.includes('slidingWindowLog')) {
+        const key = keys[0];
+        const limit = parseInt(keys[1] as string, 10);
+        const window = parseInt(keys[2] as string, 10);
+        const now = parseInt(keys[3] as string, 10);
+        const windowStart = now - window;
+        
+        const sortedSet = sortedSets.get(key);
+        if (sortedSet) {
+          for (const [member, score] of sortedSet.entries()) {
+            if (score < windowStart) {
+              sortedSet.delete(member);
+            }
+          }
+        }
+        
+        const count = sortedSet?.size ?? 0;
+        if (count < limit) {
+          const member = `${now}:${Math.random()}`;
+          if (!sortedSets.has(key)) sortedSets.set(key, new Map());
+          sortedSets.get(key)!.set(member, now);
+          return [1, count + 1, limit - count - 1, window];
+        } else {
+          return [0, count, 0, window];
+        }
       }
       if (script.includes('slidingWindow')) {
         const key = keys[0];
@@ -166,7 +193,7 @@ const createMockRedisClient = (): RedisClient => {
         
         const current = sortedSet?.size ?? 0;
         if (current >= limit) {
-          return [current, 0, window];
+          return [current + 1, 0, window];
         }
         
         const member = `${now}:${Math.random()}`;
@@ -205,36 +232,12 @@ const createMockRedisClient = (): RedisClient => {
           return [0, newTokens, waitTime];
         }
       }
-      if (script.includes('slidingWindowLog')) {
-        const key = keys[0];
-        const limit = parseInt(keys[1] as string, 10);
-        const window = parseInt(keys[2] as string, 10);
-        const now = parseInt(keys[3] as string, 10);
-        const windowStart = now - window;
-        
-        const sortedSet = sortedSets.get(key);
-        if (sortedSet) {
-          for (const [member, score] of sortedSet.entries()) {
-            if (score < windowStart) {
-              sortedSet.delete(member);
-            }
-          }
-        }
-        
-        const count = sortedSet?.size ?? 0;
-        if (count < limit) {
-          const member = `${now}:${Math.random()}`;
-          if (!sortedSets.has(key)) sortedSets.set(key, new Map());
-          sortedSets.get(key)!.set(member, now);
-          return [1, count + 1, limit - count - 1, window];
-        } else {
-          return [0, count, 0, window];
-        }
-      }
       return null;
     },
     async evalsha(sha: string, numKeys: number, ...keys: string[]) {
-      return this.eval('', numKeys, ...keys);
+      const script = scriptCache.get(sha);
+      if (!script) return null;
+      return this.eval(script, numKeys, ...keys);
     },
     async scriptLoad(script: string) {
       const sha = 'sha-' + Math.random().toString(36).substring(7);

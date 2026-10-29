@@ -112,3 +112,4 @@ export {
   getDeadLetterErrorSeverity,
   isDeadLetterErrorRetryable,
 } from './errors';
+export * from "./implementations/DeadLetterQueue";

@@ -195,7 +195,7 @@ describe('ConsoleEventPublisher', () => {
     });
 
     it('should handle connecting when already connected', async () => {
-      await expect(publisher.connect()).resolves.not.toThrow();
+      await expect(publisher.connect()).resolves.toBeUndefined();
       expect(publisher.isConnected()).toBe(true);
     });
   });
@@ -208,7 +208,7 @@ describe('ConsoleEventPublisher', () => {
 
     it('should handle disconnecting when already disconnected', async () => {
       await publisher.disconnect();
-      await expect(publisher.disconnect()).resolves.not.toThrow();
+      await expect(publisher.disconnect()).resolves.toBeUndefined();
       expect(publisher.isConnected()).toBe(false);
     });
   });

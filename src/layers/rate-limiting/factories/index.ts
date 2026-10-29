@@ -1,1 +1,1 @@
-export { RateLimitingStrategyFactory, IRateLimitingStrategy } from './RateLimitingStrategyFactory';
+export { RateLimitingStrategyFactory } from './RateLimitingStrategyFactory';

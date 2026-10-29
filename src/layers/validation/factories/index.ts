@@ -1,1 +1,1 @@
-export { ValidationStrategyFactory, IValidationStrategy } from './ValidationStrategyFactory';
+export { ValidationStrategyFactory, IValidationLegacyStrategy } from './ValidationStrategyFactory';

@@ -1,4 +1,4 @@
-export { RateLimitingDefaultStrategy, IRateLimitingStrategy } from './DefaultStrategy';
+export { RateLimitingDefaultStrategy, IRateLimitingStrategy as IRateLimitingLegacyStrategy } from './DefaultStrategy';
 export { RateLimitingFastStrategy } from './FastStrategy';
 export { RateLimitingReliableStrategy } from './ReliableStrategy';
 export { RateLimitingCachedStrategy } from './CachedStrategy';
@@ -6,7 +6,7 @@ export { RateLimitingBatchStrategy } from './BatchStrategy';
 export {
   RateLimitingLoggingStrategy,
   RateLimitingLoggingStrategyOptions,
-  RateLimitingLogger,
+  RateLimitingLogger as RateLimitingLegacyLogger,
   RateLimitingLoggingStrategyFactory,
 } from './LoggingStrategy';
 export {

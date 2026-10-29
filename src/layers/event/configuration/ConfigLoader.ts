@@ -6,14 +6,14 @@
  */
 
 import { EventBusConfig, EventBusConfigOptions } from './EventBusConfig';
-import { ConfigValidator, ValidationResult } from './ConfigValidator';
+import { ConfigValidator, LegacyValidationResult } from './ConfigValidator';
 
 export type ConfigSource = 'env' | 'file' | 'programmatic' | 'default';
 
 export interface LoadedConfig {
   config: EventBusConfig;
   source: ConfigSource;
-  validationResult: ValidationResult;
+  validationResult: LegacyValidationResult;
 }
 
 export class ConfigLoader {

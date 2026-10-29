@@ -1,1 +1,23 @@
-export { EventDEFAULTS, EventLIMITS, EventSTRATEGIES } from './EventDefaults';
+/**
+ * Event Configuration Defaults
+ *
+ * Exports all default configuration values.
+ *
+ * @module EventLayer/Configuration
+ */
+
+export {
+  DEFAULT_EVENT_BUS_CONFIG,
+  EVENT_CONFIG_LIMITS,
+  DEFAULT_ADAPTER_CONFIGS,
+  DEFAULT_STRATEGY_CONFIGS,
+  DEFAULT_METRICS_CONFIG,
+  DEFAULT_HEALTH_CHECK_CONFIG,
+  DEFAULT_LOGGING_CONFIG,
+  PROFILE_DEFAULTS,
+  VALID_LOG_LEVELS,
+  VALID_SERIALIZATION_FORMATS,
+  VALID_ADAPTER_TYPES,
+  VALID_STRATEGY_NAMES,
+  VALID_PROFILES,
+} from './EventDefaults';

@@ -1,1 +1,1 @@
-export { MiddlewareStrategyFactory, IMiddlewareStrategy } from './MiddlewareStrategyFactory';
+export { MiddlewareStrategyFactory, IMiddlewareLegacyStrategy } from './MiddlewareStrategyFactory';

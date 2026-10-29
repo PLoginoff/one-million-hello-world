@@ -21,6 +21,34 @@ export interface SecurityContextData {
 export class SecurityContextEntity {
   readonly data: SecurityContextData;
 
+  get authenticated(): boolean {
+    return this.data.authenticated;
+  }
+
+  get userId(): string | undefined {
+    return this.data.userId;
+  }
+
+  get roles(): string[] {
+    return this.data.roles;
+  }
+
+  get permissions(): string[] {
+    return this.data.permissions;
+  }
+
+  get ipAddress(): string {
+    return this.data.ipAddress;
+  }
+
+  get userAgent(): string {
+    return this.data.userAgent;
+  }
+
+  get securityLevel(): SecurityLevel {
+    return this.data.securityLevel;
+  }
+
   private constructor(data: SecurityContextData) {
     this.data = { ...data };
   }
@@ -174,6 +202,20 @@ export class SecurityContextEntity {
    */
   toObject(): SecurityContextData {
     return { ...this.data };
+  }
+
+  /**
+   * Serialize to JSON-compatible object
+   */
+  toJSON(): SecurityContextData {
+    return { ...this.data };
+  }
+
+  /**
+   * Deserialize from JSON-compatible object
+   */
+  static fromJSON(data: SecurityContextData): SecurityContextEntity {
+    return new SecurityContextEntity(data);
   }
 
   /**

@@ -41,7 +41,7 @@ export interface RateLimitingErrorContext {
 export class RateLimitingError extends Error {
   public readonly code: RateLimitingErrorCode;
   public readonly context: RateLimitingErrorContext;
-  public readonly cause?: Error;
+  public override readonly cause?: Error;
   public readonly isOperational: boolean;
 
   constructor(

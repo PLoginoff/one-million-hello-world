@@ -146,7 +146,9 @@ const createMockRedisClient = (): RedisClient => {
         }
         const current = parseInt(entry.value, 10);
         if (current >= limit) {
-          return [current, 0, entry.expiry ? entry.expiry - Date.now() : window];
+          const next = current + 1;
+          store.set(key, { value: next.toString(), expiry: entry.expiry });
+          return [next, 0, entry.expiry ? entry.expiry - Date.now() : window];
         }
         const next = current + 1;
         store.set(key, { value: next.toString(), expiry: entry.expiry || Date.now() + window });
@@ -161,7 +163,8 @@ const createMockRedisClient = (): RedisClient => {
       return null;
     },
     async evalsha(sha: string, numKeys: number, ...keys: string[]) {
-      return this.eval('', numKeys, ...keys);
+      const script = scriptCache.get(sha) ?? '';
+      return this.eval(script, numKeys, ...keys);
     },
     async scriptLoad(script: string) {
       const sha = 'sha-' + Math.random().toString(36).substring(7);

@@ -10,31 +10,13 @@ import { InboxErrorCode, InboxErrorClass } from '../types/inbox-types';
  * Base error class for all inbox errors
  */
 export class InboxError extends InboxErrorClass {
-  readonly code: InboxErrorCode;
-  readonly timestamp: number;
-  readonly details?: Record<string, unknown>;
-
   constructor(code: InboxErrorCode, message: string, details?: Record<string, unknown>) {
-    super(message);
+    super(code, message, details);
     this.name = this.constructor.name;
-    this.code = code;
-    this.timestamp = Date.now();
-    this.details = details;
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);
     }
-  }
-
-  toJSON(): Record<string, unknown> {
-    return {
-      name: this.name,
-      message: this.message,
-      code: this.code,
-      timestamp: this.timestamp,
-      details: this.details,
-      stack: this.stack,
-    };
   }
 }
 

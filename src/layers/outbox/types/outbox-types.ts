@@ -289,7 +289,7 @@ export enum OutboxErrorCode {
 /**
  * Outbox Error Class
  */
-export class OutboxError extends Error {
+export class OutboxErrorClass extends Error {
   readonly code: OutboxErrorCode;
   readonly timestamp: number;
   readonly details?: Record<string, unknown>;

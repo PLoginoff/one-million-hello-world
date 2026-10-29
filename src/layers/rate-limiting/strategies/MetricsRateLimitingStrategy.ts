@@ -98,11 +98,10 @@ export class MetricsRateLimitingStrategy implements IRateLimitingStrategy {
    */
   async execute(context: RateLimitingStrategyContext): Promise<StrategyResult> {
     // Check sample rate
+    this.executionCount++;
     if (Math.random() > this.options.sampleRate) {
       return this.wrappedStrategy.execute(context);
     }
-
-    this.executionCount++;
     const startTime = Date.now();
 
     try {

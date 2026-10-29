@@ -76,7 +76,7 @@ export class SecurityRedisAdapter extends SecurityInMemoryAdapter {
     // Rate limit check script (atomic check-and-increment)
     this.luaScripts.set(
       'rateLimitCheck',
-      `
+      `-- rateLimitCheck
       local key = KEYS[1]
       local limit = tonumber(ARGV[1])
       local window = tonumber(ARGV[2])
@@ -87,7 +87,8 @@ export class SecurityRedisAdapter extends SecurityInMemoryAdapter {
       end
       if tonumber(current) >= limit then
         local ttl = redis.call('PTTL', key)
-        return {tonumber(current), 0, ttl}
+        redis.call('INCR', key)
+        return {tonumber(current) + 1, 0, ttl}
       end
       local incr = redis.call('INCR', key)
       if incr == 1 then

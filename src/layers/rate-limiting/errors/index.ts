@@ -4,10 +4,9 @@
  * Exports all rate limiting error classes and types.
  */
 
+export type { RateLimitingErrorCode, RateLimitingErrorContext } from './RateLimitingError';
 export {
   RateLimitingError,
-  RateLimitingErrorCode,
-  RateLimitingErrorContext,
   RateLimitingConfigurationError,
   RateLimitingExecutionError,
   RateLimitingTimeoutError,

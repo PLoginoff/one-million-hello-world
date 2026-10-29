@@ -60,12 +60,11 @@ export class SecurityMetricsStrategy implements ISecurityStrategy {
   async execute(
     input: unknown
   ): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }> {
+    this._executionCount++;
     // Check sample rate
     if (Math.random() > this.options.sampleRate) {
       return this.wrappedStrategy.execute(input);
     }
-
-    this._executionCount++;
     const startTime = Date.now();
 
     try {

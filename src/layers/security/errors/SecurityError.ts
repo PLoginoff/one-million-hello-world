@@ -40,7 +40,7 @@ export interface SecurityErrorContext {
 export class SecurityError extends Error {
   public readonly code: SecurityErrorCode;
   public readonly context: SecurityErrorContext;
-  public readonly cause?: Error;
+  public override readonly cause?: Error;
   public readonly isOperational: boolean;
 
   constructor(code: SecurityErrorCode, message: string, context: Partial<SecurityErrorContext> = {}, cause?: Error) {

@@ -9,7 +9,7 @@ export { DefaultMiddlewareStrategy, type MiddlewareStage } from './DefaultMiddle
 export {
   LoggingMiddlewareStrategy,
   ConsoleMiddlewareLogger,
-  LogLevel,
+  LogLevel as MiddlewareLogLevel,
   type IMiddlewareLogger,
   type MiddlewareLogEntry,
 } from './LoggingMiddlewareStrategy';

@@ -4,22 +4,18 @@
  * Comprehensive error hierarchy for the Message Queue Layer.
  */
 
-import { MessageQueueErrorCode } from '../types/message-queue-types';
+import { MessageQueueErrorCode, MessageQueueErrorClass } from '../types/message-queue-types';
 
 /**
  * Base error class for all message queue errors
  */
-export abstract class MessageQueueError extends Error {
-  readonly code: MessageQueueErrorCode;
+export class MessageQueueError extends MessageQueueErrorClass {
   readonly timestamp: number;
-  readonly details?: Record<string, unknown>;
 
   constructor(code: MessageQueueErrorCode, message: string, details?: Record<string, unknown>) {
-    super(message);
+    super(code, message, details);
     this.name = this.constructor.name;
-    this.code = code;
     this.timestamp = Date.now();
-    this.details = details;
 
     // Maintains proper stack trace in V8 environments
     if (Error.captureStackTrace) {

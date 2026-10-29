@@ -7,6 +7,17 @@
 
 export { IRulesEngine } from './interfaces/IRulesEngine';
 export { RulesEngine } from './implementations/RulesEngine';
+export { ProductionRuleEngine } from './implementations/ProductionRuleEngine';
+export type {
+  Rule,
+  RuleAction,
+  RuleActionContext,
+  RuleEngineOptions,
+  Activation,
+  ConflictStrategy,
+  FireRecord,
+  EngineRunResult,
+} from './implementations/ProductionRuleEngine';
 export * from './types/rules-engine-types';
 export * from './domain';
 export * from './configuration';

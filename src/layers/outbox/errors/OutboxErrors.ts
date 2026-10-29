@@ -9,7 +9,7 @@ import { OutboxErrorCode } from '../types/outbox-types';
 /**
  * Base error class for all outbox errors
  */
-export abstract class OutboxError extends Error {
+export class OutboxError extends Error {
   readonly code: OutboxErrorCode;
   readonly timestamp: number;
   readonly details?: Record<string, unknown>;

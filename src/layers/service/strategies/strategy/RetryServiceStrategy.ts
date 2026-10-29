@@ -45,6 +45,10 @@ export class RetryServiceStrategy implements IServiceStrategy {
     return `RETRY(${this._inner.getName()})`;
   }
 
+  getPriority(): number {
+    return this._inner.getPriority();
+  }
+
   async execute(service: ServiceEntity, input: unknown): Promise<unknown> {
     let lastError: Error | undefined;
 

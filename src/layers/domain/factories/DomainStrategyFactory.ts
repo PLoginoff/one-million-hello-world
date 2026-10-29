@@ -7,6 +7,11 @@
 
 import { IDomainStrategy } from '../strategies/IDomainStrategy';
 import { DefaultDomainStrategy } from '../strategies/DefaultDomainStrategy';
+import { DomainDefaultStrategy } from '../strategies/DefaultStrategy';
+import { DomainFastStrategy } from '../strategies/FastStrategy';
+import { DomainReliableStrategy } from '../strategies/ReliableStrategy';
+import { DomainCachedStrategy } from '../strategies/CachedStrategy';
+import { DomainBatchStrategy } from '../strategies/BatchStrategy';
 import { EventSourcingDomainStrategy } from '../strategies/EventSourcingDomainStrategy';
 import { LoggingDomainStrategy, ILogger } from '../strategies/LoggingDomainStrategy';
 import { MetricsDomainStrategy, StrategyMetricsSnapshot } from '../strategies/MetricsDomainStrategy';
@@ -88,6 +93,10 @@ export class DomainStrategyFactory {
 
   private _registerBuiltinStrategies(): void {
     this._strategies.set('default', () => new DefaultDomainStrategy());
+    this._strategies.set('fast', () => new DomainFastStrategy());
+    this._strategies.set('reliable', () => new DomainReliableStrategy());
+    this._strategies.set('cached', () => new DomainCachedStrategy());
+    this._strategies.set('batch', () => new DomainBatchStrategy());
     this._strategies.set('event-sourcing', () => new EventSourcingDomainStrategy());
   }
 

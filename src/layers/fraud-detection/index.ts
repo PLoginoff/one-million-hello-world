@@ -6,7 +6,7 @@
  */
 
 export { IFraudDetection } from './interfaces/IFraudDetection';
-export { FraudDetection } from './implementations/FraudDetection';
+export * from './implementations';
 export * from './types/fraud-detection-types';
 export * from './domain';
 export * from './configuration';

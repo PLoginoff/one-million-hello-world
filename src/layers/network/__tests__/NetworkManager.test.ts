@@ -95,13 +95,13 @@ describe('NetworkManager', () => {
 
   describe('closeConnection', () => {
     it('should not throw when closing non-existent connection', async () => {
-      await expect(manager.closeConnection('non-existent-id')).resolves.not.toThrow();
+      await expect(manager.closeConnection('non-existent-id')).resolves.toBeUndefined();
     });
   });
 
   describe('closeAllConnections', () => {
     it('should close all connections without throwing', async () => {
-      await expect(manager.closeAllConnections()).resolves.not.toThrow();
+      await expect(manager.closeAllConnections()).resolves.toBeUndefined();
       expect(manager.getActiveConnectionCount()).toBe(0);
     });
   });

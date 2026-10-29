@@ -93,12 +93,11 @@ export class MetricsSecurityStrategy implements ISecurityStrategy {
    * @returns Promise resolving to the strategy result
    */
   async execute(context: SecurityStrategyContext): Promise<StrategyResult> {
+    this.executionCount++;
     // Check sample rate
     if (Math.random() > this.options.sampleRate) {
       return this.wrappedStrategy.execute(context);
     }
-
-    this.executionCount++;
     const startTime = Date.now();
 
     try {

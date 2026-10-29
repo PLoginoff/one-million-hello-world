@@ -102,7 +102,7 @@ describe('NetworkConnection', () => {
     });
 
     it('should not throw when disconnecting already disconnected connection', async () => {
-      await expect(connection.disconnect()).resolves.not.toThrow();
+      await expect(connection.disconnect()).resolves.toBeUndefined();
     });
   });
 

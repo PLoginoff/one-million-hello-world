@@ -7,16 +7,16 @@
 
 import { EventBusConfig, EventBusConfigOptions } from './EventBusConfig';
 
-export interface ValidationError {
+export interface LegacyValidationError {
   field: string;
   message: string;
   value: unknown;
 }
 
-export interface ValidationResult {
+export interface LegacyValidationResult {
   valid: boolean;
-  errors: ValidationError[];
-  warnings: ValidationError[];
+  errors: LegacyValidationError[];
+  warnings: LegacyValidationError[];
 }
 
 export class ConfigValidator {
@@ -27,9 +27,9 @@ export class ConfigValidator {
     this._addDefaultRules();
   }
 
-  validate(config: EventBusConfig | EventBusConfigOptions): ValidationResult {
-    const errors: ValidationError[] = [];
-    const warnings: ValidationError[] = [];
+  validate(config: EventBusConfig | EventBusConfigOptions): LegacyValidationResult {
+    const errors: LegacyValidationError[] = [];
+    const warnings: LegacyValidationError[] = [];
 
     for (const rule of this._rules) {
       const result = rule.validate(config);

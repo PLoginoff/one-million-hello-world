@@ -6,7 +6,7 @@
 
 import { InvalidationStrategy } from '../../types/cache-types';
 import { CacheConfigOptions, DefaultConfigs } from '../defaults/DefaultConfigs';
-import { CacheConfigValidator } from '../validators/CacheConfigValidator';
+import { CacheConfigValidator, Validators } from '../validators/CacheConfigValidator';
 
 export class CacheConfigBuilder {
   private config: CacheConfigOptions;
@@ -92,7 +92,7 @@ export class CacheConfigBuilder {
    * Build the configuration
    */
   build(): CacheConfigOptions {
-    CacheConfigValidator.validate(this.config);
+    Validators.standard.validateOrThrow(this.config);
     return { ...this.config };
   }
 

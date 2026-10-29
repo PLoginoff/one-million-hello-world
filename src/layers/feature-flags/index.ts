@@ -7,6 +7,18 @@
 
 export { IFeatureFlags } from './interfaces/IFeatureFlags';
 export { FeatureFlags } from './implementations/FeatureFlags';
+export {
+  FlagEvaluator,
+  InMemoryFlagStore,
+  CountingAnalytics,
+  boolFlag,
+  multivariateFlag,
+} from './implementations/FlagEvaluator';
+export type {
+  FlagStore,
+  EvaluationAnalytics,
+  FlagEvaluatorOptions,
+} from './implementations/FlagEvaluator';
 export * from './types/feature-flags-types';
 export * from './domain';
 export * from './configuration';

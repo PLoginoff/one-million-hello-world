@@ -182,17 +182,13 @@ describe('MiddlewareManager', () => {
   });
 
   describe('finishSpan', () => {
-    it('should finish span and calculate duration', () => {
+    it('should finish span and calculate duration', async () => {
       const span = manager.createSpan('test-operation');
 
-      setTimeout(() => {
-        manager.finishSpan(span);
-      }, 10);
+      await new Promise(resolve => setTimeout(resolve, 10));
+      manager.finishSpan(span);
 
-      setTimeout(() => {
-        const duration = span.duration;
-        expect(duration).toBeGreaterThan(0);
-      }, 20);
+      expect(span.duration).toBeGreaterThan(0);
     });
   });
 

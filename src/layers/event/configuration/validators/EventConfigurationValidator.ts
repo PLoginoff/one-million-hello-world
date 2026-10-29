@@ -2,7 +2,7 @@
  * Event Configuration Validator
  */
 
-import { EventDEFAULTS, EventLIMITS, EventSTRATEGIES } from '../defaults/EventDefaults';
+import { DEFAULT_EVENT_BUS_CONFIG, EVENT_CONFIG_LIMITS, VALID_STRATEGY_NAMES } from '../defaults/EventDefaults';
 
 export interface ValidationResult {
   valid: boolean;
@@ -20,18 +20,18 @@ export class EventConfigurationValidator {
     }
 
     const timeout = config.timeout as number;
-    if (typeof timeout !== 'number' || timeout < EventLIMITS.minTimeout || timeout > EventLIMITS.maxTimeout) {
-      errors.push('timeout must be between ' + EventLIMITS.minTimeout + ' and ' + EventLIMITS.maxTimeout);
+    if (typeof timeout !== 'number' || timeout < EVENT_CONFIG_LIMITS.minTimeout || timeout > EVENT_CONFIG_LIMITS.maxTimeout) {
+      errors.push('timeout must be between ' + EVENT_CONFIG_LIMITS.minTimeout + ' and ' + EVENT_CONFIG_LIMITS.maxTimeout);
     }
 
     const retries = config.retries as number;
-    if (typeof retries !== 'number' || retries < EventLIMITS.minRetries || retries > EventLIMITS.maxRetries) {
-      errors.push('retries must be between ' + EventLIMITS.minRetries + ' and ' + EventLIMITS.maxRetries);
+    if (typeof retries !== 'number' || retries < EVENT_CONFIG_LIMITS.minRetries || retries > EVENT_CONFIG_LIMITS.maxRetries) {
+      errors.push('retries must be between ' + EVENT_CONFIG_LIMITS.minRetries + ' and ' + EVENT_CONFIG_LIMITS.maxRetries);
     }
 
     const strategy = config.strategy as string;
-    if (typeof strategy === 'string' && (EventSTRATEGIES as readonly string[]).indexOf(strategy) < 0) {
-      errors.push('strategy must be one of: ' + EventSTRATEGIES.join(', '));
+    if (typeof strategy === 'string' && VALID_STRATEGY_NAMES.indexOf(strategy) < 0) {
+      errors.push('strategy must be one of: ' + VALID_STRATEGY_NAMES.join(', '));
     }
 
     const logLevel = config.logLevel as string;
@@ -49,7 +49,7 @@ export class EventConfigurationValidator {
     }
   }
 
-  getDefaults(): typeof EventDEFAULTS {
-    return EventDEFAULTS;
+  getDefaults() {
+    return DEFAULT_EVENT_BUS_CONFIG;
   }
 }

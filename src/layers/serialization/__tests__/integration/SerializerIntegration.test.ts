@@ -104,7 +104,8 @@ describe('Serializer Integration', () => {
       const serializer = new SerializerBuilder()
         .withStrictMode(false)
         .build();
-      await expect(serializer.serialize(undefined)).resolves.not.toThrow();
+      const result = await serializer.serialize(undefined);
+      expect(result.success).toBe(true);
     });
 
     it('should handle invalid serialized data', async () => {

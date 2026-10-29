@@ -7,6 +7,10 @@
 
 export { IUnitOfWork } from './interfaces/IUnitOfWork';
 export { UnitOfWork } from './implementations/UnitOfWork';
+export * from './implementations/EntityTracker';
+export * from './implementations/CommitOrdering';
+export * from './implementations/UnitOfWorkEngine';
+export * from './implementations/InMemoryPersister';
 export * from './types/unit-of-work-types';
 export * from './domain';
 export * from './configuration';

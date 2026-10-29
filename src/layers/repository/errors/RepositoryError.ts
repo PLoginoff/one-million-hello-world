@@ -9,7 +9,7 @@ export abstract class RepositoryError extends Error {
   readonly code: string;
   readonly statusCode: number;
   readonly retryable: boolean;
-  readonly details?: Record<string, unknown>;
+  readonly details?: unknown;
   readonly timestamp: Date;
 
   constructor(
@@ -18,7 +18,7 @@ export abstract class RepositoryError extends Error {
     options: {
       statusCode?: number;
       retryable?: boolean;
-      details?: Record<string, unknown>;
+      details?: unknown;
       cause?: Error;
     } = {}
   ) {
@@ -44,7 +44,7 @@ export abstract class RepositoryError extends Error {
     message: string;
     statusCode: number;
     retryable: boolean;
-    details?: Record<string, unknown>;
+    details?: unknown;
     timestamp: string;
     stack?: string;
   } {
@@ -68,7 +68,7 @@ export abstract class RepositoryError extends Error {
     error: {
       code: string;
       message: string;
-      details?: Record<string, unknown>;
+      details?: unknown;
     };
   } {
     return {

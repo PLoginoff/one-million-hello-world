@@ -52,6 +52,20 @@ export interface EventStrategyResult<T = unknown> {
     readonly executionTimeMs: number;
     readonly timestamp: number;
     readonly subscriptionId?: string;
+    readonly batched?: boolean;
+    readonly batchSize?: number;
+    readonly subscriberCount?: number;
+    readonly cacheHit?: boolean;
+    readonly filtered?: boolean;
+    readonly queued?: boolean;
+    readonly retryCount?: number;
+    readonly deadLettered?: boolean;
+    readonly deliveries?: unknown;
+    readonly matchedRule?: string;
+    readonly transformed?: boolean;
+    readonly waitTimeMs?: number;
+    readonly workerId?: unknown;
+    readonly mode?: string;
   };
 }
 

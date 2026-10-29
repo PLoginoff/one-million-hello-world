@@ -28,6 +28,18 @@ export interface PolicyData {
 export class PolicyEntity {
   readonly data: PolicyData;
 
+  get id(): string {
+    return this.data.id;
+  }
+
+  get name(): string {
+    return this.data.name;
+  }
+
+  get description(): string {
+    return this.data.description;
+  }
+
   private constructor(data: PolicyData) {
     this.data = { ...data };
   }
@@ -164,6 +176,20 @@ export class PolicyEntity {
       ...this.data,
       rules: this.data.rules.map((rule) => ({ ...rule })),
     };
+  }
+
+  /**
+   * Serialize to JSON-compatible object
+   */
+  toJSON(): PolicyData {
+    return { ...this.data, rules: this.data.rules.map((rule) => ({ ...rule })) };
+  }
+
+  /**
+   * Deserialize from JSON-compatible object
+   */
+  static fromJSON(data: PolicyData): PolicyEntity {
+    return new PolicyEntity(data);
   }
 
   /**

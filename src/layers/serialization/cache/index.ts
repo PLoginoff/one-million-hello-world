@@ -4,7 +4,8 @@
  * Exports caching layer components.
  */
 
-export { ICacheProvider, CacheEntry } from './ICacheProvider';
+export type { ICacheProvider, CacheEntry } from './ICacheProvider';
 export { InMemoryCacheProvider } from './InMemoryCacheProvider';
 export { LRUCacheProvider } from './LRUCacheProvider';
-export { CacheManager, CacheProviderType } from './CacheManager';
+export { CacheManager } from './CacheManager';
+export type { CacheProviderType } from './CacheManager';

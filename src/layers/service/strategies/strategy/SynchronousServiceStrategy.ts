@@ -12,6 +12,10 @@ export class SynchronousServiceStrategy implements IServiceStrategy {
     return 'SYNCHRONOUS';
   }
 
+  getPriority(): number {
+    return 10;
+  }
+
   async execute(service: ServiceEntity, input: unknown): Promise<unknown> {
     return Promise.resolve(input);
   }

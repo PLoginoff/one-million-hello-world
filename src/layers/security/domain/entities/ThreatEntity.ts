@@ -18,6 +18,18 @@ export interface ThreatData {
 export class ThreatEntity {
   readonly data: ThreatData;
 
+  get type(): ThreatType {
+    return this.data.type;
+  }
+
+  get severity(): ThreatSeverity {
+    return this.data.severity;
+  }
+
+  get sourceIp(): string {
+    return this.data.sourceIp;
+  }
+
   private constructor(data: ThreatData) {
     this.data = { ...data };
   }
@@ -123,6 +135,20 @@ export class ThreatEntity {
       ...this.data,
       metadata: this.data.metadata ? { ...this.data.metadata } : undefined,
     };
+  }
+
+  /**
+   * Serialize to JSON-compatible object
+   */
+  toJSON(): ThreatData {
+    return { ...this.data, metadata: this.data.metadata ? { ...this.data.metadata } : undefined };
+  }
+
+  /**
+   * Deserialize from JSON-compatible object
+   */
+  static fromJSON(data: ThreatData): ThreatEntity {
+    return new ThreatEntity(data);
   }
 
   /**

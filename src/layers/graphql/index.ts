@@ -6,7 +6,7 @@
  */
 
 export { IGraphql } from './interfaces/IGraphql';
-export { Graphql } from './implementations/Graphql';
+export * from './implementations';
 export * from './types/graphql-types';
 export * from './domain';
 export * from './configuration';

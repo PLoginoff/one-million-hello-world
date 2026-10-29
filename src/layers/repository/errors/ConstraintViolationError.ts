@@ -23,7 +23,7 @@ export interface ConstraintViolationErrorDetails {
 }
 
 export class ConstraintViolationError extends RepositoryError {
-  readonly details: ConstraintViolationErrorDetails;
+  override readonly details: ConstraintViolationErrorDetails;
 
   constructor(
     message: string,

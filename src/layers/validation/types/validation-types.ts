@@ -134,6 +134,7 @@ export interface ValidationContext {
   sessionId?: string;
   ipAddress?: string;
   userAgent?: string;
+  correlationId?: string;
 }
 
 /**

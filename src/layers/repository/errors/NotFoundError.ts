@@ -18,7 +18,7 @@ export interface NotFoundErrorDetails {
 }
 
 export class NotFoundError extends RepositoryError {
-  readonly details: NotFoundErrorDetails;
+  override readonly details: NotFoundErrorDetails;
 
   constructor(
     message: string,

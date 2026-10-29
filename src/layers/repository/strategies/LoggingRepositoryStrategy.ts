@@ -230,8 +230,9 @@ export class LoggingRepositoryStrategy<T = unknown> implements IRepositoryStrate
       return {
         ...result,
         metadata: {
-          ...result.metadata,
           strategyName: this.name,
+          executionTimeMs: result.metadata?.executionTimeMs ?? 0,
+          timestamp: result.metadata?.timestamp ?? Date.now(),
         },
       };
     } catch (error) {

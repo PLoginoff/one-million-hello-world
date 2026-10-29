@@ -1,1 +1,2 @@
 export { CacheMetricsCollector, CacheMetrics, CacheMetricSample } from './CacheMetricsCollector';
+export { CachePrometheusExporter, PrometheusExporterConfig, PrometheusMetricBuilder, PrometheusExporters } from './CachePrometheusExporter';

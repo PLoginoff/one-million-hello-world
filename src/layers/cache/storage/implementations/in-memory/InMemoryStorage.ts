@@ -31,7 +31,8 @@ export class InMemoryStorage<T> implements IStorage<T> {
   }
 
   has(key: string): boolean {
-    return this.storage.has(key);
+    const entry = this.storage.get(key);
+    return entry !== undefined && !entry.isExpired();
   }
 
   keys(): string[] {

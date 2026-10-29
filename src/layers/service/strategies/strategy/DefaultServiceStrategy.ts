@@ -20,6 +20,10 @@ export class DefaultServiceStrategy implements IServiceStrategy {
     return 'DEFAULT';
   }
 
+  getPriority(): number {
+    return 10;
+  }
+
   async execute(service: ServiceEntity, input: unknown): Promise<unknown> {
     if (!service.isEnabled()) {
       throw new Error(`Service '${service.data.id}' is disabled`);

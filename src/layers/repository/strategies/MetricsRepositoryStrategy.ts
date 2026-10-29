@@ -55,9 +55,9 @@ export interface RepositoryStrategyMetrics {
   /** Last execution timestamp */
   readonly lastExecutionTimestamp: number;
   /** Metrics by operation type */
-  readonly byOperation: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation'>>;
+  readonly byOperation: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation' | 'byEntityType'>>;
   /** Metrics by entity type */
-  readonly byEntityType: Record<string, Omit<RepositoryStrategyMetrics, 'byEntityType'>>;
+  readonly byEntityType: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation' | 'byEntityType'>>;
 }
 
 /**
@@ -122,7 +122,7 @@ export class InMemoryRepositoryMetricsCollector implements IRepositoryMetricsCol
     const timeRangeMs = Date.now() - (this._startTimes.get(strategyName) ?? Date.now());
     const throughputPerSecond = timeRangeMs > 0 ? (totalExecutions / timeRangeMs) * 1000 : 0;
 
-    const byOperation: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation'>> = {};
+    const byOperation: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation' | 'byEntityType'>> = {};
     const operationCounts = this._operationCounts.get(strategyName);
     if (operationCounts) {
       for (const [operation, count] of operationCounts.entries()) {
@@ -133,7 +133,7 @@ export class InMemoryRepositoryMetricsCollector implements IRepositoryMetricsCol
       }
     }
 
-    const byEntityType: Record<string, Omit<RepositoryStrategyMetrics, 'byEntityType'>> = {};
+    const byEntityType: Record<string, Omit<RepositoryStrategyMetrics, 'byOperation' | 'byEntityType'>> = {};
     const entityTypeCounts = this._entityTypeCounts.get(strategyName);
     if (entityTypeCounts) {
       for (const [entityType, count] of entityTypeCounts.entries()) {
@@ -344,8 +344,9 @@ export class MetricsRepositoryStrategy<T = unknown> implements IRepositoryStrate
       return {
         ...result,
         metadata: {
-          ...result.metadata,
           strategyName: this.name,
+          executionTimeMs: result.metadata?.executionTimeMs ?? 0,
+          timestamp: result.metadata?.timestamp ?? Date.now(),
         },
       };
     } catch (error) {

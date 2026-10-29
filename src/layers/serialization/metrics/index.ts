@@ -4,7 +4,7 @@
  * Exports metrics and telemetry components.
  */
 
-export {
+export type {
   IMetricsCollector,
   AnyMetric,
   CounterMetric,

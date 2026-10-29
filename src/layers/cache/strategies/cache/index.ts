@@ -6,7 +6,7 @@
  * @module CacheLayer/Strategies
  */
 
-export {
+export type {
   ICacheStrategy,
   IMultiLevelCacheStrategy,
   CacheStrategyConfig,
@@ -16,4 +16,9 @@ export {
 export { LRUCacheStrategy } from './LRUCacheStrategy';
 export { LFUCacheStrategy } from './LFUCacheStrategy';
 export { TTLCacheStrategy } from './TTLCacheStrategy';
-export { TwoTierCacheStrategy, TwoTierCacheConfig } from './TwoTierCacheStrategy';
+export { TwoTierCacheStrategy } from './TwoTierCacheStrategy';
+export type { TwoTierCacheConfig } from './TwoTierCacheStrategy';
+export { FIFOCacheStrategy } from './FIFOCacheStrategy';
+export { RandomCacheStrategy } from './RandomCacheStrategy';
+export { SegmentedCacheStrategy } from './SegmentedCacheStrategy';
+export type { SegmentConfig, SegmentedCacheConfig } from './SegmentedCacheStrategy';

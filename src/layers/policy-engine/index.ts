@@ -7,6 +7,15 @@
 
 export { IPolicyEngine } from './interfaces/IPolicyEngine';
 export { PolicyEngine } from './implementations/PolicyEngine';
+export { PolicyDecisionPoint, PolicyRepository, DecisionCache, contextHash } from './implementations/PolicyDecisionPoint';
+export type {
+  StoredPolicy,
+  PolicyVersionEntry,
+  AuditRecord,
+  AuditListener,
+  PolicyDecisionPointOptions,
+  EvaluateOptions,
+} from './implementations/PolicyDecisionPoint';
 export * from './types/policy-engine-types';
 export * from './domain';
 export * from './configuration';

@@ -10,7 +10,7 @@ import { ValidationReliableStrategy } from '../strategies/ReliableStrategy';
 import { ValidationCachedStrategy } from '../strategies/CachedStrategy';
 import { ValidationBatchStrategy } from '../strategies/BatchStrategy';
 
-export interface IValidationStrategy {
+export interface IValidationLegacyStrategy {
   readonly name: string;
   readonly priority: number;
   execute(input: unknown): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }>;
@@ -18,7 +18,7 @@ export interface IValidationStrategy {
 }
 
 export class ValidationStrategyFactory {
-  private _strategies: Map<string, () => IValidationStrategy>;
+  private _strategies: Map<string, () => IValidationLegacyStrategy>;
 
   constructor() {
     this._strategies = new Map();
@@ -29,7 +29,7 @@ export class ValidationStrategyFactory {
     this._strategies.set('batch', () => new ValidationBatchStrategy());
   }
 
-  create(name: string): IValidationStrategy {
+  create(name: string): IValidationLegacyStrategy {
     const normalizedName = name.toLowerCase();
     const factory = this._strategies.get(normalizedName);
     if (!factory) {
@@ -40,11 +40,11 @@ export class ValidationStrategyFactory {
     return factory();
   }
 
-  createDefault(): IValidationStrategy {
+  createDefault(): IValidationLegacyStrategy {
     return this.create('default');
   }
 
-  registerStrategy(name: string, factory: () => IValidationStrategy): void {
+  registerStrategy(name: string, factory: () => IValidationLegacyStrategy): void {
     this._strategies.set(name.toLowerCase(), factory);
   }
 
@@ -52,13 +52,13 @@ export class ValidationStrategyFactory {
     return Array.from(this._strategies.keys());
   }
 
-  createAll(): IValidationStrategy[] {
+  createAll(): IValidationLegacyStrategy[] {
     return Array.from(this._strategies.values()).map(function (f) {
       return f();
     });
   }
 
-  createByPriority(): IValidationStrategy[] {
+  createByPriority(): IValidationLegacyStrategy[] {
     return this.createAll().sort(function (a, b) {
       return b.priority - a.priority;
     });

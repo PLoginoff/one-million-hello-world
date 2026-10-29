@@ -20,7 +20,7 @@ export interface QueryErrorDetails {
 }
 
 export class QueryError extends RepositoryError {
-  readonly details: QueryErrorDetails;
+  override readonly details: QueryErrorDetails;
 
   constructor(
     message: string,

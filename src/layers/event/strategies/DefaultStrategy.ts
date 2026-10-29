@@ -1,36 +1,97 @@
 /**
  * EventDefaultStrategy
+ *
+ * Standard event strategy with balanced performance and reliability.
+ * Provides a base implementation for all event operations.
+ *
+ * @module EventLayer/Strategies
  */
 
-export interface IEventStrategy {
-  readonly name: string;
-  readonly priority: number;
-  execute(input: unknown): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }>;
-  canHandle(input: unknown): boolean;
-}
+import type { IEventStrategy, EventStrategyContext, EventStrategyResult } from './IEventStrategy';
 
-export class EventDefaultStrategy implements IEventStrategy {
-  readonly name = 'default';
-  readonly priority = 10;
+/**
+ * Default event strategy implementation.
+ * Handles all operations with a simple pass-through approach.
+ *
+ * @typeParam T - The type of result data returned by the strategy
+ */
+export class EventDefaultStrategy<T = unknown> implements IEventStrategy<T> {
+  /** @inheritdoc */
+  public readonly name = 'default';
+
+  /** @inheritdoc */
+  public readonly priority = 10;
+
   private _executionCount: number;
 
+  /**
+   * Creates a new EventDefaultStrategy instance.
+   */
   constructor() {
     this._executionCount = 0;
   }
 
-  canHandle(input: unknown): boolean {
-    return input !== null && input !== undefined;
+  /**
+   * @inheritdoc
+   */
+  public canHandle(context: EventStrategyContext): boolean {
+    return (
+      context !== null &&
+      context !== undefined &&
+      typeof context.operation === 'string' &&
+      context.operation.length > 0 &&
+      typeof context.eventName === 'string' &&
+      context.eventName.length > 0
+    );
   }
 
-  async execute(
-    input: unknown
-  ): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }> {
-    this._executionCount++;
-    await Promise.resolve();
-    return { success: true, data: { strategy: this.name, input: input, executionCount: this._executionCount } };
+  /**
+   * @inheritdoc
+   */
+  public async execute(context: EventStrategyContext): Promise<EventStrategyResult<T>> {
+    const startTime = Date.now();
+
+    try {
+      // In a real implementation, this would delegate to the actual event bus
+      // For now, we simulate a successful operation
+      await Promise.resolve();
+
+      const result: EventStrategyResult<T> = {
+        success: true,
+        data: undefined as T,
+        metadata: {
+          strategyName: this.name,
+          executionTimeMs: Date.now() - startTime,
+          timestamp: Date.now(),
+          subscriptionId: context.subscriptionId,
+        },
+      };
+
+      this._executionCount++;
+      return result;
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          code: 'EXECUTION_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown error occurred',
+          details: { context },
+        },
+        metadata: {
+          strategyName: this.name,
+          executionTimeMs: Date.now() - startTime,
+          timestamp: Date.now(),
+        },
+      };
+    }
   }
 
-  getExecutionCount(): number {
+  /**
+   * Gets the number of times this strategy has been executed.
+   *
+   * @returns The execution count
+   */
+  public getExecutionCount(): number {
     return this._executionCount;
   }
 }

@@ -234,7 +234,7 @@ describe('MemoryEventQueue', () => {
     });
 
     it('should handle clearing empty queue', async () => {
-      await expect(queue.clear()).resolves.not.toThrow();
+      await expect(queue.clear()).resolves.toBeUndefined();
       const size = await queue.size();
       expect(size).toBe(0);
     });
@@ -373,7 +373,7 @@ describe('MemoryEventQueue', () => {
     });
 
     it('should handle stopping when not processing', async () => {
-      await expect(queue.stopProcessing()).resolves.not.toThrow();
+      await expect(queue.stopProcessing()).resolves.toBeUndefined();
       expect(queue.isProcessing()).toBe(false);
     });
   });

@@ -2,7 +2,9 @@
  * Domain Error Taxonomy Unit Tests
  */
 
-import { DomainErrorImpl } from '../errors/DomainError';
+import { DomainError } from '../errors/DomainError';
+
+const DomainErrorImpl = DomainError;
 
 describe('DomainErrorImpl', () => {
   it('should create empty message error', () => {

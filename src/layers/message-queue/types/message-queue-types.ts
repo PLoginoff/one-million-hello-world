@@ -196,6 +196,7 @@ export interface MessageQueueStrategyContext {
   message?: Message;
   queueSize: number;
   config: QueueConfig;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MessageQueueStrategyResult {
@@ -292,7 +293,7 @@ export enum MessageQueueErrorCode {
   DESERIALIZATION_FAILED = 'DESERIALIZATION_FAILED',
 }
 
-export class MessageQueueError extends Error {
+export class MessageQueueErrorClass extends Error {
   readonly code: MessageQueueErrorCode;
   readonly details?: Record<string, unknown>;
 

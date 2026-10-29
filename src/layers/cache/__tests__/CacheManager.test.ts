@@ -6,7 +6,7 @@
  */
 
 import { CacheManager } from '../core/managers/CacheManager';
-import { CacheFactory } from '../factories/cache/CacheFactory';
+import { CacheFactory } from '../factories/CacheFactory';
 import { InvalidationStrategy } from '../types/cache-types';
 import { CacheConfigOptions } from '../configuration/defaults/DefaultConfigs';
 
@@ -157,14 +157,14 @@ describe('CacheManager', () => {
 describe('CacheFactory', () => {
   describe('create', () => {
     it('should create cache with default config', () => {
-      const cache = CacheFactory.create<string>();
+      const cache = CacheFactory.create();
       
       expect(cache).toBeDefined();
       expect(cache.getConfig().maxSize).toBe(1000);
     });
 
     it('should create cache with custom config', () => {
-      const cache = CacheFactory.create<string>({ maxSize: 500 });
+      const cache = CacheFactory.create({ config: { maxSize: 500 } });
       
       expect(cache.getConfig().maxSize).toBe(500);
     });
@@ -172,7 +172,7 @@ describe('CacheFactory', () => {
 
   describe('createHighPerformance', () => {
     it('should create high-performance cache', () => {
-      const cache = CacheFactory.createHighPerformance<string>();
+      const cache = CacheFactory.createHighPerformance();
       
       expect(cache.getConfig().maxSize).toBe(100);
       expect(cache.getConfig().defaultTTL).toBe(30000);
@@ -181,7 +181,7 @@ describe('CacheFactory', () => {
 
   describe('createLargeCache', () => {
     it('should create large cache', () => {
-      const cache = CacheFactory.createLargeCache<string>();
+      const cache = CacheFactory.createLargeCache();
       
       expect(cache.getConfig().maxSize).toBe(10000);
     });

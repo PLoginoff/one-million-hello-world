@@ -27,7 +27,7 @@ describe('Cache → Repository Integration', () => {
     expect(found.success).toBe(true);
 
     const healthCheck = new CacheHealthCheck(cacheStats);
-    const health = healthCheck.check();
+    const health = await healthCheck.check();
     expect(health.status).toBe('healthy');
 
     await repo.disconnect();
@@ -44,7 +44,7 @@ describe('Cache → Repository Integration', () => {
       cacheStats.recordMiss();
     }
 
-    const health = new CacheHealthCheck(cacheStats).check();
+    const health = await new CacheHealthCheck(cacheStats).check();
     const hitRateCheck = health.checks.find((c) => c.name === 'hit-rate');
     expect(hitRateCheck!.status).toBe('unhealthy');
 
@@ -70,7 +70,7 @@ describe('Cache → Repository Integration', () => {
 
     cacheStats.updateSize(5);
 
-    const health = new CacheHealthCheck(cacheStats).check();
+    const health = await new CacheHealthCheck(cacheStats).check();
     expect(health.status).toBe('healthy');
 
     await repo.disconnect();

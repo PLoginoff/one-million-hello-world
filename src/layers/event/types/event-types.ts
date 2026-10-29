@@ -27,6 +27,14 @@ export interface EventConfig {
   enableAsync: boolean;
   enablePersistence: boolean;
   maxQueueSize: number;
+  maxSubscriptions?: number;
+  timeout?: number;
+  retryOnFailure?: boolean;
+  maxRetries?: number;
+  enableMetrics?: boolean;
+  enableLogging?: boolean;
+  logLevel?: string;
+  serializationFormat?: string;
 }
 
 /**
@@ -37,4 +45,5 @@ export interface EventStats {
   handledCount: number;
   errorCount: number;
   subscriptionCount: number;
+  bufferSizes?: Record<string, number>;
 }

@@ -1,1 +1,1 @@
-export { RouterStrategyFactory, IRouterStrategy } from './RouterStrategyFactory';
+export { RouterStrategyFactory, IRouterLegacyStrategy } from './RouterStrategyFactory';

@@ -47,7 +47,8 @@ describe('Service → Domain Integration', () => {
           };
         }
 
-        return { success: true, data: domainResult.value!.toPayload() };
+        const messageData = (domainResult.value as { input?: { toPayload?: () => Record<string, unknown> } })?.input?.toPayload?.() ?? domainResult.value;
+        return { success: true, data: messageData as Record<string, unknown> };
       },
     };
 

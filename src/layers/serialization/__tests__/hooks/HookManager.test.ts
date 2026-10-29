@@ -204,7 +204,7 @@ describe('HookManager', () => {
       const error = new Error('Test error');
       const context: HookContext = { format: 'json', operation: 'serialize', timestamp: new Date() };
 
-      await expect(manager.executeErrorHooks(error, context)).resolves.not.toThrow();
+      await expect(manager.executeErrorHooks(error, context)).resolves.toBeUndefined();
     });
   });
 

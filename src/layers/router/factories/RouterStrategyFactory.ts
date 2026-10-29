@@ -10,7 +10,7 @@ import { RouterReliableStrategy } from '../strategies/ReliableStrategy';
 import { RouterCachedStrategy } from '../strategies/CachedStrategy';
 import { RouterBatchStrategy } from '../strategies/BatchStrategy';
 
-export interface IRouterStrategy {
+export interface IRouterLegacyStrategy {
   readonly name: string;
   readonly priority: number;
   execute(input: unknown): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }>;
@@ -18,7 +18,7 @@ export interface IRouterStrategy {
 }
 
 export class RouterStrategyFactory {
-  private _strategies: Map<string, () => IRouterStrategy>;
+  private _strategies: Map<string, () => IRouterLegacyStrategy>;
 
   constructor() {
     this._strategies = new Map();
@@ -29,7 +29,7 @@ export class RouterStrategyFactory {
     this._strategies.set('batch', () => new RouterBatchStrategy());
   }
 
-  create(name: string): IRouterStrategy {
+  create(name: string): IRouterLegacyStrategy {
     const normalizedName = name.toLowerCase();
     const factory = this._strategies.get(normalizedName);
     if (!factory) {
@@ -38,11 +38,11 @@ export class RouterStrategyFactory {
     return factory();
   }
 
-  createDefault(): IRouterStrategy {
+  createDefault(): IRouterLegacyStrategy {
     return this.create('default');
   }
 
-  registerStrategy(name: string, factory: () => IRouterStrategy): void {
+  registerStrategy(name: string, factory: () => IRouterLegacyStrategy): void {
     this._strategies.set(name.toLowerCase(), factory);
   }
 
@@ -50,13 +50,13 @@ export class RouterStrategyFactory {
     return Array.from(this._strategies.keys());
   }
 
-  createAll(): IRouterStrategy[] {
+  createAll(): IRouterLegacyStrategy[] {
     return Array.from(this._strategies.values()).map(function (f) {
       return f();
     });
   }
 
-  createByPriority(): IRouterStrategy[] {
+  createByPriority(): IRouterLegacyStrategy[] {
     return this.createAll().sort(function (a, b) {
       return b.priority - a.priority;
     });

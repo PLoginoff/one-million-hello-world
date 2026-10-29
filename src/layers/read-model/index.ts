@@ -7,6 +7,10 @@
 
 export { IReadModel } from './interfaces/IReadModel';
 export { ReadModel } from './implementations/ReadModel';
+export * from './implementations/ProjectionStore';
+export * from './implementations/ProjectionUpdater';
+export * from './implementations/QueryEngine';
+export * from './implementations/ReadConsistency';
 export * from './types/read-model-types';
 export * from './domain';
 export * from './configuration';

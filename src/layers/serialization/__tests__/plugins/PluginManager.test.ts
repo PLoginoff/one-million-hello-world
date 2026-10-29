@@ -67,7 +67,7 @@ describe('PluginManager', () => {
     });
 
     it('should handle unregistering non-existent plugin', async () => {
-      await expect(manager.unregisterPlugin('nonexistent')).resolves.not.toThrow();
+      await expect(manager.unregisterPlugin('nonexistent')).resolves.toBeUndefined();
     });
   });
 

@@ -7,6 +7,19 @@
 
 export { IWorkflowEngine } from './interfaces/IWorkflowEngine';
 export { WorkflowEngine } from './implementations/WorkflowEngine';
+export {
+  WorkflowRuntime,
+  WorkflowRegistry,
+  InMemoryInstanceStore,
+  SystemTimerScheduler,
+  ManualTimerScheduler,
+} from './implementations/WorkflowRuntime';
+export type {
+  TimerScheduler,
+  TimerHandle,
+  InstanceStore,
+  WorkflowRuntimeOptions,
+} from './implementations/WorkflowRuntime';
 export * from './types/workflow-engine-types';
 export * from './domain';
 export * from './configuration';

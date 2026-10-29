@@ -114,3 +114,5 @@ export {
   getEventSourcingErrorSeverity,
   isEventSourcingErrorRetryable,
 } from './errors';
+export * from "./implementations/EventStore";
+export * from "./implementations/Projection";

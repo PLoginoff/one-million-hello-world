@@ -2,12 +2,8 @@
  * DomainCachedStrategy
  */
 
-export interface IDomainStrategy {
-  readonly name: string;
-  readonly priority: number;
-  execute(input: unknown): Promise<{ success: boolean; data?: unknown; error?: { code: string; message: string } }>;
-  canHandle(input: unknown): boolean;
-}
+import { IDomainStrategy } from './IDomainStrategy';
+export type { IDomainStrategy };
 
 export class DomainCachedStrategy implements IDomainStrategy {
   readonly name = 'cached';
@@ -28,6 +24,14 @@ export class DomainCachedStrategy implements IDomainStrategy {
     this._executionCount++;
     await Promise.resolve();
     return { success: true, data: { strategy: this.name, input: input, executionCount: this._executionCount } };
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
+  getPriority(): number {
+    return this.priority;
   }
 
   getExecutionCount(): number {

@@ -11,6 +11,7 @@ export interface CacheConfigOptions {
   defaultTTL: number;
   invalidationStrategy: InvalidationStrategy;
   enableMultiLevel: boolean;
+  segmented?: { segments: Array<{ id: string; strategy: string; maxSize: number; defaultTTL: number; keyPattern?: string | RegExp }>; defaultSegment: string };
 }
 
 export class DefaultConfigs {

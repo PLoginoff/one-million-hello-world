@@ -32,6 +32,10 @@ export class CachingServiceStrategy implements IServiceStrategy {
     return `CACHING(${this._inner.getName()})`;
   }
 
+  getPriority(): number {
+    return this._inner.getPriority();
+  }
+
   async execute(service: ServiceEntity, input: unknown): Promise<unknown> {
     const key = this._buildKey(service, input);
     const now = Date.now();

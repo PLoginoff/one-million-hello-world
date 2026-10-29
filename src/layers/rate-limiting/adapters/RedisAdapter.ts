@@ -83,6 +83,7 @@ export class RateLimitingRedisAdapter extends RateLimitingInMemoryAdapter {
     this.luaScripts.set(
       'fixedWindow',
       `
+      -- fixedWindow
       local key = KEYS[1]
       local limit = tonumber(ARGV[1])
       local window = tonumber(ARGV[2])
@@ -111,6 +112,7 @@ export class RateLimitingRedisAdapter extends RateLimitingInMemoryAdapter {
     this.luaScripts.set(
       'slidingWindow',
       `
+      -- slidingWindow
       local key = KEYS[1]
       local limit = tonumber(ARGV[1])
       local window = tonumber(ARGV[2])
@@ -136,6 +138,7 @@ export class RateLimitingRedisAdapter extends RateLimitingInMemoryAdapter {
     this.luaScripts.set(
       'tokenBucket',
       `
+      -- tokenBucket
       local key = KEYS[1]
       local capacity = tonumber(ARGV[1])
       local refillRate = tonumber(ARGV[2]) -- tokens per ms
@@ -168,6 +171,7 @@ export class RateLimitingRedisAdapter extends RateLimitingInMemoryAdapter {
     this.luaScripts.set(
       'slidingWindowLog',
       `
+      -- slidingWindowLog
       local key = KEYS[1]
       local limit = tonumber(ARGV[1])
       local window = tonumber(ARGV[2])
@@ -393,7 +397,7 @@ export class RateLimitingRedisAdapter extends RateLimitingInMemoryAdapter {
     const now = Date.now();
     const windowStart = now - windowMs;
 
-    await this.client.zremrangebyscore(redisKey, '-inf', windowStart);
+    await this.client.zremrangebyscore(redisKey, -Infinity, windowStart);
     const current = await this.client.zcard(redisKey);
     const oldest = await this.client.zrange(redisKey, 0, 0);
 

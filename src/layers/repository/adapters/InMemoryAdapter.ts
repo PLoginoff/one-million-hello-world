@@ -355,7 +355,7 @@ export class InMemoryAdapter<T extends DomainEntity> implements IRepositoryAdapt
         if (!result.success) {
           throw new Error(result.error?.message ?? 'Save failed');
         }
-        return result.data!;
+        return result.data as T;
       },
 
       async delete(id: string): Promise<void> {
@@ -415,6 +415,11 @@ export class InMemoryAdapter<T extends DomainEntity> implements IRepositoryAdapt
 
       if (this._config.enableQueryLogging) {
         console.error(`[InMemoryAdapter] Query failed: ${operation}`, error);
+      }
+
+      // Re-throw connection errors to let caller handle them
+      if (error instanceof Error && error.message.includes('not connected')) {
+        throw error;
       }
 
       return {

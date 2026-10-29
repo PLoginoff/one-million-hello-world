@@ -7,6 +7,10 @@
 
 export { ISnapshot } from './interfaces/ISnapshot';
 export { Snapshot } from './implementations/Snapshot';
+export * from './implementations/HashTree';
+export * from './implementations/VersionMap';
+export * from './implementations/SnapshotManager';
+export * from './implementations/RetentionPolicy';
 export * from './types/snapshot-types';
 export * from './domain';
 export * from './configuration';

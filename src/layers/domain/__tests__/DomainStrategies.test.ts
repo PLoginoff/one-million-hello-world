@@ -56,7 +56,7 @@ describe('Domain Strategies', () => {
     it('should create all strategies', () => {
       const factory = new DomainStrategyFactory();
       const all = factory.createAll();
-      expect(all.length).toBe(5);
+      expect(all.length).toBe(6);
     });
 
     it('should list available strategies', () => {

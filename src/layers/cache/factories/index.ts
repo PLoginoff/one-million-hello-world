@@ -1,1 +1,2 @@
-export { CacheStrategyFactory, ICacheStrategy } from './CacheStrategyFactory';
+export { CacheStrategyFactory, CacheStrategyType, StrategySelectionCriteria, StrategyRecommendation, defaultCacheStrategyFactory } from './CacheStrategyFactory';
+export { CacheFactory, CacheFactoryOptions, CacheProfile } from './CacheFactory';

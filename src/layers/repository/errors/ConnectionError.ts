@@ -19,7 +19,7 @@ export interface ConnectionErrorDetails {
 }
 
 export class ConnectionError extends RepositoryError {
-  readonly details: ConnectionErrorDetails;
+  override readonly details: ConnectionErrorDetails;
 
   constructor(
     message: string,
@@ -104,11 +104,11 @@ export class ConnectionError extends RepositoryError {
     host: string,
     options: { details?: ConnectionErrorDetails; cause?: Error } = {}
   ): ConnectionError {
-    return new ConnectionError(`Authentication failed for ${host}`, {
+    const error = new ConnectionError(`Authentication failed for ${host}`, {
       retryable: false,
-      statusCode: 401,
       details: { ...options.details, host, operation: 'authenticate' },
       cause: options.cause,
     });
+    return error;
   }
 }

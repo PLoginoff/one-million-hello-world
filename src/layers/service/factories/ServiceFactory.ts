@@ -14,6 +14,7 @@ import { ServiceStatistics } from '../statistics/ServiceStatistics';
 import { SynchronousServiceStrategy } from '../strategies/strategy/SynchronousServiceStrategy';
 import { AsynchronousServiceStrategy } from '../strategies/strategy/AsynchronousServiceStrategy';
 import { IServiceStrategy } from '../strategies/IServiceStrategy';
+import { IServiceStrategy as ILegacyServiceStrategy } from '../strategies/strategy/IServiceStrategy';
 import { DefaultServiceStrategy } from '../strategies/DefaultServiceStrategy';
 import { LoggingServiceStrategy, ILogger } from '../strategies/LoggingServiceStrategy';
 import { MetricsServiceStrategy, StrategyMetricsSnapshot } from '../strategies/MetricsServiceStrategy';
@@ -132,7 +133,7 @@ export class ServiceFactory {
     config: ServiceConfigOptions;
     service: ServiceService;
     discovery: ServiceDiscoveryService;
-    strategy: IServiceStrategy;
+    strategy: ILegacyServiceStrategy;
     statistics: ServiceStatistics;
   } {
     return {
@@ -151,7 +152,7 @@ export class ServiceFactory {
     config: ServiceConfigOptions;
     service: ServiceService;
     discovery: ServiceDiscoveryService;
-    strategy: IServiceStrategy;
+    strategy: ILegacyServiceStrategy;
     statistics: ServiceStatistics;
   } {
     return {
@@ -170,7 +171,7 @@ export class ServiceFactory {
     config: ServiceConfigOptions;
     service: ServiceService;
     discovery: ServiceDiscoveryService;
-    strategy: IServiceStrategy;
+    strategy: ILegacyServiceStrategy;
     statistics: ServiceStatistics;
   } {
     return {
@@ -285,18 +286,13 @@ export class ServiceFactory {
   } as const;
 
   /**
-   * Type for environment profiles.
-   */
-  static ProfileType: 'development' | 'staging' | 'production' | 'test';
-
-  /**
    * Creates a service stack configured for the specified profile.
    *
    * @param profile - Target environment profile
    * @param logger - Optional logger (required for non-test profiles)
    */
   static createForProfile(
-    profile: ServiceFactory.ProfileType,
+    profile: 'development' | 'staging' | 'production' | 'test',
     logger?: ILogger
   ): {
     config: ServiceConfigOptions;

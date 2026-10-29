@@ -28,14 +28,13 @@ describe('InMemoryStorage', () => {
       expect(result).toBe(entry);
     });
 
-    it('should return null for expired entry', () => {
+    it('should return null for expired entry', async () => {
       const entry = new CacheEntry('key1', 'value1', 1);
       storage.set('key1', entry);
       
-      setTimeout(() => {
-        const result = storage.get('key1');
-        expect(result).toBeNull();
-      }, 10);
+      await new Promise(resolve => setTimeout(resolve, 20));
+      const result = storage.get('key1');
+      expect(result).toBeNull();
     });
   });
 
@@ -83,13 +82,12 @@ describe('InMemoryStorage', () => {
       expect(storage.has('key1')).toBe(true);
     });
 
-    it('should return false for expired entry', () => {
+    it('should return false for expired entry', async () => {
       const entry = new CacheEntry('key1', 'value1', 1);
       storage.set('key1', entry);
       
-      setTimeout(() => {
-        expect(storage.has('key1')).toBe(false);
-      }, 10);
+      await new Promise(resolve => setTimeout(resolve, 20));
+      expect(storage.has('key1')).toBe(false);
     });
   });
 
@@ -208,18 +206,17 @@ describe('InMemoryStorage', () => {
   });
 
   describe('cleanup', () => {
-    it('should remove expired entries', () => {
+    it('should remove expired entries', async () => {
       const entry1 = new CacheEntry('key1', 'value1', 60000);
       const entry2 = new CacheEntry('key2', 'value2', 1);
       
       storage.set('key1', entry1);
       storage.set('key2', entry2);
       
-      setTimeout(() => {
-        storage.cleanup();
-        expect(storage.has('key1')).toBe(true);
-        expect(storage.has('key2')).toBe(false);
-      }, 10);
+      await new Promise(resolve => setTimeout(resolve, 20));
+      storage.cleanup();
+      expect(storage.has('key1')).toBe(true);
+      expect(storage.has('key2')).toBe(false);
     });
   });
 });

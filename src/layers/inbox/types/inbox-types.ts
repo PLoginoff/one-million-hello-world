@@ -316,7 +316,7 @@ export enum InboxErrorCode {
 /**
  * Inbox Error Class
  */
-export class InboxError extends Error {
+export class InboxErrorClass extends Error {
   readonly code: InboxErrorCode;
   readonly timestamp: number;
   readonly details?: Record<string, unknown>;
