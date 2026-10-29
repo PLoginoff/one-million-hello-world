@@ -12,3 +12,6 @@ export * from './domain';
 export * from './configuration';
 export * from './strategies';
 export * from './factories';
+export { BpmnEngine, ProcessPersistenceEngine } from './engines';
+export { BpmnError as BpmnEngineError } from './engines/BpmnEngine';
+export type { InstanceSnapshot } from './engines/ProcessPersistenceEngine';
