@@ -1,21 +1,23 @@
 # Testing: DisasterRecovery Layer
 
-## Unit Tests
-- Implementation tests: DisasterRecovery.test.ts
-- Domain tests: DisasterRecoveryDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=disaster-recovery
+bun test ./src/layers/disaster-recovery/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `DisasterRecovery.test.ts` | `execute()` contract, `configure()` merge, `getStatus()` |
+| `DisasterRecoveryStrategies.test.ts` | Five strategies + `DisasterRecoveryStrategyFactory` |
+| `DisasterRecoveryConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `DisasterRecoveryDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- All tests run in-memory — no real failover infrastructure needed.
+- `createContext(input)` builds `DisasterRecoveryContext` fixtures.

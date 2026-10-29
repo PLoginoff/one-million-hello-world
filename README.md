@@ -2,7 +2,7 @@
 
 This project is a fully-featured implementation of a classic HTTP server returning "Hello World" using enterprise-grade architectural patterns and best practices.
 
-The codebase targets **1 million lines** (currently ~63K across all file types)
+The codebase targets **1 million lines** (currently **707,039 / 1,000,000 — 70.7%**)
 
 ![Progress](https://img.shields.io/badge/progress-65%25-yellow)
 
@@ -330,17 +330,23 @@ make format
 make stats
 ```
 
-Or use npm directly:
+Or use bun directly:
 
 ```bash
 # Install dependencies
-npm install
+bun install
+
+# Build
+bun run build
+
+# Run tests
+bun test
 
 # Start server
-npm start
+bun start
 
 # Start with logs
-npm run start:dev
+bun run start:dev
 ```
 
 Server will be available at `http://localhost:3000`
@@ -424,18 +430,15 @@ terraform apply -var="image_uri=your-ecr-image-uri"
 
 ## Actual Statistics
 
-Run `npm run cli -- stats` to see current numbers.
+Run `bun run cli -- stats` to see current numbers.
 
-Latest snapshot (after Epics 1-7):
-- **Total files**: 4,551
-- **Total lines (all types)**: ~63,000
-- **TypeScript files**: 3,892
-- **TypeScript lines**: ~15,000
-- **Markdown lines**: ~55,000
-- **Architecture layers**: 105
-- **Test suites**: 379
-- **Tests**: 5,108
-- **Test coverage**: ~31%
+Latest snapshot (2026-10-29):
+- **Total files**: 10,389
+- **Total lines**: **707,039 / 1,000,000 (70.7%)**
+- **Architecture layers**: 104
+- **Tests**: 15,523 passing, 0 failing, 14 skipped (`bun test`)
+- **Build**: clean (`bun run build` — tsc, 0 errors)
+- **Deepened layers**: 25 core pipeline layers + 20 horizontal layers with real algorithms (load-balancer, service-discovery, ddos-protection, waf, bot-detection, jwt-validation, oauth2, mfa, sso, encryption, search, recommendation, anomaly-detection, fraud-detection, graphql, message-queue, dead-letter, outbox, inbox, event-sourcing)
 - **Infrastructure**: Terraform (AWS/GCP/Azure), K8s, Helm, Docker, Prometheus, Grafana, Loki, Alertmanager
 - **CI/CD**: 7 GitHub Actions workflows (CI, release, Docker, Terraform, Helm, security scan, badge)
 - **Documentation**: 15 ADRs, 104 per-layer docs, OpenAPI spec, runbook, deployment guide
@@ -444,11 +447,11 @@ Latest snapshot (after Epics 1-7):
 
 ## Expected Statistics
 
-- **Lines of code**: 1,000,000 (goal — currently ~63K, ~6%)
-- **Architecture layers**: 105 (achieved)
-- **Files**: 4,551 (achieved 3,000+ target)
-- **Test suites**: 379 (5,108 tests)
-- **Test coverage**: 95%+ (target — currently ~31%)
+- **Lines of code**: 1,000,000 (goal — currently 707,039, 70.7%)
+- **Architecture layers**: 104 (achieved)
+- **Files**: 10,389 (achieved 3,000+ target)
+- **Tests**: 15,523 passing, 0 failing, 14 skipped
+- **Test coverage**: 95%+ (target)
 - **Deployment targets**: Docker, Kubernetes, AWS, GCP, Azure (achieved)
 
 ------------------------------------

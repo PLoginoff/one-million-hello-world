@@ -1,25 +1,16 @@
 # Configuration: EventSourcing Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Defaults
+`DEFAULT_EVENTSOURCING_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure(config: Record<string, unknown>)` shallow-merges keys. `EventSourcingConfigurationBuilder` and validator provide typed construction.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| EVENT_SOURCING_ENABLED | Enable layer (default: true) |
-| EVENT_SOURCING_TIMEOUT | Timeout in ms |
+## Strategy configuration
+Each strategy takes `Record<string, unknown>` in its constructor; `configure()` merges, `getConfig()` returns a copy, `getExecutionCount()` reports calls. Strategies via `EventSourcingStrategyFactory`.
+
+## Status inspection
+`getStatus()` → `{ config, metrics, active }`; metrics include `successCount`, `failureCount`, `lastExecutionTime` — useful for spotting slow replays.

@@ -1,159 +1,55 @@
 # Circuit States
 
-## Overview
-The Circuit Breaker Layer implements circuit states with closed state (normal operation), open state (failures exceed threshold), half-open state (testing recovery), and automatic state transitions.
+The layer models the classic three-state circuit breaker in
+`types/circuit-breaker-types.ts`:
 
-## State Definition
-
-### Circuit State
-```typescript
+```ts
 enum CircuitState {
   CLOSED = 'closed',
   OPEN = 'open',
-  HALF_OPEN = 'half_open'
-}
-
-interface StateTransition {
-  from: CircuitState;
-  to: CircuitState;
-  reason: string;
-  timestamp: Date;
+  HALF_OPEN = 'half_open',
 }
 ```
 
-### State Manager
-```typescript
-class CircuitStateManager {
-  private state: CircuitState;
-  private transitions: StateTransition[];
-  
-  constructor(initialState: CircuitState = CircuitState.CLOSED) {
-    this.state = initialState;
-    this.transitions = [];
-  }
-  
-  getState(): CircuitState {
-    return this.state;
-  }
-  
-  transitionTo(newState: CircuitState, reason: string): void {
-    if (!this.canTransition(newState)) {
-      throw new Error(`Cannot transition from ${this.state} to ${newState}`);
-    }
-    
-    const transition: StateTransition = {
-      from: this.state,
-      to: newState,
-      reason,
-      timestamp: new Date()
-    };
-    
-    this.transitions.push(transition);
-    this.state = newState;
-  }
-  
-  private canTransition(newState: CircuitState): boolean {
-    switch (this.state) {
-      case CircuitState.CLOSED:
-        return newState === CircuitState.OPEN;
-      case CircuitState.OPEN:
-        return newState === CircuitState.HALF_OPEN;
-      case CircuitState.HALF_OPEN:
-        return newState === CircuitState.CLOSED || newState === CircuitState.OPEN;
-      default:
-        return false;
-    }
-  }
-  
-  getTransitions(): StateTransition[] {
-    return [...this.transitions];
-  }
-  
-  reset(): void {
-    this.state = CircuitState.CLOSED;
-    this.transitions = [];
-  }
-}
-```
+`implementations/CircuitBreaker.ts` holds the transitions; there is no
+separate `StateManager` class — the implementation mutates `_state` and
+`_lastStateChange` directly.
 
-## State Machine
+## Transitions
 
-### State Machine
-```typescript
-class CircuitStateMachine {
-  private stateManager: CircuitStateManager;
-  private failureThreshold: number;
-  private successThreshold: number;
-  private resetTimeout: number;
-  private lastFailureTime: Date | null = null;
-  private successCount: number = 0;
-  private failureCount: number = 0;
-  
-  constructor(config: CircuitBreakerConfig) {
-    this.stateManager = new CircuitStateManager();
-    this.failureThreshold = config.failureThreshold;
-    this.successThreshold = config.successThreshold;
-    this.resetTimeout = config.resetTimeout;
-  }
-  
-  recordFailure(): void {
-    this.failureCount++;
-    this.lastFailureTime = new Date();
-    
-    if (this.failureCount >= this.failureThreshold && this.stateManager.getState() === CircuitState.CLOSED) {
-      this.stateManager.transitionTo(CircuitState.OPEN, 'Failure threshold exceeded');
-    }
-  }
-  
-  recordSuccess(): void {
-    this.successCount++;
-    
-    if (this.stateManager.getState() === CircuitState.HALF_OPEN) {
-      if (this.successCount >= this.successThreshold) {
-        this.stateManager.transitionTo(CircuitState.CLOSED, 'Recovery confirmed');
-        this.resetCounters();
-      }
-    }
-  }
-  
-  attemptReset(): void {
-    if (this.stateManager.getState() === CircuitState.OPEN) {
-      if (this.shouldAttemptReset()) {
-        this.stateManager.transitionTo(CircuitState.HALF_OPEN, 'Attempting recovery');
-        this.successCount = 0;
-      }
-    }
-  }
-  
-  private shouldAttemptReset(): boolean {
-    if (!this.lastFailureTime) return false;
-    
-    const elapsed = Date.now() - this.lastFailureTime.getTime();
-    return elapsed >= this.resetTimeout;
-  }
-  
-  private resetCounters(): void {
-    this.failureCount = 0;
-    this.successCount = 0;
-    this.lastFailureTime = null;
-  }
-  
-  getState(): CircuitState {
-    return this.stateManager.getState();
-  }
-}
-```
+- **CLOSED → OPEN**: on each `execute()` failure, `_onFailure()`
+  increments `stats.failureCount`. When `failureCount` reaches
+  `config.failureThreshold` (default `5`), the state becomes `OPEN`.
+- **OPEN → HALF_OPEN**: `execute()` first checks
+  `_shouldAttemptReset()` — true once `Date.now() - _lastStateChange >=
+  config.resetTimeout` (default `30000` ms). On true, the state moves to
+  `HALF_OPEN` and the call is allowed through.
+- **HALF_OPEN → CLOSED**: a successful call in `HALF_OPEN` triggers
+  `_onSuccess()`; once `successCount` reaches
+  `config.successThreshold` (default `2`) the circuit closes and stats
+  reset.
+- **HALF_OPEN → OPEN**: a failure while half-open re-opens the circuit
+  and restarts the `resetTimeout` window.
 
-## Best Practices
+## Behaviour per state
 
-### State Management Guidelines
-- Use appropriate thresholds
-- Monitor state transitions
-- Configure reset timeouts
-- Track transition history
-- Test state transitions
+- `CLOSED` — `execute(operation, fallback?)` calls `operation()`. On
+  success `_onSuccess()`; on throw `_onFailure()` and, if a `fallback`
+  was provided, its result is returned instead.
+- `OPEN` — `execute()` short-circuits: if a `fallback` is supplied its
+  result is returned, otherwise `{ success: false, error: 'Circuit is
+  open', state: OPEN }`.
+- `HALF_OPEN` — behaves like `CLOSED` for the probe call; success/failure
+  decides the next transition.
 
-### Performance Considerations
-- Minimize state check overhead
-- Use efficient counters
-- Monitor transition frequency
+## Pluggable transitions
+
+`strategies/state-transition/StateTransitionStrategy.ts` provides
+`DefaultStateTransitionStrategy` implementing
+`IStateTransitionStrategy` — the same transition rules factored behind
+an interface so callers can substitute custom policies.
+
+## Reset
+
+`circuitBreaker.reset()` forces `CLOSED` and zeroes `failureCount`,
+`successCount` and `lastFailureTime`.

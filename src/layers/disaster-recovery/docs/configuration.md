@@ -1,25 +1,16 @@
 # Configuration: DisasterRecovery Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Defaults
+`DEFAULT_DISASTERRECOVERY_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure(config: Record<string, unknown>)` shallow-merges keys. `DisasterRecoveryConfigurationBuilder` and `DisasterRecoveryConfigurationValidator` provide typed construction/validation.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| DISASTER_RECOVERY_ENABLED | Enable layer (default: true) |
-| DISASTER_RECOVERY_TIMEOUT | Timeout in ms |
+## Strategy configuration
+Strategies take `Record<string, unknown>` in their constructors and are created via `DisasterRecoveryStrategyFactory` (there is no `DisasterRecoveryFactory`).
+
+## Status inspection
+`getStatus()` returns current config plus initialization state (`_initialized`) — check it before triggering failover orchestration.

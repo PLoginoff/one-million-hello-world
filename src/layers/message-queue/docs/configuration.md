@@ -1,25 +1,35 @@
 # Configuration: MessageQueue Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## QueueConfig (runtime queue behavior)
 
-## Configuration Options
+`QueueConfig` in `types/message-queue-types.ts` controls the queue itself —
+this is what `MessageQueue` applies:
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `maxRetries` | `number` | `3` | Max attempts per message before dead-lettering |
+| `retryDelay` | `number` | `1000` | Delay (ms) between attempts |
+| `enableDeadLetter` | `boolean` | `true` | Move exhausted messages to the DLQ |
+| `maxQueueSize` | `number` | `1000` | Reject `enqueue` when the queue is full |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| MESSAGE_QUEUE_ENABLED | Enable layer (default: true) |
-| MESSAGE_QUEUE_TIMEOUT | Timeout in ms |
+## MessageQueueConfiguration (layer config)
+
+`MessageQueueConfiguration` extends the shared layer shape:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `enabled` | `boolean` | Enable/disable the layer |
+| `timeout` | `number` | Operation timeout in ms |
+| `retries` | `number` | Retry attempts |
+| `logLevel` | `'debug' \| 'info' \| 'warn' \| 'error'` | Logging verbosity |
+| `strategy` | `string` | Strategy name for `MessageQueueStrategyFactory` |
+| `options` | `Record<string, unknown>` | Free-form strategy options |
+
+Defaults: `configuration/defaults/MessageQueueDefaults.ts`; build via
+`configuration/builders/MessageQueueConfigurationBuilder`; validate via
+`configuration/validators/MessageQueueConfigurationValidator`.
+
+## Runtime Reconfiguration
+
+`MessageQueue` exposes `updateConfig`/`configure` for partial updates;
+changes apply to subsequent enqueue/dequeue cycles.

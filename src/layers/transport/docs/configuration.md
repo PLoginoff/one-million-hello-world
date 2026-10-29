@@ -1,25 +1,25 @@
 # Configuration: Transport Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## `TransportConfig` (`types/transport-types.ts`)
+Passed to `Transport.setConfig` / returned by `getConfig`:
 
-## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `enableStreaming` | boolean | false | Emit data as a stream |
+| `enableChunkedEncoding` | boolean | false | Split payloads into 1 KiB `\r\n`-joined chunks in `send` |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| TRANSPORT_ENABLED | Enable layer (default: true) |
-| TRANSPORT_TIMEOUT | Timeout in ms |
+`setConfig` merges partial configs over the current values.
+
+## Layer defaults
+`configuration/defaults/TransportDefaults.ts` exports the generic
+layer constants — `TransportDEFAULTS` (`enabled`, `timeout: 30000`,
+`retries: 3`, `strategy: 'default'`, `maxConcurrentExecutions: 100`,
+`cacheTtlMs: 60000`, metrics/health toggles), `TransportLIMITS`
+(timeout 1–300 s, retries 0–10, max 1,000 concurrent, max TTL
+3.6 M ms), and `TransportSTRATEGIES` (`'default'`, `'fast'`,
+`'reliable'`, `'cached'`, `'batch'`).
+
+## Builder and validator
+- `TransportConfigurationBuilder` (`configuration/builders/`).
+- `TransportConfigurationValidator` (`configuration/validators/`) —
+  checks values against `TransportLIMITS` and `TransportSTRATEGIES`.

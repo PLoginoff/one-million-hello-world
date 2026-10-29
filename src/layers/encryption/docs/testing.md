@@ -1,21 +1,25 @@
 # Testing: Encryption Layer
 
-## Unit Tests
-- Implementation tests: Encryption.test.ts
-- Domain tests: EncryptionDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=encryption
+bun test ./src/layers/encryption/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `EncryptionReal.test.ts` | The real crypto path: `AesGcm` round-trips, `Kdf` derivations, `KeyRing` envelope encrypt/decrypt + rotation, `FieldEncryptor` per-field encryption |
+| `Encryption.test.ts` | `IEncryption` contract: `execute()` result shape, error path, `getStatus()` metrics |
+| `EncryptionAdapters.test.ts` | InMemory / Mock / Stub adapters |
+| `EncryptionStrategies.test.ts` | Five generic strategies + `EncryptionStrategyFactory` |
+| `EncryptionConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `EncryptionDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `EncryptionReal` tests use real `crypto` primitives with short/fast parameters where KDF cost would slow the suite.
+- All keys are generated via `SecureRandom` — no hardcoded key material.

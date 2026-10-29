@@ -3,33 +3,22 @@
 ## Status
 Accepted
 
-## Context
-The system requires a governance layer to handle governance concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+## Decisions
 
-## Decision
-Implement Governance as a standalone layer with:
-- Interface (IGovernance) defining the contract
-- Implementation (Governance) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+### 1. Low-layer placement
+Governance sits at Layer 4 so policy evaluation is available to everything above it — compliance checks aren't an afterthought bolted onto the top of the stack.
 
-## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
+### 2. Specifications as the policy model
+Compliance rules compose via And/Or/Not `IGovernanceSpecification`s rather than a bespoke rules DSL — boolean composition covers most policy shapes and stays testable.
 
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
+### 3. Policies as first-class domain objects
+`GovernanceAccessPolicy`/`RatePolicy` live in `domain/policies/` — access control and rate governance are domain concepts, not middleware details.
 
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
+### 4. Violations as domain events
+`GovernanceExecuted`/`GovernanceFailed` are emitted for downstream audit/alerting — governance decisions must be observable to be enforceable.
 
-## References
-- Layer architecture: docs/governance-layer-architecture.md
-- Interface: src/layers/governance/interfaces/IGovernance.ts
+### 5. Batch strategy for compliance sweeps
+Per-request checks use `fast`; periodic whole-fleet compliance scans use `batch` — same interface, different execution semantics.
+
+### 6. Non-throwing results
+`execute()` returns `GovernanceResult { success, data?, error? }` — a denied policy check is a result, not an exception.

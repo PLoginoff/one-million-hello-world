@@ -1,25 +1,30 @@
 # Configuration: UnitOfWork Layer
 
 ## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+Defaults are defined in `configuration/defaults/UnitOfWorkDefaults.ts`
+as `DEFAULT_UNITOFWORK_CONFIG`:
+
+```typescript
+export const DEFAULT_UNITOFWORK_CONFIG: UnitOfWorkConfig = {
+  enabled: true,
+  timeout: 30000,
+  retries: 3,
+  logLevel: 'info',
+};
 ```
 
 ## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| enabled | boolean | true | Enable/disable the layer |
+| timeout | number | 30000 | Operation timeout in ms (validated 1,000–300,000) |
+| retries | number | 3 | Retry attempts (validated 0–10) |
+| logLevel | string | "info" | Logging verbosity (`debug`/`info`/`warn`/`error`) |
+| strategy | string | "default" | Execution strategy: `default`, `fast`, `reliable`, `cached`, `batch` |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| UNIT_OF_WORK_ENABLED | Enable layer (default: true) |
-| UNIT_OF_WORK_TIMEOUT | Timeout in ms |
+## Builder and Validator
+- `UnitOfWorkConfigurationBuilder` (`configuration/builders/`) — fluent
+  construction of the config object.
+- `UnitOfWorkConfigurationValidator` (`configuration/validators/`) —
+  returns `{ valid, errors, warnings }`; enforces the timeout/retries
+  bounds and the strategy allowlist, warns on unknown `logLevel`.

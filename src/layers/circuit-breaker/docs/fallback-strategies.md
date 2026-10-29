@@ -1,93 +1,47 @@
 # Fallback Strategies
 
-## Overview
-The Circuit Breaker Layer implements fallback strategies with fallback function support, fallback execution on failure, fallback error handling, and graceful degradation.
+Two levels of fallback exist: an inline `fallback` argument to
+`execute()`, and pluggable `IFallbackStrategy` implementations under
+`strategies/fallback/`.
 
-## Fallback Definition
+## Inline fallback
 
-### Fallback Function
-```typescript
-type FallbackFunction<T> = () => Promise<T> | T;
+`CircuitBreaker.execute(operation, fallback?)`:
 
-interface FallbackConfig<T> {
-  fallback: FallbackFunction<T>;
-  executeOnError: boolean;
-  executeOnOpen: boolean;
+- In `OPEN`, if `fallback` is supplied its result is returned instead of
+  an error — degraded service while the circuit protects the backend.
+- In `CLOSED`/`HALF_OPEN`, if `operation()` throws, `fallback()` is
+  tried; its success becomes the call result (primary error swallowed),
+  its failure returns the primary error.
+
+## `IFallbackStrategy<T>` (`strategies/fallback/IFallbackStrategy.ts`)
+
+```ts
+interface IFallbackStrategy<T> {
+  execute(context: FallbackContext<T>): Promise<FallbackResult<T>>;
+  isAvailable(): boolean;
+  getName(): string;
 }
 ```
 
-### Fallback Executor
-```typescript
-class FallbackExecutor<T> {
-  private config: FallbackConfig<T>;
-  
-  constructor(config: FallbackConfig<T>) {
-    this.config = config;
-  }
-  
-  async execute(): Promise<T> {
-    try {
-      return await this.config.fallback();
-    } catch (error) {
-      throw new FallbackError('Fallback execution failed', error);
-    }
-  }
-  
-  shouldExecuteOnError(): boolean {
-    return this.config.executeOnError;
-  }
-  
-  shouldExecuteOnOpen(): boolean {
-    return this.config.executeOnOpen;
-  }
-}
+`FallbackContext<T>` carries `originalError`, `attemptCount`,
+`lastAttemptTime`, `metadata`, `data`. `FallbackResult<T>` is
+`{ success, data?, error?, fromFallback, strategyName }`.
 
-class FallbackError extends Error {
-  constructor(message: string, public cause?: Error) {
-    super(message);
-    this.name = 'FallbackError';
-  }
-}
-```
+## Implementations (`strategies/fallback/`)
 
-### Fallback Manager
-```typescript
-class FallbackManager<T> {
-  private fallbacks: Map<string, FallbackExecutor<T>> = new Map();
-  
-  register(name: string, config: FallbackConfig<T>): void {
-    this.fallbacks.set(name, new FallbackExecutor(config));
-  }
-  
-  unregister(name: string): void {
-    this.fallbacks.delete(name);
-  }
-  
-  async execute(name: string): Promise<T> {
-    const fallback = this.fallbacks.get(name);
-    
-    if (!fallback) {
-      throw new Error(`Fallback '${name}' not found`);
-    }
-    
-    return await fallback.execute();
-  }
-  
-  has(name: string): boolean {
-    return this.fallbacks.has(name);
-  }
-}
-```
+- `DefaultFallbackStrategy` — generic fallback executing the context's
+  supplied logic/value.
+- `DefaultValueFallbackStrategy` — returns a pre-configured default
+  `data` regardless of the error; ignores context (`_context`).
+- `CacheFallbackStrategy` — serves a cached value when the primary
+  failed; reports `fromFallback: true` and the strategy name.
 
-## Best Practices
+## Decorator strategies
 
-### Fallback Guidelines
-- Implement graceful degradation
-- Test fallback functions
-- Handle fallback errors
-- Use fallback for critical operations
-- Document fallback behavior
-
-### Performance Considerations
-- Monitor fallback execution time
-- Use efficient fallback implementations
+`strategies/LoggingCircuitBreakerStrategy.ts` and
+`strategies/MetricsCircuitBreakerStrategy.ts` wrap another
+`ICircuitBreakerStrategy` (`name` becomes `logging-<wrapped>`,
+`metrics-<wrapped>`), adding a `ConsoleLogger`/`IStructuredLogger` or an
+`InMemoryMetricsCollector` that counts `execution.fallback` events —
+the seam where fallback usage is observed.

@@ -3,17 +3,19 @@
 ## Status
 Accepted
 
-## Context
-The architecture requires a dedicated Identity layer to handle identity concerns.
+## Decisions
 
-## Decision
-Introduce Identity as an isolated layer with interface, implementation, domain model, strategies, factories, configuration, and metrics.
+### 1. Uniform `execute(context)` contract
+Identity operations flow through `execute(IdentityContext)` so user management composes with auth, audit, and provisioning layers under the shared `Context → Result` shape. This layer manages identities; the separate `identity-provider` layer handles IdP federation — the split keeps local user management independent of external providers.
 
-## Consequences
-- Improved separation of concerns
-- Testable in isolation
-- Configurable at runtime
-- Adds measurable overhead in terms of file count and lines of code
+### 2. Cached lookups for hot paths
+Identity reads dominate auth-adjacent traffic — `cached` memoizes repeated lookups, `fast` serves latency-critical paths, `batch` handles bulk provisioning.
 
-## Position
-N/A
+### 3. Lifecycle as domain events
+`IdentityExecuted`/`IdentityFailed` give provisioning, audit, and deprovisioning flows an event seam to subscribe to rather than polling.
+
+### 4. Non-throwing results
+`execute()` returns `{ success: false, error: { code: 'IDENTITY_EXECUTION_ERROR' } }` — a failed lookup is control flow (unknown user), not an exception.
+
+### 5. Store behind adapters
+LDAP/SCIM/database identity stores plug into the adapter seam; in-memory implementations ship for tests and local dev.

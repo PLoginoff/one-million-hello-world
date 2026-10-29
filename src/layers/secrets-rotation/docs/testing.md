@@ -1,21 +1,28 @@
 # Testing: SecretsRotation Layer
 
-## Unit Tests
-- Implementation tests: SecretsRotation.test.ts
-- Domain tests: SecretsRotationDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+| File | Scope |
+|------|-------|
+| `__tests__/SecretsRotation.test.ts` | Facade: default config, `configure()`, `execute()` success path |
+| `__tests__/SecretsRotationStrategies.test.ts` | All five strategies (name, priority, `execute()`, execution count) and `SecretsRotationStrategyFactory` (create/list/sort/unknown-name error) |
+| `__tests__/SecretsRotationConfiguration.test.ts` | `SecretsRotationConfigurationBuilder` fluent API and `SecretsRotationConfigurationValidator` limits |
+| `domain/__tests__/SecretsRotationDomain.test.ts` | `SecretsRotationEntity`, `SecretsRotationValueObject`, `SecretsRotationDomainService` |
+| `domain/__tests__/SecretsRotationExtendedDomain.test.ts` | `SecretsRotationExecution`, `SecretsRotationThreshold`, `SecretsRotationTimeWindow`, `SecretsRotationPriority`, `SecretsRotationExecuted`/`SecretsRotationFailed` events |
+| `domain/__tests__/SecretsRotationPatterns.test.ts` | Access/rate policies, And/Or/Not specifications, `SecretsRotationEventObserver`, `SecretsRotationProcessingPipeline`, caching/logging decorators, `SecretsRotationEventHandler` |
+| `domain/__tests__/SecretsRotationServices.test.ts` | Execution/validation/query services, `SecretsRotationInMemoryRepository`, `SecretsRotationMapper`, command/query handlers |
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=secrets-rotation
+bun test ./src/layers/secrets-rotation/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/secrets-rotation/__tests__/SecretsRotationStrategies.test.ts
+```
+
+Tests use `bun:test` (`describe`/`it`/`expect`) and need no
+external services — all strategies and adapters are in-memory.

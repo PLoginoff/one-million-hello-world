@@ -1,21 +1,46 @@
 # Testing: Analytics Layer
 
-## Unit Tests
-- Implementation tests: Analytics.test.ts
-- Domain tests: AnalyticsDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `Analytics.test.ts` — `execute()` happy path and error path
+  (`ANALYTICS_EXECUTION_ERROR`), `configure()`, `getStatus()`.
+- `AnalyticsStrategies.test.ts` — each strategy's `execute`,
+  `canHandle`, `name`/`priority` invariants; factory creation by name
+  and rejection of unknown names.
+- `AnalyticsConfiguration.test.ts` — defaults, builder chaining,
+  validator bounds.
+- `AnalyticsEventProcessor.test.ts` — the event handler pipeline
+  (`AnalyticsExecuted` / `AnalyticsFailed`).
+
+Domain (`domain/__tests__/`):
+
+- `AnalyticsDomain.test.ts` — entities, value objects, domain service.
+- `AnalyticsExtendedDomain.test.ts` — specifications, policies,
+  repository, pipeline.
+- `AnalyticsServices.test.ts` — execution/query/validation services.
+- `AnalyticsPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=analytics
+bun test ./src/layers/analytics/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single file:
+
+```bash
+bun test ./src/layers/analytics/__tests__/AnalyticsStrategies.test.ts
+```
+
+## Conventions
+
+- No network or Redis: tests exercise the `InMemoryAdapter`, `MockAdapter`
+  and `StubAdapter`.
+- `HttpAnalyticsAdapter`/`RedisAnalyticsAdapter` are tested through their
+  in-memory shims, not live endpoints.
+- Each suite is self-contained: entities and value objects are built
+  inside the test; there is no shared fixture file.

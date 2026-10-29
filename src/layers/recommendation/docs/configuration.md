@@ -1,25 +1,56 @@
 # Configuration: Recommendation Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## Generic Layer Config
 
-## Configuration Options
+`RecommendationConfig` is not defined as a single bag — the layer's
+generic implementation uses `RecommendationContext`/`RecommendationResult`
+from `types/recommendation-types.ts`, and `configure` merges a `Record`.
+
+## Recommender Options
+
+### `UserBasedCF` / `ItemBasedCF` (`CfOptions`)
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `similarity` | `'cosine' \| 'pearson' \| 'adjusted-cosine'` | `'cosine'` | Similarity metric (`adjusted-cosine` for items) |
+| `k` | `number` | `40` | Neighborhood size |
+| `minOverlap` | `number` | `2` | Min shared ratings for Pearson |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| RECOMMENDATION_ENABLED | Enable layer (default: true) |
-| RECOMMENDATION_TIMEOUT | Timeout in ms |
+### `MatrixFactorization` (`MfOptions`)
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `factors` | `number` | `32` | Latent dimension |
+| `epochs` | `number` | `20` | SGD passes over ratings |
+| `learningRate` | `number` | `0.01` | SGD step size |
+| `regularization` | `number` | `0.02` | L2 penalty on biases/factors |
+
+### `ImplicitALS` (`AlsOptions`)
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `factors` | `number` | `32` | Latent dimension |
+| `iterations` | `number` | `15` | ALS sweeps |
+| `alpha` | `number` | `40` | Confidence scaling (Hu-Koren-Volinsky) |
+| `regularization` | `number` | `0.01` | L2 penalty |
+
+### `ColdStartRecommender` (`ColdStartOptions`)
+
+`minRatings` (fallback threshold) plus the wrapped `primary` and
+`fallback` recommenders.
+
+### `HybridRecommender` (`HybridComponent[]`)
+
+Each component is `{ recommender, weight }`; final score is the weighted
+sum of component scores.
+
+### `RecommendOptions` (per call)
+
+`limit` (default 10), `excludeRated` (default true),
+`minScore` filter.
+
+## Generic Layer Config Keys
+
+`enabled`, `timeout`, `retries`, `logLevel` — same shape as the shared
+`{enabled, timeout, retries, logLevel}` layer config, via
+`configuration/builders` and `configuration/validators`.

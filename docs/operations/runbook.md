@@ -92,10 +92,10 @@
 ## Deployment
 
 ### Pre-deployment Checklist
-- [ ] All tests pass: `npm test`
-- [ ] Type check passes: `npm run type-check`
-- [ ] Lint passes: `npm run lint`
-- [ ] Build succeeds: `npm run build`
+- [ ] All tests pass: `bun test`
+- [ ] Type check passes: `bun run type-check` (tsc --noEmit)
+- [ ] Lint passes: `bun run lint`
+- [ ] Build succeeds: `bun run build`
 - [ ] OpenAPI spec updated if API changes
 
 ### Deployment Steps

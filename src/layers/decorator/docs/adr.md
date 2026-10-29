@@ -4,32 +4,25 @@
 Accepted
 
 ## Context
-The system requires a decorator layer to handle decorator concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Cross-cutting concerns (logging, metrics) need to wrap operations at runtime with an auditable record of what was applied.
 
-## Decision
-Implement Decorator as a standalone layer with:
-- Interface (IDecorator) defining the contract
-- Implementation (Decorator) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Decoration tracked in the result
+`DecoratorResult` always carries the `decorators: string[]` applied — callers and tests can assert exactly which cross-cutting concerns ran, rather than inferring from side effects.
+
+### 2. Config-gated built-ins
+`enableLogging`/`enableMetrics` (default `false`) add named decorators automatically; caller-supplied names pass through. Built-ins are opt-in so undecorated execution is the default.
+
+### 3. Errors as results
+`execute()` catches operation failures into `{ success: false, error }` — a decorated operation failing doesn't crash the decoration pipeline, and the applied-decorator list survives the failure for diagnostics.
+
+### 4. Runtime over compile-time decoration
+Operations are wrapped at call time (`execute(operation, decorators)`) rather than via TS decorators — dynamic composition, no metadata/reflect dependencies.
+
+*Alternative rejected:* compile-time decorators — no runtime toggling, harder to audit.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/decorator-layer-architecture.md
-- Interface: src/layers/decorator/interfaces/IDecorator.ts
+- Auditable, toggleable cross-cutting behavior
+- Result shape carries decorator metadata — slight payload overhead
+- No real decorator implementations are invoked (names are tracked) — actual logging/metrics behavior lives in the wrapped operation or downstream middleware

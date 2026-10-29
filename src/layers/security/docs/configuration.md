@@ -1,25 +1,40 @@
 # Configuration: Security Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## `SecurityConfigOptions` (`configuration/defaults/DefaultConfigs.ts`)
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| Option | Type | Description |
+|--------|------|-------------|
+| `enableAuthentication` | boolean | Run credential checks |
+| `enableAuthorization` | boolean | Run RBAC/permission checks |
+| `enableThreatDetection` | boolean | Run pattern threat detection |
+| `enableRateLimiting` | boolean | Enforce per-IP rate limits |
+| `enableCors` | boolean | Validate CORS policy |
+| `defaultSecurityLevel` | `SecurityLevel` | LOW / MEDIUM / HIGH baseline |
+| `maxFailedAttempts` | number | Failures before lockout |
+| `lockoutDuration` | number | Lockout ms |
+| `sessionTimeout` | number | Session ms |
+| `corsOrigins` / `corsMethods` / `corsHeaders` | string[] | CORS allowlists |
+| `threatThresholds` | `Map<ThreatType, number>` | Per-type detection thresholds |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| SECURITY_ENABLED | Enable layer (default: true) |
-| SECURITY_TIMEOUT | Timeout in ms |
+## Presets
+| Preset | Auth | Authz | Threats | RateLimit | CORS | Level | maxFailedAttempts | lockout | session |
+|--------|------|-------|---------|-----------|------|-------|-------------------|---------|---------|
+| `DEFAULT` | on | on | on | on | off | MEDIUM | 5 | 300,000 | 3,600,000 |
+| `HIGH_SECURITY` | on | on | on | on | on | HIGH | 3 | 600,000 | 1,800,000 |
+| `DEVELOPMENT` | off | off | off | off | on | LOW | 100 | 0 | — |
+
+## Feature configs (`types/security-types.ts`)
+`CorsConfig`, `SecurityPolicyConfig`, `RateLimitConfig`,
+`IPFilterConfig`, `UserAgentFilterConfig`, `SignatureConfig`,
+`TimestampConfig`, `NonceConfig` — per-feature knobs consumed by
+`SecurityManager`.
+
+## Builders and validators
+- `SecurityConfigBuilder` / `SecurityConfigurationBuilder`
+  (`configuration/builders/`).
+- `SecurityConfigValidator` / `SecurityConfigurationValidator`
+  (`configuration/validators/`).
+
+## Related docs
+`authentication-authorization.md`, `cors-threat-detection.md`,
+`security-policies.md`.

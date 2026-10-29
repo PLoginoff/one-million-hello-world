@@ -1,21 +1,37 @@
 # Testing: Reporting Layer
 
-## Unit Tests
-- Implementation tests: Reporting.test.ts
-- Domain tests: ReportingDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `Reporting.test.ts` — implementation: `execute` happy and error paths,
+  `configure`, `getStatus` shape (config, metrics, active).
+- `ReportingStrategies.test.ts` — all five strategies: `canHandle`,
+  `execute` results, execution counting.
+- `ReportingConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `ReportingDomain.test.ts`, `ReportingExtendedDomain.test.ts` — entities and
+  value objects.
+- `ReportingPatterns.test.ts` — specifications, decorators, pipeline.
+- `ReportingServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=reporting
+bun test ./src/layers/reporting/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/reporting/__tests__/Reporting.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IReportingStrategy` contract:
+  `canHandle` accepts non-null input, `execute` returns
+  `{ success, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` isolate the layer
+  from external systems.
+- Implementation tests verify metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

@@ -1,35 +1,29 @@
-# ADR: DataTransformation Layer
+# ADR: Data Transformation Layer
 
 ## Status
 Accepted
 
 ## Context
-The system requires a data transformation layer to handle data transformation concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Pipeline data needs normalization (consistent string forms), enrichment (added fields), and mapping (schema reshaping) before downstream layers consume it.
 
-## Decision
-Implement DataTransformation as a standalone layer with:
-- Interface (IDataTransformation) defining the contract
-- Implementation (DataTransformation) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Three primitives + one pipeline method
+`IDataTransformer` exposes `normalize`, `enrich`, `map` separately plus `transform()` which runs all three in order (normalize → enrich → map). Callers that need one step don't pay for the whole pipeline; callers that need all three get a defined order.
+
+### 2. Non-destructive operations
+All operations copy the input record rather than mutating it — a transformer must never corrupt data the caller still holds.
+
+### 3. Toggleable steps via config
+`TransformationConfig` carries `enableNormalization`/`enableEnrichment` flags — the same `transform()` call adapts without code changes.
+
+### 4. Errors collected, not thrown
+`map()` returns `TransformationResult { success: false, errors: [...] }` for missing source fields — a bad record reports all its problems at once instead of failing on the first.
+
+### 5. Generic strategies + domain model
+The standard five strategies and DDD domain model (specifications, policies, repository) give the transformation pipeline the same composability and testability surface as every other layer.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/data-transformation-layer-architecture.md
-- Interface: src/layers/data-transformation/interfaces/IDataTransformation.ts
+- Clear, testable transformation stages
+- Rule-driven mapping without code changes
+- String normalization is opinionated (trim + lowercase) — callers needing case preservation set `enableNormalization: false`

@@ -1,22 +1,58 @@
 # Bpmn Layer Architecture
 
-## Position
-Layer 60
-
 ## Responsibility
-BPMN process execution
 
-## Components
-- **IBpmn**: Interface defining the layer contract.
-- **Bpmn**: Concrete implementation.
-- **BpmnEntity**: Core domain entity.
-- **BpmnValueObject**: Immutable value object.
-- **BpmnDomainService**: Domain logic.
+BPMN process execution. The layer takes a `BpmnContext` (`input`, `metadata`,
+`timestamp`) and returns `BpmnResult<T>` (`success`, `data` or
+`error`).
 
-## Integration
-This layer receives input from the previous layer and delegates to the next layer through a well-defined interface.
+## Public contract
 
-## Testing
-- Unit tests for implementation
-- Domain tests for entities and value objects
-- Integration tests with adjacent layers (planned)
+`interfaces/IBpmn.ts` — `execute(context)`, `configure(config)`,
+`getStatus()`. `implementations/Bpmn.ts` is the reference
+implementation; it records success/failure counts and last execution
+time, and wraps errors as `BPMN_EXECUTION_ERROR`.
+
+## Strategies
+
+`IBpmnStrategy` (`strategies/`): `name`, `priority`, `canHandle`,
+`execute`. Five implementations — `default` (0), `fast` (10),
+`reliable` (5), `cached` (7), `batch` (3) — created by name via
+`BpmnStrategyFactory` (`create`, `createDefault`, `createAll`,
+`registerStrategy`, `getAvailableStrategies`).
+
+## Domain model
+
+`domain/` is a self-contained DDD skeleton:
+
+- **Entities** — `BpmnEntity`, `BpmnExecution`, `BpmnConfigState`,
+  `BpmnMetricsSnapshot`.
+- **Value objects** — `BpmnValueObject`, `BpmnPriority`,
+  `BpmnThreshold`, `BpmnTimeWindow`.
+- **Services** — `BpmnDomainService`, `BpmnExecutionService`,
+  `BpmnQueryService`, `BpmnValidationService`.
+- **Handlers** — `BpmnCommandHandler`, `BpmnQueryHandler`,
+  `BpmnEventHandler`; lifecycle events `BpmnExecuted`/`BpmnFailed`.
+- **Specifications** — `IBpmnSpecification` with `And`/`Or`/`Not`
+  combinators.
+- **Policies** — `BpmnAccessPolicy`, `BpmnRatePolicy`.
+- **Repository** — `BpmnInMemoryRepository`;
+  **pipeline** — `BpmnProcessingPipeline`; **decorators** —
+  caching/logging; **mapper** — `BpmnMapper`; **observer** —
+  `BpmnEventObserver`.
+
+## Adapters
+
+`BpmnInMemoryAdapter`, `BpmnMockAdapter`, `BpmnStubAdapter`
+(`adapters/`) — the in-memory variant stores responses in a local map;
+mock/stub return canned/no-op responses. No remote adapter ships in this
+layer; add one by implementing the same contract.
+
+## Configuration & observability
+
+`configuration/` — `BpmnDefaults`, `BpmnConfigurationBuilder`,
+validators. `statistics/BpmnMetricsCollector` (counts, timings, error
+rates), `metrics/BpmnPrometheusMetricsCollector` (Prometheus
+exposition) and `health/BpmnHealthCheck` aggregating execution-count,
+success-rate and average-time checks into `healthy | degraded |
+unhealthy`.

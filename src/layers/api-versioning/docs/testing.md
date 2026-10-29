@@ -1,21 +1,32 @@
-# Testing: ApiVersioning Layer
+# Testing: API Versioning Layer
 
-## Unit Tests
-- Implementation tests: ApiVersioning.test.ts
-- Domain tests: ApiVersioningDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `ApiVersioning.test.ts` — `execute`/`configure`/`getStatus` contract.
+- `ApiVersioningStrategies.test.ts` — five strategies and factory
+  lookup.
+- `ApiVersioningConfiguration.test.ts` — defaults, builder, validator.
+
+Domain (`domain/__tests__/`):
+
+- `ApiVersioningDomain.test.ts` — entities, value objects, domain
+  service.
+- `ApiVersioningExtendedDomain.test.ts` — specifications, policies,
+  repository, pipeline.
+- `ApiVersioningServices.test.ts` — execution/query/validation services.
+- `ApiVersioningPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
 ```bash
-npx jest --testPathPattern=api-versioning
+bun test ./src/layers/api-versioning/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Conventions
+
+- Adapters used in tests are `ApiVersioningInMemoryAdapter`,
+  `ApiVersioningMockAdapter`, `ApiVersioningStubAdapter` — no network.
+- Entities/value objects are constructed in the test body; no shared
+  fixture files.

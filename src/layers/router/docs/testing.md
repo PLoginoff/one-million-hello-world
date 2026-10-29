@@ -502,53 +502,22 @@ function createRoute(method: HttpMethod, path: string): Route {
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit -- src/layers/router
+bun test ./src/layers/router/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration -- src/layers/router
+bun test ./src/layers/router/__tests__/
+# e.g. bun test ./src/layers/router/__tests__/<file>.test.ts
 ```
 
-### Performance Tests
+### Coverage
 ```bash
-npm run test:performance -- src/layers/router
-```
-
-### All Tests
-```bash
-npm test -- src/layers/router
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/router
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Router Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/router/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit -- src/layers/router
-      - run: npm run test:integration -- src/layers/router
-      - run: npm run test:performance -- src/layers/router
-      - run: npm run test:coverage -- src/layers/router
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/router/
 ```
 
 ## Best Practices

@@ -1,21 +1,37 @@
 # Testing: Onboarding Layer
 
-## Unit Tests
-- Implementation tests: Onboarding.test.ts
-- Domain tests: OnboardingDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `Onboarding.test.ts` — implementation: `execute` happy and error paths,
+  `configure`, `getStatus` shape (config, metrics, active).
+- `OnboardingStrategies.test.ts` — all five strategies: `canHandle`,
+  `execute` results, execution counting.
+- `OnboardingConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `OnboardingDomain.test.ts`, `OnboardingExtendedDomain.test.ts` — entities and
+  value objects.
+- `OnboardingPatterns.test.ts` — specifications, decorators, pipeline.
+- `OnboardingServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=onboarding
+bun test ./src/layers/onboarding/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/onboarding/__tests__/Onboarding.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IOnboardingStrategy` contract:
+  `canHandle` accepts non-null input, `execute` returns
+  `{ success, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` isolate the layer
+  from external systems.
+- Implementation tests verify metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

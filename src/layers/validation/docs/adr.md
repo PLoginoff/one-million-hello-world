@@ -4,32 +4,44 @@
 Accepted
 
 ## Context
-The system requires a validation layer to handle validation concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Input needs declarative schema validation, sanitization, cross-field
+and conditional rules, and observability (statistics, health,
+diagnostics) before it reaches deeper layers.
 
-## Decision
-Implement Validation as a standalone layer with:
-- Interface (IValidation) defining the contract
-- Implementation (Validation) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Schema-first validation
+`ValidationSchema` (`types/validation-types.ts`) declares fields,
+rules, and formats; `Validator` (`implementations/Validator.ts`)
+evaluates them into `ValidationResult` with typed `ValidationError`s
+and `ValidationWarning`s — validation is data, not code.
+
+### 2. Pluggable validation strategies
+`strategies/strategy/` adds semantic strategy variants —
+`RuleBasedValidationStrategy`, `SchemaValidationStrategy`,
+`ConditionalValidationStrategy`, `CompositeValidationStrategy` — behind
+`IValidationStrategy`, alongside the generic layer strategies and
+`Logging`/`Metrics` decorator strategies.
+
+### 3. Config-toggled features
+`ValidationConfig` toggles `strictMode`, `sanitize`,
+`enableAsyncValidation`, `enableCrossFieldValidation`,
+`enableConditionalValidation`, `maxValidationTime`, and the
+diagnostics/health/statistics switches — features are opt-in/out per
+deployment, not per call.
+
+### 4. Statistics and health built in
+`ValidationMetrics`/`ValidationStatistics`, `ValidationHealthCheck`,
+and `ValidationDiagnostics` expose pass rates, timing, and failure
+breakdowns as first-class API rather than log scraping.
+
+### 5. Multiple failure granularity
+`stopOnFirstError`/`returnAllErrors` presets (`DefaultConfigs`) let
+hosts trade speed for completeness; errors carry codes, fields, and
+severity for per-field reporting.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/validation-layer-architecture.md
-- Interface: src/layers/validation/interfaces/IValidation.ts
+- New rules land as schema/strategy additions, not validator edits.
+- Broad toggle surface means config must be chosen deliberately —
+  `DefaultConfigs` presets (`DEFAULT`/`STRICT`/`LENIENT`/`API`) capture
+  the common profiles.

@@ -1,25 +1,38 @@
 # Configuration: Onboarding Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## Configuration Shape
 
-## Configuration Options
+`OnboardingConfig` (in `types/`):
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `enabled` | `boolean` | `true` | Enable/disable the layer |
+| `timeout` | `number` | `30000` | Operation timeout in ms |
+| `retries` | `number` | `3` | Retry attempts |
+| `logLevel` | `'debug' \| 'info' \| 'warn' \| 'error'` | `'info'` | Logging verbosity |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| ONBOARDING_ENABLED | Enable layer (default: true) |
-| ONBOARDING_TIMEOUT | Timeout in ms |
+Defaults: `configuration/defaults/OnboardingDefaults.ts`.
+
+## Building a Configuration
+
+Use `OnboardingConfigurationBuilder` (and `OnboardingBuilder` where present)
+from `configuration/builders/` to assemble a config object; validate via
+`OnboardingConfigurationValidator` before applying.
+
+```ts
+const config = new OnboardingConfigurationBuilder()
+  .withTimeout(5000)
+  .withRetries(5)
+  .build();
+```
+
+## Runtime Configuration
+
+`Onboarding.configure(config)` merges a partial config at runtime;
+`getStatus()` returns the active config plus internal metrics.
+
+## Strategy Selection
+
+Strategy is chosen via `OnboardingStrategyFactory.create(name)` where
+`name` is `default`, `fast`, `reliable`, `cached` or `batch` —
+it is not part of `OnboardingConfig`.

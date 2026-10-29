@@ -1,25 +1,16 @@
 # Configuration: FeatureFlags Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Defaults
+`DEFAULT_FEATUREFLAGS_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure(config: Record<string, unknown>)` shallow-merges keys — the layer-level kill switch is `enabled: false`, which should map to your "all flags default off" behavior. `FeatureFlagsConfigurationBuilder` and validator provide typed construction.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| FEATURE_FLAGS_ENABLED | Enable layer (default: true) |
-| FEATURE_FLAGS_TIMEOUT | Timeout in ms |
+## Strategy configuration
+Each strategy takes `Record<string, unknown>` in its constructor; `configure()` merges, `getConfig()` returns a copy, `getExecutionCount()` reports calls. Strategies via `FeatureFlagsStrategyFactory`. Choose `cached` for request-hot evaluations, `batch` for flag-set bootstrap.
+
+## Status inspection
+`getStatus()` → `{ config, metrics, active }`; metrics include `successCount`, `failureCount`, `lastExecutionTime` — watch `failureCount` for flag-backend outages.

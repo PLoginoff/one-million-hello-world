@@ -10,16 +10,16 @@
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Run in development mode
-npm run dev
+bun run start:dev
 
 # Run tests
-npm test
+bun test
 
 # Build
-npm run build
+bun run build
 ```
 
 ## Docker Deployment

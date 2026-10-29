@@ -1,21 +1,43 @@
 # Testing: DataLineage Layer
 
-## Unit Tests
-- Implementation tests: DataLineage.test.ts
-- Domain tests: DataLineageDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `DataLineage.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `DataLineageStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `DataLineageStrategyFactory` creation and
+  unknown-name rejection.
+- `DataLineageConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `DataLineageDomain.test.ts` — entities, value objects, domain service.
+- `DataLineageExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `DataLineageServices.test.ts` — execution/query/validation services.
+- `DataLineagePatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=data-lineage
+bun test ./src/layers/data-lineage/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/data-lineage/__tests__/DataLineageStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `DataLineageInMemoryAdapter`,
+  `DataLineageMockAdapter`, `DataLineageStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

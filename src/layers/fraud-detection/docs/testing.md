@@ -1,21 +1,25 @@
 # Testing: FraudDetection Layer
 
-## Unit Tests
-- Implementation tests: FraudDetection.test.ts
-- Domain tests: FraudDetectionDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=fraud-detection
+bun test ./src/layers/fraud-detection/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `FraudEngine.test.ts` | Engine aggregation: rule signals → weighted score → approve/review/decline; blocklist/allowlist overrides |
+| `FraudExtended.test.ts` | Concrete rules (velocity, amount anomaly, impossible travel, device), `FeatureExtractor`/`LogisticScorer`, `LinkAnalysis` clusters, `DeviceSignals` |
+| `FraudDetection.test.ts` | `IFraudDetection` contract: `execute()` result shape, error path, `getStatus()` |
+| `FraudDetectionStrategies.test.ts` | Five generic strategies + `FraudDetectionStrategyFactory` |
+| `FraudDetectionConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `FraudDetectionDomain`, `ExtendedDomain`, `Services`, `Patterns` cover the domain model.
+
+## Conventions
+- Tests construct `Transaction`/`UserProfile` fixtures directly — impossible-travel cases are built from lat/lon + timestamp pairs; no external data.
+- `LogisticScorer` tests train on small synthetic sets rather than loading model files.

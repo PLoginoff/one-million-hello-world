@@ -207,53 +207,22 @@ function createRetryPolicy(): RetryPolicy {
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit -- src/layers/retry
+bun test ./src/layers/retry/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration -- src/layers/retry
+bun test ./src/layers/retry/__tests__/
+# e.g. bun test ./src/layers/retry/__tests__/<file>.test.ts
 ```
 
-### Performance Tests
+### Coverage
 ```bash
-npm run test:performance -- src/layers/retry
-```
-
-### All Tests
-```bash
-npm test -- src/layers/retry
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/retry
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Retry Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/retry/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit -- src/layers/retry
-      - run: npm run test:integration -- src/layers/retry
-      - run: npm run test:performance -- src/layers/retry
-      - run: npm run test:coverage -- src/layers/retry
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/retry/
 ```
 
 ## Best Practices

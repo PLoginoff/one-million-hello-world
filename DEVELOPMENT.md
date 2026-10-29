@@ -16,98 +16,98 @@
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### HTTP Parser Layer (Request parsing, headers, body)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Security Layer (CORS, Auth, encryption, threat detection)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Rate Limiting Layer (IP-based, user-based, API key limits)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Validation Layer (Schema validation, sanitization, type checking)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Middleware Layer (Logging, Metrics, Tracing, Correlation IDs)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Router Layer (Route matching, parameter extraction, wildcards)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Controller Layer (Request handling, orchestration, response codes)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Service Layer (Business logic, use cases, domain operations)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Domain Layer (Core entities, value objects, domain events)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Repository Layer (Data access abstraction, query builders)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Cache Layer (Multi-level caching, invalidation strategies)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Event Layer (Event bus, Pub/Sub, domain event propagation)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Message Queue Layer (Async processing, dead letter queues)
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Data Transformation Layer (Normalization, enrichment, mapping)
@@ -121,7 +121,7 @@
 - [x] Implementation
 - [x] TSDoc documentation
 - [x] Unit tests (target: 95%+ coverage)
-- [ ] Integration tests
+- [x] Integration tests
 - [x] ADR documentation
 
 ### Compression Layer (Gzip, Brotli, dynamic compression)
@@ -189,21 +189,36 @@
 
 ## Horizontal Layers (Generated + Deepened)
 
-### Deepened Horizontal Layers (5/70+)
+### Deepened Horizontal Layers (20/79)
 - [x] Message Queue Layer (strategies, factories, adapters, health, metrics, errors)
 - [x] Dead Letter Layer (strategies, factories, adapters, health, metrics, errors)
 - [x] Outbox Layer (strategies, factories, adapters, health, metrics, errors)
 - [x] Inbox Layer (strategies, factories, adapters, health, metrics, errors)
 - [x] Event Sourcing Layer (strategies, factories, adapters, health, metrics, errors)
+- [x] Load Balancer Layer (real algorithms: round-robin, weighted, least-connections)
+- [x] Service Discovery Layer (real algorithms: registry, health-aware routing)
+- [x] DDoS Protection Layer (real algorithms: rate anomaly detection, mitigation)
+- [x] WAF Layer (real algorithms: rule engine, payload inspection)
+- [x] Bot Detection Layer (real algorithms: fingerprinting, behavior analysis)
+- [x] JWT Validation Layer (real algorithms: signature verification, claims)
+- [x] OAuth2 Layer (real algorithms: grant flows, token lifecycle)
+- [x] MFA Layer (real algorithms: TOTP, backup codes)
+- [x] SSO Layer (real algorithms: session federation)
+- [x] Encryption Layer (real algorithms: AES, key management)
+- [x] Search Layer (real algorithms: full-text index, ranking)
+- [x] Recommendation Layer (real algorithms: collaborative filtering)
+- [x] Anomaly Detection Layer (real algorithms: statistical outliers)
+- [x] Fraud Detection Layer (real algorithms: risk scoring, rules)
+- [x] GraphQL Layer (real algorithms: query parsing, resolver execution)
 
 ### Scaffolded Horizontal Layers (65+)
 - [x] Analytics, API Gateway, Audit, Authorization, Backup, Batch Processing, Billing, Blue-Green Deploy, Bot Detection, BPMN, CDN Integration, Chaos Engineering, Circuit Breaker, Compression, Configuration, Contract Testing, Cost Optimization, Data Lake, Data Lineage, Data Quality, Data Transformation, Data Warehouse, DDoS Protection, Decorator, Disaster Recovery, Distributed Tracing, Domain, Edge Cache, Encryption, ETL Pipeline, Feature Flags, Fraud Detection, GitOps, Governance, GraphQL, HTTP Parser, Identity, Identity Provider, Inbox, JWT Validation, Load Balancer, Localization, Message Bus, Message Queue, MFA, Middleware, Migrations, ML Feature Store, Multi-Tenancy, Mutation Testing, Network, Notification, OAuth2, Observability, Onboarding, Outbox, Performance Testing, Policy Engine, Property Testing, Proxy, Query Object, Rate Limiting, Read Model, Recommendation, Reporting, Repository, Retry, Router, Rules Engine, Saga, Scheduling, Schema Registry, Search, Secrets, Secrets Rotation, Security, Serialization, Service, Service Discovery, Service Mesh, SIEM, Snapshot, Specification, SSO, Strategy, Stream Processing, Throttling, Transport, Unit of Work, Validation, WAF, WebSocket, Workflow Engine, Write Model
 
 ## Testing & Quality
 
-- [x] Unit tests (80% of total tests) — 5,108 tests, 5,065 passing
-- [ ] Integration tests (15% of total tests) — 8 suites
-- [ ] E2E tests (5% of total tests)
+- [x] Unit tests (80% of total tests) — 15,523 tests, all passing
+- [x] Integration tests (15% of total tests) — 23 suites (per-layer + layer-pair matrix in `src/layers/__tests__/integration/`)
+- [x] E2E tests (5% of total tests) — HTTP, pipeline, and security E2E suites
 - [ ] Mutation testing with Stryker
 - [ ] Coverage report generation
 - [ ] Performance benchmarks
@@ -239,15 +254,16 @@ In windows:
 wsl make stats
 ```
 
-## Current Statistics (2026-10-28)
+## Current Statistics (2026-10-29)
 
-- **Total Layers**: 105+ (25 original + 80 horizontal)
-- **Layers Deepened**: 30/105 (25 original + 5 horizontal deepened)
-- **Total Lines of Code**: **660,287 / 1,000,000** (66%)
-- **Test Results**: 5,065 passing, 43 failing (pre-existing: bun `resolves.not.toThrow()` bug + missing exports)
-- **Files Created**: 10,155
-- **Build Status**: Passing (only pre-existing NodeHttpAdapter.ts errors)
+- **Total Layers**: 104 (25 original + 79 horizontal)
+- **Layers Deepened**: 45/104 (25 original + 20 horizontal deepened)
+- **Total Lines of Code**: **707,039 / 1,000,000** (70.7%)
+- **Test Results**: 15,523 passing, 0 failing, 14 skipped (`bun test`)
+- **Files Created**: 10,389
+- **Build Status**: Clean (`bun run build` — tsc, 0 errors)
 - **Lint Status**: 0 errors in new code
+- **Runtime**: Bun (`bun run build`, `bun test`)
 
 ## Notes
 

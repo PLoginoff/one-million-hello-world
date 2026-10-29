@@ -4,32 +4,40 @@
 Accepted
 
 ## Context
-The system requires a ml feature store layer to handle ml feature store concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+The pipeline requires a dedicated ml-feature-store step (ml feature storage, serving, and versioning) that can be
+tuned per deployment without changing call sites.
 
-## Decision
-Implement MlFeatureStore as a standalone layer with:
-- Interface (IMlFeatureStore) defining the contract
-- Implementation (MlFeatureStore) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Strategy pattern over a single implementation
+Five strategies (`default`, `fast`, `reliable`, `cached`,
+`batch`) implement `IMlFeatureStoreStrategy`. Callers pick by name via
+`MlFeatureStoreStrategyFactory`; new strategies register via
+`registerStrategy` without touching the factory.
+
+### 2. CQRS-style domain handlers
+`MlFeatureStoreCommandHandler`, `MlFeatureStoreQueryHandler` and
+`MlFeatureStoreEventHandler` separate write, read and notification concerns;
+`MlFeatureStoreEventObserver` subscribers react to `MlFeatureStoreExecuted` /
+`MlFeatureStoreFailed`.
+
+### 3. In-memory adapter first
+`InMemoryAdapter` is the primary adapter; `Mock`/`Stub` exist for
+tests. No external system is wired in — the interface leaves room for one
+but the current scope is single-process.
+
+### 4. Domain primitives as value objects
+`MlFeatureStorePriority`, `MlFeatureStoreThreshold` and `MlFeatureStoreTimeWindow` are
+immutable value objects so policies operate on typed concepts instead of
+raw numbers.
+
+### 5. Cross-cutting concerns as decorators
+Caching and logging live in `MlFeatureStoreCachingDecorator` /
+`MlFeatureStoreLoggingDecorator` wrappers rather than inside `MlFeatureStore`, keeping
+the core free of side effects.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/ml-feature-store-layer-architecture.md
-- Interface: src/layers/ml-feature-store/interfaces/IMlFeatureStore.ts
+- Strategy selection is configuration, not code change.
+- Uniform `execute` contract makes per-strategy tests trivial.
+- In-memory state is deterministic but not durable — persistence is a
+  future adapter.

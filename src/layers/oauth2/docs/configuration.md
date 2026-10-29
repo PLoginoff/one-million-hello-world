@@ -1,25 +1,51 @@
-# Configuration: Oauth2 Layer
+# Configuration: OAuth2 Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## Generic Layer Config
 
-## Configuration Options
+`Oauth2Config` (in `types/oauth2-types.ts`), used by
+`implementations/Oauth2.ts`:
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `enabled` | `boolean` | `true` | Enable/disable the layer |
+| `timeout` | `number` | `30000` | Operation timeout in ms |
+| `retries` | `number` | `3` | Retry attempts |
+| `logLevel` | `'debug' \| 'info' \| 'warn' \| 'error'` | `'info'` | Logging verbosity |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| OAUTH2_ENABLED | Enable layer (default: true) |
-| OAUTH2_TIMEOUT | Timeout in ms |
+Defaults: `configuration/defaults/Oauth2Defaults.ts`. Build via
+`Oauth2ConfigurationBuilder` / `Oauth2Builder`; validate via
+`Oauth2ConfigurationValidator` / `Oauth2Validator`.
+
+## Authorization Server
+
+`new OAuth2AuthorizationServer({ issuer, now })`:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `issuer` | `string` | `'https://auth.local'` | Issuer stamped on tokens/introspection |
+| `now` | `() => number` | `Date.now` | Clock for deterministic tests |
+
+## Per-Client Registration (`OAuth2Client`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `clientId` | `string` | Client identifier |
+| `clientSecret` | `string` | Provided at registration; stored hashed |
+| `isPublic` | `boolean` | Public clients have no secret |
+| `redirectUris` | `string[]` | Allowed redirect URIs |
+| `allowedGrantTypes` | `GrantType[]` | Permitted grants |
+| `allowedScopes` | `string[]` | Permitted scopes |
+| `requirePkce` | `boolean` | Require PKCE on authorization_code |
+| `accessTokenTtlSeconds` | `number` | Access-token TTL |
+| `refreshTokenTtlSeconds` | `number` | Refresh-token TTL (optional) |
+
+## Device Grant
+
+`DeviceAuthorizationRequest` controls `scope` and poll `interval`
+(RFC 8628 default 5 s); `slow_down` is returned when the client polls
+faster than the interval.
+
+## Testability
+
+Every component accepts `now: () => number` for deterministic expiry and
+rate-limit testing.

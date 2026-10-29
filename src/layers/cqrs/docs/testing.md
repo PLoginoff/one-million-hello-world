@@ -1,21 +1,43 @@
 # Testing: Cqrs Layer
 
-## Unit Tests
-- Implementation tests: Cqrs.test.ts
-- Domain tests: CqrsDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `Cqrs.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `CqrsStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `CqrsStrategyFactory` creation and
+  unknown-name rejection.
+- `CqrsConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `CqrsDomain.test.ts` — entities, value objects, domain service.
+- `CqrsExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `CqrsServices.test.ts` — execution/query/validation services.
+- `CqrsPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=cqrs
+bun test ./src/layers/cqrs/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/cqrs/__tests__/CqrsStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `CqrsInMemoryAdapter`,
+  `CqrsMockAdapter`, `CqrsStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

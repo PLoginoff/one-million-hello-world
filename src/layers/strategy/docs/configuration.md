@@ -1,25 +1,25 @@
 # Configuration: Strategy Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## `StrategyConfig` (`types/strategy-types.ts`)
+Passed to `StrategyManager` / returned by `getConfig`:
 
-## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `defaultStrategy` | `StrategyType` | `DEFAULT` | Strategy used when `execute` gets none |
+| `enableABTesting` | boolean | false | Record strategy choice on results for A/B analysis |
+| `enableFeatureFlags` | boolean | false | Master switch for `isFlagEnabled` |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| STRATEGY_ENABLED | Enable layer (default: true) |
-| STRATEGY_TIMEOUT | Timeout in ms |
+`StrategyType`: `DEFAULT`, `EXPERIMENTAL`, `CONSERVATIVE`.
+`FeatureFlag`: `{ name, enabled, percentage }`.
+
+## Presets (`configuration/defaults/StrategyDefaults.ts`)
+`StrategyDefaults` returns `StrategyConfigDefaults`
+(`strategyConfig` + `enableMetrics`/`enableLogging`/`enableFeatureFlags`)
+for: `getDefault`, `getHighPriority`, `getLowPriority`,
+`getDevelopment` — built on the `StrategyConfig` domain value object.
+
+## Builders and validators
+- `StrategyConfigBuilder` / `StrategyConfigurationBuilder`
+  (`configuration/builders/`).
+- `StrategyConfigValidator` / `StrategyConfigurationValidator`
+  (`configuration/validators/`).

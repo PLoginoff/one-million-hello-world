@@ -1,21 +1,43 @@
 # Testing: CostOptimization Layer
 
-## Unit Tests
-- Implementation tests: CostOptimization.test.ts
-- Domain tests: CostOptimizationDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `CostOptimization.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `CostOptimizationStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `CostOptimizationStrategyFactory` creation and
+  unknown-name rejection.
+- `CostOptimizationConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `CostOptimizationDomain.test.ts` — entities, value objects, domain service.
+- `CostOptimizationExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `CostOptimizationServices.test.ts` — execution/query/validation services.
+- `CostOptimizationPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=cost-optimization
+bun test ./src/layers/cost-optimization/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/cost-optimization/__tests__/CostOptimizationStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `CostOptimizationInMemoryAdapter`,
+  `CostOptimizationMockAdapter`, `CostOptimizationStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

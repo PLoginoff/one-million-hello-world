@@ -1,21 +1,23 @@
 # Testing: DeadLetter Layer
 
-## Unit Tests
-- Implementation tests: DeadLetter.test.ts
-- Domain tests: DeadLetterDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=dead-letter
+bun test ./src/layers/dead-letter/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `DeadLetter.test.ts` | `execute()` success/failure, `configure()` merge, `getStatus()` shape + metrics |
+| `DeadLetterStrategies.test.ts` | All five strategies (name, priority, execute, execution count) + `DeadLetterStrategyFactory` |
+| `DeadLetterConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `DeadLetterDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `DeadLetterContext` fixtures.
+- Strategy tests are table-driven over `{ name, cls }`; repository is in-memory — no external services needed.

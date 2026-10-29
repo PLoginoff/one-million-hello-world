@@ -1,21 +1,22 @@
 # Testing: Localization Layer
 
-## Unit Tests
-- Implementation tests: Localization.test.ts
-- Domain tests: LocalizationDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=localization
+bun test ./src/layers/localization/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `Localization.test.ts` | `execute()` contract, `configure()` merge, `getStatus()` |
+| `LocalizationStrategies.test.ts` | Five strategies + `LocalizationStrategyFactory` |
+| `LocalizationConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `LocalizationDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository (catalog seam), events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `LocalizationContext` fixtures; all tests run in-memory.

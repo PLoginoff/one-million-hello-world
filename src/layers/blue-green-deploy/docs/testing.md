@@ -1,21 +1,43 @@
 # Testing: BlueGreenDeploy Layer
 
-## Unit Tests
-- Implementation tests: BlueGreenDeploy.test.ts
-- Domain tests: BlueGreenDeployDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `BlueGreenDeploy.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `BlueGreenDeployStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `BlueGreenDeployStrategyFactory` creation and
+  unknown-name rejection.
+- `BlueGreenDeployConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `BlueGreenDeployDomain.test.ts` — entities, value objects, domain service.
+- `BlueGreenDeployExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `BlueGreenDeployServices.test.ts` — execution/query/validation services.
+- `BlueGreenDeployPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=blue-green-deploy
+bun test ./src/layers/blue-green-deploy/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/blue-green-deploy/__tests__/BlueGreenDeployStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `BlueGreenDeployInMemoryAdapter`,
+  `BlueGreenDeployMockAdapter`, `BlueGreenDeployStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

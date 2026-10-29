@@ -4,16 +4,40 @@
 Accepted
 
 ## Context
-The architecture requires a dedicated MutationTesting layer to handle mutation testing concerns.
+The pipeline requires a dedicated mutation-testing step (mutation testing) that can be
+tuned per deployment without changing call sites.
 
-## Decision
-Introduce MutationTesting as an isolated layer with interface, implementation, domain model, strategies, factories, configuration, and metrics.
+## Decisions
+
+### 1. Strategy pattern over a single implementation
+Five strategies (`default`, `fast`, `reliable`, `cached`,
+`batch`) implement `IMutationTestingStrategy`. Callers pick by name via
+`MutationTestingStrategyFactory`; new strategies register via
+`registerStrategy` without touching the factory.
+
+### 2. CQRS-style domain handlers
+`MutationTestingCommandHandler`, `MutationTestingQueryHandler` and
+`MutationTestingEventHandler` separate write, read and notification concerns;
+`MutationTestingEventObserver` subscribers react to `MutationTestingExecuted` /
+`MutationTestingFailed`.
+
+### 3. In-memory adapter first
+`InMemoryAdapter` is the primary adapter; `Mock`/`Stub` exist for
+tests. No external system is wired in — the interface leaves room for one
+but the current scope is single-process.
+
+### 4. Domain primitives as value objects
+`MutationTestingPriority`, `MutationTestingThreshold` and `MutationTestingTimeWindow` are
+immutable value objects so policies operate on typed concepts instead of
+raw numbers.
+
+### 5. Cross-cutting concerns as decorators
+Caching and logging live in `MutationTestingCachingDecorator` /
+`MutationTestingLoggingDecorator` wrappers rather than inside `MutationTesting`, keeping
+the core free of side effects.
 
 ## Consequences
-- Improved separation of concerns
-- Testable in isolation
-- Configurable at runtime
-- Adds measurable overhead in terms of file count and lines of code
-
-## Position
-N/A
+- Strategy selection is configuration, not code change.
+- Uniform `execute` contract makes per-strategy tests trivial.
+- In-memory state is deterministic but not durable — persistence is a
+  future adapter.

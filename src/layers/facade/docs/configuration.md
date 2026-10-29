@@ -1,25 +1,28 @@
 # Configuration: Facade Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## FacadeConfig
+`FacadeConfig` (`types/facade-types.ts`) has exactly two toggles:
+
+| Option | Type | Default | Effect |
+|--------|------|---------|--------|
+| `enableAggregation` | boolean | `true` | Results from all operations collected into `FacadeResult.data[]` |
+| `enableComposition` | boolean | `true` | Operations composed/tracked into `FacadeResult.operations[]` |
+
+```ts
+facade.setConfig({ enableAggregation: true });
+facade.getConfig(); // merged FacadeConfig
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`setConfig` merges partial config; `getConfig` returns a copy.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| FACADE_ENABLED | Enable layer (default: true) |
-| FACADE_TIMEOUT | Timeout in ms |
+## Result shape
+`FacadeResult<T>` always carries `operations: string[]` — the `operation_N` names of steps that ran before success/failure.
+
+## Layer defaults
+`DEFAULT_FACADE_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
+```
+
+`FacadeConfigurationBuilder` and validators provide typed construction for layer-level config.

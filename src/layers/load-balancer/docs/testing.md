@@ -1,21 +1,32 @@
 # Testing: LoadBalancer Layer
 
-## Unit Tests
-- Implementation tests: LoadBalancer.test.ts
-- Domain tests: LoadBalancerDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=load-balancer
+bun test ./src/layers/load-balancer/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/` — one file per real strategy plus pool/adapters/contract:
+
+| File | Covers |
+|------|--------|
+| `BackendPool.test.ts` | Health state machine, in-flight tracking, membership notifications |
+| `RoundRobinStrategy.test.ts` | Rotation order |
+| `WeightedRoundRobinStrategy.test.ts` | Weight-proportional distribution |
+| `LeastConnectionsStrategy.test.ts` | Picks least-loaded backend |
+| `LeastResponseTimeStrategy.test.ts` | Latency-based routing |
+| `ConsistentHashingStrategy.test.ts` | Ring construction, key affinity, remapping on membership change |
+| `RandomAndIPHashStrategy.test.ts` | Random distribution, IP-hash stickiness |
+| `PowerOfTwoChoicesStrategy.test.ts` | Two-choice selection, d-choice generalization, small pools |
+| `LoadBalancerAdapters.test.ts` | `RoundRobinAdapter`, `WeightedAdapter` |
+| `LoadBalancer.test.ts` | `ILoadBalancer` contract: `execute()`, error path, `getStatus()` |
+| `LoadBalancerStrategies.test.ts` | Five generic strategies + `LoadBalancerStrategyFactory` |
+| `LoadBalancerConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `LoadBalancerDomain`, `ExtendedDomain`, `Services`, `Patterns` cover the domain model.
+
+## Conventions
+- Pool tests inject backends and probe results directly — no real health checks or network.
+- `ConsistentHashing` tests assert distribution quality and remap bounds rather than exact placement.

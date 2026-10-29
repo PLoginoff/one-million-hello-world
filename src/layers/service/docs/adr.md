@@ -4,32 +4,48 @@
 Accepted
 
 ## Context
-The system requires a service layer to handle service concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Business operations need a registry of use-cases decoupled from
+controllers, with a shared context, typed results, and pluggable
+execution semantics (sync/async/retry/caching).
 
-## Decision
-Implement Service as a standalone layer with:
-- Interface (IService) defining the contract
-- Implementation (Service) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Use-case registry behind `Service`
+`Service` (`implementations/Service.ts`) registers `UseCase`s
+(`registerUseCase`/`getUseCase`/`clearUseCases`) and runs them through
+`execute(input, context)`. A `UseCase` is a named async function —
+`execute(input, context) → Promise<ServiceResult<TOutput>>` — so
+controllers stay thin and use-cases are independently testable. Built-in
+use-cases ship under `use-cases/` (`GetHelloWorldUseCase`,
+`GetHealthCheckUseCase`, `GetMetricsUseCase`, `GetVersionUseCase`).
+
+### 2. `ServiceContext` + `ServiceResult` envelope
+Every call gets a `ServiceContext` (`types/service-types.ts`) carrying
+request-scoped state; results are `ServiceResult<T>` with a typed
+`ServiceError` — no exceptions for expected failures.
+
+### 3. Strategy variants for execution semantics
+`strategies/strategy/` holds `SynchronousServiceStrategy`,
+`AsynchronousServiceStrategy`, `RetryServiceStrategy`,
+`CachingServiceStrategy`, `DefaultServiceStrategy` behind
+`IServiceStrategy`; the flat `strategies/` also carries the generic
+layer strategies and decorator strategies (`LoggingServiceStrategy`,
+`MetricsServiceStrategy`, `CachedServiceStrategy`).
+
+### 4. Typed errors per failure mode
+`errors/` distinguishes `UseCaseNotFoundError`,
+`UseCaseExecutionError`, `RetryExhaustedError`,
+`ServiceConfigurationError`, `ServiceError` — callers branch on error
+type, not message text.
+
+### 5. Full domain package
+`domain/` carries entities (`ServiceEntity`, `ServiceExecution`,
+`ServiceConfigState`, `ServiceMetrics`), value objects, services,
+repository, specifications, policies, pipeline, decorators, handlers,
+events (`ServiceExecuted`/`ServiceFailed`).
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/service-layer-architecture.md
-- Interface: src/layers/service/interfaces/IService.ts
+- Use-cases are registered and testable in isolation; controllers depend
+  only on the `IService` contract.
+- Multiple strategy namespaces exist (generic + service-specific) —
+  the richer `strategies/strategy/` variants are the semantic ones.

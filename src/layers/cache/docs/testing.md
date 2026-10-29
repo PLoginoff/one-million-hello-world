@@ -506,17 +506,15 @@ Aim for:
 ## Running Tests
 
 ```bash
-# Run all tests
-npm test
+# Run all cache-layer tests
+bun test ./src/layers/cache/
+
+# Run a single suite
+bun test ./src/layers/cache/__tests__/CacheManager.test.ts
+bun test ./src/layers/cache/strategies/__tests__/LRUEvictionStrategy.test.ts
 
 # Run with coverage
-npm test -- --coverage
-
-# Run specific test file
-npm test -- CacheManager.test.ts
-
-# Watch mode
-npm test -- --watch
+bun test --coverage ./src/layers/cache/
 ```
 
 ## CI/CD Integration
@@ -532,10 +530,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm ci
-      - run: npm test
-      - run: npm test -- --coverage
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun test ./src/layers/cache/
 ```
 
 ## Best Practices

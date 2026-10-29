@@ -4,32 +4,40 @@
 Accepted
 
 ## Context
-The system requires a reporting layer to handle reporting concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+The pipeline requires a dedicated reporting step (report generation and export in multiple formats) that can be
+tuned per deployment without changing call sites.
 
-## Decision
-Implement Reporting as a standalone layer with:
-- Interface (IReporting) defining the contract
-- Implementation (Reporting) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Strategy pattern over a single implementation
+Five strategies (`default`, `fast`, `reliable`, `cached`,
+`batch`) implement `IReportingStrategy`. Callers pick by name via
+`ReportingStrategyFactory`; new strategies register via
+`registerStrategy` without touching the factory.
+
+### 2. CQRS-style domain handlers
+`ReportingCommandHandler`, `ReportingQueryHandler` and
+`ReportingEventHandler` separate write, read and notification concerns;
+`ReportingEventObserver` subscribers react to `ReportingExecuted` /
+`ReportingFailed`.
+
+### 3. In-memory adapter first
+`InMemoryAdapter` is the primary adapter; `Mock`/`Stub` exist for
+tests. No external system is wired in — the interface leaves room for one
+but the current scope is single-process.
+
+### 4. Domain primitives as value objects
+`ReportingPriority`, `ReportingThreshold` and `ReportingTimeWindow` are
+immutable value objects so policies operate on typed concepts instead of
+raw numbers.
+
+### 5. Cross-cutting concerns as decorators
+Caching and logging live in `ReportingCachingDecorator` /
+`ReportingLoggingDecorator` wrappers rather than inside `Reporting`, keeping
+the core free of side effects.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/reporting-layer-architecture.md
-- Interface: src/layers/reporting/interfaces/IReporting.ts
+- Strategy selection is configuration, not code change.
+- Uniform `execute` contract makes per-strategy tests trivial.
+- In-memory state is deterministic but not durable — persistence is a
+  future adapter.

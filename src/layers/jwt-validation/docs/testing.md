@@ -1,21 +1,24 @@
 # Testing: JwtValidation Layer
 
-## Unit Tests
-- Implementation tests: JwtValidation.test.ts
-- Domain tests: JwtValidationDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=jwt-validation
+bun test ./src/layers/jwt-validation/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `JwtReal.test.ts` | The real `jwt/` module: parse/verify round-trips for supported algorithms, `JwtIssuer` signing, `JwkStore` lookup, `KeyRotationStrategy` grace periods, `TokenBlacklist` pruning, `TokenRefresher` rotation, algorithm-confusion rejection |
+| `JwtValidation.test.ts` | `IJwtValidation` contract: `execute()` result shape, error path, `getStatus()` |
+| `JwtValidationStrategies.test.ts` | Five generic strategies + `JwtValidationStrategyFactory` |
+| `JwtValidationConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `JwtValidationDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `JwtReal` generates throwaway RSA/EC/Ed25519 keypairs in-test via Node `crypto` — no fixtures or network.
+- Tampered tokens and `alg` mismatches are asserted to fail verification, not just return `success: false`.

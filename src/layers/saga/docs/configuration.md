@@ -1,25 +1,25 @@
 # Configuration: Saga Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## Core config (`SagaConfig`)
+`SagaManager` accepts `SagaConfig` (`types/saga-types.ts`):
 
-## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `enableLogging` | boolean | false | Route step/compensation events through `Logger` |
+| `enableCompensation` | boolean | true | Run reverse-order compensation on failure |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| SAGA_ENABLED | Enable layer (default: true) |
-| SAGA_TIMEOUT | Timeout in ms |
+The orchestrator also receives an `OrchestratorConfig`
+(`interfaces/ISagaOrchestrator.ts`) derived from it.
+
+## Presets and builders (`configuration/`)
+- `SagaDefaults` (`configuration/defaults/`) — default layer values.
+- `SagaConfigBuilder` / `SagaConfigurationBuilder`
+  (`configuration/builders/`) — fluent config construction.
+- `SagaConfigValidator` / `SagaConfigurationValidator`
+  (`configuration/validators/`) — validate config objects.
+
+## Behavior notes
+- Logging is off by default (`enableLogging: false`) to keep saga
+  execution silent unless observability is requested.
+- Compensation defaults **on** — opt out explicitly if steps are
+  non-compensatable.

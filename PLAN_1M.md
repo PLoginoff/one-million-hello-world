@@ -1,5 +1,7 @@
 # Strategic Plan: Reaching 1,000,000 Lines of Clean Code
 
+> NOTE: This is the original plan kept for history. See PLAN.md for the current state.
+
 ## Current State (Updated: 2026-10-28)
 
 | Metric | Value |

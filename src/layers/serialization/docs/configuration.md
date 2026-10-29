@@ -1,25 +1,30 @@
 # Configuration: Serialization Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## `SerializationConfig` (`types/serialization-types.ts`)
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| Option | Type | Description |
+|--------|------|-------------|
+| `defaultFormat` | `SerializationFormat` | Format used when the request doesn't specify one |
+| `enableVersioning` | boolean | Apply a versioning strategy to output |
+| `currentVersion` | string | Version string stamped into output |
+| `enableValidation` | boolean | Run the validation pipeline on serialize/deserialize |
+| `enablePlugins` | boolean | Run registered plugins |
+| `enableHooks` | boolean | Run registered hooks |
+| `strictMode` | boolean | Fail on warnings/unknowns where supported |
+| `maxDataSize` | number? | Reject payloads above this size |
+| `timeout` | number? | Abort operations exceeding this ms |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| SERIALIZATION_ENABLED | Enable layer (default: true) |
-| SERIALIZATION_TIMEOUT | Timeout in ms |
+## `SerializationOptions` (per-call overrides)
+`format?`, `validate?`, `skipPlugins?`, `skipHooks?`, `metadata?`.
+
+## Config subsystem (`config/`)
+- `ConfigLoader` — loads config from `ConfigSource`s.
+- `ConfigSchema` / `ConfigValidator` — schema-driven validation with
+  `defaultSerializationConfigSchema`; produces typed defaults.
+- `SerializerBuilder` (`builders/`) — fluent serializer construction.
+
+## Related docs
+- `serialization-formats.md` — per-format behavior.
+- `content-negotiation.md` — Accept negotiation and fallbacks.
+- `versioning.md` — wrapper/header/custom strategies.
+- `error-handling.md` — `SerializationError`, codes, context.

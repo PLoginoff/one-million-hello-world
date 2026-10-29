@@ -1,25 +1,41 @@
-# Configuration: ApiVersioning Layer
+# Configuration: API Versioning Layer
 
-## Default Configuration
+## Defaults
+
+`configuration/defaults/ApiVersioningDefaults.ts` exports
+`ApiVersioningDEFAULTS`:
+
 ```json
 {
   "enabled": true,
   "timeout": 30000,
   "retries": 3,
-  "logLevel": "info"
+  "logLevel": "info",
+  "strategy": "default",
+  "maxConcurrentExecutions": 100,
+  "cacheEnabled": true,
+  "cacheTtlMs": 60000,
+  "metricsEnabled": true,
+  "healthCheckEnabled": true,
+  "healthCheckIntervalMs": 30000
 }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## Bounds
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| API_VERSIONING_ENABLED | Enable layer (default: true) |
-| API_VERSIONING_TIMEOUT | Timeout in ms |
+`ApiVersioningLIMITS`: `timeout` 1000–300000 ms, `retries` 0–10,
+`maxConcurrentExecutions` ≤ 1000, `cacheTtlMs` ≤ 3600000.
+`ApiVersioningSTRATEGIES` =
+`['default','fast','reliable','cached','batch']`.
+
+## Building & validating
+
+`ApiVersioningConfigurationBuilder` — `withEnabled`, `withTimeout`,
+`withRetries`, `withLogLevel`, `withStrategy`, `withOption(s)`, `build`.
+`ApiVersioningConfigurationValidator` / `ApiVersioningValidator` check
+the limits; `configure(config)` merges the partial config at runtime.
+
+## Strategy selection
+
+`ApiVersioningStrategyFactory.create(name)`; unknown names throw with
+the list from `getAvailableStrategies()`.

@@ -1,21 +1,37 @@
 # Testing: MultiTenancy Layer
 
-## Unit Tests
-- Implementation tests: MultiTenancy.test.ts
-- Domain tests: MultiTenancyDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `MultiTenancy.test.ts` — implementation: `execute` happy and error paths,
+  `configure`, `getStatus` shape (config, metrics, active).
+- `MultiTenancyStrategies.test.ts` — all five strategies: `canHandle`,
+  `execute` results, execution counting.
+- `MultiTenancyConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `MultiTenancyDomain.test.ts`, `MultiTenancyExtendedDomain.test.ts` — entities and
+  value objects.
+- `MultiTenancyPatterns.test.ts` — specifications, decorators, pipeline.
+- `MultiTenancyServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=multi-tenancy
+bun test ./src/layers/multi-tenancy/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/multi-tenancy/__tests__/MultiTenancy.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IMultiTenancyStrategy` contract:
+  `canHandle` accepts non-null input, `execute` returns
+  `{ success, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` isolate the layer
+  from external systems.
+- Implementation tests verify metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

@@ -4,32 +4,35 @@
 Accepted
 
 ## Context
-The system requires a strategy layer to handle strategy concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Operations need to run under selectable execution semantics (default /
+experimental / conservative) with A/B testing and feature-flag gating,
+without changing the operations themselves.
 
-## Decision
-Implement Strategy as a standalone layer with:
-- Interface (IStrategy) defining the contract
-- Implementation (Strategy) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Operation-passing API
+`StrategyManager.execute(operation, strategy?)` takes the work as a
+closure and returns `StrategyResult<T>` (`success`, `data?`,
+`strategy`, `flags`). The caller's operation is strategy-agnostic; the
+manager annotates the result with which strategy ran and which flags
+were enabled.
+
+### 2. Three named strategy types
+`StrategyType` = `DEFAULT | EXPERIMENTAL | CONSERVATIVE`. Selection is
+explicit per call or falls back to `config.defaultStrategy`.
+
+### 3. Percentage-based feature flags
+`FeatureFlag` = `{ name, enabled, percentage }`. `isFlagEnabled` rolls
+`Math.random() * 100` against `percentage` only when flags are globally
+enabled (`config.enableFeatureFlags`) and the flag itself is `enabled` —
+two-level gating.
+
+### 4. Failures are captured in the result
+`execute` catches operation errors and returns `success: false` with
+the selected strategy + flags still attached, so A/B analysis sees
+failures attributed to the strategy that ran them.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/strategy-layer-architecture.md
-- Interface: src/layers/strategy/interfaces/IStrategy.ts
+- Strategies/flags are toggled by config, not code changes.
+- Percentage rollout is non-deterministic per call — fine for flags,
+  intentionally so.

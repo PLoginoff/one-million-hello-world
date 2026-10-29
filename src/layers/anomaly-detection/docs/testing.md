@@ -1,21 +1,47 @@
-# Testing: AnomalyDetection Layer
+# Testing: Anomaly Detection Layer
 
-## Unit Tests
-- Implementation tests: AnomalyDetection.test.ts
-- Domain tests: AnomalyDetectionDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `AnomalyDetection.test.ts` — the `IAnomalyDetection` contract
+  (`execute`, `configure`, `getStatus`).
+- `AnomalyDetectionStrategies.test.ts` — the five generic strategies and
+  `AnomalyDetectionStrategyFactory`.
+- `AnomalyDetectionConfiguration.test.ts` — defaults, builder, validator.
+- `Detectors.test.ts`, `DetectorsExtended.test.ts` — the real algorithm
+  coverage: univariate (ZScore/Iqr/Grubbs), streaming (MovingAverage/
+  Ewma/Cusum), `IsolationForest`, seasonal decomposition, drift detectors
+  (PageHinkley, KS, AR) and clustering (`Dbscan`, `Lof`).
+
+Domain (`domain/__tests__/`):
+
+- `AnomalyDetectionDomain.test.ts` — entities, value objects, domain
+  service.
+- `AnomalyDetectionExtendedDomain.test.ts` — specifications, policies,
+  repository, pipeline.
+- `AnomalyDetectionServices.test.ts` — execution/query/validation
+  services.
+- `AnomalyDetectionPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=anomaly-detection
+bun test ./src/layers/anomaly-detection/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or the detectors only:
+
+```bash
+bun test ./src/layers/anomaly-detection/__tests__/Detectors.test.ts
+```
+
+## Conventions
+
+- All detectors are deterministic — `IsolationForest` accepts a `seed`
+  so tests are reproducible.
+- No external services: adapters are the in-memory/mock/stub variants.
+- Detector tests build synthetic series in the test body; there are no
+  fixture files.

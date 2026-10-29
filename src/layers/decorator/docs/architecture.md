@@ -1,75 +1,27 @@
 # Decorator Layer Architecture
 
-## Status
-Accepted
+## Position
+Layer 24 of the 25-layer architecture. Responsibility: runtime decoration and cross-cutting concerns around operations.
 
-## Context
-The Decorator Layer is responsible for runtime decoration and cross-cutting concerns. It receives requests from the Proxy Layer and provides decorator capabilities.
+## Core Contract
+`IDecorator` (`interfaces/IDecorator.ts`) exposes:
 
-## Decision
-We chose to implement the Decorator Layer with the following design:
+- `execute<T>(operation: () => Promise<T>, decorators: string[]): Promise<DecoratorResult<T>>` — runs `operation`, then reports which decorators applied. Config toggles add built-ins: `enableLogging` adds `'logging'`, `enableMetrics` adds `'metrics'` — merged with the caller-supplied `decorators` list in the result.
+- `setConfig(config: DecoratorConfig)` — merges `{ enableLogging, enableMetrics }` (both default `false`)
+- `getConfig(): DecoratorConfig` — copy of current config
 
-### Components
-1. **IDecorator Interface**: Defines the contract for decorator operations
-2. **Decorator Implementation**: Concrete decorator with logging and metrics
-3. **Type Definitions**: Comprehensive types for results and configuration
+`Decorator` (`implementations/Decorator.ts`) implements it. `DecoratorResult<T> = { success, data?, decorators: string[], error? }` — on failure `error` carries the message and `decorators` still reports what was applied before the operation ran.
 
-### Key Design Decisions
+## Design notes
+- Decoration is **tracked, not opaque**: the result always lists applied decorator names — auditable cross-cutting behavior.
+- `execute()` catches operation errors into `DecoratorResult` — the decorated operation can fail without the decorator pipeline throwing.
+- Built-in decorators are config-gated; caller-named decorators pass through, so the result is a faithful record of the decoration context.
 
-**Runtime Decoration**
-- Dynamic decorator application
-- Decorator composition
-- Decorator tracking
-- Runtime configuration
+## Strategies & domain
+Standard five `IDecoratorStrategy` implementations (`default`, `fast`, `reliable`, `cached`, `batch`) via `DecoratorStrategyFactory`, plus the shared DDD domain model under `domain/` (entities, services, events, handlers, repository, specifications, policies).
 
-**Cross-Cutting Concerns**
-- Logging decorator
-- Metrics decorator
-- Extensible decorator system
-- Decorator chaining
+## Supporting
+`adapters/` (InMemory, Mock, Stub), `configuration/` (builders, defaults, validators), `health/`, `metrics/` (Prometheus), `statistics/`, `utils/` (`DecoratorError`, `DecoratorErrorMapper`).
 
-**Decorator Management**
-- Decorator registration
-- Decorator execution
-- Decorator tracking
-- Error handling
-
-**Configuration**
-- Logging toggle
-- Metrics toggle
-- Runtime configuration updates
-
-### Isolation Strategy
-- Decorator Layer depends only on Proxy Layer types
-- Does not depend on any higher layers
-- Exports only interfaces to Transport Layer
-- Implementation details hidden behind interface
-
-## Consequences
-
-### Positive
-- Runtime decoration support
-- Cross-cutting concerns handling
-- Decorator composition
-- Configurable behavior
-- Decorator tracking
-
-### Negative
-- Decoration overhead
-- Runtime complexity
-- Memory overhead from decorators
-- Execution delay
-
-### Alternatives Considered
-1. **Compile-time decorators**: Rejected for flexibility
-2. **No metrics**: Rejected for observability
-3. **No logging**: Rejected for debugging
-4. **Single decorator**: Rejected for flexibility
-
-## References
-- README.md - Architecture overview
-- DEVELOPMENT.md - Implementation progress
-- runtime-decoration.md - Runtime decoration
-- cross-cutting-concerns.md - Cross-cutting concerns
-- decorator-management.md - Decorator management
-- testing.md - Testing strategy
+## Detail docs
+`runtime-decoration.md`, `cross-cutting-concerns.md`, `decorator-management.md`

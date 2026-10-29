@@ -1,25 +1,28 @@
-# Configuration: DataTransformation Layer
+# Configuration: Data Transformation Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## TransformationConfig
+`DataTransformer` holds a `TransformationConfig` (`types/data-transformation-types.ts`) with three toggles:
+
+| Option | Type | Effect |
+|--------|------|--------|
+| `enableNormalization` | boolean | `normalize()` step in `transform()`; when false, strings are left untouched |
+| `enableEnrichment` | boolean | `enrich()` step; when false, `EnrichmentData` is ignored |
+| `enableMapping` | boolean | `map()` step; when false, `TransformationRule[]` is ignored |
+
+Read via `transformer.getConfig()`; update via `transformer.setConfig(partial)`.
+
+## Layer defaults
+`DEFAULT_DATATRANSFORMATION_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## Enrichment shape
+`EnrichmentData = { source: string; data: Record<string, unknown> }` — `data` is merged over the record; `source` labels where it came from.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| DATA_TRANSFORMATION_ENABLED | Enable layer (default: true) |
-| DATA_TRANSFORMATION_TIMEOUT | Timeout in ms |
+## Mapping rules
+`TransformationRule[]` — source→target field mappings with optional transform functions; see `mapping.md`.
+
+## Builders/validators
+`configuration/` provides `DataTransformationConfigurationBuilder` and validators for layer config.

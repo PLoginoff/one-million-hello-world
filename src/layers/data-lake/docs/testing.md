@@ -1,21 +1,43 @@
 # Testing: DataLake Layer
 
-## Unit Tests
-- Implementation tests: DataLake.test.ts
-- Domain tests: DataLakeDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `DataLake.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `DataLakeStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `DataLakeStrategyFactory` creation and
+  unknown-name rejection.
+- `DataLakeConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `DataLakeDomain.test.ts` — entities, value objects, domain service.
+- `DataLakeExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `DataLakeServices.test.ts` — execution/query/validation services.
+- `DataLakePatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=data-lake
+bun test ./src/layers/data-lake/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/data-lake/__tests__/DataLakeStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `DataLakeInMemoryAdapter`,
+  `DataLakeMockAdapter`, `DataLakeStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

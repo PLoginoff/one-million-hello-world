@@ -1,83 +1,32 @@
 # Data Transformation Layer Architecture
 
-## Status
-Accepted
+## Position
+Layer 15 of the 25-layer architecture. Responsibility: normalization, enrichment, and field mapping of data flowing through the pipeline.
 
-## Context
-The Data Transformation Layer is responsible for normalization, enrichment, and mapping. It receives requests from the Message Queue Layer and provides data transformation capabilities.
+## Core Contract
+`IDataTransformer` (`interfaces/IDataTransformer.ts`) exposes four operations:
 
-## Decision
-We chose to implement the Data Transformation Layer with the following design:
+- `normalize<T>(data): TransformationResult<T>` — trims/lowercases string properties (skippable via `enableNormalization: false`)
+- `enrich<T>(data, enrichment): TransformationResult<T>` — merges `EnrichmentData` fields into the record (skippable via `enableEnrichment: false`)
+- `map<T, U>(data, rules): TransformationResult<U>` — applies `TransformationRule[]` (source→target field mapping with optional transform functions); fails if the data isn't an object or a source field is missing
+- `transform<T, U>(data, rules?, enrichment?): TransformationResult<U>` — full pipeline: normalize → enrich → map
 
-### Components
-1. **IDataTransformer Interface**: Defines the contract for transformation operations
-2. **DataTransformer Implementation**: Concrete transformer with normalization, enrichment, and mapping
-3. **Type Definitions**: Comprehensive types for rules, enrichment, and results
+`DataTransformer` (`implementations/DataTransformer.ts`) implements it, holding a `TransformationConfig` exposed via `getConfig()`/`setConfig()`. All operations are non-destructive (input objects are copied, not mutated) and return `TransformationResult { success, data?, errors? }`.
 
-### Key Design Decisions
+## Strategies (`strategies/`)
+Five `IDataTransformationStrategy` implementations — `default`, `fast`, `reliable`, `cached`, `batch` — via `DataTransformationStrategyFactory`, sharing the standard layer `Context → Result` shape.
 
-**Normalization**
-- String trimming and lowercasing
-- Object property normalization
-- Configurable normalization toggle
-- Non-destructive transformation
+## Domain Model (`domain/`)
+Entities, value objects (`DataTransformationPriority`, `Threshold`, `TimeWindow`), domain/execution/query/validation services, events, handlers, in-memory repository, mapper, decorators, observer, pipeline, policies, And/Or/Not specifications — tested by `domain/__tests__/`.
 
-**Enrichment**
-- Data enrichment from external sources
-- Field merging
-- Configurable enrichment toggle
-- Source tracking
+## Supporting
+- `adapters/` — InMemory, Mock, Stub
+- `configuration/` — builders, `DEFAULT_DATATRANSFORMATION_CONFIG`, validators
+- `health/DataTransformationHealthCheck`, `metrics/` Prometheus collector, `statistics/` collector
+- `utils/` — `DataTransformationError`, `DataTransformationErrorMapper`
 
-**Mapping**
-- Field-to-field mapping
-- Transform function support
-- Error handling for missing fields
-- Configurable mapping toggle
-
-**Combined Transformation**
-- Sequential transformation pipeline
-- Normalization → Enrichment → Mapping
-- Error propagation
-- Configurable pipeline steps
-
-**Configuration**
-- Normalization toggle
-- Enrichment toggle
-- Mapping toggle
-- Runtime configuration updates
-
-### Isolation Strategy
-- Data Transformation Layer depends only on Message Queue Layer types
-- Does not depend on any higher layers
-- Exports only interfaces to Serialization Layer
-- Implementation details hidden behind interface
-
-## Consequences
-
-### Positive
-- Flexible data transformation
-- Configurable pipeline
-- Type-safe operations
-- Error handling
-- Non-destructive transformations
-
-### Negative
-- Transformation overhead
-- Configuration complexity
-- Error handling overhead
-- Memory overhead from copies
-
-### Alternatives Considered
-1. **Use joi/yup**: Rejected for control and learning purposes
-2. **Single transformation type**: Rejected for flexibility
-3. **No configuration**: Rejected for flexibility
-4. **Destructive transformations**: Rejected for safety
-
-## References
-- README.md - Architecture overview
-- DEVELOPMENT.md - Implementation progress
-- normalization.md - Normalization
-- enrichment.md - Enrichment
-- mapping.md - Mapping
-- combined-transformation.md - Combined transformation pipeline
-- testing.md - Testing strategy
+## Detail docs
+- `normalization.md` — normalization rules in depth
+- `enrichment.md` — enrichment sources and merging
+- `mapping.md` — transformation rule syntax
+- `combined-transformation.md` — the `transform()` pipeline

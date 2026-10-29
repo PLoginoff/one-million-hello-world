@@ -80,7 +80,7 @@ describe('Connection State Management', () => {
 
   it('should log state changes', async () => {
     const connection = new NetworkConnection(config);
-    const spy = jest.spyOn(connection, 'logStateChange');
+    const spy = spyOn(connection, 'logStateChange'); // from 'bun:test'
     await connection.connect();
     expect(spy).toHaveBeenCalled();
   });
@@ -567,47 +567,22 @@ function waitForState(connection: INetworkConnection, state: ConnectionState): P
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit
+bun test ./src/layers/network/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration
+bun test ./src/layers/network/__tests__/
+# e.g. bun test ./src/layers/network/__tests__/<file>.test.ts
 ```
 
-### All Tests
+### Coverage
 ```bash
-npm test
-```
-
-### Coverage Report
-```bash
-npm run test:coverage
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Network Layer Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/network/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit
-      - run: npm run test:integration
-      - run: npm run test:coverage
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/network/
 ```
 
 ## Best Practices

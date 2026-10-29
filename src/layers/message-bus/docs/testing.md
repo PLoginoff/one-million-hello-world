@@ -1,21 +1,37 @@
 # Testing: MessageBus Layer
 
-## Unit Tests
-- Implementation tests: MessageBus.test.ts
-- Domain tests: MessageBusDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `MessageBus.test.ts` — implementation: `execute` happy path and error
+  path, `configure`, `getStatus` shape (config, metrics, active).
+- `MessageBusStrategies.test.ts` — all five strategies: `canHandle`
+  contracts, `execute` results, execution counting.
+- `MessageBusConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `MessageBusDomain.test.ts` — entities and value objects.
+- `MessageBusExtendedDomain.test.ts` — extended domain scenarios.
+- `MessageBusPatterns.test.ts` — specifications, decorators, pipeline.
+- `MessageBusServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=message-bus
+bun test ./src/layers/message-bus/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+To run a single file:
+
+```bash
+bun test ./src/layers/message-bus/__tests__/MessageBusStrategies.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IMessageBusStrategy` contract:
+  `canHandle` returns true for non-null input, `execute` returns
+  `{ success: true, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` are used to isolate the
+  layer from transport concerns.
+- The implementation test verifies metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

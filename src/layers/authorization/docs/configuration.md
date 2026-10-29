@@ -1,6 +1,10 @@
 # Configuration: Authorization Layer
 
-## Default Configuration
+## Defaults
+
+`configuration/defaults/AuthorizationDefaults.ts` exports
+`DEFAULT_AUTHORIZATION_CONFIG`:
+
 ```json
 {
   "enabled": true,
@@ -10,16 +14,37 @@
 }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## Options
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| AUTHORIZATION_ENABLED | Enable layer (default: true) |
-| AUTHORIZATION_TIMEOUT | Timeout in ms |
+| Option     | Type    | Default  | Description |
+|------------|---------|----------|-------------|
+| `enabled`  | boolean | `true`   | Enable/disable the layer |
+| `timeout`  | number  | `30000`  | Operation timeout in ms |
+| `retries`  | number  | `3`      | Retry attempts |
+| `logLevel` | string  | `"info"` | `debug \| info \| warn \| error` |
+
+## Processor config (`AuthorizationProcessorConfig`)
+
+Toggles: `enableValidation`, `enableEnrichment`,
+`enablePermissionTracking`, `enableRoleTracking`,
+`enablePolicyTracking`, `enableResourceTracking`,
+`enableSubjectTracking`, `enableDelegationTracking`,
+`enableConditionTracking`, `enableCacheTracking`; guards:
+`maxEventSize`, `allowedEventTypes` (`AuthorizationEventType[]`),
+`piiFields`.
+
+## Adapters
+
+- `HttpAuthorizationAdapter(config)` —
+  `HttpAuthorizationAdapterConfig`: PDP endpoint (OPA, Casbin, custom),
+  batch size, retry policy, headers.
+- `RedisAuthorizationAdapter(config)` —
+  `RedisAuthorizationAdapterConfig`: connection, stream key, metrics
+  key prefix.
+
+## Building & validating
+
+`AuthorizationConfigurationBuilder` — `withEnabled`, `withTimeout`,
+`withRetries`, `withLogLevel`, `withStrategy`, `withOption(s)`,
+`build`. `AuthorizationConfigurationValidator`/`AuthorizationValidator`
+check bounds; `configure(config)` merges at runtime.

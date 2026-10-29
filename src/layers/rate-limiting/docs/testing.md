@@ -567,53 +567,22 @@ function createConfig(overrides?: Partial<RateLimitConfig>): RateLimitConfig {
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit -- src/layers/rate-limiting
+bun test ./src/layers/rate-limiting/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration -- src/layers/rate-limiting
+bun test ./src/layers/rate-limiting/__tests__/
+# e.g. bun test ./src/layers/rate-limiting/__tests__/<file>.test.ts
 ```
 
-### Performance Tests
+### Coverage
 ```bash
-npm run test:performance -- src/layers/rate-limiting
-```
-
-### All Tests
-```bash
-npm test -- src/layers/rate-limiting
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/rate-limiting
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Rate Limiting Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/rate-limiting/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit -- src/layers/rate-limiting
-      - run: npm run test:integration -- src/layers/rate-limiting
-      - run: npm run test:performance -- src/layers/rate-limiting
-      - run: npm run test:coverage -- src/layers/rate-limiting
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/rate-limiting/
 ```
 
 ## Best Practices

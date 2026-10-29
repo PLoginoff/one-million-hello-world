@@ -1,21 +1,26 @@
 # Testing: Secrets Layer
 
-## Unit Tests
-- Implementation tests: Secrets.test.ts
-- Domain tests: SecretsDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+| File | Scope |
+|------|-------|
+| `__tests__/SecretsAdapters.test.ts` | `EnvSecretsAdapter` (env lookup, prefixing, `SECRET_NOT_FOUND`) and `VaultSecretsAdapter` (fetch, cache hits) |
+| `__tests__/Secrets.test.ts` | `Secrets` facade: config, `execute()` result envelope |
+| `__tests__/SecretsStrategies.test.ts` | Five strategies + `SecretsStrategyFactory` |
+| `__tests__/SecretsConfiguration.test.ts` | `SecretsConfigurationBuilder`, `SecretsConfigurationValidator` |
+| `domain/__tests__/` | `SecretsDomain`, `SecretsExtendedDomain`, `SecretsPatterns`, `SecretsServices` — entities, value objects, specifications, policies, pipeline, decorators, handlers, repository |
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=secrets
+bun test ./src/layers/secrets/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/secrets/__tests__/SecretsAdapters.test.ts
+```
+
+Tests use `bun:test`. The Vault adapter is a mock and env vars are
+manipulated inside the test process — no external secret store needed.

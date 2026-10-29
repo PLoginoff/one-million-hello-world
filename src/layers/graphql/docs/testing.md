@@ -1,21 +1,25 @@
-# Testing: Graphql Layer
+# Testing: GraphQL Layer
 
-## Unit Tests
-- Implementation tests: Graphql.test.ts
-- Domain tests: GraphqlDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=graphql
+bun test ./src/layers/graphql/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `GraphQLEngine.test.ts` | Lexer → parser → validation → executor: queries, mutations, fragments, variables, `@skip`/`@include`, NonNull bubbling, partial-result errors, introspection |
+| `GraphQLSdl.test.ts` | `SchemaParser`: type/enum/input/interface/union/scalar definitions, field args, defaults, `schema {}` blocks |
+| `Graphql.test.ts` | `IGraphql` contract: `execute()` result shape, error path, `getStatus()` |
+| `GraphqlStrategies.test.ts` | Five generic strategies + `GraphqlStrategyFactory` |
+| `GraphqlConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `GraphqlDomain`, `ExtendedDomain`, `Services`, `Patterns` cover the domain model.
+
+## Conventions
+- Engine tests build schemas via `SchemaParser` + inline resolvers — no external schema files or network.
+- Spec semantics are asserted directly (e.g. a null NonNull field nulls its parent; error arrays accompany partial `data`).

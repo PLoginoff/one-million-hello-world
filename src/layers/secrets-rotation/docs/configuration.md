@@ -1,25 +1,53 @@
 # Configuration: SecretsRotation Layer
 
 ## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+Defaults are defined in `configuration/defaults/SecretsRotationDefaults.ts`:
+
+```typescript
+export const SecretsRotationDEFAULTS = {
+  enabled: true,
+  timeout: 30000,
+  retries: 3,
+  logLevel: 'info',
+  strategy: 'default',
+  maxConcurrentExecutions: 100,
+  cacheEnabled: true,
+  cacheTtlMs: 60000,
+  metricsEnabled: true,
+  healthCheckEnabled: true,
+  healthCheckIntervalMs: 30000,
+} as const;
 ```
+
+Limits enforced by the validator (`SecretsRotationLIMITS`):
+
+| Limit | Value |
+|-------|-------|
+| `minTimeout` / `maxTimeout` | 1,000 / 300,000 ms |
+| `minRetries` / `maxRetries` | 0 / 10 |
+| `maxConcurrentExecutions` | 1,000 |
+| `maxCacheTtlMs` | 3,600,000 ms |
+
+Valid `strategy` values: `'default'`, `'fast'`, `'reliable'`,
+`'cached'`, `'batch'` (`SecretsRotationSTRATEGIES`).
 
 ## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
+| enabled | boolean | true | Enable/disable the layer |
 | timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
+| retries | number | 3 | Retry attempts per execution |
 | logLevel | string | "info" | Logging verbosity |
+| strategy | string | "default" | Strategy selected via the factory |
+| maxConcurrentExecutions | number | 100 | Max parallel executions |
+| cacheEnabled | boolean | true | Enable the caching decorator/strategy |
+| cacheTtlMs | number | 60000 | Cache entry lifetime |
+| metricsEnabled | boolean | true | Collect execution metrics |
+| healthCheckEnabled | boolean | true | Expose the health check |
+| healthCheckIntervalMs | number | 30000 | Health check cadence |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| SECRETS_ROTATION_ENABLED | Enable layer (default: true) |
-| SECRETS_ROTATION_TIMEOUT | Timeout in ms |
+## Builder and Validator
+- `SecretsRotationConfigurationBuilder` (`configuration/builders/`) — fluent
+  construction of the config object.
+- `SecretsRotationConfigurationValidator` (`configuration/validators/`) —
+  checks values against `SecretsRotationLIMITS` and `SecretsRotationSTRATEGIES`.

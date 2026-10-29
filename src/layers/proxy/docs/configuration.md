@@ -1,25 +1,20 @@
 # Configuration: Proxy Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+The real configuration type is `ProxyConfig` in `types/proxy-types.ts`.
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## ProxyConfig
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| PROXY_ENABLED | Enable layer (default: true) |
-| PROXY_TIMEOUT | Timeout in ms |
+| Option | Type | Description |
+|--------|------|-------------|
+| `enableAccessControl` | `boolean` | Intercept operations with permission checks |
+| `enableLazyLoading` | `boolean` | Defer subject initialization until first use |
+| `enableCaching` | `boolean` | Cache proxy results in an in-memory map |
+
+See [access-control.md](access-control.md),
+[lazy-loading.md](lazy-loading.md) and [caching-proxy.md](caching-proxy.md)
+for the behavior each flag controls.
+
+## Pipeline strategies
+
+`ProxyStrategyFactory` creates the generic `IProxy` execution strategies:
+`Default`, `Fast`, `Reliable`, `Cached`, `Batch`.

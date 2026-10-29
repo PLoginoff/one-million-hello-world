@@ -1,21 +1,43 @@
 # Testing: Bpmn Layer
 
-## Unit Tests
-- Implementation tests: Bpmn.test.ts
-- Domain tests: BpmnDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `Bpmn.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `BpmnStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `BpmnStrategyFactory` creation and
+  unknown-name rejection.
+- `BpmnConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `BpmnDomain.test.ts` — entities, value objects, domain service.
+- `BpmnExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `BpmnServices.test.ts` — execution/query/validation services.
+- `BpmnPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=bpmn
+bun test ./src/layers/bpmn/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/bpmn/__tests__/BpmnStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `BpmnInMemoryAdapter`,
+  `BpmnMockAdapter`, `BpmnStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

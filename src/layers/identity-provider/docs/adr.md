@@ -3,17 +3,19 @@
 ## Status
 Accepted
 
-## Context
-The architecture requires a dedicated IdentityProvider layer to handle identity provider concerns.
+## Decisions
 
-## Decision
-Introduce IdentityProvider as an isolated layer with interface, implementation, domain model, strategies, factories, configuration, and metrics.
+### 1. Federation separate from identity management
+`identity-provider` (Layer 66) talks to external IdPs; `identity` (Layer 36) manages local user entities. Two layers because provider federation (OIDC/SAML protocols, token exchange) and user CRUD have different lifecycles, dependencies, and failure modes.
 
-## Consequences
-- Improved separation of concerns
-- Testable in isolation
-- Configurable at runtime
-- Adds measurable overhead in terms of file count and lines of code
+### 2. Provider-agnostic contract
+`execute(IdentityProviderContext)` abstracts provider operations — authenticate, fetch profile, validate assertion — so OIDC, SAML, and LDAP backends are interchangeable behind the same interface.
 
-## Position
-N/A
+### 3. Cached strategy for provider metadata
+Provider metadata (discovery docs, JWKS, userinfo) is read-heavy and changes rarely — `cached` avoids hammering the IdP on every request.
+
+### 4. Non-throwing results
+`execute()` returns `{ success: false, error: { code: 'IDENTITYPROVIDER_EXECUTION_ERROR' } }` — a failed provider call (IdP outage, bad assertion) degrades to a handled result for auth layers above.
+
+### 5. Provider adapters as the seam
+Real OIDC/SAML implementations plug into the adapter interface; in-memory providers ship for tests.

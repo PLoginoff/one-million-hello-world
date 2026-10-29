@@ -1,25 +1,19 @@
 # Configuration: Inbox Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Defaults
+`DEFAULT_INBOX_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure(config: Record<string, unknown>)` shallow-merges keys. `InboxConfigurationBuilder` and validator provide typed construction.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| INBOX_ENABLED | Enable layer (default: true) |
-| INBOX_TIMEOUT | Timeout in ms |
+## Dedup retention
+`InboxTimeWindow` (domain value object) models how long message ids are retained — set it ≥ the broker's maximum redelivery window; expired entries can be pruned safely.
+
+## Strategy configuration
+Each strategy takes `Record<string, unknown>` in its constructor; `configure()` merges, `getConfig()` returns a copy, `getExecutionCount()` reports calls. Strategies via `InboxStrategyFactory` — `batch` for batched deliveries, `reliable` where double-processing is costly.
+
+## Status inspection
+`getStatus()` → `{ config, metrics, active }`; metrics include `successCount`, `failureCount`, `lastExecutionTime`.

@@ -1,21 +1,43 @@
 # Testing: Authorization Layer
 
-## Unit Tests
-- Implementation tests: Authorization.test.ts
-- Domain tests: AuthorizationDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `Authorization.test.ts` — `execute`/`configure`/`getStatus` contract.
+- `AuthorizationStrategies.test.ts` — five strategies and
+  `AuthorizationStrategyFactory`.
+- `AuthorizationConfiguration.test.ts` — defaults, builder, validator.
+- `AuthorizationEventProcessor.test.ts` — the authz processor against
+  `AuthorizationInMemoryAdapter`: permission checks, role/policy
+  lifecycle, resource access, delegation, condition evaluation and
+  cache events, asserting validation/enrichment/routing.
+
+Domain (`domain/__tests__/`):
+
+- `AuthorizationDomain.test.ts` — entities, value objects, domain
+  service.
+- `AuthorizationExtendedDomain.test.ts` — specifications, policies,
+  repository, pipeline.
+- `AuthorizationServices.test.ts` — execution/query/validation
+  services.
+- `AuthorizationPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
 ```bash
-npx jest --testPathPattern=authorization
+bun test ./src/layers/authorization/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/authorization/__tests__/AuthorizationEventProcessor.test.ts
+```
+
+## Conventions
+
+- No live PDP or Redis: `AuthorizationInMemoryAdapter` is the test
+  sink; `HttpAuthorizationAdapter`/`RedisAuthorizationAdapter` are
+  covered through constructor/config paths.
+- Events are literals in the test body; no fixture files.

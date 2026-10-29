@@ -1,21 +1,37 @@
 # Testing: Observability Layer
 
-## Unit Tests
-- Implementation tests: Observability.test.ts
-- Domain tests: ObservabilityDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `Observability.test.ts` — implementation: `execute` happy and error paths,
+  `configure`, `getStatus` shape (config, metrics, active).
+- `ObservabilityStrategies.test.ts` — all five strategies: `canHandle`,
+  `execute` results, execution counting.
+- `ObservabilityConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `ObservabilityDomain.test.ts`, `ObservabilityExtendedDomain.test.ts` — entities and
+  value objects.
+- `ObservabilityPatterns.test.ts` — specifications, decorators, pipeline.
+- `ObservabilityServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=observability
+bun test ./src/layers/observability/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/observability/__tests__/Observability.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IObservabilityStrategy` contract:
+  `canHandle` accepts non-null input, `execute` returns
+  `{ success, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` isolate the layer
+  from external systems.
+- Implementation tests verify metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

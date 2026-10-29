@@ -1,21 +1,37 @@
 # Testing: PerformanceTesting Layer
 
-## Unit Tests
-- Implementation tests: PerformanceTesting.test.ts
-- Domain tests: PerformanceTestingDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+### `__tests__/`
+- `PerformanceTesting.test.ts` — implementation: `execute` happy and error paths,
+  `configure`, `getStatus` shape (config, metrics, active).
+- `PerformanceTestingStrategies.test.ts` — all five strategies: `canHandle`,
+  `execute` results, execution counting.
+- `PerformanceTestingConfiguration.test.ts` — builder and validator behavior.
+
+### `domain/__tests__/`
+- `PerformanceTestingDomain.test.ts`, `PerformanceTestingExtendedDomain.test.ts` — entities and
+  value objects.
+- `PerformanceTestingPatterns.test.ts` — specifications, decorators, pipeline.
+- `PerformanceTestingServices.test.ts` — domain/execution/query/validation services.
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=performance-testing
+bun test ./src/layers/performance-testing/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/performance-testing/__tests__/PerformanceTesting.test.ts
+```
+
+## Test Approach
+- Strategies are tested against the shared `IPerformanceTestingStrategy` contract:
+  `canHandle` accepts non-null input, `execute` returns
+  `{ success, data: { strategy, input, metadata, executionCount } }`.
+- `InMemoryAdapter` / `MockAdapter` / `StubAdapter` isolate the layer
+  from external systems.
+- Implementation tests verify metric recording (`successCount`,
+  `failureCount`, `lastExecutionTime`) via `getStatus()`.

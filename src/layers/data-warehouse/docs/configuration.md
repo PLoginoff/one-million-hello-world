@@ -1,25 +1,27 @@
 # Configuration: DataWarehouse Layer
 
-## Default Configuration
-```json
+## Defaults
+`DEFAULT_DATAWAREHOUSE_CONFIG` (`configuration/defaults/DataWarehouseDefaults.ts`):
+
+```ts
 {
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
+  enabled: true,
+  timeout: 30000,   // ms
+  retries: 3,
+  logLevel: 'info'  // 'debug' | 'info' | 'warn' | 'error'
 }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## Applying configuration
+`DataWarehouse.configure(config: Record<string, unknown>)` shallow-merges the given keys over the current config. There is no built-in environment-variable loader in this layer — supply values from your own config source.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| DATA_WAREHOUSE_ENABLED | Enable layer (default: true) |
-| DATA_WAREHOUSE_TIMEOUT | Timeout in ms |
+## Builders and validators (`configuration/`)
+- `DataWarehouseConfigurationBuilder` — fluent builder producing a `DataWarehouseConfig`
+- `DataWarehouseBuilder` — assembles a configured layer instance
+- `DataWarehouseConfigurationValidator` / `DataWarehouseValidator` — validate config objects (checked in `DataWarehouseConfiguration.test.ts`)
+
+## Strategy configuration
+Each strategy constructor accepts `Record<string, unknown>`; `strategy.configure()` merges additional options and `getConfig()` returns a copy. Strategies also expose `getExecutionCount()` for diagnostics.
+
+## Status inspection
+`getStatus()` returns `{ config, metrics, active }` where `metrics` contains `successCount`, `failureCount`, and `lastExecutionTime` counters collected during `execute()`.

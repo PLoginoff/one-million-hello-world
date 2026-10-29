@@ -1,103 +1,43 @@
 # Decompression
 
-## Overview
-The Compression Layer implements decompression with algorithm-specific decompression, error handling, format validation, and data integrity.
+`Compressor.decompress(data, algorithm)` reverses the simulated codec
+envelopes produced by `compress`. There is no `DecompressionEngine` or
+error-handler class.
 
-## Decompression Engine
+## `decompress(data, algorithm)`
 
-### Decompression Engine
-```typescript
-class DecompressionEngine {
-  private selector: AlgorithmSelector;
-  
-  constructor(selector: AlgorithmSelector) {
-    this.selector = selector;
-  }
-  
-  decompress(data: Buffer, algorithm: CompressionAlgorithm): Buffer {
-    const compressor = this.selector.select(algorithm);
-    return compressor.decompress(data);
-  }
-  
-  decompressAuto(data: Buffer): Buffer {
-    // Auto-detect algorithm from data
-    const algorithm = this.detectAlgorithm(data);
-    return this.decompress(data, algorithm);
-  }
-  
-  private detectAlgorithm(data: Buffer): CompressionAlgorithm {
-    if (data[0] === 0x1f && data[1] === 0x8b) {
-      return CompressionAlgorithm.GZIP;
-    }
-    
-    if (data[0] === 0x81) {
-      return CompressionAlgorithm.BROTLI;
-    }
-    
-    return CompressionAlgorithm.NONE;
-  }
-}
+```ts
+decompress(data: string, algorithm: CompressionAlgorithm): CompressionResult
 ```
 
-## Error Handling
+| `algorithm` | Behaviour |
+|-------------|-----------|
+| `NONE`    | returns `data` unchanged |
+| `GZIP`    | strips `[GZIP:<len>]` prefix if present, else returns `data` |
+| `BROTLI`  | strips `[BROTLI:<len>]` prefix if present, else returns `data` |
+| other     | `{ success: false, error: 'Unsupported decompression algorithm' }` |
 
-### Decompression Errors
-```typescript
-class DecompressionError extends Error {
-  constructor(
-    message: string,
-    public algorithm?: CompressionAlgorithm,
-    public cause?: Error
-  ) {
-    super(message);
-    this.name = 'DecompressionError';
-  }
-}
+Result: `CompressionResult { success, data, algorithm }` — no
+`originalSize`/`compressedSize`/`ratio` (decompression doesn't report
+them).
 
-class ValidationError extends Error {
-  constructor(message: string, public data: Buffer) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
-```
+## Envelope format
 
-### Error Handler
-```typescript
-class DecompressionErrorHandler {
-  handleDecompressionError(error: Error, algorithm: CompressionAlgorithm): DecompressionError {
-    if (error instanceof DecompressionError) {
-      return error;
-    }
-    
-    return new DecompressionError(
-      `Decompression failed for algorithm ${algorithm}`,
-      algorithm,
-      error
-    );
-  }
-  
-  validateFormat(data: Buffer, algorithm: CompressionAlgorithm): void {
-    switch (algorithm) {
-      case CompressionAlgorithm.GZIP:
-        if (data[0] !== 0x1f || data[1] !== 0x8b) {
-          throw new ValidationError('Invalid Gzip format', data);
-        }
-        break;
-      case CompressionAlgorithm.BROTLI:
-        if (data[0] !== 0x81) {
-          throw new ValidationError('Invalid Brotli format', data);
-        }
-        break;
-    }
-  }
-}
-```
+Produced by `compress`: `"[GZIP:42]<payload>"`, `"[BROTLI:7]<payload>"`.
+`decompress` locates the `]`, parses the length (currently ignored —
+the prefix is informational), and returns the substring after it.
 
-## Best Practices
+## Error paths
 
-### Decompression Guidelines
-- Validate format before decompression
-- Handle decompression errors gracefully
-- Auto-detect algorithm when possible
-- Monitor decompression performance
+- Unknown `algorithm` → `{ success: false, error: 'Unsupported
+  decompression algorithm' }`.
+- Any thrown error inside the switch → `{ success: false, error:
+  <message> }`.
+- Malformed/missing prefix → `data` returned as-is (no error) — the
+  implementation is lenient, not strict.
+
+## Real codecs
+
+These are simulated — see `compression-algorithms.md` for replacing
+`_simulateGzip`/`_simulateBrotli` and their decompress counterparts
+with `zlib`.

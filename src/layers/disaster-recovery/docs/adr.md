@@ -3,33 +3,19 @@
 ## Status
 Accepted
 
-## Context
-The system requires a disaster recovery layer to handle disaster recovery concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+## Decisions
 
-## Decision
-Implement DisasterRecovery as a standalone layer with:
-- Interface (IDisasterRecovery) defining the contract
-- Implementation (DisasterRecovery) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+### 1. Uniform `execute(context)` contract
+Drills, failover, and recovery all flow through `execute(DisasterRecoveryContext)` so DR orchestration sits in the same pipeline shape as every other layer — DR plans can be triggered by the same machinery that runs normal operations.
 
-## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
+### 2. Initialization-gated implementation
+`DisasterRecovery` tracks an `_initialized` flag — failover orchestration refuses to run before the layer is configured, a guard against half-initialized DR execution.
 
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
+### 3. Strategy variants for drill vs real failover
+`fast` and `reliable` strategies share the interface: drills run the fast path (no durability guarantees needed), real failover runs reliable (every step confirmed). Same pipeline, different execution semantics.
 
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
+### 4. Non-throwing results
+Failures surface as `DisasterRecoveryResult { success: false, error }` — during an actual disaster you need structured failure information, not exceptions.
 
-## References
-- Layer architecture: docs/disaster-recovery-layer-architecture.md
-- Interface: src/layers/disaster-recovery/interfaces/IDisasterRecovery.ts
+### 5. In-memory domain model
+Recovery plans, executions, and metrics snapshots live in the in-memory domain model; durable plan storage is an adapter concern added downstream.

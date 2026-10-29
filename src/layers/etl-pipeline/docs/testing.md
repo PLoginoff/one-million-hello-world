@@ -1,21 +1,23 @@
 # Testing: EtlPipeline Layer
 
-## Unit Tests
-- Implementation tests: EtlPipeline.test.ts
-- Domain tests: EtlPipelineDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=etl-pipeline
+bun test ./src/layers/etl-pipeline/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `EtlPipeline.test.ts` | `execute()` success/failure, `configure()` merge, `getStatus()` + metrics |
+| `EtlPipelineStrategies.test.ts` | Five strategies + `EtlPipelineStrategyFactory` |
+| `EtlPipelineConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `EtlPipelineDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `EtlPipelineContext` fixtures; strategy tests are table-driven.
+- In-memory connectors only — no external sources/sinks needed.

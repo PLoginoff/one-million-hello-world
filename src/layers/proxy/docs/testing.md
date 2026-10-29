@@ -176,53 +176,22 @@ function createProxy(): ProxyManager {
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit -- src/layers/proxy
+bun test ./src/layers/proxy/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration -- src/layers/proxy
+bun test ./src/layers/proxy/__tests__/
+# e.g. bun test ./src/layers/proxy/__tests__/<file>.test.ts
 ```
 
-### Performance Tests
+### Coverage
 ```bash
-npm run test:performance -- src/layers/proxy
-```
-
-### All Tests
-```bash
-npm test -- src/layers/proxy
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/proxy
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Proxy Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/proxy/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit -- src/layers/proxy
-      - run: npm run test:integration -- src/layers/proxy
-      - run: npm run test:performance -- src/layers/proxy
-      - run: npm run test:coverage -- src/layers/proxy
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/proxy/
 ```
 
 ## Best Practices

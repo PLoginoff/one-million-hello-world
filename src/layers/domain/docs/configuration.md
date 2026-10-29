@@ -1,25 +1,20 @@
 # Configuration: Domain Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Layer defaults
+`DEFAULT_DOMAIN_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure()` merges `Record<string, unknown>`; `DomainConfigurationBuilder` and validators provide typed construction.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| DOMAIN_ENABLED | Enable layer (default: true) |
-| DOMAIN_TIMEOUT | Timeout in ms |
+## Domain-specific behavior
+Domain semantics live in code, not config:
+
+- **Entity validation** — `DomainManager.validateEntity()` checks required fields and timestamps before create/update; not toggleable.
+- **Value objects** — immutable by construction; `MessageContent.create(...)`, `CorrelationId`, `RequestId`, `Timestamp`.
+- **Message policy** — `services/MessagePolicy.ts` holds HelloWorld-message business rules; `HelloWorldFactory`/`DomainFactory` construct valid instances.
+
+## Status inspection
+`getStatus()` returns current config and state.

@@ -454,53 +454,22 @@ function sleep(ms: number): Promise<void> {
 
 ## Running Tests
 
-### Unit Tests
+All tests in this layer run under `bun test` (tests import from `bun:test`).
+
+### All Layer Tests
 ```bash
-npm run test:unit -- src/layers/middleware
+bun test ./src/layers/middleware/
 ```
 
-### Integration Tests
+### Single File
 ```bash
-npm run test:integration -- src/layers/middleware
+bun test ./src/layers/middleware/__tests__/
+# e.g. bun test ./src/layers/middleware/__tests__/<file>.test.ts
 ```
 
-### Performance Tests
+### Coverage
 ```bash
-npm run test:performance -- src/layers/middleware
-```
-
-### All Tests
-```bash
-npm test -- src/layers/middleware
-```
-
-### Coverage Report
-```bash
-npm run test:coverage -- src/layers/middleware
-```
-
-## Continuous Integration
-
-### GitHub Actions Workflow
-```yaml
-name: Middleware Tests
-
-on:
-  pull_request:
-    paths:
-      - 'src/layers/middleware/**'
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run test:unit -- src/layers/middleware
-      - run: npm run test:integration -- src/layers/middleware
-      - run: npm run test:performance -- src/layers/middleware
-      - run: npm run test:coverage -- src/layers/middleware
-      - uses: codecov/codecov-action@v3
+bun test --coverage ./src/layers/middleware/
 ```
 
 ## Best Practices

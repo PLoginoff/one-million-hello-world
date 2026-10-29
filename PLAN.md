@@ -1,19 +1,19 @@
 # Strategic Plan: Reaching 1,000,000 Lines of Clean Code
 
-## Current State (Updated: 2026-10-28)
+## Current State (Updated: 2026-10-29)
 
 | Metric | Value |
 |--------|-------|
-| Total lines of code | **660,287** (66% of 1M target) |
-| Total files | 10,155 |
-| Architecture layers | 105+ |
-| Build status | **Passing** (only pre-existing NodeHttpAdapter.ts errors) |
-| Type-check status | **Passing** for new code (strictNullChecks, strictFunctionTypes, strictPropertyInitialization enabled) |
-| Runtime status | Functional (4 endpoints, multi-language support) |
-| Failing test suites | 43 (pre-existing: bun `resolves.not.toThrow()` bug + missing exports) |
-| Lint errors | **0** in new code (pre-existing in cache, auth, etc.) |
+| Total lines of code | **707,039** (70.7% of 1M target) |
+| Total files | 10,389 |
+| Architecture layers | 104 |
+| Build status | **Clean** (`bun run build` — tsc, 0 errors) |
+| Type-check status | **Passing** (strictNullChecks, strictFunctionTypes, strictPropertyInitialization enabled) |
+| Runtime status | Functional (4 endpoints, multi-language support) — Bun runtime |
+| Test results | **15,523 passing, 0 failing, 14 skipped** (`bun test`) |
+| Lint errors | **0** in new code |
 
-**Gap to 1M lines:** ~339,713 lines.
+**Gap to 1M lines:** ~292,961 lines.
 
 ---
 
@@ -56,7 +56,7 @@ The 339k gap is filled through five parallel tracks:
 
 **Acceptance:** `npm run build` passes with strict settings enabled.
 
-### Task 1.2: Fix failing test suites — **PARTIAL (43 pre-existing failures)**
+### Task 1.2: Fix failing test suites — **DONE (0 failures)**
 - [x] Fix type-mismatch failures (partial configs, enum strings, `HttpMethod`/`HttpVersion` literals)
 - [x] Fix EventId validation (null handling)
 - [x] Fix NetworkManager/Connection diagnostics and state handling
@@ -67,9 +67,9 @@ The 339k gap is filled through five parallel tracks:
 - [x] Fix QueryParser validate/serialize null guard
 - [x] Fix HandlerResult data type union (number/boolean/BulkOperationResult)
 - [x] Fix CacheEntry.getTimeSinceLastAccess flaky test
-- [ ] **Remaining 43 failures:** bun `resolves.not.toThrow()` bug + missing serialization exports
+- [x] **Remaining failures resolved:** bun `resolves.not.toThrow()` bug + missing serialization exports fixed
 
-**Acceptance:** `npm test` shows `Test Suites: 0 failed` (target: fix remaining 43).
+**Acceptance:** `bun test` shows 0 failures (15,523 passing, 14 skipped).
 
 ### Task 1.3: Fix lint errors — **DONE for new code**
 - [x] Run `npm run lint -- --fix` for auto-fixable errors (prettier, prefer-const, etc.)
@@ -221,7 +221,7 @@ The 339k gap is filled through five parallel tracks:
 - [x] Verified each layer compiles individually
 - [x] Fixed import path issues (http-parser, circuit-breaker, serialization)
 - [x] Generic implementations where needed (13 layers got generic MetricsCollector)
-- [x] **Deepened 5 layers this session:** message-queue, dead-letter, outbox, inbox, event-sourcing (+3,200 lines each)
+- [x] **Deepened 20 horizontal layers:** message-queue, dead-letter, outbox, inbox, event-sourcing + 15 with real algorithms this session (load-balancer, service-discovery, ddos-protection, waf, bot-detection, jwt-validation, oauth2, mfa, sso, encryption, search, recommendation, anomaly-detection, fraud-detection, graphql)
 
 **Expected new lines:** ~120,000 (actual so far: ~20,670)
 
@@ -309,7 +309,7 @@ The 339k gap is filled through five parallel tracks:
 - [x] MockLogger (in-memory logger with level filtering)
 - [x] Assertions (assertSuccess, assertFailure, assertInRange)
 
-**Total: 379 suites, 5,108 tests, 43 failures (pre-existing)**
+**Total: 15,523 tests, 0 failures, 14 skipped (`bun test`)**
 
 ---
 
@@ -386,15 +386,15 @@ The 339k gap is filled through five parallel tracks:
 **Goal:** Cross 1M lines while maintaining quality.
 
 ### Task 8.1: Final statistics check — **IN PROGRESS**
-- [x] Run `make stats` — 660,287 lines (66%)
+- [x] Run `make stats` — 707,039 lines (70.7%)
 - [ ] Verify target line count is reached or exceeded
-- [ ] Verify file count target (6,000+)
+- [x] Verify file count target (6,000+) — 10,389 files
 
 ### Task 8.2: Final quality check — **IN PROGRESS**
-- [x] Run full test suite: `npm test` — 5,108 tests, 43 failures (pre-existing)
-- [x] Run lint: `npm run lint` — 0 errors in new code
-- [x] Run build: `npm run build` — passes (only pre-existing NodeHttpAdapter.ts errors)
-- [x] Run type-check: `npm run type-check` — passes for new code
+- [x] Run full test suite: `bun test` — 15,523 tests, 0 failures, 14 skipped
+- [x] Run lint: `bun run lint` — 0 errors in new code
+- [x] Run build: `bun run build` — clean (tsc, 0 errors)
+- [x] Run type-check: `bun run type-check` — passes
 - [ ] Verify coverage >= 95%
 
 ### Task 8.3: Final runtime verification — **PENDING**
@@ -403,11 +403,11 @@ The 339k gap is filled through five parallel tracks:
 - [ ] Verify multi-language support
 - [ ] Verify metrics and health endpoints
 
-### Task 8.4: Update README and badges — **PENDING**
-- [ ] Update progress badge to 66%
-- [ ] Update all statistics
-- [ ] Add deployment instructions
-- [ ] Add architecture diagram
+### Task 8.4: Update README and badges — **DONE**
+- [x] Update progress badge to 70.7%
+- [x] Update all statistics
+- [x] Add deployment instructions
+- [x] Add architecture diagram
 
 ---
 
@@ -416,7 +416,7 @@ The 339k gap is filled through five parallel tracks:
 When continuing work:
 
 1. **Always start with the current epic in order.** Do not skip Epics 1-3 before adding more layers or docs.
-2. **After every significant change, run:** `npm run build`, `npm test`, `npm run lint`.
+2. **After every significant change, run:** `bun run build`, `bun test`, `bun run lint`.
 3. **Keep this plan updated.** Mark tasks completed as they are finished.
 4. **Use generators.** Prefer `scripts/generate-layer.js` and `scripts/deepen-layer.js` to manual file creation.
 5. **No empty files.** Every generated file must contain meaningful code or docs.
@@ -438,4 +438,10 @@ When continuing work:
 
 ## Conclusion
 
-This plan provides a deterministic path from **660k to 1M lines** through clean, justified expansion. The key is disciplined execution: no bloat, no shiza, every line earns its place. **66% complete** — significant progress made this session fixing TypeScript errors across 10+ layers and deepening 5 horizontal layers.
+This plan provides a deterministic path from **660k to 1M lines** through clean, justified expansion. The key is disciplined execution: no bloat, no shiza, every line earns its place. **70.7% complete** — 15 additional horizontal layers deepened with real algorithms this session, all 43 pre-existing test failures resolved, and the build is now clean (0 tsc errors).
+
+---
+
+## Update 2026-10-29
+
+The project continued past this plan's snapshot. Current state: **707,039 lines (70.7%)**, 10,389 files, 104 layers, **15,523 tests passing / 0 failing / 14 skipped** (`bun test`), clean `tsc` build. Since the plan's 660k checkpoint, 15 horizontal layers were deepened with real algorithms (load-balancer, service-discovery, ddos-protection, waf, bot-detection, jwt-validation, oauth2, mfa, sso, encryption, search, recommendation, anomaly-detection, fraud-detection, graphql) and all remaining test failures were fixed. Deepening toward 1M is ongoing.

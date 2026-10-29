@@ -8,7 +8,12 @@ Each layer can be tested independently:
 
 ## Test Coverage
 
-All 13 layers have comprehensive test coverage using Jest:
+All 13 component layers have test coverage using `bun:test`:
+
+### Running Tests
+```bash
+bun test ./src/layers/repository/
+```
 
 ### Test Files Location
 - `components/data-access/__tests__/DataAccess.test.ts` - CRUD operations, bulk operations, snapshots, stats, config, index management

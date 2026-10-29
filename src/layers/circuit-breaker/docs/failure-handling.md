@@ -1,99 +1,50 @@
 # Failure Handling
 
-## Overview
-The Circuit Breaker Layer implements failure handling with failure threshold tracking, automatic circuit opening, reset timeout management, and failure count reset on success.
+Failures are recorded inside `implementations/CircuitBreaker.ts`; there
+is no separate `FailureHandler` class.
 
-## Failure Handler
+## What counts as a failure
 
-### Failure Handler
-```typescript
-class FailureHandler {
-  private failureCount: number = 0;
-  private failureThreshold: number;
-  private resetTimeout: number;
-  private lastFailureTime: Date | null = null;
-  
-  constructor(threshold: number, resetTimeout: number) {
-    this.failureThreshold = threshold;
-    this.resetTimeout = resetTimeout;
-  }
-  
-  recordFailure(): void {
-    this.failureCount++;
-    this.lastFailureTime = new Date();
-  }
-  
-  recordSuccess(): void {
-    this.failureCount = 0;
-    this.lastFailureTime = null;
-  }
-  
-  shouldOpenCircuit(): boolean {
-    return this.failureCount >= this.failureThreshold;
-  }
-  
-  shouldReset(): boolean {
-    if (!this.lastFailureTime) return false;
-    
-    const elapsed = Date.now() - this.lastFailureTime.getTime();
-    return elapsed >= this.resetTimeout;
-  }
-  
-  getFailureCount(): number {
-    return this.failureCount;
-  }
-  
-  reset(): void {
-    this.failureCount = 0;
-    this.lastFailureTime = null;
+`execute(operation, fallback?)` calls `await operation()`. Any thrown
+error (sync or rejected promise) is caught and routed to
+`_onFailure()`. A *successful* fallback after a failed operation still
+counts as a failure of the primary operation — the failure was already
+recorded before the fallback ran.
+
+## `_onFailure()` behaviour
+
+```ts
+private _onFailure(): void {
+  this._stats.failureCount++;
+  this._stats.lastFailureTime = Date.now();
+  this._successCount = 0;
+
+  if (this._stats.failureCount >= this._config.failureThreshold) {
+    this._state = CircuitState.OPEN;
+    this._lastStateChange = Date.now();
   }
 }
 ```
 
-## Timeout Management
+- `failureCount` is cumulative across the circuit's lifetime (or until
+  `reset()` / a half-open close).
+- `successCount` is zeroed so a single failure cancels a half-open
+  recovery probe.
+- Crossing `failureThreshold` (default `5`) opens the circuit and stamps
+  `_lastStateChange`, which starts the `resetTimeout` window.
 
-### Timeout Manager
-```typescript
-class TimeoutManager {
-  private resetTimeout: number;
-  private lastFailureTime: Date | null = null;
-  
-  constructor(resetTimeout: number) {
-    this.resetTimeout = resetTimeout;
-  }
-  
-  recordFailure(): void {
-    this.lastFailureTime = new Date();
-  }
-  
-  recordSuccess(): void {
-    this.lastFailureTime = null;
-  }
-  
-  getRemainingTime(): number {
-    if (!this.lastFailureTime) return 0;
-    
-    const elapsed = Date.now() - this.lastFailureTime.getTime();
-    const remaining = this.resetTimeout - elapsed;
-    
-    return Math.max(0, remaining);
-  }
-  
-  isTimeoutExpired(): boolean {
-    return this.getRemainingTime() === 0;
-  }
-}
-```
+## Timeout handling
 
-## Best Practices
+There is no separate `TimeoutManager`. `config.timeout` is stored and
+returned by `getConfig()`; the implementation does not itself race the
+operation against a timer — call sites that need a hard deadline should
+wrap `operation` in their own `Promise.race`/`AbortSignal` logic.
 
-### Failure Handling Guidelines
-- Set appropriate failure thresholds
-- Configure reasonable reset timeouts
-- Monitor failure patterns
-- Reset on successful recovery
-- Document failure criteria
+## Error propagation
 
-### Performance Considerations
-- Monitor failure check overhead
-- Use efficient counting
+- Circuit open, no fallback → `{ success: false, error: 'Circuit is
+  open', state: OPEN }`.
+- Operation throws, fallback succeeds → `{ success: true, data:
+  fallbackResult, state }` (the primary error is swallowed by design).
+- Operation throws, fallback throws or absent → `{ success: false,
+  error: <primary message>, state }`.

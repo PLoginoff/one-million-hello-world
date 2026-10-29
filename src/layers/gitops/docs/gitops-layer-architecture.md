@@ -1,22 +1,23 @@
 # Gitops Layer Architecture
 
 ## Position
-Layer 50
+Layer 50. Responsibility: GitOps deployment reconciliation — desired-state (Git) vs observed-state reconciliation behind a uniform contract.
 
-## Responsibility
-GitOps deployment reconciliation
+## Core Contract
+`IGitops` (`interfaces/`): `execute(context: GitopsContext)`, `configure(config)`, `getStatus()` → `{ config, metrics, active }`.
 
-## Components
-- **IGitops**: Interface defining the layer contract.
-- **Gitops**: Concrete implementation.
-- **GitopsEntity**: Core domain entity.
-- **GitopsValueObject**: Immutable value object.
-- **GitopsDomainService**: Domain logic.
+`Gitops` (`implementations/`) returns `GitopsResult` (`{ success, data?, error? }`, code `GITOPS_EXECUTION_ERROR`) and records `successCount`/`failureCount`/`lastExecutionTime` metrics.
 
-## Integration
-This layer receives input from the previous layer and delegates to the next layer through a well-defined interface.
+## Types (`types/gitops-types.ts`)
+`GitopsContext` `{ input, metadata, timestamp }` — reconciliation inputs (repo ref, target environment, manifests) flow through `input`/`metadata`; `GitopsResult<T>`; `GitopsError`; `GitopsConfig` (`enabled`, `timeout`, `retries`, `logLevel`).
 
-## Testing
-- Unit tests for implementation
-- Domain tests for entities and value objects
-- Integration tests with adjacent layers (planned)
+## Strategies (`strategies/`)
+`IGitopsStrategy` (`name`/`priority`/`canHandle`/`execute`) implementations via `GitopsStrategyFactory`: `default` (0), `fast` (1), `reliable` (2), `batch` (3), `cached` (4). `batch` suits multi-environment reconciliation sweeps; `reliable` suits production applies.
+
+## Domain Model (`domain/`)
+Entities (`GitopsEntity`, `ConfigState`, `Execution`, `MetricsSnapshot`), value objects (`Priority`, `Threshold`, `TimeWindow` — sync windows), domain/execution/query/validation services, events (`GitopsExecuted`/`Failed` — drift-detected/apply-failed hooks), handlers, in-memory repository, mapper, decorators, observer, pipeline (reconcile stages), policies, specifications.
+
+## Supporting
+- `adapters/` — InMemory, Mock, Stub (extension points for Git providers and Kubernetes controllers)
+- `configuration/` — builders, `DEFAULT_GITOPS_CONFIG`, validators
+- `health/`, `metrics/` (Prometheus), `statistics/`, `utils/` (`GitopsError`, `GitopsErrorMapper`)

@@ -1,25 +1,30 @@
 # Configuration: Retry Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+The real configuration type is `RetryConfig` in `types/retry-types.ts`.
 
-## Configuration Options
+## RetryConfig
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `maxAttempts` | `number` | `3` | Total attempts (initial + retries) |
+| `strategy` | `RetryStrategy` | `EXPONENTIAL_BACKOFF` | Delay strategy |
+| `baseDelay` | `number` | `1000` | Base delay in ms |
+| `maxDelay` | `number` | `10000` | Delay cap in ms |
+| `jitter` | `boolean` | `true` | ±10% random jitter |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| RETRY_ENABLED | Enable layer (default: true) |
-| RETRY_TIMEOUT | Timeout in ms |
+Defaults are applied in `implementations/RetryPolicy.ts`.
+
+## RetryStrategy
+
+`EXPONENTIAL_BACKOFF` (`baseDelay * 2^attempt`), `LINEAR_BACKOFF`
+(`baseDelay * (attempt+1)`), `FIXED_DELAY` (`baseDelay`), all capped at
+`maxDelay`; jitter adds ±10% randomness to prevent thundering herd — see
+[delay-calculation.md](delay-calculation.md) and
+[jitter-implementation.md](jitter-implementation.md).
+
+## Pipeline strategies
+
+`IRetryStrategy` in `strategies/` is a different abstraction — generic
+execution strategies (`Default`, `Fast`, `Reliable`, `Cached`, `Batch`)
+plus `DefaultRetryStrategy`, `LoggingRetryStrategy`,
+`MetricsRetryStrategy` created via `RetryStrategyFactory`.

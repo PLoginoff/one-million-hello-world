@@ -25,8 +25,9 @@ class TraceIdGenerator {
 ```
 
 ### Span Structure
+The real type is `TraceSpan` in `types/middleware-types.ts`:
 ```typescript
-interface Span {
+interface TraceSpan {
   traceId: string;
   spanId: string;
   parentSpanId?: string;
@@ -34,10 +35,11 @@ interface Span {
   startTime: Date;
   endTime?: Date;
   duration?: number;
-  tags: Map<string, string>;
-  events: SpanEvent[];
-  links: SpanLink[];
-  status: SpanStatus;
+  tags?: Record<string, unknown>;
+  events?: SpanEvent[];
+  links?: SpanLink[];
+  status?: SpanStatus;
+  statusCode?: number;
   error?: SpanError;
 }
 
@@ -54,11 +56,11 @@ interface SpanLink {
 }
 
 enum SpanStatus {
-  OK = 'ok',
-  ERROR = 'error',
-  CANCELLED = 'cancelled',
-  TIMEOUT = 'timeout',
-  UNKNOWN = 'unknown'
+  OK = 'OK',
+  ERROR = 'SPAN_ERROR',
+  CANCELLED = 'CANCELLED',
+  TIMEOUT = 'TIMEOUT',
+  UNKNOWN = 'UNKNOWN',
 }
 
 interface SpanError {

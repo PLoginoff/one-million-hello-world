@@ -1,21 +1,23 @@
 # Testing: Inbox Layer
 
-## Unit Tests
-- Implementation tests: Inbox.test.ts
-- Domain tests: InboxDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=inbox
+bun test ./src/layers/inbox/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `Inbox.test.ts` | `execute()` success/failure, `configure()` merge, `getStatus()` + metrics |
+| `InboxStrategies.test.ts` | Five strategies + `InboxStrategyFactory` |
+| `InboxConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `InboxDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects (incl. `TimeWindow` retention), services, repository (dedup store), events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `InboxContext` fixtures; strategy tests are table-driven.
+- Dedup store is in-memory — no broker needed.

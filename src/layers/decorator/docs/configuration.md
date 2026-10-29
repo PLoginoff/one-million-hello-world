@@ -1,25 +1,25 @@
 # Configuration: Decorator Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## DecoratorConfig
+`DecoratorConfig` (`types/decorator-types.ts`) has exactly two toggles:
+
+| Option | Type | Default | Effect |
+|--------|------|---------|--------|
+| `enableLogging` | boolean | `false` | Adds `'logging'` to the applied-decorator list on `execute()` |
+| `enableMetrics` | boolean | `false` | Adds `'metrics'` to the applied-decorator list on `execute()` |
+
+```ts
+decorator.setConfig({ enableLogging: true, enableMetrics: false });
+decorator.getConfig(); // { enableLogging: true, enableMetrics: false }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`setConfig` merges partial config; `getConfig` returns a copy.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| DECORATOR_ENABLED | Enable layer (default: true) |
-| DECORATOR_TIMEOUT | Timeout in ms |
+## Layer defaults
+`DEFAULT_DECORATOR_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
+```
+
+`DecoratorConfigurationBuilder` and validators provide typed construction for layer-level config.

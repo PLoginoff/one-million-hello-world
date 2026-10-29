@@ -1,35 +1,33 @@
 # ADR: Event Layer
 
 ## Status
-Accepted
+Accepted (Refactored)
 
 ## Context
-The system requires a event layer to handle event concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+Event-driven communication (pub/sub, domain events, handler pipelines) needed a home that could grow beyond a simple emitter — subscription lifecycle, error handling, persistence, monitoring, and multiple broker backends.
 
-## Decision
-Implement Event as a standalone layer with:
-- Interface (IEvent) defining the contract
-- Implementation (Event) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Eight-layer clean architecture
+Domain (entities/VOs) → Core (bus, subscription mgmt, execution, errors) → Infrastructure (stores, queues, external publishers) → Application (dispatcher, handler registry) → Utils → Monitoring → Configuration → Testing. Each ring only depends inward.
+
+*Rationale:* a flat emitter couldn't host persistence/monitoring cleanly; layering makes each concern replaceable (e.g. `MemoryEventStore` → Redis/Kafka without touching the bus).
+
+### 2. `IEventBus` + `SubscriptionManager` split
+Publishing/subscribing lives in `core/implementations/EventBus.ts`; subscription storage/lifecycle lives in `SubscriptionManager`; execution in `EventExecutor`; failures in `ErrorHandler`. One responsibility per component, all behind `core/interfaces/`.
+
+### 3. Strategy-pattern event dispatch
+`Default`, `Broadcast`, `Filtered`, `Prioritized`, `Logging`, `Metrics`, `DeadLetter` strategies implement `IEventStrategy` — dispatch semantics (fan-out vs filtered vs dead-lettered) are pluggable per event, not hard-coded in the bus.
+
+### 4. Multiple broker adapters
+`InMemoryEventBusAdapter`, `RedisEventBusAdapter`, `RedisEventAdapter`, `KafkaEventAdapter`, `HttpEventAdapter` — the same bus API fronts in-process, Redis, Kafka, and HTTP transports.
+
+### 5. First-class monitoring and config
+`EventMetricsCollector`/`EventLogger` (monitoring/) and `EventBusConfig`/`ConfigLoader`/`ConfigValidator` (configuration/) are real subsystems, not afterthoughts — observability and validation are built into the bus surface.
+
+### 6. Immutable domain events
+`Event`/`EventId`/`EventType`/`EventMetadata`/`EventPayload` are immutable VOs/entities in `domain/` — events are facts, not mutable messages.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/event-layer-architecture.md
-- Interface: src/layers/event/interfaces/IEvent.ts
+- Replaceable transports, dispatch semantics, and stores
+- More moving parts than a simple emitter — justified by the pub/sub + persistence + monitoring requirements

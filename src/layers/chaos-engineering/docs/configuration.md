@@ -1,6 +1,9 @@
 # Configuration: ChaosEngineering Layer
 
-## Default Configuration
+## Defaults
+
+`configuration/defaults/ChaosEngineeringDefaults.ts` exports `DEFAULT_CHAOSENGINEERING_CONFIG`:
+
 ```json
 {
   "enabled": true,
@@ -10,16 +13,24 @@
 }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## Options
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| CHAOS_ENGINEERING_ENABLED | Enable layer (default: true) |
-| CHAOS_ENGINEERING_TIMEOUT | Timeout in ms |
+| Option     | Type    | Default  | Description |
+|------------|---------|----------|-------------|
+| `enabled`  | boolean | `true`   | Enable/disable the layer |
+| `timeout`  | number  | `30000`  | Operation timeout in ms |
+| `retries`  | number  | `3`      | Retry attempts |
+| `logLevel` | string  | `"info"` | `debug \| info \| warn \| error` |
+
+## Building & validating
+
+`ChaosEngineeringConfigurationBuilder` (`configuration/builders/`) exposes
+`withEnabled`, `withTimeout`, `withRetries`, `withLogLevel`,
+`withStrategy`, `withOption(s)`, `build`.
+`ChaosEngineeringConfigurationValidator` / `ChaosEngineeringValidator` enforce the bounds;
+`configure(config)` merges the partial config into the live one.
+
+## Strategy selection
+
+`ChaosEngineeringStrategyFactory.create(name)`; unknown names throw with the list
+from `getAvailableStrategies()`.

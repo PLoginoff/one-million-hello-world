@@ -1,25 +1,16 @@
 # Configuration: Governance Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
+## Defaults
+`DEFAULT_GOVERNANCE_CONFIG` (`configuration/defaults/`):
+
+```ts
+{ enabled: true, timeout: 30000, retries: 3, logLevel: 'info' }
 ```
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+`configure(config: Record<string, unknown>)` shallow-merges keys. `GovernanceConfigurationBuilder` and `GovernanceConfigurationValidator` provide typed construction/validation.
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| GOVERNANCE_ENABLED | Enable layer (default: true) |
-| GOVERNANCE_TIMEOUT | Timeout in ms |
+## Strategy configuration
+Strategies take `Record<string, unknown>` in their constructors and are created via `GovernanceStrategyFactory` (no `GovernanceFactory` exists). `fast` for per-request checks, `batch` for compliance sweeps.
+
+## Status inspection
+`getStatus()` returns current config and state for health checks.

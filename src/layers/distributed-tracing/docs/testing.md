@@ -1,21 +1,23 @@
 # Testing: DistributedTracing Layer
 
-## Unit Tests
-- Implementation tests: DistributedTracing.test.ts
-- Domain tests: DistributedTracingDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=distributed-tracing
+bun test ./src/layers/distributed-tracing/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `DistributedTracing.test.ts` | `execute()` success/failure, `configure()` merge, `getStatus()` + metrics |
+| `DistributedTracingStrategies.test.ts` | Five strategies + `DistributedTracingStrategyFactory` |
+| `DistributedTracingConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `DistributedTracingDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `DistributedTracingContext` fixtures; strategy tests are table-driven.
+- All adapters are in-memory — no exporter or network needed.

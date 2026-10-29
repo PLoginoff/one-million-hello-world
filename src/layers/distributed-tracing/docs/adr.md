@@ -3,17 +3,19 @@
 ## Status
 Accepted
 
-## Context
-The architecture requires a dedicated DistributedTracing layer to handle distributed tracing concerns.
+## Decisions
 
-## Decision
-Introduce DistributedTracing as an isolated layer with interface, implementation, domain model, strategies, factories, configuration, and metrics.
+### 1. Uniform `execute(context)` contract
+Trace operations (span creation, export, context propagation) flow through `execute(DistributedTracingContext)` so tracing composes into the same pipeline machinery as the layers it observes.
 
-## Consequences
-- Improved separation of concerns
-- Testable in isolation
-- Configurable at runtime
-- Adds measurable overhead in terms of file count and lines of code
+### 2. Batched and reliable export strategies
+Span export is the volume problem in tracing — `batch` aggregates for throughput, `reliable` guarantees delivery for audit-critical traces, `fast` drops guarantees for low-overhead sampling paths. Priority/`canHandle` selection picks per context.
 
-## Position
-N/A
+### 3. Non-throwing results
+A tracing layer must never crash the request it observes: failures return `DistributedTracingResult { success: false, error }` and are counted in `failureCount` metrics.
+
+### 4. Exporter adapters as the extension point
+In-memory/mock/stub adapters ship in-repo; a real OTLP/Jaeger exporter plugs in behind the adapter interface without changing the domain model or strategies.
+
+### 5. Metrics self-observation
+The layer records `successCount`/`failureCount`/`lastExecutionTime` and ships a Prometheus collector — tracing infrastructure should itself be observable.

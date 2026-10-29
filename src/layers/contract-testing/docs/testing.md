@@ -1,21 +1,43 @@
 # Testing: ContractTesting Layer
 
-## Unit Tests
-- Implementation tests: ContractTesting.test.ts
-- Domain tests: ContractTestingDomain.test.ts
+## Test files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+Top-level (`__tests__/`):
 
-## Running Tests
+- `ContractTesting.test.ts` — `execute`/`configure`/`getStatus` contract and
+  error wrapping.
+- `ContractTestingStrategies.test.ts` — the five strategies' `execute`,
+  `canHandle` and `priority`; `ContractTestingStrategyFactory` creation and
+  unknown-name rejection.
+- `ContractTestingConfiguration.test.ts` — defaults, builder chaining and
+  validator bounds.
+
+Domain (`domain/__tests__/`):
+
+- `ContractTestingDomain.test.ts` — entities, value objects, domain service.
+- `ContractTestingExtendedDomain.test.ts` — specifications, policies, repository,
+  pipeline.
+- `ContractTestingServices.test.ts` — execution/query/validation services.
+- `ContractTestingPatterns.test.ts` — mapper, decorators, observer.
+
+## Running
+
+From the repository root:
+
 ```bash
-npx jest --testPathPattern=contract-testing
+bun test ./src/layers/contract-testing/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+or a single suite:
+
+```bash
+bun test ./src/layers/contract-testing/__tests__/ContractTestingStrategies.test.ts
+```
+
+## Conventions
+
+- Adapters used in tests are `ContractTestingInMemoryAdapter`,
+  `ContractTestingMockAdapter`, `ContractTestingStubAdapter` — no network or external
+  service.
+- Entities and value objects are built inside the test body; there are
+  no shared fixture files.

@@ -4,32 +4,40 @@
 Accepted
 
 ## Context
-The system requires a notification layer to handle notification concerns.
-This layer must be independent, testable, and integrate with the pipeline.
+The pipeline requires a dedicated notification step (email, sms, and push notification abstractions) that can be
+tuned per deployment without changing call sites.
 
-## Decision
-Implement Notification as a standalone layer with:
-- Interface (INotification) defining the contract
-- Implementation (Notification) with configurable behavior
-- Domain model (entity, value object, domain service)
-- Health check, metrics collector, and error mapper
-- Adapters where applicable (in-memory + real service)
+## Decisions
+
+### 1. Strategy pattern over a single implementation
+Five strategies (`default`, `fast`, `reliable`, `cached`,
+`batch`) implement `INotificationStrategy`. Callers pick by name via
+`NotificationStrategyFactory`; new strategies register via
+`registerStrategy` without touching the factory.
+
+### 2. CQRS-style domain handlers
+`NotificationCommandHandler`, `NotificationQueryHandler` and
+`NotificationEventHandler` separate write, read and notification concerns;
+`NotificationEventObserver` subscribers react to `NotificationExecuted` /
+`NotificationFailed`.
+
+### 3. In-memory adapter first
+`InMemoryAdapter` is the primary adapter; `Mock`/`Stub` exist for
+tests. No external system is wired in — the interface leaves room for one
+but the current scope is single-process.
+
+### 4. Domain primitives as value objects
+`NotificationPriority`, `NotificationThreshold` and `NotificationTimeWindow` are
+immutable value objects so policies operate on typed concepts instead of
+raw numbers.
+
+### 5. Cross-cutting concerns as decorators
+Caching and logging live in `NotificationCachingDecorator` /
+`NotificationLoggingDecorator` wrappers rather than inside `Notification`, keeping
+the core free of side effects.
 
 ## Consequences
-**Positive:**
-- Clear separation of concerns
-- Independent testability
-- Pluggable adapters for different backends
-
-**Negative:**
-- Additional abstraction layer
-- Slight overhead from indirection
-
-## Alternatives Considered
-1. Inline logic in controller — rejected: tight coupling
-2. Utility module — rejected: no interface contract
-3. External library — rejected: vendor lock-in risk
-
-## References
-- Layer architecture: docs/notification-layer-architecture.md
-- Interface: src/layers/notification/interfaces/INotification.ts
+- Strategy selection is configuration, not code change.
+- Uniform `execute` contract makes per-strategy tests trivial.
+- In-memory state is deterministic but not durable — persistence is a
+  future adapter.

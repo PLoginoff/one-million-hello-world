@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-**One Million Hello World** — educational/satirical project demonstrating enterprise architectural patterns applied to a trivial task (HTTP endpoint returning "Hello World"). Goal: 1,000,000 lines of code. Current progress: **66%** (~660,287 lines, 10,155 files, 105+ layers).
+**One Million Hello World** — educational/satirical project demonstrating enterprise architectural patterns applied to a trivial task (HTTP endpoint returning "Hello World"). Goal: 1,000,000 lines of code. Current progress: **70.7%** (707,039 lines, 10,389 files, 104 layers).
 
 ---
 
@@ -335,4 +335,13 @@ The project has a strong **scaffold** but weak **substance**. The path to 1M lin
 - Deepened 5 horizontal layers: message-queue, dead-letter, outbox, inbox, event-sourcing (+~3,200 lines each)
 - Removed duplicate `one-million-hello-world/one-million-hello-world` nesting
 - Quality gates: `bun run build` passes (only pre-existing NodeHttpAdapter.ts), `bunx eslint src` — 0 errors in new code
-- **Current: 660,287 lines (66%)** — significant progress toward 1M target
+- **Snapshot at the time: 660,287 lines (66%)**, 10,155 files, 105+ layers
+
+---
+
+## Update (2026-10-29)
+
+- Deepened 15 more horizontal layers with real algorithms: load-balancer, service-discovery, ddos-protection, waf, bot-detection, jwt-validation, oauth2, mfa, sso, encryption, search, recommendation, anomaly-detection, fraud-detection, graphql
+- All 43 pre-existing test failures resolved — `bun test`: **15,523 passing, 0 failing, 14 skipped**
+- Build fully clean: `bun run build` (tsc) — 0 errors, including the previously broken `NodeHttpAdapter.ts`
+- **Current: 707,039 lines (70.7%)**, 10,389 files, 104 layers

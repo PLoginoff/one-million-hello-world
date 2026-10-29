@@ -1,21 +1,25 @@
 # Testing: Sso Layer
 
-## Unit Tests
-- Implementation tests: Sso.test.ts
-- Domain tests: SsoDomain.test.ts
+## Test Files
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
+| File | Scope |
+|------|-------|
+| `__tests__/SsoReal.test.ts` | Full federation suite: `SamlResponseParser` (conditions, audience), `AttributeMapper`, `IdpRegistry`, `OidcFlow` (state/nonce/PKCE), `SessionTicketStore` (one-time use, TTL), `SloCoordinator` (revocation + propagation), `SsoEngine` end-to-end |
+| `__tests__/Sso.test.ts` | `Sso` facade: config, `execute()` result envelope |
+| `__tests__/SsoStrategies.test.ts` | Generic strategies + `SsoStrategyFactory` |
+| `__tests__/SsoConfiguration.test.ts` | `SsoConfigurationBuilder`, `SsoConfigurationValidator` |
 
 ## Running Tests
+
 ```bash
-npx jest --testPathPattern=sso
+bun test ./src/layers/sso/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+Single file:
+
+```bash
+bun test ./src/layers/sso/__tests__/SsoReal.test.ts
+```
+
+Tests use `bun:test`. Clocks are injected (`now` options) and the SLO
+transport is a stub callback, so no IdP or network is needed.

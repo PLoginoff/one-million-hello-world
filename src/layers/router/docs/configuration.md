@@ -1,25 +1,32 @@
 # Configuration: Router Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+The real configuration type is `RouterConfig` in
+`types/router-types.ts`.
 
-## Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+## RouterConfig
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| ROUTER_ENABLED | Enable layer (default: true) |
-| ROUTER_TIMEOUT | Timeout in ms |
+| Option | Type | Description |
+|--------|------|-------------|
+| `caseSensitive` | `boolean` | Case-sensitive path matching |
+| `strictRouting` | `boolean` | Strict trailing-slash handling |
+| `allowWildcards` | `boolean` | Enable wildcard routes |
+| `enableCaching` / `cacheTTL` | `boolean` / `number` | Cache match results |
+| `enableMetrics` / `enableLogging` | `boolean` | Observability toggles |
+| `maxRoutes` | `number` | Registry size cap |
+| `defaultPriority` | `RoutePriority` | Fallback route priority |
+| `defaultCache` | `CacheStrategy` | Default per-route cache strategy |
+
+## RouteGroup
+
+`RouteGroup` bundles routes under a `prefix` with optional `middleware`,
+per-group `priority`, `cache`, and `rateLimit` scope — see
+[route-matching.md](route-matching.md).
+
+## Matching strategies
+
+`strategies/strategy/` ships four `IRoutingStrategy` implementations —
+`TrieRoutingStrategy`, `PrefixRoutingStrategy`, `RegexRoutingStrategy`,
+`SequentialRoutingStrategy` — plus the generic pipeline strategies
+(`Default`, `Fast`, `Reliable`, `Cached`, `Batch`) and decorator-style
+`LoggingRouterStrategy`/`MetricsRouterStrategy` created via
+`RouterStrategyFactory` / `RouterFactory`.

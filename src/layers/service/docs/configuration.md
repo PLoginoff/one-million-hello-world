@@ -1,25 +1,28 @@
 # Configuration: Service Layer
 
-## Default Configuration
-```json
-{
-  "enabled": true,
-  "timeout": 30000,
-  "retries": 3,
-  "logLevel": "info"
-}
-```
+## `ServiceConfig` (`types/service-types.ts`)
+Passed to `Service.setConfig` / returned by `getConfig`:
 
-## Configuration Options
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| enabled | boolean | true | Enable/disable layer |
-| timeout | number | 30000 | Operation timeout in ms |
-| retries | number | 3 | Number of retry attempts |
-| logLevel | string | "info" | Logging verbosity |
+| `enableCaching` | boolean | false | Route calls through the caching strategy |
+| `cacheTimeout` | number | 60,000 | Cache TTL in ms |
+| `enableRetry` | boolean | false | Enable `RetryServiceStrategy` |
+| `maxRetries` | number | 3 | Max retry attempts before `RetryExhaustedError` |
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| SERVICE_ENABLED | Enable layer (default: true) |
-| SERVICE_TIMEOUT | Timeout in ms |
+## `ServiceConfigOptions` presets
+`configuration/defaults/DefaultConfigs.ts` ships four presets:
+
+| Preset | `enableAutoRegistration` | `enableHealthCheck` | `healthCheckInterval` | `maxServices` | `enableDiscovery` |
+|--------|--------------------------|---------------------|-----------------------|---------------|-------------------|
+| `DEFAULT` | false | true | 30,000 | 100 | true |
+| `DEVELOPMENT` | true | true | 10,000 | 200 | true |
+| `PRODUCTION` | false | true | 30,000 | 100 | true |
+| `MINIMAL` | false | false | 60,000 | 50 | false |
+
+## Builders and validators
+- `ServiceConfigBuilder` / `ServiceConfigurationBuilder`
+  (`configuration/builders/`).
+- `ServiceConfigValidator` / `ServiceConfigurationValidator`
+  (`configuration/validators/`).
+- `ServiceDefaults.ts` (`configuration/defaults/`) — layer constants.

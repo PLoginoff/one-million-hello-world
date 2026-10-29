@@ -1,21 +1,23 @@
 # Testing: EventSourcing Layer
 
-## Unit Tests
-- Implementation tests: EventSourcing.test.ts
-- Domain tests: EventSourcingDomain.test.ts
+## Running tests
 
-## Test Coverage
-- Happy path: execute() returns success result
-- Configuration: configure() updates status
-- Status: getStatus() returns layer info
-- Domain entity: create, update, immutability
-- Value object: create, equality, toString
-- Domain service: validate, merge
-
-## Running Tests
 ```bash
-npx jest --testPathPattern=event-sourcing
+bun test ./src/layers/event-sourcing/
 ```
 
-## Integration Points
-Test with adjacent layers using in-memory adapters.
+## Test files
+
+`__tests__/`:
+
+| File | Covers |
+|------|--------|
+| `EventSourcing.test.ts` | `execute()` success/failure, `configure()` merge, `getStatus()` + metrics |
+| `EventSourcingStrategies.test.ts` | Five strategies + `EventSourcingStrategyFactory` |
+| `EventSourcingConfiguration.test.ts` | Config builder/validator, defaults |
+
+`domain/__tests__/` — `EventSourcingDomain`, `ExtendedDomain`, `Services`, `Patterns` cover entities, value objects, services, repository, events, handlers, decorators, observer, pipeline, policies, specifications.
+
+## Conventions
+- `createContext(input)` builds `EventSourcingContext` fixtures; strategy tests are table-driven.
+- The event store is in-memory — no external store needed.
