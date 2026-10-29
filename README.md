@@ -4,7 +4,7 @@ This project is a fully-featured implementation of a classic HTTP server returni
 
 The codebase targets **1 million lines** (currently **801,469 / 1,000,000 — 80.1%**)
 
-![Progress](https://img.shields.io/badge/progress-80.1%25-yellow)
+![Progress](https://img.shields.io/badge/progress-80%25-yellow)
 
 ## Contents
 
