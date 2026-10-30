@@ -140,3 +140,8 @@ export { SagaAnalytics, AnalyticsReport } from './analytics/SagaAnalytics';
 
 // Security
 export { SecurityManager, SecurityPolicy, SecurityRule, AuditLogEntry } from './security/SecurityManager';
+
+// Engine Layer (explicit lifecycle state machine, compensation-bearing
+// steps, injectable-clock timeouts/retry backoff, append-only saga log,
+// isolated concurrent instances)
+export * from './engine';

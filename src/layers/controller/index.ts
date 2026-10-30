@@ -20,3 +20,4 @@ export * from './strategies';
 export * from './statistics';
 export * from './factories';
 export { ControllerHelpers } from './utils';
+export * from './engine';

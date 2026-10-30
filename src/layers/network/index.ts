@@ -15,3 +15,4 @@ export { INetworkManager } from './interfaces/INetworkManager';
 export { NetworkConnection } from './implementations/NetworkConnection';
 export { NetworkManager } from './implementations/NetworkManager';
 export * from './types/network-types';
+export * from './engine';

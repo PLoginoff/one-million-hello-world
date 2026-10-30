@@ -109,3 +109,7 @@ export { MessageQueueError as MessageQueueErrorBase } from './errors/MessageQueu
 // Utils
 export { MessageQueueError as MessageQueueLegacyError } from './utils/MessageQueueError';
 export { MessageQueueErrorMapper as MessageQueueUtilsErrorMapper, MappedMessageQueueError } from './utils/MessageQueueErrorMapper';
+
+// Engine Layer (priority heap, delay scheduler, at-least-once leasing,
+// consumer groups, dead-letter policies, depth/backpressure metrics)
+export * from './engine';

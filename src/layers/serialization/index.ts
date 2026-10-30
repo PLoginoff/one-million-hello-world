@@ -42,3 +42,7 @@ export { CompressionPlugin } from './plugins/CompressionPlugin';
 
 export { HookType, HookContext, HookFunction, ErrorHookFunction, SerializationHook } from './hooks/SerializationHook';
 export { HookManager } from './hooks/HookManager';
+
+// Engine Layer (binary codec, schema-aware records, streaming decode,
+// versioned envelopes with CRC32)
+export * from './engine';

@@ -40,3 +40,6 @@ export * from './configuration';
 
 // Testing Layer
 export * from './testing';
+
+// Engine Layer (append-only log, projections, upcasting, catch-up subs)
+export * from './engine';

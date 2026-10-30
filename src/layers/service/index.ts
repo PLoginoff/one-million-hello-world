@@ -85,3 +85,6 @@ export { RetryExhaustedError } from './errors/RetryExhaustedError';
 export { ServiceError as ServiceLegacyError } from './utils/ServiceError';
 export { ServiceHelpers } from './utils/ServiceHelpers';
 export { ServiceErrorMapper, MappedServiceError } from './utils/ServiceErrorMapper';
+
+// Engine
+export * from './engine';

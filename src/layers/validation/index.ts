@@ -38,3 +38,10 @@ export {
 } from './domain/value-objects/ValidationSchema';
 export * from './strategies';
 export * from './factories';
+
+// Engine
+export * from "./engine";
+
+// Ambiguity resolution: `CrossFieldRule` is declared in both types/
+// and engine/; keep the original types/ declaration as canonical.
+export type { CrossFieldRule } from './types/validation-types';

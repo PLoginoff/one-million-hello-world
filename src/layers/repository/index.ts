@@ -27,3 +27,7 @@ export * from './strategies';
 export * from './statistics';
 export * from './factories';
 export { RepositoryHelpers } from './utils';
+
+// Second query engine: spec compilation, cursor pagination, optimistic
+// locking, soft deletes, chunked batch ops, percentile metrics.
+export * from './engine';

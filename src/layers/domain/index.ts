@@ -13,3 +13,4 @@
 export { IDomainManager } from './interfaces/IDomainManager';
 export { DomainManager } from './implementations/DomainManager';
 export * from './types/domain-types';
+export * from './engine';

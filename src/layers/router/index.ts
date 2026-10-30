@@ -20,3 +20,8 @@ export * from './strategies';
 export * from './statistics';
 export * from './factories';
 export * from './utils';
+export * from './engine';
+
+// Ambiguity resolution: domain/ and engine/ both export `MatchResult`;
+// keep the pre-existing domain shape as the layer-level default.
+export type { MatchResult } from './domain/services';

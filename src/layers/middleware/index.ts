@@ -20,3 +20,8 @@ export * from './strategies';
 export * from './statistics';
 export * from './factories';
 export * from './utils';
+export * from './engine';
+
+// Ambiguity resolution: `export *` collisions between domain/ and engine/
+// are resolved explicitly in favor of the existing domain signatures.
+export type { MiddlewareFunction, PipelineHandler } from './domain/services';
