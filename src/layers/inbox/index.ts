@@ -115,3 +115,6 @@ export { InboxErrorMapper as InboxLegacyErrorMapper, MappedInboxError } from './
 
 // Pattern (real inbox engine)
 export * from './pattern';
+
+// Engine2 (deeper capabilities)
+export * from "./engine2";

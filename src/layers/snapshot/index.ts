@@ -16,3 +16,6 @@ export * from './domain';
 export * from './configuration';
 export * from './strategies';
 export * from './factories';
+
+// Engine2 (deeper capabilities)
+export * from "./engine2";

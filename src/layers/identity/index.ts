@@ -13,3 +13,6 @@ export * from './configuration';
 export * from './strategies';
 export * from './factories';
 export * from './core';
+
+// Engine2 (deeper capabilities)
+export * from "./engine2";
