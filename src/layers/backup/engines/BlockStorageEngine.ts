@@ -42,6 +42,19 @@ export class BlockStorageEngine {
     return hash;
   }
 
+  /**
+   * Replace a block's payload in place (e.g. re-encryption during key
+   * rotation). Unlike `put`, this overwrites existing content — the
+   * caller is responsible for correctness; returns false when absent.
+   */
+  replace(block: StoredBlock): boolean {
+    const existing = this._blocks.get(block.hash);
+    if (!existing) return false;
+    this._storedBytes += block.size - existing.size;
+    this._blocks.set(block.hash, block);
+    return true;
+  }
+
   /** Increment the reference count for a block (once per restore point). */
   retain(hash: string): void {
     this._refCounts.set(hash, (this._refCounts.get(hash) ?? 0) + 1);
