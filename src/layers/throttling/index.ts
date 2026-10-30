@@ -5,6 +5,10 @@
  * for the Throttling Layer (Layer 44 of the architecture).
  */
 
+export * from './distributed';
+export * from './quota';
+export * from './penalty';
+export * from './composition';
 export { IThrottling } from './interfaces/IThrottling';
 export { Throttling } from './implementations/Throttling';
 export * from './types/throttling-types';

@@ -10,6 +10,7 @@
  * @module DecoratorLayer
  */
 
-export { IDecorator } from './interfaces/IDecorator';
+export type { IDecorator } from './interfaces/IDecorator';
 export { Decorator } from './implementations/Decorator';
 export * from './types/decorator-types';
+export * from './engine';

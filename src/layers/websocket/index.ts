@@ -5,6 +5,8 @@
  * for the Websocket Layer (Layer 42 of the architecture).
  */
 
+export * from './protocol';
+export * from './server';
 export { IWebsocket } from './interfaces/IWebsocket';
 export { Websocket } from './implementations/Websocket';
 export * from './types/websocket-types';

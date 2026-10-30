@@ -10,6 +10,7 @@
  * @module TransportLayer
  */
 
-export { ITransport } from './interfaces/ITransport';
+export type { ITransport } from './interfaces/ITransport';
 export { Transport } from './implementations/Transport';
 export * from './types/transport-types';
+export * from './engine';

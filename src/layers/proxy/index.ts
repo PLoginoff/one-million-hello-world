@@ -13,3 +13,4 @@
 export { IProxy } from './interfaces/IProxy';
 export { Proxy } from './implementations/Proxy';
 export * from './types/proxy-types';
+export * from './engine';

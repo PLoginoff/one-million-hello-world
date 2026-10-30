@@ -13,3 +13,4 @@
 export { IDataTransformer } from './interfaces/IDataTransformer';
 export { DataTransformer } from './implementations/DataTransformer';
 export * from './types/data-transformation-types';
+export * from './engine';
