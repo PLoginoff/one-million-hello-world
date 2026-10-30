@@ -66,3 +66,6 @@ export type { CacheFactoryOptions } from './factories/cache';
 // Utils Layer
 export { CacheError, CacheKeyError, CacheConfigError, CacheStorageError, CacheEvictionError } from './utils/errors';
 export { CacheHelper } from './utils/helpers';
+
+// Engine Layer
+export * from './engine';
