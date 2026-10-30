@@ -13,3 +13,4 @@ export * from './configuration';
 export * from './strategies';
 export * from './factories';
 export * from './totp';
+export * from './engine2';

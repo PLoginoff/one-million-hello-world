@@ -15,3 +15,4 @@ export * from './factories';
 export * from './core';
 export * from './grants';
 export { OAuth2AuthorizationServer } from './OAuth2AuthorizationServer';
+export * from './engine2';

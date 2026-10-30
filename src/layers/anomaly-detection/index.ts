@@ -1,5 +1,6 @@
 export * from './interfaces';
 export * from './implementations';
+export * from './engine2';
 export {
   AnomalyDetectionContext,
   AnomalyDetectionResult,
