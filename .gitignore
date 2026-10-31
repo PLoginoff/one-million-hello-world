@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
@@ -22,9 +21,10 @@ lerna-debug.log*
 .env.local
 .env.*.local
 
-# Test and coverage reports
+# Test and coverage reports (root-level only)
+# src/**/reports/ is source code and must be tracked
 coverage/
-reports/
+/reports/
 .jest/
 .stryker-tmp/
 
