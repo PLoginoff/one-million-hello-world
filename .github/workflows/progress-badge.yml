@@ -17,11 +17,12 @@ jobs:
       - name: Count lines of code
         id: count
         run: |
-          LINES=$(find . -type f ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" -exec cat {} \; | wc -l)
+          LINES=$(find . -type f ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" ! -path "*/.git/*" -exec cat {} \; | wc -l)
           echo "lines=$LINES" >> $GITHUB_OUTPUT
           
           TARGET=1000000
           PERCENT=$((LINES * 100 / TARGET))
+          if [ $PERCENT -gt 100 ]; then PERCENT=100; fi
           echo "percent=$PERCENT" >> $GITHUB_OUTPUT
           
           echo "Current lines: $LINES"
