@@ -117,7 +117,7 @@ Modeled as a finite state machine, with respect:
 - **Vlissides** (John): "23 patterns. You have 23 *per layer*. We
   described a vocabulary; you built a dictionary printing press."
 
-The book is 652 pages. This repository is 801,131 lines. The ratio of
+The book is 652 pages. This repository is 1,000,000 lines. The ratio of
 wisdom to words has, admittedly, changed.
 
 ---

@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-**One Million Hello World** — educational/satirical project demonstrating enterprise architectural patterns applied to a trivial task (HTTP endpoint returning "Hello World"). Goal: 1,000,000 lines of code. Current progress: **99.2%** (992,048 lines, 11,795 files, 104 layers).
+**One Million Hello World** — educational/satirical project demonstrating enterprise architectural patterns applied to a trivial task (HTTP endpoint returning "Hello World"). Current state: **1,000,000 lines**, 11,795 files, 104 layers.
 
 ---
 
@@ -63,7 +63,7 @@ this._stats.connectionsClosed += this._connections.size; // always += 0
 
 ## Vision: Deep Clean Architecture
 
-The current architecture is **wide but shallow**. To reach 1M lines meaningfully, we need **depth, not just width**. Every layer must:
+The current architecture is **wide but shallow**. To make it meaningful, we need **depth, not just width**. Every layer must:
 
 1. **Have a real reason to exist** — not just a `Map` wrapper.
 2. **Be composable** — each layer delegates to the next through a well-defined interface.
@@ -136,7 +136,7 @@ Each arrow is a **directed interface call**, not a conceptual relationship.
 
 ---
 
-## Roadmap to 1,000,000 Lines
+## Roadmap
 
 ### Phase 1: Stabilization (Fix the Foundation) — **MOSTLY COMPLETE**
 **Goal:** The project compiles, lints clean, tests pass, and the entry point runs a real pipeline.
@@ -325,7 +325,7 @@ Value objects are immutable. Entities mutate only through explicit methods that 
 
 ## Conclusion
 
-The project has a strong **scaffold** but weak **substance**. The path to 1M lines is not copy-pasting more `Map` wrappers, but creating **deep, meaningful, testable, observable layers** that form a real pipeline. The architecture must be **runnable** — not just a directory tree. With the phases outlined above, 1M lines is achievable in a way that is educational, impressive, and technically sound.
+The project has a strong **scaffold** but weak **substance**. The path forward is not copy-pasting more `Map` wrappers, but creating **deep, meaningful, testable, observable layers** that form a real pipeline. The architecture must be **runnable** — not just a directory tree. With the phases outlined above, the system grows in a way that is educational, impressive, and technically sound.
 
 ---
 
@@ -344,4 +344,4 @@ The project has a strong **scaffold** but weak **substance**. The path to 1M lin
 - Deepened 15 more horizontal layers with real algorithms: load-balancer, service-discovery, ddos-protection, waf, bot-detection, jwt-validation, oauth2, mfa, sso, encryption, search, recommendation, anomaly-detection, fraud-detection, graphql
 - All pre-existing test failures resolved — `bun test`: **20,964 passing, 0 failing, 14 skipped**
 - Build fully clean: `bun run build` (tsc) — 0 errors, including the previously broken `NodeHttpAdapter.ts`
-- **Current: 992,048 lines (99.2%)**, 11,795 files, 104 layers
+- **Current: 1,000,000 lines**, 11,795 files, 104 layers

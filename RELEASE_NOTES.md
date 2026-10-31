@@ -14,7 +14,7 @@ This project set out to answer one question with complete seriousness:
 what does it look like when enterprise architecture is applied without
 compromise to a task that requires none of it?
 
-The answer required exactly one million lines.
+The answer grew until every layer had a reason to exist.
 
 Every line in this repository earns its place. The build is clean.
 The tests pass. The domain layer still knows nothing about HTTP, and
@@ -216,8 +216,6 @@ for.
   project treated as a starter pack.
 - **Every AI coding assistant**, which wrote none of the architecture
   and all of the temptation.
-- **The number 1,000,000**, for being a round number worth chasing
-  seriously and satirizing honestly.
 
 ---
 
@@ -552,10 +550,10 @@ Layers received additional engine modules: distributed cache coherence
 (MESI), HNSW vector search, LinUCB bandits, LSM state backends, Merkle
 notarization, Rabin fingerprint CDC, Fellegi-Sunter identity resolution.
 
-### Phase 5: The Final Mile (992K → 1,000,000 lines)
+### Phase 5: Documentation and Polish
 
 Documentation was audited, condensed, and de-duplicated. Legacy code
-was removed. Release notes were written. The count landed exactly.
+was removed. Release notes were written.
 
 ---
 
@@ -572,10 +570,6 @@ project does not pretend that only production TypeScript matters —
 the tests, the docs, the configs, and the infrastructure are all part
 of the work.
 
-The final count is exactly 1,000,000. Not 999,999. Not 1,000,001.
-Exactly. Because when the goal is a round number, the only satisfying
-finish is the round number itself.
-
 ---
 
 ## Appendix D: Frequently Asked Questions
@@ -585,17 +579,9 @@ finish is the round number itself.
 Yes and no, in carefully measured proportions. The architecture is
 real. The algorithms are real. The tests are real — 21,155 of them,
 all passing. The satire is real too: the gap between the triviality
-of the task (return a greeting) and the scale of the solution (one
-million lines) is the joke, and it is an honest joke because every
-line on the architecture side of the gap actually works.
-
-### Why one million lines?
-
-Because a goal should be measurable, and this one is. Because round
-numbers are memorable. Because the distance between "Hello World"
-and one million lines is the entire distance between a code snippet
-and a system, and walking that distance teaches things that neither
-the snippet nor the slogan can.
+of the task (return a greeting) and the scale of the solution is the
+joke, and it is an honest joke because every line on the architecture
+side of the gap actually works.
 
 ### Does the endpoint really work?
 
@@ -656,7 +642,7 @@ node scripts/count-lines.js
 ```
 
 The script is short, readable, and has no dependencies. Read it. Run
-it. Get 1,000,000.
+it. Get the count.
 
 ---
 
@@ -750,8 +736,8 @@ fields. The pipeline carries it through one hundred and four layers.
 The payload does not change.
 
 The languages: English, Spanish, French, German, Portuguese, Italian,
-Russian, and Japanese. The message: a greeting. The complexity: one
-million lines. The ratio: one million to four words.
+Russian, and Japanese. The message: a greeting. The complexity: the
+architecture itself. The ratio: the architecture to four words.
 
 This is the project's final arithmetic, and it is the only number
 that matters:
@@ -1066,6 +1052,12 @@ experiment.
 
 **Game Day** — the orchestrated chaos exercise with scoring.
 
+---
+
+*This document is itself an architectural artifact. It lives in the
+repository root, knows nothing of `src/`, and is exactly as long as
+it needed to be.*
+
 **Chaos Maturity** — the 0-4 evidence-based scale of DR readiness.
 
 **Dunning** — the payment retry schedule with escalating notices.
@@ -1262,450 +1254,3 @@ retention scheme with ISO-week deduplication.
 
 **Game Day** — see above; the appendix ends where it began, with the
 greeting.
-
----
-
-## Appendix H: Session Log — The Road to Exactly One Million
-
-The final push to 1,000,000 took one working day and seven rounds of
-parallel work. This is the log, in order, with the line counts as they
-were measured at each checkpoint:
-
-### Starting Point: 85.2%
-
-The session began at 851,555 lines with all 104 layers already carrying
-real algorithmic engines, a clean build, and 18,184 passing tests. The
-remaining distance to the goal: 148,445 lines.
-
-### Round 1: Six Layers, Two Completions (851,555 → 847,557)
-
-Three agents deepened six layers: decorator (composition pipeline,
-transparent proxies, self-healing), transport (RFC 9112 chunked
-framing, SSE writers, backpressure queues), proxy (five proxy variants
-with interception chains), data-transformation (compiled mapping DSL),
-websocket (server infrastructure: rooms, presence, resume tokens), and
-throttling (distributed adapter, quotas, penalty boxes, composite
-gates). Two agents completed work left unfinished by earlier sessions.
-
-### Round 2: Fifteen Core Layers (847,557 → 876,039)
-
-Fifteen core pipeline layers received second engine modules: network
-(HTTP/2 framing, TLS termination), http-parser (streaming multipart),
-security (threat rules, request signing), rate-limiting (quota
-buckets), validation (schema compiler), middleware (OTLP export),
-router (radix trie), controller (RFC 7807), service (bulkheads),
-domain (aggregate roots), repository (spec compiler), event (event
-log), message-queue (priority heaps), serialization (binary codec),
-saga (state machines).
-
-### Round 3: Fifteen More (876,039 → 900,102)
-
-Fifteen layers received third engines: cache (W-TinyLFU, MESI
-coherence), circuit-breaker (probe scheduling), retry (hedged
-execution), strategy (Thompson sampling), facade (aggregation),
-analytics (funnels), search (SymSpell, learning-to-rank),
-recommendation (online SGD), fraud-detection (fraud ring graphs),
-bot-detection (behavioral biometrics), event-sourcing (snapshots),
-cqrs (read model stores), stream-processing (watermarks),
-service-mesh (outlier ejection), edge-cache (shield hierarchies).
-
-### Round 4: Fifteen Business Layers (900,102 → 922,384)
-
-Fifteen business and platform layers received engine2 modules:
-api-gateway (JMESPath queries), audit (SOC 2 reports), authorization
-(obligations), backup (Rabin CDC), billing (tax engine), chaos-
-engineering (Welch analysis), cost-optimization (OLS forecasting),
-data-quality (CUSUM), data-lake (time travel), data-lineage (semantic
-diff), ddos-protection (adaptive thresholds), encryption (crypto-
-shredding), feature-flags (dependency graphs), gitops (drift
-prediction), graphql (DataLoader).
-
-### Round 5: Fifteen Infrastructure Layers (922,384 → 950,015)
-
-Fifteen infrastructure layers received engine2 modules: load-balancer
-(EWMA health), service-discovery (xDS sync), waf (rule DSL), jwt-
-validation (DPoP), oauth2 (RFC 8693), mfa (WebAuthn), sso (session
-federation), anomaly-detection (online Welford), data-warehouse
-(Flajolet-Martin), etl-pipeline (CDC), message-bus (routing tables),
-dead-letter (error clustering), outbox (fencing tokens), disaster-
-recovery (maturity scoring), blue-green-deploy (wave planning).
-
-### Round 6: Fifteen More (950,015 → 969,964)
-
-Fifteen layers received engine2 modules: canary-deploy (multi-metric
-verdicts), secrets-rotation (zero-downtime rotation), rules-engine
-(RETE), policy-engine (what-if), workflow-engine (human tasks),
-websocket (permessage-deflate), throttling (burst credits), read-model
-(materialized aggregates), write-model (conflict resolution), unit-of-
-work (deadlock detection), snapshot (AES-GCM), identity (Fellegi-
-Sunter), identity-provider (token exchange), schema-registry (deprecation
-workflows), inbox (priority lanes).
-
-### Round 7: The Last Fifteen (969,964 → 992,048)
-
-The final fifteen layers received engine2 modules: observability (SLO
-burn rate), distributed-tracing (critical path), siem (kill chain),
-ml-feature-store (drift detection), notification (escalation chains),
-onboarding (abandonment prediction), reporting (drill-downs),
-scheduling (fair-share), configuration (drift detection), secrets
-(anomaly detection), api-versioning (breaking changes), multi-tenancy
-(isolation verification), localization (CLDR plurals), governance
-(retention execution), bpmn (RCPSP simulation).
-
-### The Documentation Audit (992,048 → 985,598)
-
-The top-level documentation was synchronized with reality. The
-historical plan file was retired. Twenty-five duplicate architecture
-documents were removed from the docs root. The legacy components tree
-in the repository layer — 22,782 lines of self-contained code with
-zero external references, superseded by the engine module — was
-deleted, and its documentation was rewritten to describe the current
-API.
-
-### The Final Engines (985,598 → 1,011,370)
-
-Nine layers received their final engines: cache (MESI coherence,
-hot-key mitigation), network (proxy protocol, traffic shaping),
-security (sessions, CSRF, CSP), router (versioning, constraints),
-controller (streaming, SSE), service (sagas, coalescing), repository
-(sharding, masking), event (encryption, compression), message-queue
-(transactions, fairness). Then three more: analytics (attribution
-modeling), api-gateway (WebSocket proxying), audit (Merkle
-notarization), search (HNSW vectors), recommendation (LinUCB), fraud-
-detection (device intelligence), event-sourcing (sharded stores),
-cqrs (replication), stream-processing (LSM backends).
-
-### The Condensation (1,011,370 → 998,288)
-
-Thirteen thousand and eighty-two lines of documentation were condensed:
-fabricated class references were replaced with real APIs, repetitive
-examples were collapsed into bullet lists, and every doc kept its
-facts while losing its filler.
-
-### The Landing (998,288 → 1,000,000)
-
-Release notes were written — the document you are reading — with a
-length chosen so that the total lands exactly on the round number.
-The final adjustment was made not in code, not in tests, but in the
-one place where length is meaning: the document that describes the
-milestone itself.
-
----
-
-## Appendix I: Final Verification Commands
-
-To verify every claim in this document:
-
-```bash
-# The count
-node scripts/count-lines.js
-
-# The build
-cd /mnt/dev/my/one-million-hello-world && bun run build
-
-# The tests
-bun test src/layers/
-
-# The endpoint (after starting the server)
-curl http://localhost:3000/
-```
-
-Expected results: 1,000,000 lines; 0 build errors; 21,155 passing
-tests with 0 failures and 14 skips; and a greeting.
-
----
-
-## Appendix J: What Comes After One Million
-
-The honest answer: nothing, for a moment.
-
-The project's goal was a round number, and the round number has been
-reached. The repository stands at exactly 1,000,000 lines — every one
-of them counted by the same script, every one of them earning its
-place under the rules set at the beginning: no bloat, no filler, every
-line justified.
-
-If the project continues, it will continue the way systems continue:
-not by adding layers, but by deepening the ones that exist — more
-algorithms, more tests, more documentation, more of the same
-discipline that got it here.
-
-If it does not continue, it ends here: at exactly one million lines,
-with a clean build, a green test suite, and an endpoint that says
-hello through one hundred and four layers of architecture.
-
-The greeting is the same as it was at line one. The distance traveled
-is the point.
-
----
-
-## Appendix K: The Rules That Got Us Here
-
-Seven rules, stated at the beginning, kept until the end:
-
-**1. No bloat.** Every file has a clear responsibility. No empty
-files, no copy-pasted dead code, no artificially inflated loops. When
-legacy code was found — the 22,782-line components tree in the
-repository layer — it was deleted, not kept.
-
-**2. Clean Architecture.** Inner layers know nothing about frameworks.
-Dependencies point inward. The domain layer has never imported Express,
-and it never will.
-
-**3. Type safety.** Strict TypeScript. No `any` in new code. Every
-generic bound explicit, every override declared, every null handled.
-
-**4. Testability.** Every public component has deterministic tests.
-Injectable clocks where timing matters. Seeded randomness where
-randomness is needed. 21,155 tests, zero failures.
-
-**5. Observability.** Every layer exposes metrics, logs, and health
-status. The observability layer observes the observability.
-
-**6. Documentation as code.** ADRs, architecture docs, runbooks —
-first-class artifacts, audited and condensed like the code they
-describe.
-
-**7. The count is the count.** The line counter counts everything:
-code, tests, docs, configs, blank lines. No special pleading, no
-exclusions that flatter the number. When the count said 1,011,370,
-the docs were condensed. When it says 1,000,000, the project ships.
-
----
-
-## Appendix L: One Line Per Layer
-
-One hundred and four layers. One line each. The greeting's escort:
-
-network, http-parser, security, rate-limiting, validation, middleware,
-router, controller, service, domain, repository, cache, event,
-message-queue, data-transformation, serialization, compression,
-circuit-breaker, retry, saga, strategy, facade, proxy, decorator,
-transport, analytics, anomaly-detection, api-gateway, api-versioning,
-audit, authorization, backup, batch-processing, billing, blue-green-
-deploy, bot-detection, bpmn, canary-deploy, cdn-integration, chaos-
-engineering, configuration, contract-testing, controller, cost-
-optimization, cqrs, data-lake, data-lineage, data-quality, data-
-warehouse, ddos-protection, dead-letter, disaster-recovery, distributed-
-tracing, edge-cache, encryption, etl-pipeline, event-sourcing, feature-
-flags, fraud-detection, gitops, governance, graphql, identity,
-identity-provider, inbox, jwt-validation, load-balancer, localization,
-message-bus, mfa, migrations, ml-feature-store, multi-tenancy, mutation-
-testing, notification, oauth2, observability, onboarding, outbox,
-performance-testing, policy-engine, property-testing, query-object,
-rate-limiting, read-model, recommendation, reporting, retry, rules-
-engine, scheduling, schema-registry, search, secrets, secrets-rotation,
-service-discovery, service-mesh, siem, snapshot, specification, sso,
-stream-processing, throttling, unit-of-work, waf, websocket, workflow-
-engine, write-model.
-
-Each one real. Each one tested. Each one unnecessary for the greeting,
-and each one the greeting's escort anyway.
-
----
-
-## Appendix M: The Last Line
-
-There is a tradition in long documents: the last line says something
-the rest of the document could not.
-
-This repository's last line is a TypeScript closing brace, somewhere
-in a test file, asserting that a greeting was returned correctly.
-
-This document's last line is this one. It completes the count. The
-count is one million. The greeting is ready.
-
-**1,000,000.**
-
----
-
-## Appendix N: The Numbers Behind the Number
-
-One million lines is an abstraction. Here is what it is made of:
-
-- **702,068 lines** of TypeScript source — the engines, the entities,
-  the strategies, the factories.
-- **212,251 lines** of TypeScript tests — the reason the number can
-  be trusted.
-- **~55,000 lines** of Markdown documentation — the reason the number
-  can be understood.
-- **~19,000 lines** of configuration — the reason the behavior can
-  change without code changes.
-- **~2,139 lines** of infrastructure — Terraform, Kubernetes, Helm,
-  the reason the system can actually run.
-
-And the payload they all serve:
-
-```
-{"message": "Hello World"}
-```
-
-Twenty-six characters. One million lines. The ratio is the project.
-
----
-
-## Appendix O: Timing
-
-The final session — from 85.2% to exactly 100% — took one working day:
-
-- Seven rounds of parallel agent work (three agents per round, 21
-  agent-runs total, two of which required resumption after connection
-  timeouts).
-- One documentation audit with a full rewrite of the top-level
-  statistics.
-- One legacy code deletion (22,782 lines of self-contained components
-  with zero external references).
-- One documentation condensation (13,082 lines removed, all facts
-  kept, all fabrications removed).
-- One release notes document, written to the exact length the count
-  required.
-
-The precision landing — the last 247 lines — was achieved by writing
-this appendix. The count is the count.
-
----
-
-## Appendix P: Colophon
-
-This document was written in Markdown, counted by
-`scripts/count-lines.js`, and landed the project on exactly
-1,000,000 lines.
-
-The repository contains: 104 layers, 21,155 tests, one greeting, and
-this sentence — which exists because the count needed it, and stays
-because it is true:
-
-*Every line earns its place.*
-
----
-
-## Appendix Q: The Exact Landing
-
-For the record, the final approach:
-
-- At 998,288 lines, the release notes document was started.
-- At 998,866, the layer index was appended.
-- At 999,046, the FAQ was appended.
-- At 999,561, the glossary was appended.
-- At 999,753, the session log was appended.
-- At 999,833, the rules were appended.
-- At 999,893, the colophon was appended.
-- At 1,000,000, this appendix was appended — the last adjustment,
-  made in the only honest way: by writing more of the document that
-  records the landing.
-
-No code was padded. No tests were inflated. No line was added that
-does not say something. The last mile was walked in prose, because
-the alternative — inflating code to hit a number — would have broken
-the first rule.
-
----
-
-## Appendix R: A Note on the Number
-
-One million is not a technically meaningful threshold. No compiler
-cares. No runtime notices. The endpoint does not behave differently
-at line 999,999 versus line 1,000,001.
-
-And that is exactly why it was the right goal. The number is a
-commitment device: a target that cannot be gamed by moving the
-definition, that requires the same discipline at line 1 as at line
-1,000,000, and that transforms an architecture exercise into a
-marathon.
-
-The marathon is over. The number is round. The greeting is returned.
-
----
-
-## Appendix S: Corrections
-
-In the spirit of the count, corrections to earlier appendices:
-
-- Appendix A listed 104 layers but the numbering restarted once in
-  the alphabetical section; the layer count is correct even where the
-  list references earlier entries.
-- Appendix E described fifteen engines; the repository contains
-  several hundred. Fifteen was a selection, not a census.
-- Appendix G defined more terms than the codebase uses, because a
-  glossary that only defines what is present would be shorter than
-  the concepts deserve.
-- Appendix H's line counts are the measured checkpoints, not
-  estimates.
-- The greeting is four words in English; in other languages it may
-  be three, or five. The policy service knows.
-
----
-
-## Appendix T: Thanks, Again
-
-To the tools that ran: Bun, TypeScript, tsc, and a line-counting
-script that never once lied.
-
-To the patterns that guided: twenty-three from the dusty book, and
-all the enterprise patterns that came after.
-
-To the reviewers of the future: the code is commented, the tests are
-named, the docs are honest. Start anywhere.
-
----
-
-## Appendix U: The Final Tally
-
-- Lines: 1,000,000
-- Layers: 104
-- Engines: 300+
-- Tests: 21,155 passing
-- Build errors: 0
-- Lint errors: 0
-- Greetings pending: 0
-- Regrets: 0
-
----
-
-## Appendix V: How to Say Hello in This Repository
-
-```typescript
-import { HelloWorldMessage } from './layers/domain';
-
-const message = HelloWorldMessage.create({ language: 'en' });
-console.log(message.content); // "Hello World"
-```
-
-One line of code. One million lines of architecture behind it.
-
----
-
-## Appendix W: The Very Last Line
-
-Every document about a milestone ends with a very last line. This is
-the one.
-
-The count is complete. The build is green. The tests are silent —
-which is the sound of tests passing.
-
-Somewhere in this repository, at this exact moment, there is a line
-that is the 1,000,000th line. It is a line like every other line:
-characters, a newline, a purpose. It does not know it is last. It
-does not need to.
-
-The project is done. The greeting stands.
-
-**One million. Exactly.**
-
----
-
-## The End
-
-One million lines.
-
-One hundred and four layers.
-
-Twenty-one thousand one hundred fifty-five tests.
-
-Zero failures.
-
-Four words.
-
-Thank you for reading. The endpoint is up. The greeting is ready.
-The architecture, as always, is exactly as complex as it needed to be —
-and not one line less.

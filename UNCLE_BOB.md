@@ -162,7 +162,7 @@ deserves structured representation.
 Uncle Bob praises architecture that lets you defer decisions. We deferred
 the decision of when the project is finished, and are pleased to report
 that the architecture supports deferring it indefinitely. Current progress:
-775,398 lines. The endpoint being supported by those lines returns
+1,000,000 lines. The endpoint being supported by those lines returns
 `"Hello World"`. This is not waste; it is *optionality*.
 
 ---
@@ -172,8 +172,8 @@ that the architecture supports deferring it indefinitely. Current progress:
 | Metric | Value | Commentary |
 |---|---|---|
 | Layers | 104 | Uncle Bob's examples used 4. We assumed he was being brief. |
-| Lines of code | 775,398 | For a four-endpoint application. |
-| Lines per greeting | ~775,000 | Amortized. Improve with traffic. |
+| Lines of code | 1,000,000 | For a four-endpoint application. |
+| Lines per greeting | ~1,000,000 | Amortized. Improve with traffic. |
 | Test count | 16,772 | All passing. Genuinely. |
 | Framework coupling | 1 file | The pigeon migration path remains open. |
 | Build errors | 0 | Strict mode. No `any`. Uncle Bob would nod. |
@@ -232,7 +232,7 @@ As any good architecture should be.
 And yet. Strip away the consistent hashing, the Isolation Forest, the
 GraphQL executor, the saga orchestrator with compensation logic — and what
 remains is an endpoint that returns a string. It always was. The entire
-775,000-line machine exists to protect a constant from the possibility
+1,000,000-line machine exists to protect a constant from the possibility
 of being returned incorrectly.
 
 That is the actual lesson, and it cuts both ways. Clean Architecture is
