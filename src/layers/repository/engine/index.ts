@@ -33,3 +33,4 @@ export type {
   Page,
   CompiledSpec,
 } from './types';
+export * from './sharding';

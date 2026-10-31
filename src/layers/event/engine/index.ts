@@ -28,3 +28,4 @@ export type {
   StoredEngineEvent,
   Upcaster,
 } from './types';
+export * from './security';

@@ -1,238 +1,78 @@
 # Combined Transformation
 
 ## Overview
-The Data Transformation Layer implements combined transformation with sequential transformation pipeline (Normalization → Enrichment → Mapping), error propagation, and configurable pipeline steps.
+The Data Transformation Layer runs normalization → enrichment → mapping as a single `transform()` call on `implementations/DataTransformer.ts` (`IDataTransformer`). The three stages are gated by flags in `TransformationConfig`; there is no separate `TransformationPipeline`/`PipelineBuilder` class — orchestration is a method on `DataTransformer`, and `DataTransformationProcessingPipeline` (domain/pipelines) wires domain-side processing.
 
-## Pipeline Configuration
+## Types (`types/data-transformation-types.ts`)
 
-### Pipeline Config
 ```typescript
-interface PipelineConfig {
-  normalizationEnabled: boolean;
-  enrichmentEnabled: boolean;
-  mappingEnabled: boolean;
-  steps: TransformationStep[];
+interface TransformationRule {
+  sourceField: string;
+  targetField: string;
+  transform?: (value: unknown) => unknown;
 }
 
-enum TransformationStep {
-  NORMALIZATION = 'normalization',
-  ENRICHMENT = 'mapping',
-  MAPPING = 'mapping'
+interface EnrichmentData {
+  source: string;
+  data: Record<string, unknown>;
+}
+
+interface TransformationResult<T> {
+  success: boolean;
+  data?: T;
+  errors?: string[];
+}
+
+interface TransformationConfig {
+  enableNormalization: boolean;
+  enableEnrichment: boolean;
+  enableMapping: boolean;
 }
 ```
 
-### Transformation Pipeline
+## API
+
 ```typescript
-class TransformationPipeline {
-  private config: PipelineConfig;
-  private normalizationEngine: NormalizationEngine;
-  private enrichmentEngine: EnrichmentEngine;
-  private fieldMapper: FieldMapper;
-  
-  constructor(
-    config: PipelineConfig,
-    normalizationEngine: NormalizationEngine,
-    enrichmentEngine: EnrichmentEngine,
-    fieldMapper: FieldMapper
-  ) {
-    this.config = config;
-    this.normalizationEngine = normalizationEngine;
-    this.enrichmentEngine = enrichmentEngine;
-    this.fieldMapper = fieldMapper;
-  }
-  
-  async transform(data: any, enrichmentRules?: EnrichmentRule[]): Promise<any> {
-    let result = data;
-    
-    for (const step of this.config.steps) {
-      try {
-        result = await this.executeStep(result, step, enrichmentRules);
-      } catch (error) {
-        throw new TransformationError(`Error in step ${step}: ${error.message}`);
-      }
-    }
-    
-    return result;
-  }
-  
-  private async executeStep(data: any, step: TransformationStep, enrichmentRules?: EnrichmentRule[]): Promise<any> {
-    switch (step) {
-      case TransformationStep.NORMALIZATION:
-        if (this.config.normalizationEnabled) {
-          return this.normalizationEngine.normalize(data);
-        }
-        return data;
-        
-      case TransformationStep.ENRICHMENT:
-        if (this.config.enrichmentEnabled && enrichmentRules) {
-          const result = await this.enrichmentEngine.enrich(data, enrichmentRules);
-          return result.data;
-        }
-        return data;
-        
-      case TransformationStep.MAPPING:
-        if (this.config.mappingEnabled) {
-          return this.fieldMapper.map(data);
-        }
-        return data;
-        
-      default:
-        return data;
-    }
-  }
-  
-  enableStep(step: TransformationStep): void {
-    switch (step) {
-      case TransformationStep.NORMALIZATION:
-        this.config.normalizationEnabled = true;
-        break;
-      case TransformationStep.ENRICHMENT:
-        this.config.enrichmentEnabled = true;
-        break;
-      case TransformationStep.MAPPING:
-        this.config.mappingEnabled = true;
-        break;
-    }
-  }
-  
-  disableStep(step: TransformationStep): void {
-    switch (step) {
-      case TransformationStep.NORMALIZATION:
-        this.config.normalizationEnabled = false;
-        break;
-      case TransformationStep.ENRICHMENT:
-        this.config.enrichmentEnabled = false;
-        break;
-      case TransformationStep.MAPPING:
-        this.config.mappingEnabled = false;
-        break;
-    }
-  }
-  
-  setSteps(steps: TransformationStep[]): void {
-    this.config.steps = steps;
-  }
-}
+const transformer = new DataTransformer();
+
+// Individual stages
+transformer.normalize(data): TransformationResult<T>;
+transformer.enrich(data, enrichment): TransformationResult<T>;
+transformer.map(data, rules): TransformationResult<U>;
+
+// Combined: normalization → enrichment → mapping
+transformer.transform(data, rules?, enrichment?): TransformationResult<U>;
+
+transformer.setConfig({ enableNormalization: true, enableEnrichment: true, enableMapping: true });
+transformer.getConfig();
 ```
 
-## Pipeline Builder
+- `transform` short-circuits on a failed stage and returns `success: false` with `errors`.
+- Each stage honors its `enable*` flag; a disabled stage is a passthrough.
+- `enrich` merges `enrichment.data` under the given `source`; `map` applies `TransformationRule`s (field rename + optional `transform` fn).
 
-### Pipeline Builder
-```typescript
-class PipelineBuilder {
-  private config: PipelineConfig;
-  private normalizationEngine?: NormalizationEngine;
-  private enrichmentEngine?: EnrichmentEngine;
-  private fieldMapper?: FieldMapper;
-  
-  constructor() {
-    this.config = {
-      normalizationEnabled: true,
-      enrichmentEnabled: true,
-      mappingEnabled: true,
-      steps: [
-        TransformationStep.NORMALIZATION,
-        TransformationStep.ENRICHMENT,
-        TransformationStep.MAPPING
-      ]
-    };
-  }
-  
-  withNormalization(engine: NormalizationEngine): this {
-    this.normalizationEngine = engine;
-    return this;
-  }
-  
-  withEnrichment(engine: EnrichmentEngine): this {
-    this.enrichmentEngine = engine;
-    return this;
-  }
-  
-  withMapping(mapper: FieldMapper): this {
-    this.fieldMapper = mapper;
-    return this;
-  }
-  
-  withSteps(steps: TransformationStep[]): this {
-    this.config.steps = steps;
-    return this;
-  }
-  
-  enableNormalization(): this {
-    this.config.normalizationEnabled = true;
-    return this;
-  }
-  
-  disableNormalization(): this {
-    this.config.normalizationEnabled = false;
-    return this;
-  }
-  
-  enableEnrichment(): this {
-    this.config.enrichmentEnabled = true;
-    return this;
-  }
-  
-  disableEnrichment(): this {
-    this.config.enrichmentEnabled = false;
-    return this;
-  }
-  
-  enableMapping(): this {
-    this.config.mappingEnabled = true;
-    return this;
-  }
-  
-  disableMapping(): this {
-    this.config.mappingEnabled = false;
-    return this;
-  }
-  
-  build(): TransformationPipeline {
-    if (!this.normalizationEngine || !this.enrichmentEngine || !this.fieldMapper) {
-      throw new Error('Missing required engines');
-    }
-    
-    return new TransformationPipeline(
-      this.config,
-      this.normalizationEngine,
-      this.enrichmentEngine,
-      this.fieldMapper
-    );
-  }
-}
-```
+## Engine Components
+
+`engine/` contains the building blocks used by `DataTransformer`:
+
+- `TransformationEngine` — executes rule-based transforms.
+- `MappingEngine` / `Path` — field mapping and nested-path access.
+- `Enricher` — merges `EnrichmentData` sources.
+- `Coercer` / `Validators` / `Transforms` — type coercion and built-in transform functions.
+- `Aggregator` / `BatchTransformer` — multi-record transforms (see `strategies/BatchStrategy.ts`).
 
 ## Error Handling
 
-### Error Types
-```typescript
-class TransformationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'TransformationError';
-  }
-}
-
-class MappingError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'MappingError';
-  }
-}
-```
+Failures surface as `TransformationResult.success === false` with `errors: string[]`; layer errors are produced by `utils/DataTransformationError.ts` and mapped by `DataTransformationErrorMapper`. Domain-side, `DataTransformationExecutionService` emits `DataTransformationExecuted`/`DataTransformationFailed` events.
 
 ## Best Practices
 
 ### Pipeline Guidelines
-- Use sequential pipeline steps
-- Configure steps based on data needs
-- Handle errors gracefully
-- Monitor pipeline performance
-- Document pipeline configuration
+- Order matters: normalize first so mapping sees clean field names/types, then enrich, then map.
+- Toggle stages via `TransformationConfig` flags rather than building separate pipelines.
+- Return/inspect `TransformationResult.errors` instead of throwing on partial failures.
 
 ### Performance Considerations
-- Optimize normalization for large objects
-- Cache enrichment results
-- Monitor transformation time
-- Use efficient data structures
+- Use `BatchTransformer`/`BatchStrategy` for multi-record work.
+- `CachedStrategy` memoizes repeated transforms; `FastStrategy` skips validation.
+- Keep `transform` rules pure — they run per record.

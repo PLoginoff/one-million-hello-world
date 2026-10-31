@@ -11,6 +11,16 @@
  *                            still confident about.
  * - `ExplanationGenerator`— "because you liked X" rationales from
  *                            nearest-neighbor evidence.
+ * - `LinUCBBandit`        — contextual bandit: per-arm ridge regression
+ *                            with upper-confidence-bound arm selection.
+ * - `MarkovSequenceModel` — order-k Markov chain over item transitions
+ *                            with additive smoothing + time decay.
+ * - `InteractionStream`   — per-event model updates and session
+ *                            windowing for real-time pipelines.
+ * - `TrendingTracker`     — exponentially-decayed event counters for
+ *                            "what's hot now".
+ * - `CategoryQuota`       — per-category min/max constraints enforced
+ *                            on a ranked list.
  *
  * @module RecommendationLayer/Engine
  */
@@ -184,4 +194,178 @@ export interface Explanation {
   readonly evidence: readonly ItemId[];
   /** 0..1 confidence — strength of the evidence. */
   readonly confidence: number;
+}
+
+/* ------------------------------------------------------------------ */
+/* Contextual bandits                                                  */
+/* ------------------------------------------------------------------ */
+
+export interface BanditOptions {
+  /** context feature dimension. Required. */
+  readonly dims: number;
+  /**
+   * Exploration scale α: UCB bonus = α·√(xᵀA⁻¹x). Higher = more
+   * exploration. Default 1.0 (the paper's setting).
+   */
+  readonly alpha?: number;
+  /** ridge regularization λ for A = λI + Σxxᵀ. Default 1.0. */
+  readonly regularization?: number;
+  /**
+   * Forgetting factor γ∈(0,1]: A ← γA, b ← γb before each update.
+   * 1 = stationary rewards; <1 adapts to drifting preferences.
+   * Default 1.
+   */
+  readonly decay?: number;
+}
+
+export interface ArmScore {
+  readonly arm: ItemId;
+  /** point estimate θ̂·x — exploitation component. */
+  readonly estimate: number;
+  /** α·√(xᵀA⁻¹x) — exploration bonus. */
+  readonly bonus: number;
+  /** estimate + bonus — the UCB the arm was ranked on. */
+  readonly ucb: number;
+}
+
+export interface BanditArmStats {
+  readonly arm: ItemId;
+  /** rewards observed for this arm. */
+  readonly pulls: number;
+  /** mean observed reward. */
+  readonly meanReward: number;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sequence-aware recommendations                                      */
+/* ------------------------------------------------------------------ */
+
+export interface MarkovOptions {
+  /**
+   * Chain order: how many trailing items form a context state.
+   * Order 1 = P(next|last); order 2 = P(next|last two). Default 1.
+   */
+  readonly order?: number;
+  /**
+   * Additive (Laplace/Lidstone) smoothing α: P(next|ctx) =
+   * (count(ctx,next) + α) / (total(ctx) + α·|vocab|). Default 0.1.
+   */
+  readonly smoothing?: number;
+  /**
+   * Half-life in ms for transition-count decay; 0 disables. Old
+   * sequences fade so the model follows drifting catalogs.
+   */
+  readonly halfLifeMs?: number;
+  /** Max distinct contexts retained; LRU eviction beyond. 0 = ∞. */
+  readonly maxContexts?: number;
+}
+
+export interface SequencePrediction {
+  readonly itemId: ItemId;
+  /** smoothed P(item | context). */
+  readonly probability: number;
+  /** raw transition count (post-decay) backing the prediction. */
+  readonly support: number;
+}
+
+export interface SequenceContextStats {
+  /** distinct context states observed. */
+  readonly contexts: number;
+  /** total transition observations (post-decay). */
+  readonly transitions: number;
+  /** average out-degree per context. */
+  readonly meanBranching: number;
+}
+
+/* ------------------------------------------------------------------ */
+/* Interaction stream                                                  */
+/* ------------------------------------------------------------------ */
+
+export type InteractionKind =
+  | 'view'
+  | 'click'
+  | 'add-to-cart'
+  | 'purchase'
+  | 'like'
+  | 'skip'
+  | 'rating';
+
+export interface InteractionEvent {
+  readonly userId: UserId;
+  readonly itemId: ItemId;
+  readonly kind: InteractionKind;
+  /** epoch millis; events may arrive slightly out of order. */
+  readonly timestamp: number;
+  /** for kind='rating': the star value. */
+  readonly rating?: number;
+  /** context features for bandit/realtime models. */
+  readonly context?: readonly number[];
+}
+
+export interface StreamOptions {
+  /** per-kind implicit weights; defaults below. */
+  readonly kindWeights?: Readonly<Partial<Record<InteractionKind, number>>>;
+  /** ms gap that splits a user's events into separate sessions. */
+  readonly sessionGapMs?: number;
+}
+
+/** Summary of one processing pass for observability. */
+export interface StreamUpdateResult {
+  readonly userId: UserId;
+  readonly itemId: ItemId;
+  /** mapped implicit weight sent downstream. */
+  readonly weight: number;
+  /** session id the event joined (per-user counter). */
+  readonly sessionId: number;
+  /** true when the event started a new session. */
+  readonly newSession: boolean;
+}
+
+/* ------------------------------------------------------------------ */
+/* Trending                                                            */
+/* ------------------------------------------------------------------ */
+
+export interface TrendingOptions {
+  /**
+   * Half-life in ms of an event's contribution. score(item) =
+   * Σ w·2^(-age/halfLife). Default 6 hours.
+   */
+  readonly halfLifeMs?: number;
+  /** per-kind event weights (view < click < purchase). */
+  readonly kindWeights?: Readonly<Partial<Record<InteractionKind, number>>>;
+  /**
+   * Per-item event cap before oldest entries are compacted into a
+   * running decayed sum (bounds memory at high volume). Default 512.
+   */
+  readonly maxEventsPerItem?: number;
+}
+
+export interface TrendingItem {
+  readonly itemId: ItemId;
+  /** decayed score at query time. */
+  readonly score: number;
+  /** raw event count in the retained window. */
+  readonly events: number;
+}
+
+/* ------------------------------------------------------------------ */
+/* Category quotas                                                     */
+/* ------------------------------------------------------------------ */
+
+export interface QuotaRule {
+  readonly category: string;
+  /** minimum items from this category in the output (soft). */
+  readonly min?: number;
+  /** maximum items from this category in the output (hard). */
+  readonly max?: number;
+}
+
+export interface QuotaResult {
+  readonly items: readonly CategorizedItem[];
+  /** items demoted/displaced to satisfy min quotas. */
+  readonly promoted: readonly ItemId[];
+  /** items dropped by max caps. */
+  readonly dropped: readonly ItemId[];
+  /** categories whose min could not be satisfied (supply-starved). */
+  readonly unmet: readonly string[];
 }

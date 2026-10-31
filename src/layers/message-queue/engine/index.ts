@@ -26,3 +26,4 @@ export type {
   GroupOffset,
   DepthStats,
 } from './types';
+export * from './advanced';

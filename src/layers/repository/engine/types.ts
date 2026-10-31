@@ -2,12 +2,11 @@
  * Repository Engine — shared types.
  *
  * The engine module adds a *second*, self-contained query engine to the
- * repository layer. Unlike `components/query-parser` (which parses textual
- * query strings into `ParsedQuery` structures) and `components/pagination-engine`
- * (which slices arrays by page number), this engine works on a typed
- * `SpecNode` tree that compiles to BOTH an in-memory predicate and a
- * parameterized SQL-like string, plus keyset ("cursor") pagination,
- * optimistic-locking storage, and percentile query metrics.
+ * repository layer. Unlike textual query-string parsing and page-number
+ * slicing, this engine works on a typed `SpecNode` tree that compiles to
+ * BOTH an in-memory predicate and a parameterized SQL-like string, plus
+ * keyset ("cursor") pagination, optimistic-locking storage, and percentile
+ * query metrics.
  *
  * @module RepositoryLayer/Engine
  */

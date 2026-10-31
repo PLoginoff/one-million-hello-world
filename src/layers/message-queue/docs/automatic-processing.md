@@ -1,232 +1,74 @@
 # Automatic Processing
 
 ## Overview
-The Message Queue Layer implements automatic processing with handler registration, start/stop processing control, processing state management, and concurrent processing prevention.
+Automatic processing lives in `implementations/MessageQueue.ts` (`IMessageQueue`). A single registered `MessageHandler` is invoked per message; the internal loop dequeues, retries, and dead-letters failed messages. There are no separate `ProcessingController`, `HandlerRegistry`, or `ConcurrencyManager` classes — `MessageQueue` holds a `_processing` flag, `_isRunning` flag, and a `_deadLetterQueue` array.
 
-## Processing State
+## Types
 
-### Processing State
 ```typescript
-enum ProcessingState {
-  IDLE = 'idle',
-  PROCESSING = 'processing',
-  PAUSED = 'paused',
-  STOPPED = 'stopped'
+type MessageHandler<T = unknown> = (data: T) => void | Promise<void>;
+
+interface Message<T> {
+  id: string;
+  data: T;
+  priority: number;
+  attempts: number;
+  maxAttempts: number;
+  createdAt: number;
+  scheduledAt: number;
 }
 
-interface ProcessingContext {
-  state: ProcessingState;
-  handler: MessageHandler | null;
-  startTime: Date | null;
+interface QueueConfig {
+  maxRetries: number;      // default 3
+  retryDelay: number;      // default 1000 ms
+  enableDeadLetter: boolean; // default true
+  maxQueueSize: number;    // default 1000
+}
+
+interface QueueStats {
+  queuedCount: number;
   processedCount: number;
-  errorCount: number;
+  failedCount: number;
+  deadLetterCount: number;
 }
 ```
 
-### Processing Controller
+## Processing Lifecycle
+
 ```typescript
-class ProcessingController {
-  private context: ProcessingContext;
-  private queueManager: QueueManager;
-  private deadLetterQueueManager: DeadLetterQueueManager;
-  private retryHandler: RetryHandler;
-  private processingLoop: NodeJS.Timeout | null = null;
-  
-  constructor(
-    queueManager: QueueManager,
-    deadLetterQueueManager: DeadLetterQueueManager,
-    retryHandler: RetryHandler
-  ) {
-    this.context = {
-      state: ProcessingState.IDLE,
-      handler: null,
-      startTime: null,
-      processedCount: 0,
-      errorCount: 0
-    };
-    
-    this.queueManager = queueManager;
-    this.deadLetterQueueManager = deadLetterQueueManager;
-    this.retryHandler = retryHandler;
-  }
-  
-  registerHandler(handler: MessageHandler): void {
-    this.context.handler = handler;
-  }
-  
-  start(interval: number = 100): void {
-    if (this.context.state === ProcessingState.PROCESSING) {
-      return;
-    }
-    
-    this.context.state = ProcessingState.PROCESSING;
-    this.context.startTime = new Date();
-    
-    this.processingLoop = setInterval(() => {
-      this.processNextMessage();
-    }, interval);
-  }
-  
-  stop(): void {
-    if (this.processingLoop) {
-      clearInterval(this.processingLoop);
-      this.processingLoop = null;
-    }
-    
-    this.context.state = ProcessingState.STOPPED;
-  }
-  
-  pause(): void {
-    if (this.processingLoop) {
-      clearInterval(this.processingLoop);
-      this.processingLoop = null;
-    }
-    
-    this.context.state = ProcessingState.PAUSED;
-  }
-  
-  resume(interval: number = 100): void {
-    if (this.context.state !== ProcessingState.PAUSED) {
-      return;
-    }
-    
-    this.start(interval);
-  }
-  
-  private async processNextMessage(): Promise<void> {
-    if (this.context.state !== ProcessingState.PROCESSING) {
-      return;
-    }
-    
-    if (!this.context.handler) {
-      return;
-    }
-    
-    const message = this.queueManager.dequeue();
-    
-    if (!message) {
-      return;
-    }
-    
-    try {
-      await this.retryHandler.handleWithRetry(message, this.context.handler);
-      this.context.processedCount++;
-    } catch (error) {
-      this.context.errorCount++;
-      this.deadLetterQueueManager.add(message, error as Error);
-    }
-  }
-  
-  getState(): ProcessingState {
-    return this.context.state;
-  }
-  
-  getStatistics(): {
-    processedCount: number;
-    errorCount: number;
-    startTime: Date | null;
-  } {
-    return {
-      processedCount: this.context.processedCount,
-      errorCount: this.context.errorCount,
-      startTime: this.context.startTime
-    };
-  }
-  
-  resetStatistics(): void {
-    this.context.processedCount = 0;
-    this.context.errorCount = 0;
-    this.context.startTime = null;
-  }
-}
+const queue = new MessageQueue();
+
+queue.registerHandler(async (data) => { /* process */ });
+queue.start();  // begins the loop; no-op if already running or no handler
+queue.stop();   // sets _isRunning = false; loop exits after current message
 ```
 
-## Handler Registration
+- `start()` spins `_processQueue()`: while `_isRunning` and a handler is set, it pulls the head message (priority-sorted), waits if `scheduledAt` is in the future or a message is already in flight, then calls `dequeue(handler)`.
+- The loop polls with a 100 ms delay when idle or busy. `_processing` prevents concurrent message handling — there is one in-flight message at a time.
+- `enqueue(data, priority)` returns `{ success: false, error: 'Queue is full' }` past `maxQueueSize`; otherwise pushes, re-sorts by `priority` desc, and bumps `queuedCount`.
 
-### Handler Registry
+## Retry and Dead Lettering
+
+- On handler failure, `attempts++`. Below `maxAttempts`, the message is re-queued with `scheduledAt = now + retryDelay`.
+- At `attempts >= maxAttempts`: if `enableDeadLetter`, the message moves to the dead letter queue (`getDeadLetterQueue()`), `deadLetterCount++`; `failedCount++` either way.
+- `queuedCount` is resynced to `queue.length` after each dequeue.
+
+## Stats and Config
+
 ```typescript
-class HandlerRegistry {
-  private handlers: Map<string, MessageHandler> = new Map();
-  
-  register(name: string, handler: MessageHandler): void {
-    this.handlers.set(name, handler);
-  }
-  
-  unregister(name: string): void {
-    this.handlers.delete(name);
-  }
-  
-  get(name: string): MessageHandler | undefined {
-    return this.handlers.get(name);
-  }
-  
-  has(name: string): boolean {
-    return this.handlers.has(name);
-  }
-  
-  getAll(): Map<string, MessageHandler> {
-    return new Map(this.handlers);
-  }
-  
-  clear(): void {
-    this.handlers.clear();
-  }
-}
+queue.getStats();   // { queuedCount, processedCount, failedCount, deadLetterCount }
+queue.setConfig({ maxRetries: 5, retryDelay: 500 });  // merged partial update
+queue.getConfig();
+queue.clear();      // empties queue, resets queuedCount (dead letters kept)
 ```
 
-## Concurrent Processing Prevention
+## Engine Extras
 
-### Concurrency Manager
-```typescript
-class ConcurrencyManager {
-  private processing: boolean = false;
-  private lock: Promise<void> | null = null;
-  
-  async acquire(): Promise<void> {
-    while (this.processing) {
-      await this.lock;
-    }
-    
-    this.processing = true;
-    this.lock = new Promise(resolve => {
-      this.lock = resolve;
-    });
-  }
-  
-  release(): void {
-    this.processing = false;
-    
-    if (this.lock) {
-      const resolve = this.lock;
-      this.lock = null;
-      resolve();
-    }
-  }
-  
-  isProcessing(): boolean {
-    return this.processing;
-  }
-}
-```
+`engine/` provides richer primitives beyond `MessageQueue`: `PriorityHeap`, `DelayScheduler`, `ConsumerGroups`, `BrokerQueue`, and `advanced/` (`AdvancedQueueEngine`, `FifoSequencer`, `MessageExpiry`, `QueueFairness`, `ProducerQuotas`, `QueueTransaction`, `MessageTracer`, `PreemptingQueue`).
 
 ## Best Practices
 
-### Processing Guidelines
-- Register handlers before starting processing
-- Monitor processing statistics
-- Handle errors gracefully
-- Implement backpressure handling
-- Monitor queue depth
-
-### Handler Registration Guidelines
-- Use descriptive handler names
-- Document handler behavior
-- Implement proper error handling
-- Set appropriate retry limits
-- Monitor handler performance
-
-### Concurrency Guidelines
-- Prevent concurrent message processing
-- Use locks for critical sections
-- Monitor processing state
-- Implement graceful shutdown
+- Register the handler **before** `start()`; `start()` is a no-op without one.
+- Keep handlers idempotent — retries re-invoke them.
+- Monitor `getStats()` for `deadLetterCount`/`failedCount` growth and queue depth.
+- Size `maxQueueSize` and `retryDelay` for your throughput; drain the dead letter queue on a schedule.

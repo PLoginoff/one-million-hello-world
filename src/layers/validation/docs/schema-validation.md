@@ -1,680 +1,133 @@
 # Schema Validation
 
 ## Overview
-The Validation Layer uses schema-based validation to ensure data integrity and type safety. Schemas define validation rules for fields, including type checking, format validation, and custom validators.
+Schema validation runs through `Validator` (`IValidator`). A `ValidationSchema` declares per-field `FieldValidation` rules plus optional `crossFieldRules`, `conditionalRules`, and nested schemas. Types live in `types/validation-types.ts`.
 
 ## Schema Definition
 
-### Schema Structure
 ```typescript
 interface ValidationSchema {
-  fields: FieldDefinition[];
+  fields: Record<string, FieldValidation>;
+  strictMode?: boolean;
+  sanitize?: boolean;
+  version?: string;
+  nestedSchemas?: Record<string, ValidationSchema>;
   crossFieldRules?: CrossFieldRule[];
-  conditionalSchemas?: ConditionalSchema[];
-  strict?: boolean;
-  sanitization?: SanitizationConfig;
-}
-
-interface FieldDefinition {
-  name: string;
-  type: FieldType;
-  required?: boolean;
-  validation?: ValidationRule[];
-  sanitization?: Sanitizer[];
-  defaultValue?: any;
-  description?: string;
+  conditionalRules?: ConditionalRule[];
 }
 
 enum FieldType {
-  STRING,
-  NUMBER,
-  INTEGER,
-  BOOLEAN,
-  ARRAY,
-  OBJECT,
-  DATE,
-  EMAIL,
-  URL,
-  UUID,
-  CUSTOM
+  STRING, NUMBER, BOOLEAN, DATE, ARRAY, OBJECT,
+  UUID, PHONE, EMAIL, URL, CREDIT_CARD,
+  IP_ADDRESS, HEX_COLOR, BASE64, JSON, XML, ANY,
 }
 ```
 
-### Validation Rules
+## Field Rules (`FieldValidation`)
+
 ```typescript
-interface ValidationRule {
-  type: ValidationRuleType;
-  value?: any;
-  message?: string;
-  validator?: (value: any, context: ValidationContext) => boolean | Promise<boolean>;
-}
-
-enum ValidationRuleType {
-  MIN_LENGTH,
-  MAX_LENGTH,
-  MIN_VALUE,
-  MAX_VALUE,
-  PATTERN,
-  EMAIL,
-  URL,
-  ENUM,
-  CUSTOM,
-  REQUIRED,
-  TYPE
+interface FieldValidation {
+  required: boolean;
+  type: FieldType;
+  minLength?: number; maxLength?: number;       // string/array length
+  pattern?: RegExp;
+  enum?: unknown[];
+  min?: number; max?: number;                   // numeric range
+  email?: boolean; url?: boolean; date?: boolean;
+  uuid?: boolean; phone?: boolean; creditCard?: boolean;
+  ipAddress?: boolean; hexColor?: boolean; base64?: boolean;
+  json?: boolean; xml?: boolean;
+  booleanString?: boolean; numberString?: boolean;
+  allowNull?: boolean; allowUndefined?: boolean;
+  arrayMinLength?: number; arrayMaxLength?: number;
+  objectRequiredKeys?: string[]; objectAllowedKeys?: string[];
+  nestedSchema?: ValidationSchema;
+  customValidator?: (v, ctx) => boolean;
+  asyncValidator?: (v, ctx) => Promise<boolean>;
+  sanitizers?: Sanitizer[];
 }
 ```
 
-## Field Validation
+Set boolean flags to enforce a format (`email: true`, `uuid: true`, `ipAddress: true`, …) or use the matching `FieldType`. Length/range constraints apply after the type/format check.
 
-### String Validation
+## Running Validation
+
 ```typescript
-interface StringValidationRule extends ValidationRule {
-  type: ValidationRuleType.MIN_LENGTH | ValidationRuleType.MAX_LENGTH | ValidationRuleType.PATTERN;
-}
+const result = validator.validate(request, schema);           // ValidationResult
+const ext = validator.validateExtended(request, schema, ctx); // + sanitizedData, validationTime, schemaVersion
 
-class StringValidator {
-  validate(value: string, rules: StringValidationRule[]): ValidationResult {
-    for (const rule of rules) {
-      switch (rule.type) {
-        case ValidationRuleType.MIN_LENGTH:
-          if (value.length < rule.value) {
-            return {
-              valid: false,
-              error: ValidationError.STRING_TOO_SHORT,
-              message: rule.message || `String must be at least ${rule.value} characters`
-            };
-          }
-          break;
-          
-        case ValidationRuleType.MAX_LENGTH:
-          if (value.length > rule.value) {
-            return {
-              valid: false,
-              error: ValidationError.STRING_TOO_LONG,
-              message: rule.message || `String must not exceed ${rule.value} characters`
-            };
-          }
-          break;
-          
-        case ValidationRuleType.PATTERN:
-          const pattern = new RegExp(rule.value);
-          if (!pattern.test(value)) {
-            return {
-              valid: false,
-              error: ValidationError.PATTERN_MISMATCH,
-              message: rule.message || 'String does not match required pattern'
-            };
-          }
-          break;
-      }
-    }
-    
-    return { valid: true };
-  }
-}
+result.valid;            // no errors (warnings don't affect it)
+result.errors;           // ValidationError[] { field, code, message, severity, path, nestedErrors }
+result.warnings;         // ValidationWarning[]
+result.metrics;          // fieldsChecked/Passed/Failed/Skipped, durations, memoryUsage
 ```
 
-### Number Validation
+`strictMode: true` fails on undeclared fields. `sanitize: true` runs field `sanitizers` before validation.
+
+## Built-in Format Checks
+
 ```typescript
-interface NumberValidationRule extends ValidationRule {
-  type: ValidationRuleType.MIN_VALUE | ValidationRuleType.MAX_VALUE;
-}
-
-class NumberValidator {
-  validate(value: number, rules: NumberValidationRule[]): ValidationResult {
-    for (const rule of rules) {
-      switch (rule.type) {
-        case ValidationRuleType.MIN_VALUE:
-          if (value < rule.value) {
-            return {
-              valid: false,
-              error: ValidationError.NUMBER_TOO_SMALL,
-              message: rule.message || `Number must be at least ${rule.value}`
-            };
-          }
-          break;
-          
-        case ValidationRuleType.MAX_VALUE:
-          if (value > rule.value) {
-            return {
-              valid: false,
-              error: ValidationError.NUMBER_TOO_LARGE,
-              message: rule.message || `Number must not exceed ${rule.value}`
-            };
-          }
-          break;
-      }
-    }
-    
-    return { valid: true };
-  }
-}
+validator.isValidUUID(v);   validator.isValidPhone(v);
+validator.isValidCreditCard(v); validator.isValidIPAddress(v);
+validator.isValidHexColor(v);   validator.isValidBase64(v);
+validator.isValidJSON(v);       validator.isValidXML(v);
 ```
 
-### Email Validation
+## Nested Schemas
+
 ```typescript
-class EmailValidator {
-  validate(value: string): ValidationResult {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!emailRegex.test(value)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_EMAIL,
-        message: 'Invalid email format'
-      };
-    }
-    
-    // Additional checks
-    const parts = value.split('@');
-    if (parts.length !== 2) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_EMAIL,
-        message: 'Invalid email format'
-      };
-    }
-    
-    const [local, domain] = parts;
-    
-    if (local.length > 64) {
-      return {
-        valid: false,
-        error: ValidationError.EMAIL_LOCAL_TOO_LONG,
-        message: 'Email local part too long'
-      };
-    }
-    
-    if (domain.length > 255) {
-      return {
-        valid: false,
-        error: ValidationError.EMAIL_DOMAIN_TOO_LONG,
-        message: 'Email domain too long'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
+validator.validateNestedSchema(data, schema, 'user.address', ctx);
 ```
 
-### URL Validation
-```typescript
-class URLValidator {
-  validate(value: string): ValidationResult {
-    try {
-      const url = new URL(value);
-      
-      // Validate protocol
-      const allowedProtocols = ['http:', 'https:', 'ftp:'];
-      if (!allowedProtocols.includes(url.protocol)) {
-        return {
-          valid: false,
-          error: ValidationError.INVALID_URL_PROTOCOL,
-          message: `URL protocol must be one of: ${allowedProtocols.join(', ')}`
-        };
-      }
-      
-      return { valid: true };
-    } catch (error) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_URL,
-        message: 'Invalid URL format'
-      };
-    }
-  }
-}
-```
+Or set `field.nestedSchema` / `schema.nestedSchemas` — nested failures surface as `nestedErrors` with dotted `path`.
 
-### UUID Validation
-```typescript
-class UUIDValidator {
-  validate(value: string): ValidationResult {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    
-    if (!uuidRegex.test(value)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_UUID,
-        message: 'Invalid UUID format'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
-```
+## Cross-Field and Conditional Rules
 
-### Phone Number Validation
-```typescript
-class PhoneValidator {
-  validate(value: string): ValidationResult {
-    // Remove non-digit characters
-    const digits = value.replace(/\D/g, '');
-    
-    // Check length
-    if (digits.length < 10 || digits.length > 15) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_PHONE,
-        message: 'Invalid phone number format'
-      };
-    }
-    
-    // Check for valid country code
-    if (digits.length === 11 && digits[0] !== '1') {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_PHONE_COUNTRY_CODE,
-        message: 'Invalid country code'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
-```
-
-### Credit Card Validation
-```typescript
-class CreditCardValidator {
-  validate(value: string): ValidationResult {
-    // Remove non-digit characters
-    const digits = value.replace(/\D/g, '');
-    
-    // Check length
-    if (digits.length < 13 || digits.length > 19) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_CREDIT_CARD,
-        message: 'Invalid credit card number'
-      };
-    }
-    
-    // Luhn algorithm
-    if (!this.luhnCheck(digits)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_CREDIT_CARD_CHECKSUM,
-        message: 'Invalid credit card checksum'
-      };
-    }
-    
-    return { valid: true };
-  }
-  
-  private luhnCheck(cardNumber: string): boolean {
-    let sum = 0;
-    let isEven = false;
-    
-    for (let i = cardNumber.length - 1; i >= 0; i--) {
-      let digit = parseInt(cardNumber[i], 10);
-      
-      if (isEven) {
-        digit *= 2;
-        if (digit > 9) {
-          digit -= 9;
-        }
-      }
-      
-      sum += digit;
-      isEven = !isEven;
-    }
-    
-    return sum % 10 === 0;
-  }
-}
-```
-
-### IP Address Validation
-```typescript
-class IPAddressValidator {
-  validate(value: string): ValidationResult {
-    // IPv4 validation
-    const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    
-    if (ipv4Regex.test(value)) {
-      return { valid: true };
-    }
-    
-    // IPv6 validation
-    const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-    
-    if (ipv6Regex.test(value)) {
-      return { valid: true };
-    }
-    
-    return {
-      valid: false,
-      error: ValidationError.INVALID_IP_ADDRESS,
-      message: 'Invalid IP address format'
-    };
-  }
-}
-```
-
-### Hex Color Validation
-```typescript
-class HexColorValidator {
-  validate(value: string): ValidationResult {
-    const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-    
-    if (!hexColorRegex.test(value)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_HEX_COLOR,
-        message: 'Invalid hex color format (e.g., #FFFFFF or #FFF)'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
-```
-
-### Base64 Validation
-```typescript
-class Base64Validator {
-  validate(value: string): ValidationResult {
-    const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
-    
-    if (!base64Regex.test(value)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_BASE64,
-        message: 'Invalid Base64 format'
-      };
-    }
-    
-    // Check padding
-    const padding = value.length % 4;
-    if (padding !== 0) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_BASE64_PADDING,
-        message: 'Invalid Base64 padding'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
-```
-
-### JSON Validation
-```typescript
-class JSONValidator {
-  validate(value: string): ValidationResult {
-    try {
-      JSON.parse(value);
-      return { valid: true };
-    } catch (error) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_JSON,
-        message: 'Invalid JSON format'
-      };
-    }
-  }
-}
-```
-
-### XML Validation
-```typescript
-class XMLValidator {
-  validate(value: string): ValidationResult {
-    // Basic XML structure check
-    const xmlRegex = /^<(\w+)[\s\S]*<\/\1>$/;
-    
-    if (!xmlRegex.test(value)) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_XML,
-        message: 'Invalid XML format'
-      };
-    }
-    
-    // Check for proper nesting (simplified)
-    const stack: string[] = [];
-    const tagRegex = /<\/?(\w+)[^>]*>/g;
-    let match;
-    
-    while ((match = tagRegex.exec(value)) !== null) {
-      const tag = match[1];
-      const isClosing = match[0].startsWith('</');
-      
-      if (isClosing) {
-        if (stack.pop() !== tag) {
-          return {
-            valid: false,
-            error: ValidationError.INVALID_XML_NESTING,
-            message: 'Invalid XML nesting'
-          };
-        }
-      } else {
-        stack.push(tag);
-      }
-    }
-    
-    if (stack.length > 0) {
-      return {
-        valid: false,
-        error: ValidationError.INVALID_XML_NESTING,
-        message: 'Unclosed XML tags'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
-```
-
-## Cross-Field Validation
-
-### Cross-Field Rules
 ```typescript
 interface CrossFieldRule {
-  name: string;
-  fields: string[];
-  validator: (values: Map<string, any>, context: ValidationContext) => boolean | Promise<boolean>;
-  message: string;
+  id, name, fields: string[],
+  validator: (values, ctx) => boolean,
+  errorMessage: string, enabled: boolean,
 }
 
-class CrossFieldValidator {
-  private rules: CrossFieldRule[] = [];
-  
-  addRule(rule: CrossFieldRule): void {
-    this.rules.push(rule);
-  }
-  
-  async validate(data: Map<string, any>, context: ValidationContext): Promise<ValidationResult> {
-    for (const rule of this.rules) {
-      const values = new Map<string, any>();
-      
-      for (const field of rule.fields) {
-        if (data.has(field)) {
-          values.set(field, data.get(field));
-        }
-      }
-      
-      const isValid = await rule.validator(values, context);
-      
-      if (!isValid) {
-        return {
-          valid: false,
-          error: ValidationError.CROSS_FIELD_VALIDATION_FAILED,
-          message: rule.message,
-          fields: rule.fields
-        };
-      }
-    }
-    
-    return { valid: true };
-  }
+interface ConditionalRule {
+  id, name,
+  condition: (data, ctx) => boolean,
+  then: ValidationSchema, otherwise?: ValidationSchema, enabled,
 }
 ```
 
-### Common Cross-Field Rules
 ```typescript
-// Password confirmation rule
-const passwordConfirmationRule: CrossFieldRule = {
-  name: 'password-confirmation',
-  fields: ['password', 'passwordConfirmation'],
-  validator: (values) => values.get('password') === values.get('passwordConfirmation'),
-  message: 'Password confirmation does not match'
-};
-
-// Date range rule
-const dateRangeRule: CrossFieldRule = {
-  name: 'date-range',
-  fields: ['startDate', 'endDate'],
-  validator: (values) => {
-    const startDate = new Date(values.get('startDate'));
-    const endDate = new Date(values.get('endDate'));
-    return startDate <= endDate;
-  },
-  message: 'Start date must be before end date'
-};
-
-// Field dependency rule
-const fieldDependencyRule: CrossFieldRule = {
-  name: 'field-dependency',
-  fields: ['country', 'state'],
-  validator: (values) => {
-    const country = values.get('country');
-    const state = values.get('state');
-    
-    // If country is US, state is required
-    if (country === 'US' && !state) {
-      return false;
-    }
-    
-    return true;
-  },
-  message: 'State is required for US country'
-};
+validator.validateCrossFieldRules(data, rules, ctx);
+validator.validateConditionalRules(data, rules, ctx);
+validator.addCrossFieldRule(rule);   validator.removeCrossFieldRule(id);
+validator.addConditionalRule(rule);  validator.removeConditionalRule(id);
 ```
 
-## Conditional Validation
-
-### Conditional Schemas
-```typescript
-interface ConditionalSchema {
-  condition: (data: Map<string, any>, context: ValidationContext) => boolean | Promise<boolean>;
-  schema: ValidationSchema;
-}
-
-class ConditionalValidator {
-  private conditionalSchemas: ConditionalSchema[] = [];
-  
-  addConditionalSchema(schema: ConditionalSchema): void {
-    this.conditionalSchemas.push(schema);
-  }
-  
-  async validate(data: Map<string, any>, context: ValidationContext): Promise<ValidationResult> {
-    for (const conditionalSchema of this.conditionalSchemas) {
-      const applies = await conditionalSchema.condition(data, context);
-      
-      if (applies) {
-        return await this.validator.validateWithSchema(data, conditionalSchema.schema, context);
-      }
-    }
-    
-    return { valid: true };
-  }
-}
-```
-
-### Common Conditional Patterns
-```typescript
-// Role-based validation
-const roleBasedSchema: ConditionalSchema = {
-  condition: (data, context) => context.userRole === 'admin',
-  schema: adminValidationSchema
-};
-
-// Feature flag validation
-const featureFlagSchema: ConditionalSchema = {
-  condition: (data, context) => context.features.includes('advanced-validation'),
-  schema: advancedValidationSchema
-};
-
-// Data type based validation
-const dataTypeSchema: ConditionalSchema = {
-  condition: (data, context) => data.get('type') === 'premium',
-  schema: premiumValidationSchema
-};
-```
+Cross-field example: `password === confirmPassword`, `endDate > startDate`. Conditional example: apply `then` schema only when `condition` holds (e.g. `type === 'business' → require taxId`).
 
 ## Custom Validators
 
-### Custom Validator Interface
 ```typescript
-interface CustomValidator {
-  name: string;
-  validate: (value: any, context: ValidationContext) => boolean | Promise<boolean>;
-  message?: string;
-}
+validator.addCustomValidator('sku-format', (v, ctx) => /^SKU-\d{6}$/.test(String(v)));
+validator.removeCustomValidator('sku-format');
+```
 
-class CustomValidatorRegistry {
-  private validators: Map<string, CustomValidator> = new Map();
-  
-  register(validator: CustomValidator): void {
-    this.validators.set(validator.name, validator);
-  }
-  
-  unregister(name: string): void {
-    this.validators.delete(name);
-  }
-  
-  get(name: string): CustomValidator | undefined {
-    return this.validators.get(name);
-  }
-  
-  async validate(name: string, value: any, context: ValidationContext): Promise<ValidationResult> {
-    const validator = this.validators.get(name);
-    
-    if (!validator) {
-      return {
-        valid: false,
-        error: ValidationError.UNKNOWN_VALIDATOR,
-        message: `Unknown validator: ${name}`
-      };
-    }
-    
-    const isValid = await validator.validate(value, context);
-    
-    if (!isValid) {
-      return {
-        valid: false,
-        error: ValidationError.CUSTOM_VALIDATION_FAILED,
-        message: validator.message || 'Custom validation failed'
-      };
-    }
-    
-    return { valid: true };
-  }
-}
+`customValidator`/`asyncValidator` on `FieldValidation` run per field; failures produce `CUSTOM`/`ASYNC_VALIDATION` errors.
+
+## Schema Management
+
+```typescript
+validator.setDefaultSchema(schema);
+validator.getDefaultSchema();
+validator.setValidationConfig(config);
+validator.getValidationConfig();
+validator.createValidationContext(request);  // { requestId, timestamp, userId, ipAddress, userAgent, correlationId }
 ```
 
 ## Best Practices
 
-### Schema Design
-- Use descriptive field names
-- Provide clear error messages
-- Keep schemas focused and single-purpose
-- Reuse common validation rules
-- Document complex validation logic
-
-### Performance Optimization
-- Cache compiled regex patterns
-- Use simple type checks before complex validations
-- Implement early termination for required fields
-- Optimize cross-field validation order
-
-### Security Considerations
-- Sanitize input before validation
-- Use whitelisting for allowed values
-- Validate against malicious patterns
-- Implement rate limiting for validation
+- One schema per request shape; version it (`schema.version`) and reuse via `setDefaultSchema`.
+- Prefer declarative flags (`email`, `uuid`, `enum`) over `customValidator` — they produce precise `ValidationErrorCode`s.
+- Use `crossFieldRules` for multi-field invariants and `conditionalRules` for type-dependent fields.
+- Keep `strictMode` on for public APIs to reject unexpected input.

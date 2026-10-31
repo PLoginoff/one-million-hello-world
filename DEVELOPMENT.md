@@ -216,7 +216,7 @@
 
 ## Testing & Quality
 
-- [x] Unit tests (80% of total tests) — 15,523 tests, all passing
+- [x] Unit tests (80% of total tests) — 20,964 tests, all passing
 - [x] Integration tests (15% of total tests) — 23 suites (per-layer + layer-pair matrix in `src/layers/__tests__/integration/`)
 - [x] E2E tests (5% of total tests) — HTTP, pipeline, and security E2E suites
 - [ ] Mutation testing with Stryker
@@ -227,9 +227,9 @@
 
 - [x] TSDoc for all public APIs
 - [x] Architecture Decision Records (ADRs) — 15 top-level + 104 per-layer
-- [ ] API documentation
-- [ ] Contributing guide
-- [ ] Deployment guide
+- [x] API documentation (OpenAPI spec)
+- [x] Contributing guide
+- [x] Deployment guide
 
 ## CI/CD
 
@@ -254,13 +254,13 @@ In windows:
 wsl make stats
 ```
 
-## Current Statistics (2026-10-29)
+## Current Statistics (2026-10-31)
 
 - **Total Layers**: 104 (25 original + 79 horizontal)
-- **Layers Deepened**: 45/104 (25 original + 20 horizontal deepened)
-- **Total Lines of Code**: **707,039 / 1,000,000** (70.7%)
-- **Test Results**: 15,523 passing, 0 failing, 14 skipped (`bun test`)
-- **Files Created**: 10,389
+- **Layers Deepened**: 104/104 — every layer has real algorithmic engines (most have 2-3)
+- **Total Lines of Code**: **992,048 / 1,000,000** (99.2%)
+- **Test Results**: 20,964 passing, 0 failing, 14 skipped (`bun test`)
+- **Files Created**: 11,795
 - **Build Status**: Clean (`bun run build` — tsc, 0 errors)
 - **Lint Status**: 0 errors in new code
 - **Runtime**: Bun (`bun run build`, `bun test`)

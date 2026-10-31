@@ -22,3 +22,51 @@ export {
   HTTP2_DEFAULT_WINDOW,
 } from './Http2Framing';
 export { KeepAliveTracker } from './KeepAliveTracker';
+export {
+  ConnectServerHandshake,
+  ConnectClientHandshake,
+  Socks5ServerHandshake,
+  ProxyKind,
+  ProxyPhase,
+  ConnectState,
+  Socks5State,
+  Socks5Method,
+  Socks5Cmd,
+  Socks5AddrType,
+  Socks5Reply,
+  CONNECT_MAX_HEADER_BYTES,
+  parseAuthority,
+  concat,
+  encodeAscii,
+  socks5ConnectFrame,
+  socks5Greeting,
+} from './ProxyProtocol';
+export type { ProxyTarget, FeedResult, ConnectRequest, Socks5ServerOptions } from './ProxyProtocol';
+export {
+  negotiateSocketOptions,
+  SndBufGovernor,
+  WriteDisposition,
+  SOCKET_DEFAULTS,
+  MSS_FLOOR,
+  MSS_CEILING,
+} from './SocketOptions';
+export type {
+  SocketOptionProfile,
+  EffectiveSocketOptions,
+  WriteOutcome,
+} from './SocketOptions';
+export {
+  TokenBucket,
+  ConnectionShaper,
+  TrafficShaper,
+  NetworkNamespace,
+  NetnsRegistry,
+} from './TrafficShaper';
+export type {
+  TokenBucketOptions,
+  Permit,
+  ShapePolicy,
+  ShapeResult,
+  VethPair,
+  RouteResult,
+} from './TrafficShaper';

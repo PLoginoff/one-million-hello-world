@@ -1,397 +1,55 @@
 # Request Parsing
 
 ## Overview
-The HTTP Parser Layer implements comprehensive request parsing capabilities following RFC 7230 and related specifications. The parsing process is divided into distinct phases for clarity and maintainability.
+`HttpRequestParser` (`IHttpRequestParser`) parses raw HTTP/1.x bytes into `HttpRequest` per RFC 7230, in three phases: request line → headers → body. `parse(raw, config?)` returns `ParseResult<HttpRequest>`; `parseRequestLine`/`parseHeaders` expose the stages individually.
 
-## Request Line Parsing
+## Request Line
 
-### Request Line Structure
-```
-METHOD SP REQUEST-URI SP HTTP-VERSION CRLF
-```
+`METHOD SP REQUEST-URI SP HTTP-VERSION CRLF`
 
-### Parsing Process
+- `HttpMethod`: `GET POST PUT DELETE PATCH HEAD OPTIONS TRACE CONNECT`
+- `HttpVersion`: `HTTP/1.0`, `HTTP/1.1`, `HTTP/2.0`
+- Errors: `INVALID_METHOD`, `INVALID_VERSION`, `MALFORMED_REQUEST`.
+
 ```typescript
-interface RequestLine {
-  method: HttpMethod;
-  uri: string;
-  version: HttpVersion;
-}
-
-enum HttpMethod {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-  PATCH,
-  HEAD,
-  OPTIONS,
-  TRACE,
-  CONNECT
-}
-
-enum HttpVersion {
-  HTTP_1_0,
-  HTTP_1_1,
-  HTTP_2_0
-}
+parser.parseRequestLine('GET /a?b=1 HTTP/1.1');
+// { method: 'GET', path: '/a?b=1', version: 'HTTP/1.1' }
 ```
 
-### Request Line Validation
-- Method must be valid HTTP method
-- URI must be properly formatted
-- Version must be supported
-- Single space between components
-- CRLF termination required
+## Headers
 
-### Error Handling
-- Invalid method: ParseError.INVALID_METHOD
-- Invalid URI: ParseError.INVALID_URI
-- Invalid version: ParseError.INVALID_VERSION
-- Missing components: ParseError.MALFORMED_REQUEST_LINE
+`HEADER-NAME ":" OWS HEADER-VALUE OWS CRLF`
 
-## Header Parsing
+`parseHeaders(lines)` splits on the first colon, lowercases the name, trims the value, and stores in `Map<string, string>` for O(1) lookup. Validation: name/value length caps (`maxHeaderNameLength`/`maxHeaderValueLength`), `maxHeaderCount`, `maxHeaderSize`, control-char rejection; duplicates handled per RFC → `INVALID_HEADER`.
 
-### Header Structure
-```
-HEADER-NAME ":" OWS HEADER-VALUE OWS CRLF
-```
+## Body
 
-### Header Processing Pipeline
-1. Read header line
-2. Split at first colon
-3. Normalize header name to lowercase
-4. Trim whitespace from value
-5. Store in Map for O(1) lookup
-6. Handle continuation lines (obsolete)
+- **Content-Length** → fixed body up to `ParserConfig.maxBodySize` (`INVALID_BODY` over).
+- **Transfer-Encoding: chunked** → `parseChunkedEncoding(body)` (gated by `allowChunkedEncoding`).
+- **multipart/form-data** → `parseMultipartFormData(body, boundary)`.
+- GET/HEAD typically carry no body; `allowEmptyBody` controls tolerance.
 
-### Header Validation
-- Header name must not contain invalid characters
-- Header value must not exceed configured limit
-- Duplicate headers handled according to RFC
-- Empty headers allowed for certain cases
+## Query, Cookies, MIME, Content-Disposition
 
-### Common Headers
 ```typescript
-interface HttpHeaders {
-  'content-type': string;
-  'content-length': string;
-  'host': string;
-  'user-agent': string;
-  'accept': string;
-  'authorization': string;
-  'cookie': string;
-  // ... additional headers
-}
-```
-
-## Body Parsing
-
-### Body Detection
-- Content-Length header indicates body size
-- Transfer-Encoding: chunked indicates chunked encoding
-- GET/HEAD requests typically have no body
-- Multipart content type indicates multipart body
-
-### Fixed-Length Body
-```typescript
-async parseFixedBody(contentLength: number): Promise<Buffer> {
-  if (contentLength > this.config.maxBodySize) {
-    throw ParseError.BODY_TOO_LARGE;
-  }
-  
-  const body = await this.readBytes(contentLength);
-  return body;
-}
-```
-
-### Chunked Encoding
-```typescript
-interface Chunk {
-  size: number;
-  data: Buffer;
-  extensions: string[];
-}
-
-async parseChunkedBody(): Promise<Buffer> {
-  const chunks: Chunk[] = [];
-  let totalSize = 0;
-  
-  while (true) {
-    const chunk = await this.parseChunk();
-    if (chunk.size === 0) break; // Last chunk
-    
-    totalSize += chunk.size;
-    if (totalSize > this.config.maxBodySize) {
-      throw ParseError.BODY_TOO_LARGE;
-    }
-    
-    chunks.push(chunk);
-  }
-  
-  return Buffer.concat(chunks.map(c => c.data));
-}
-```
-
-## Query String Parsing
-
-### Query String Format
-```
-?param1=value1&param2=value2&param3=value3
-```
-
-### Parsing Algorithm
-```typescript
-interface QueryParams {
-  [key: string]: string | string[];
-}
-
-function parseQueryString(queryString: string): QueryParams {
-  const params: QueryParams = {};
-  const pairs = queryString.split('&');
-  
-  for (const pair of pairs) {
-    const [key, value] = pair.split('=');
-    const decodedKey = decodeURIComponent(key);
-    const decodedValue = value ? decodeURIComponent(value) : '';
-    
-    if (params[decodedKey]) {
-      // Handle multiple values
-      if (Array.isArray(params[decodedKey])) {
-        params[decodedKey].push(decodedValue);
-      } else {
-        params[decodedKey] = [params[decodedKey], decodedValue];
-      }
-    } else {
-      params[decodedKey] = decodedValue;
-    }
-  }
-  
-  return params;
-}
-```
-
-## Cookie Parsing
-
-### Cookie Header Format
-```
-Cookie: name1=value1; name2=value2; name3=value3
-```
-
-### Parsing Process
-```typescript
-interface Cookie {
-  name: string;
-  value: string;
-  attributes?: CookieAttributes;
-}
-
-interface CookieAttributes {
-  expires?: Date;
-  maxAge?: number;
-  domain?: string;
-  path?: string;
-  secure?: boolean;
-  httpOnly?: boolean;
-  sameSite?: 'Strict' | 'Lax' | 'None';
-}
-
-function parseCookieHeader(cookieHeader: string): Cookie[] {
-  const cookies: Cookie[] = [];
-  const pairs = cookieHeader.split(';');
-  
-  for (const pair of pairs) {
-    const [name, value] = pair.trim().split('=');
-    cookies.push({
-      name: name.trim(),
-      value: value?.trim() || ''
-    });
-  }
-  
-  return cookies;
-}
-```
-
-## MIME Type Parsing
-
-### MIME Type Format
-```
-type/subtype; parameter=value; parameter=value
-```
-
-### Parsing Algorithm
-```typescript
-interface MimeType {
-  type: string;
-  subtype: string;
-  charset?: string;
-  boundary?: string;
-  parameters: Map<string, string>;
-}
-
-function parseMimeType(mimeType: string): MimeType {
-  const [typeSubtype, ...paramStrings] = mimeType.split(';');
-  const [type, subtype] = typeSubtype.trim().split('/');
-  
-  const parameters = new Map<string, string>();
-  for (const paramString of paramStrings) {
-    const [key, value] = paramString.trim().split('=');
-    parameters.set(key, value?.replace(/"/g, '') || '');
-  }
-  
-  return {
-    type: type.trim(),
-    subtype: subtype.trim(),
-    charset: parameters.get('charset'),
-    boundary: parameters.get('boundary'),
-    parameters
-  };
-}
-```
-
-## Content-Disposition Parsing
-
-### Content-Disposition Format
-```
-Content-Disposition: form-data; name="fieldName"; filename="file.txt"
-```
-
-### Parsing Process
-```typescript
-interface ContentDisposition {
-  type: 'inline' | 'attachment' | 'form-data';
-  name?: string;
-  filename?: string;
-  parameters: Map<string, string>;
-}
-
-function parseContentDisposition(header: string): ContentDisposition {
-  const [type, ...paramStrings] = header.split(';');
-  const parameters = new Map<string, string>();
-  
-  for (const paramString of paramStrings) {
-    const [key, value] = paramString.trim().split('=');
-    const cleanValue = value?.replace(/"/g, '') || '';
-    parameters.set(key, cleanValue);
-  }
-  
-  return {
-    type: type.trim() as 'inline' | 'attachment' | 'form-data',
-    name: parameters.get('name'),
-    filename: parameters.get('filename'),
-    parameters
-  };
-}
-```
-
-## Multipart Form Data Parsing
-
-### Multipart Structure
-```
---boundary
-Content-Disposition: form-data; name="field1"
-
-value1
---boundary
-Content-Disposition: form-data; name="file"; filename="file.txt"
-
-file content
---boundary--
-```
-
-### Parsing Process
-```typescript
-interface MultipartPart {
-  headers: Map<string, string>;
-  contentDisposition?: ContentDisposition;
-  contentType?: MimeType;
-  data: Buffer;
-}
-
-async parseMultipartFormData(boundary: string): Promise<MultipartPart[]> {
-  const parts: MultipartPart[] = [];
-  const boundaryLine = `--${boundary}`;
-  
-  // Parse each part between boundaries
-  // Handle headers and content for each part
-  
-  return parts;
-}
+parser.parseQueryString('a=1&b=2');         // QueryString { parameters: QueryParameter[] }
+parser.parseCookies('sid=1; theme=dark');   // ParsedCookies
+parser.parseMimeType('application/json; charset=utf-8'); // MimeType { type, subtype, charset?, boundary? }
+parser.parseContentDisposition('form-data; name="f"; filename="a.png"'); // ContentDisposition
 ```
 
 ## State Machine
 
-### Parser States
-```typescript
-enum ParserState {
-  IDLE,
-  PARSING_REQUEST_LINE,
-  PARSING_HEADERS,
-  PARSING_BODY,
-  COMPLETE,
-  ERROR
-}
-```
+`ParserState`: `REQUEST_LINE → HEADERS → BODY → COMPLETE`. `getState()` inspects; `resetState()` aborts. `INCOMPLETE_DATA` means the parser wants more bytes — feed the next chunk instead of failing.
 
-### State Transitions
-```
-IDLE → PARSING_REQUEST_LINE (on data received)
-PARSING_REQUEST_LINE → PARSING_HEADERS (request line complete)
-PARSING_HEADERS → PARSING_BODY (headers complete)
-PARSING_BODY → COMPLETE (body complete)
-ANY → ERROR (on parsing error)
-ERROR → IDLE (after reset)
-```
+## Performance
 
-### State Management
-```typescript
-class HttpRequestParser {
-  private state: ParserState = ParserState.IDLE;
-  
-  setState(newState: ParserState): void {
-    this.state = newState;
-    this.logStateChange(newState);
-  }
-  
-  reset(): void {
-    this.state = ParserState.IDLE;
-    this.buffer = Buffer.alloc(0);
-  }
-}
-```
-
-## Performance Considerations
-
-### Buffer Management
-- Reuse buffers when possible
-- Limit buffer growth to prevent memory exhaustion
-- Stream processing for large bodies
-- Zero-copy operations where feasible
-
-### Optimization Strategies
-- Header name normalization during parsing
-- Map-based storage for O(1) header lookup
-- Lazy parsing of optional components
-- Caching of parsed results
-
-### Memory Efficiency
-- Strict size limits enforced
-- Buffer pooling for allocations
-- Early rejection of oversized requests
-- Memory pressure monitoring
+- Header map gives O(1) lookup; chunked parser is streaming (no full-body copy).
+- `maxBodySize`/`maxHeaderSize`/`maxHeaderCount` bound memory per request.
+- `getStats(): ParsingStats` tracks `totalRequestsParsed`, `averageParseTime`, `errorCount`.
 
 ## Best Practices
 
-### Parsing Guidelines
-- Always validate input before processing
-- Enforce size limits strictly
-- Handle malformed input gracefully
-- Log parsing errors for debugging
-- Maintain parser state consistency
-
-### Security Considerations
-- Validate all input data
-- Prevent buffer overflow attacks
-- Handle malicious input patterns
-- Enforce rate limits
-- Sanitize parsed data
+- Tune `ParserConfig` (`maxBodySize`, `strictMode`, `timeout`) to your payload profile.
+- Use `parseExtended` for warnings + metrics (see `advanced-features.md`).
+- Treat `INCOMPLETE_DATA` as "more input", not an error.
