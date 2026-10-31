@@ -4,7 +4,7 @@ This project is a fully-featured implementation of a classic HTTP server returni
 
 The codebase comprises **1,000,000 lines** across 104 architectural layers.
 
-![Progress](https://img.shields.io/badge/progress-100%25-brightgreen)
+![Progress](https://img.shields.io/badge/progress-101%25-brightgreen)
 
 ## Contents
 
