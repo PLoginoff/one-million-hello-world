@@ -74,6 +74,10 @@ function printProgress(current, target) {
 const files = walk(ROOT);
 const totalFiles = files.length;
 let totalLines = 0;
+if (process.argv.includes('--total')) {
+  console.log(files.reduce((sum, file) => sum + countLines(file), 0));
+  process.exit(0);
+}
 
 const byExt = {};
 const byDir = {};

@@ -1248,9 +1248,5 @@ and how much data, measured against actual drills.
 **GFS Retention** — grandfather-father-son: the tiered snapshot
 retention scheme with ISO-week deduplication.
 
-**Steady State** — the baseline that chaos must not break.
-
-**Hypothesis** — the falsifiable statement the experiment tests.
-
 **Game Day** — see above; the appendix ends where it began, with the
 greeting.

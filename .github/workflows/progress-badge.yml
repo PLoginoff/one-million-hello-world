@@ -17,7 +17,8 @@ jobs:
       - name: Count lines of code
         id: count
         run: |
-          LINES=$(find . -type f ! -path "*/node_modules/*" ! -path "*/dist/*" ! -path "*/.next/*" ! -path "*/coverage/*" ! -path "*/.git/*" -exec cat {} \; | wc -l)
+          # Same methodology as scripts/count-lines.js — the project's source of truth
+          LINES=$(node scripts/count-lines.js --total)
           echo "lines=$LINES" >> $GITHUB_OUTPUT
           
           TARGET=1000000
